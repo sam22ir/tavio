@@ -33,7 +33,7 @@ beforeAll(async () => {
     { id: otherCompanyId, legalName: 'Chatter B', displayName: 'Chatter B' },
   ]);
   await db.insert(activityTypes).values(
-    ACTIVITY_TYPE_SEED.map((s) => ({ companyId, name: s.name, defaultDays: s.defaultDays, icon: s.icon })),
+    ACTIVITY_TYPE_SEED.map((s) => ({ companyId, name: s.key, defaultDays: s.defaultDays, icon: s.icon })),
   );
 });
 
@@ -72,7 +72,7 @@ describe('chatter service', () => {
     const mine = await withTenant(a, (ctx) => myOpenActivities(ctx, 50), db);
     const open = mine.filter((m) => m.recordId === rid);
     expect(open.length).toBe(1);
-    expect(open[0]!.typeName).toBe('Call');
+    expect(open[0]!.typeName).toBe('call');
 
     const done = await withTenant(a, (ctx) => completeActivity(ctx, open[0]!.id, 'reached client'), db);
     expect(done.ok).toBe(true);

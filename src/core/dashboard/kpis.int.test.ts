@@ -6,6 +6,7 @@ import { getDb } from '@/core/db/client';
 import { withTenant } from '@/core/db/tenant';
 import { companies, companyModules, memberships, rolePermissions, roles, users } from '@/core/db/schema';
 import { createCompany, loadTenantArgs } from '@/core/tenancy/service';
+import { activityTypes } from '@/modules/chatter/schema';
 import { dashboardKpis } from './kpis';
 
 loadDevEnv();
@@ -16,6 +17,7 @@ const createdCompanyIds: string[] = [];
 
 afterAll(async () => {
   if (createdCompanyIds.length > 0) {
+    await db.delete(activityTypes).where(inArray(activityTypes.companyId, createdCompanyIds));
     await db.delete(rolePermissions).where(inArray(rolePermissions.companyId, createdCompanyIds));
     await db.delete(memberships).where(inArray(memberships.companyId, createdCompanyIds));
     await db.delete(companyModules).where(inArray(companyModules.companyId, createdCompanyIds));

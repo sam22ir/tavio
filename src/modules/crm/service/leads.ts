@@ -46,7 +46,7 @@ export type LeadData = z.output<typeof leadInput>;
 export const leadUpdateInput = leadInput.omit({ stageId: true }).partial();
 export type LeadUpdateInput = z.input<typeof leadUpdateInput>;
 
-export interface LeadRow {
+export type LeadRow = {
   id: string;
   reference: string | null;
   type: string;
@@ -73,7 +73,7 @@ export interface LeadRow {
   convertedContractId: string | null;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
 const leadColumns = {
   id: leads.id,
@@ -94,8 +94,8 @@ const leadColumns = {
   expectedCents: leads.expectedRevenueCents,
   expectedCloseDate: leads.expectedCloseDate,
   salespersonId: leads.salespersonId,
-  // users is revoked from tavio_app (drizzle/0003), so the name cannot be joined here yet.
-  salespersonName: sql<string | null>`null`,
+  // users is revoked from tavio_app; the tenant-scoped member_directory view carries the name.
+  salespersonName: sql<string | null>`(select md.name from member_directory md where md.company_id = ${leads.companyId} and md.user_id = ${leads.salespersonId})`,
   priority: leads.priority,
   nextActivityDate: activities.dueDate,
   active: leads.active,
@@ -515,6 +515,8 @@ export async function convertToContract(
       let partnerId = lead.partnerId;
       if (!partnerId) {
         partnerId = await insertPartnerFromLead(spCtx, lead);
+      } else {
+        await ensureCustomer(spCtx, partnerId);
       }
 
       const contract = await createDraftContract(spCtx, { ...draft, leadId, partnerId });
@@ -565,6 +567,18 @@ export async function convertToContract(
   if (outcome.error) return { ok: false, error: outcome.error };
   if (!outcome.contractId || !outcome.partnerId) return err('INTERNAL', 'Conversion produced no contract');
   return ok({ contractId: outcome.contractId, partnerId: outcome.partnerId });
+}
+
+// A draft contract needs a customer, so an existing partner linked to the lead becomes one here.
+async function ensureCustomer(ctx: Ctx, partnerId: string): Promise<void> {
+  const [row] = await ctx.tx
+    .update(partners)
+    .set({ isCustomer: true, updatedAt: new Date() })
+    .where(and(eq(partners.id, partnerId), eq(partners.companyId, ctx.companyId), eq(partners.isCustomer, false)))
+    .returning({ id: partners.id });
+  if (row) {
+    await audit(ctx, { entity: 'contacts.partner', recordId: partnerId, action: 'update', after: { isCustomer: true, origin: 'crm.lead' } });
+  }
 }
 
 // Splits the lead contact into an individual partner. The partner is a customer from now on.

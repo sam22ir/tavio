@@ -19,8 +19,6 @@ import {
 import { leadFormEntity } from '@/modules/crm/ui/form-entity';
 import { LeadStatusActions } from '@/modules/crm/ui/lead-status-actions';
 
-type Row = Record<string, unknown> & { id: string };
-
 // Digits only: 0XXXXXXXXX becomes 213XXXXXXXXX. Returns null when the number looks invalid.
 function waNumber(phone: string): string | null {
   let digits = phone.replace(/[^\d+]/g, '').replace(/^\+/, '').replace(/^00/, '');
@@ -45,21 +43,21 @@ export default async function LeadPage({
     if (!lead.ok) return null;
     const reasons = await crm.listLostReasons(ctx);
     const pipeline = await crm.ensureDefaultPipeline(ctx);
+    const stages = pipeline.ok ? await crm.listStages(ctx, pipeline.value.id) : null;
     return {
-      lead: lead.value as Row,
+      lead: lead.value,
       reasons: reasons.ok ? (reasons.value as { id: string; name: string }[]) : [],
-      stages: pipeline.ok ? (pipeline.value.stages as { id: string; name: string }[]) : [],
+      stages: stages?.ok ? stages.value.map((s) => ({ id: s.id, name: s.name })) : [],
     };
   });
   if (!data) notFound();
 
   const { lead, reasons, stages } = data;
   const stageName = stages.find((s) => s.id === lead.stageId)?.name ?? (lead.stageName as string | undefined);
-  const cents = lead.expectedRevenueCents;
-  const amount =
-    cents === null || cents === undefined || cents === ''
-      ? '—'
-      : formatDzd(BigInt(String(cents)), loc);
+  const cents = lead.expectedCents;
+  const amount = cents === null ? '—' : formatDzd(cents, loc);
+  // The edit form takes the amount as a decimal string ("1500.50").
+  const expectedInput = cents === null ? '' : `${cents / 100n}.${String(cents % 100n).padStart(2, '0')}`;
   const phone = typeof lead.phone === 'string' && lead.phone ? lead.phone : null;
   const wa = phone ? waNumber(phone) : null;
 
@@ -116,7 +114,7 @@ export default async function LeadPage({
         <RecordForm
           entity={leadFormEntity}
           action={updateLeadFormAction}
-          values={lead}
+          values={{ ...lead, expectedRevenueCents: expectedInput }}
           hidden={{ id }}
           relationOptions={{
             stageId: stages.map((s) => ({ value: s.id, label: s.name })),

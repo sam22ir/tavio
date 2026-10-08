@@ -6,7 +6,6 @@ import { getPdfRenderer, PdfError } from '@/core/adapters/pdf';
 import { buildReceiptHtml } from '@/modules/credit_sales/print/receipt-html';
 import { loadReceiptPrint } from '@/modules/credit_sales/print/queries';
 
-export const dynamic = 'force-dynamic';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

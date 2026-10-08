@@ -72,7 +72,9 @@ const moveLeadDefined = defineAction(
 const markWonDefined = defineAction({ perm: 'crm.lead.write', schema: idInput, module: 'crm' }, async (ctx, input) => {
   const pipeline = await crm.ensureDefaultPipeline(ctx);
   if (!pipeline.ok) return pipeline;
-  const won = (pipeline.value.stages as { id: string; isWon: boolean }[]).find((s) => s.isWon);
+  const stages = await crm.listStages(ctx, pipeline.value.id);
+  if (!stages.ok) return stages;
+  const won = stages.value.find((s) => s.isWon);
   if (!won) return { ok: false, error: { code: 'INTERNAL', message: 'No won stage configured' } };
   return crm.moveLead(ctx, input.id, won.id);
 });

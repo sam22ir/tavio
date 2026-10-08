@@ -8,6 +8,7 @@ import { Composer, MarkDoneButton, ScheduleActivityForm } from './composer';
 export async function Chatter({ entity, recordId }: { entity: string; recordId: string }) {
   const t = await getTranslations('chatter.thread');
   const ta = await getTranslations('chatter.activity');
+  const tt = await getTranslations('chatter.type');
   const locale = await getLocale();
   const data = await withPageCtx(async (ctx) => ({
     items: await listThread(ctx, entity, recordId),
@@ -48,7 +49,7 @@ export async function Chatter({ entity, recordId }: { entity: string; recordId: 
                 className={`flex flex-col gap-2 rounded-lg border p-3 ${overdue ? 'border-destructive' : ''}`}
               >
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <span className="font-medium">{item.typeName}</span>
+                  <span className="font-medium">{tt(item.typeName)}</span>
                   <span>{ta('dueOn', { date: a.dueDate })}</span>
                   {overdue ? <span className="font-medium text-destructive">{ta('overdue')}</span> : null}
                   {!open ? <span>{ta('done')}</span> : null}
