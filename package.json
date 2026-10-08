@@ -12,6 +12,7 @@
     "test:int": "vitest run -c vitest.int.config.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx scripts/seed-global.ts",
     "modules:gen": "tsx scripts/gen-module-registry.ts",
     "cf:build": "opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare preview"

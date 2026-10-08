@@ -35,5 +35,23 @@
     "new": "Nouvelle taxe",
     "edit": "Modifier la taxe",
     "empty": "Aucune taxe configurée pour le moment."
+  },
+  "taxes": {
+    "title": "Taxes",
+    "warning": "⚠ Les taux doivent être vérifiés par votre expert-comptable.",
+    "load_defaults": "Charger les taux algériens par défaut",
+    "defaults_loaded": "{count} taxe(s) ajoutée(s).",
+    "defaults_none": "Les taux par défaut sont déjà chargés.",
+    "create_title": "Ajouter une taxe",
+    "save": "Enregistrer",
+    "saved": "Taxe enregistrée.",
+    "archive": "Désactiver",
+    "archived": "Taxe désactivée.",
+    "error": "Une erreur est survenue. Vérifiez les champs.",
+    "status_active": "Actif",
+    "status_inactive": "Inactif",
+    "valid_to_optional": "Facultatif",
+    "empty": "Aucune taxe pour le moment.",
+    "loading": "Chargement..."
   }
 }
