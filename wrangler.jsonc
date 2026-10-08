@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tavio",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "placement": { "mode": "smart" },
+  "hyperdrive": [
+    {
+      // Replace with the Hyperdrive config id after `wrangler hyperdrive create`.
+      // Store the Postgres connection string with the Hyperdrive config, not in this file.
+      "binding": "HYPERDRIVE",
+      "id": "REPLACE_ME"
+    }
+  ]
+}
