@@ -112,7 +112,7 @@
     "record": "Enregistrer un paiement",
     "method": "Mode",
     "reference": "Référence",
-    "success": "Paiement enregistré",
+    "success": "Paiement enregistré : reçu {number}",
     "overpayment": "Le montant dépasse le solde restant."
   },
   "methods": {

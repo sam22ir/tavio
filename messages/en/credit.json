@@ -112,7 +112,7 @@
     "record": "Record payment",
     "method": "Method",
     "reference": "Reference",
-    "success": "Payment recorded",
+    "success": "Payment recorded: receipt {number}",
     "overpayment": "The amount is more than the remaining balance."
   },
   "methods": {
