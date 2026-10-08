@@ -35,5 +35,23 @@
     "new": "New tax",
     "edit": "Edit tax",
     "empty": "No taxes configured yet."
+  },
+  "taxes": {
+    "title": "Taxes",
+    "warning": "⚠ Rates must be verified by your accountant.",
+    "load_defaults": "Load Algerian defaults",
+    "defaults_loaded": "{count} tax(es) added.",
+    "defaults_none": "The default taxes are already loaded.",
+    "create_title": "Add a tax",
+    "save": "Save",
+    "saved": "Tax saved.",
+    "archive": "Deactivate",
+    "archived": "Tax deactivated.",
+    "error": "Something went wrong. Check the fields.",
+    "status_active": "Active",
+    "status_inactive": "Inactive",
+    "valid_to_optional": "Optional",
+    "empty": "No taxes yet.",
+    "loading": "Loading..."
   }
 }
