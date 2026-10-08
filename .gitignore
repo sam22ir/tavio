@@ -42,3 +42,4 @@ next-env.d.ts
 
 # example env file, safe to commit
 !.env.example
+supabase/.temp
