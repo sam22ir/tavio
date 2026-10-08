@@ -26,6 +26,7 @@ describe('withTenant', () => {
     pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1 });
     db = drizzle(pool);
     await db.execute(sql`create temp table if not exists tenant_probe (v int)`);
+    await db.execute(sql`grant all on tenant_probe to tavio_app`);
   });
 
   afterAll(async () => {

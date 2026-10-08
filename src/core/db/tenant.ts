@@ -28,6 +28,8 @@ export async function withTenant<T>(
     await tx.execute(
       sql`select set_config('app.company_id', ${args.companyId}, true), set_config('app.user_id', ${args.userId}, true)`,
     );
+    // Drop to the non-owner app role so RLS applies (the owner bypasses it).
+    await tx.execute(sql`set local role tavio_app`);
     return fn({ ...args, tx });
   });
 }
