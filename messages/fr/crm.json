@@ -57,5 +57,32 @@
     "new": "Nouveau prospect",
     "edit": "Modifier le prospect",
     "empty": "Aucun prospect pour le moment"
+  },
+  "ui": {
+    "title": "Leads",
+    "viewToggle": "Affichage",
+    "kanban": "Tableau",
+    "list": "Liste",
+    "newLead": "Nouveau lead",
+    "newTitle": "Nouveau lead",
+    "editTitle": "Détails",
+    "loadError": "Impossible de charger les leads. Réessayez.",
+    "updated": "Lead mis à jour",
+    "error": "Une erreur est survenue. Réessayez.",
+    "won": "Marquer gagné",
+    "lost": "Marquer perdu",
+    "reopen": "Rouvrir",
+    "lostTitle": "Marquer le lead comme perdu",
+    "lostReason": "Motif",
+    "lostNote": "Note",
+    "lostConfirm": "Confirmer la perte",
+    "noReason": "Aucun motif",
+    "back": "Retour aux leads",
+    "stage": "Étape",
+    "status": "Statut",
+    "expected": "CA attendu",
+    "call": "Appeler",
+    "whatsapp": "WhatsApp",
+    "convert": "Convertir en contrat à crédit"
   }
 }
