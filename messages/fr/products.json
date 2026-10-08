@@ -1,1 +1,38 @@
-{}
+{
+  "module": { "name": "Produits" },
+  "menu": { "products": "Produits" },
+  "fields": {
+    "name": "Nom",
+    "nameAr": "Nom (arabe)",
+    "sku": "Référence interne",
+    "barcode": "Code-barres",
+    "categoryId": "Catégorie",
+    "kind": "Type",
+    "uomId": "Unité de mesure",
+    "salePriceCents": "Prix de vente",
+    "costCents": "Coût",
+    "trackStock": "Suivi du stock",
+    "active": "Actif",
+    "description": "Description",
+    "code": "Code",
+    "parentId": "Catégorie parente"
+  },
+  "options": {
+    "kind": {
+      "goods": "Bien",
+      "service": "Service"
+    }
+  },
+  "product": {
+    "title": "Produits",
+    "new": "Nouveau produit",
+    "edit": "Modifier le produit",
+    "empty": "Aucun produit pour le moment."
+  },
+  "category": {
+    "title": "Catégories de produits",
+    "new": "Nouvelle catégorie",
+    "edit": "Modifier la catégorie",
+    "empty": "Aucune catégorie pour le moment."
+  }
+}

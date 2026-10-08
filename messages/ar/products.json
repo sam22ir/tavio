@@ -1,1 +1,38 @@
-{}
+{
+  "module": { "name": "المنتجات" },
+  "menu": { "products": "المنتجات" },
+  "fields": {
+    "name": "الاسم",
+    "nameAr": "الاسم بالعربية",
+    "sku": "المرجع الداخلي",
+    "barcode": "الباركود",
+    "categoryId": "الفئة",
+    "kind": "النوع",
+    "uomId": "وحدة القياس",
+    "salePriceCents": "سعر البيع",
+    "costCents": "التكلفة",
+    "trackStock": "تتبع المخزون",
+    "active": "نشط",
+    "description": "الوصف",
+    "code": "الرمز",
+    "parentId": "الفئة الأم"
+  },
+  "options": {
+    "kind": {
+      "goods": "سلعة",
+      "service": "خدمة"
+    }
+  },
+  "product": {
+    "title": "المنتجات",
+    "new": "منتج جديد",
+    "edit": "تعديل المنتج",
+    "empty": "لا توجد منتجات بعد."
+  },
+  "category": {
+    "title": "فئات المنتجات",
+    "new": "فئة جديدة",
+    "edit": "تعديل الفئة",
+    "empty": "لا توجد فئات بعد."
+  }
+}

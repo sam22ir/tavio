@@ -1,1 +1,38 @@
-{}
+{
+  "module": { "name": "Products" },
+  "menu": { "products": "Products" },
+  "fields": {
+    "name": "Name",
+    "nameAr": "Name (Arabic)",
+    "sku": "Internal reference",
+    "barcode": "Barcode",
+    "categoryId": "Category",
+    "kind": "Type",
+    "uomId": "Unit of measure",
+    "salePriceCents": "Sale price",
+    "costCents": "Cost",
+    "trackStock": "Track stock",
+    "active": "Active",
+    "description": "Description",
+    "code": "Code",
+    "parentId": "Parent category"
+  },
+  "options": {
+    "kind": {
+      "goods": "Goods",
+      "service": "Service"
+    }
+  },
+  "product": {
+    "title": "Products",
+    "new": "New product",
+    "edit": "Edit product",
+    "empty": "No products yet."
+  },
+  "category": {
+    "title": "Product categories",
+    "new": "New category",
+    "edit": "Edit category",
+    "empty": "No categories yet."
+  }
+}
