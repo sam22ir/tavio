@@ -20,7 +20,8 @@ import {
 } from '@/ui/primitives/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/primitives/select';
 
-const METHODS = ['cash', 'ccp', 'transfer', 'cib', 'edahabia', 'cheque'] as const;
+// 'cheque' is hidden until the form collects the cheque due date the database requires.
+const METHODS = ['cash', 'ccp', 'transfer', 'cib', 'edahabia'] as const;
 
 /** Formats integer cents as a plain DZD string that parseDzd accepts, e.g. 150050 -> "1500.50". */
 function centsToInput(cents: string): string {
