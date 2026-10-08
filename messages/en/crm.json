@@ -57,5 +57,32 @@
     "new": "New lead",
     "edit": "Edit lead",
     "empty": "No leads yet"
+  },
+  "ui": {
+    "title": "Leads",
+    "viewToggle": "View",
+    "kanban": "Board",
+    "list": "List",
+    "newLead": "New lead",
+    "newTitle": "New lead",
+    "editTitle": "Details",
+    "loadError": "Could not load leads. Please try again.",
+    "updated": "Lead updated",
+    "error": "Something went wrong. Please try again.",
+    "won": "Mark won",
+    "lost": "Mark lost",
+    "reopen": "Reopen",
+    "lostTitle": "Mark lead as lost",
+    "lostReason": "Reason",
+    "lostNote": "Note",
+    "lostConfirm": "Confirm lost",
+    "noReason": "No reason",
+    "back": "Back to leads",
+    "stage": "Stage",
+    "status": "Status",
+    "expected": "Expected revenue",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "convert": "Convert to credit contract"
   }
 }
