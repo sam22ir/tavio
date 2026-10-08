@@ -7,6 +7,7 @@ import { entityPath } from './entity-path';
 // Server component: the current user's open activities (overdue first), max `limit`.
 export async function MyActivities({ limit = 10 }: { limit?: number }) {
   const t = await getTranslations('chatter.activity');
+  const tt = await getTranslations('chatter.type');
   const rows = await withPageCtx((ctx) => myOpenActivities(ctx, limit));
   const today = todayIso();
   // Overdue first; the query already orders by due date, so a stable sort keeps that order within each group.
@@ -26,7 +27,7 @@ export async function MyActivities({ limit = 10 }: { limit?: number }) {
           const body = (
             <>
               <span className="text-sm font-medium">{r.summary}</span>
-              <span className="text-xs text-muted-foreground">{r.typeName}</span>
+              <span className="text-xs text-muted-foreground">{tt(r.typeName)}</span>
               <span className={`text-xs ${overdue ? 'font-medium text-destructive' : 'text-muted-foreground'}`}>
                 {overdue ? t('overdue') + ' · ' : ''}
                 {t('dueOn', { date: r.dueDate })}

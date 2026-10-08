@@ -1,7 +1,6 @@
-import { and, asc, desc, eq, isNull } from 'drizzle-orm';
+import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
-import { memberships, users } from '@/core/db/schema';
 import { err, ok, type Result } from '@/core/result';
 import { ACTIVITY_TYPE_SEED } from '../entities';
 import { activities, activityTypes, messages, type Activity, type Message } from '../schema';
@@ -38,12 +37,13 @@ export function todayIso(now: Date = new Date()): string {
 
 /** Resolves a seed key (for example 'call') to the company's activity_types row. */
 async function resolveActivityTypeId(ctx: Ctx, typeKey: string, entity: string): Promise<Result<string>> {
+  // activity_types.name holds the stable seed key (see core/tenancy/service.ts).
   const seed = ACTIVITY_TYPE_SEED.find((s) => s.key === typeKey);
   if (!seed) return err('VALIDATION', `Unknown activity type ${typeKey}`, { typeKey });
   const rows = await ctx.tx
     .select({ id: activityTypes.id, entity: activityTypes.entity })
     .from(activityTypes)
-    .where(and(eq(activityTypes.name, seed.name), eq(activityTypes.active, true)));
+    .where(and(eq(activityTypes.name, seed.key), eq(activityTypes.active, true)));
   const row = rows.find((r) => r.entity === entity) ?? rows.find((r) => r.entity === null);
   if (!row) return err('NOT_FOUND', `Activity type ${typeKey} is not configured`, { typeKey });
   return ok(row.id);
@@ -198,11 +198,11 @@ export async function myOpenActivities(ctx: Ctx, limit: number): Promise<OpenAct
 
 /** Active members of the company, for the activity assignee select. */
 export async function listAssignees(ctx: Ctx): Promise<{ id: string; name: string }[]> {
+  // users is not readable by tavio_app; member_directory is the tenant-scoped view of members.
   const rows = await ctx.tx
-    .select({ id: users.id, name: users.name })
-    .from(memberships)
-    .innerJoin(users, eq(memberships.userId, users.id))
-    .where(and(eq(memberships.companyId, ctx.companyId), eq(memberships.status, 'active')))
-    .orderBy(asc(users.name));
+    .select({ id: sql<string>`member_directory.user_id`, name: sql<string>`member_directory.name` })
+    .from(sql`member_directory`)
+    .where(sql`member_directory.company_id = ${ctx.companyId} and member_directory.status = 'active'`)
+    .orderBy(sql`member_directory.name`);
   return rows;
 }
