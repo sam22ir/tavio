@@ -2,7 +2,7 @@
 
 ## Rules for the orchestrator
 - Each task runs in its own git worktree at `/home/saadi/tavio-wt/<ID>` on branch `task/<ID>` (created with `git worktree add`), done by a Haiku 5.5 agent at low effort.
-- The dev machine is weak. Run at most 4 agents at once. Task agents don't run `next build` or dev servers; build runs once at integration.
+- Run a whole wave in parallel (12 or more agents is fine). Task agents don't run `next build` or dev servers; build runs once at integration.
 - The agent's prompt is: "Do the task in docs/plan/tasks/<file>. Follow docs/plan/CONVENTIONS.md. Report: files changed, verification output (pass/fail), and any questions. Do not edit files outside the task's list."
 - If a task fails, send it to a fresh agent with the error output.
 - **Integration after each wave** (orchestrator or reviewer):
