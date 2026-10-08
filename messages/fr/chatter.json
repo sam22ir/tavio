@@ -1,5 +1,42 @@
 {
   "module": {
     "name": "Discussion"
+  },
+  "thread": {
+    "title": "Discussion",
+    "tabMessage": "Envoyer un message",
+    "tabNote": "Note interne",
+    "placeholderMessage": "Écrire un message à l'équipe",
+    "placeholderNote": "Écrire une note interne",
+    "send": "Envoyer",
+    "logNote": "Enregistrer la note",
+    "empty": "Rien pour le moment",
+    "internalNote": "Note interne",
+    "system": "Système",
+    "error": "Une erreur est survenue. Réessayez.",
+    "saved": "Enregistré"
+  },
+  "activity": {
+    "schedule": "Planifier une activité",
+    "type": "Type",
+    "summary": "Résumé",
+    "dueDate": "Échéance",
+    "assignee": "Responsable",
+    "submit": "Planifier",
+    "markDone": "Marquer comme fait",
+    "done": "Fait",
+    "open": "Ouverte",
+    "overdue": "En retard",
+    "dueOn": "Échéance {date}",
+    "myActivities": "Mes activités",
+    "noActivities": "Aucune activité ouverte",
+    "feedbackPlaceholder": "Commentaire (facultatif)"
+  },
+  "type": {
+    "call": "Appel",
+    "meeting": "Réunion",
+    "todo": "À faire",
+    "payment_reminder": "Rappel de paiement",
+    "visit": "Visite"
   }
 }
