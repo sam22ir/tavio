@@ -4,7 +4,7 @@ export const manifest = defineModule({
   id: 'crm',
   name: 'crm.module.name',
   version: '0.1.0',
-  depends: ['contacts', 'chatter'],
+  depends: ['contacts', 'chatter', 'credit_sales'],
   permissions: ['crm.lead.read', 'crm.lead.write', 'crm.lead.delete'],
   menus: [{ label: 'crm.menu.leads', href: '/crm', perm: 'crm.lead.read', order: 40 }],
 });
