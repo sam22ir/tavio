@@ -1,1 +1,39 @@
-{}
+{
+  "module": {
+    "name": "Algeria localization"
+  },
+  "menu": {
+    "taxes": "Taxes"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name",
+    "kind": "Kind",
+    "rate": "Rate (%)",
+    "scope": "Scope",
+    "validFrom": "Valid from",
+    "validTo": "Valid to",
+    "active": "Active",
+    "legalRef": "Legal reference",
+    "isDefaultSale": "Default for sales",
+    "isDefaultPurchase": "Default for purchases"
+  },
+  "options": {
+    "kind": {
+      "vat": "VAT",
+      "stamp": "Stamp duty",
+      "other": "Other"
+    },
+    "scope": {
+      "sale": "Sales",
+      "purchase": "Purchases",
+      "both": "Both"
+    }
+  },
+  "tax": {
+    "title": "Taxes",
+    "new": "New tax",
+    "edit": "Edit tax",
+    "empty": "No taxes configured yet."
+  }
+}
