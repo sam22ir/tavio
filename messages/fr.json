@@ -1,0 +1,6 @@
+{
+  "core": {
+    "app": { "name": "Tavio", "tagline": "Votre gestion, simplement." },
+    "nav": { "dashboard": "Tableau de bord", "settings": "Paramètres", "logout": "Se déconnecter" }
+  }
+}
