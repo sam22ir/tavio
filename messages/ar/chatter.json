@@ -1,5 +1,42 @@
 {
   "module": {
-    "name": "المحادثات"
+    "name": "النقاش"
+  },
+  "thread": {
+    "title": "النقاش",
+    "tabMessage": "إرسال رسالة",
+    "tabNote": "ملاحظة داخلية",
+    "placeholderMessage": "اكتب رسالة للفريق",
+    "placeholderNote": "اكتب ملاحظة داخلية",
+    "send": "إرسال",
+    "logNote": "تسجيل الملاحظة",
+    "empty": "لا شيء بعد",
+    "internalNote": "ملاحظة داخلية",
+    "system": "النظام",
+    "error": "حدث خطأ. حاول مرة أخرى.",
+    "saved": "تم الحفظ"
+  },
+  "activity": {
+    "schedule": "جدولة نشاط",
+    "type": "النوع",
+    "summary": "الملخص",
+    "dueDate": "تاريخ الاستحقاق",
+    "assignee": "المسؤول",
+    "submit": "جدولة",
+    "markDone": "تحديد كمنجز",
+    "done": "منجز",
+    "open": "مفتوح",
+    "overdue": "متأخر",
+    "dueOn": "الاستحقاق {date}",
+    "myActivities": "أنشطتي",
+    "noActivities": "لا توجد أنشطة مفتوحة",
+    "feedbackPlaceholder": "ملاحظات (اختياري)"
+  },
+  "type": {
+    "call": "مكالمة",
+    "meeting": "اجتماع",
+    "todo": "مهمة",
+    "payment_reminder": "تذكير بالدفع",
+    "visit": "زيارة"
   }
 }

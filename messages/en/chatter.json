@@ -1,5 +1,42 @@
 {
   "module": {
     "name": "Chatter"
+  },
+  "thread": {
+    "title": "Chatter",
+    "tabMessage": "Send message",
+    "tabNote": "Log note",
+    "placeholderMessage": "Write a message to the team",
+    "placeholderNote": "Write an internal note",
+    "send": "Send message",
+    "logNote": "Log note",
+    "empty": "Nothing here yet",
+    "internalNote": "Internal note",
+    "system": "System",
+    "error": "Something went wrong. Try again.",
+    "saved": "Saved"
+  },
+  "activity": {
+    "schedule": "Schedule activity",
+    "type": "Type",
+    "summary": "Summary",
+    "dueDate": "Due date",
+    "assignee": "Assignee",
+    "submit": "Schedule",
+    "markDone": "Mark done",
+    "done": "Done",
+    "open": "Open",
+    "overdue": "Overdue",
+    "dueOn": "Due {date}",
+    "myActivities": "My activities",
+    "noActivities": "No open activities",
+    "feedbackPlaceholder": "Feedback (optional)"
+  },
+  "type": {
+    "call": "Call",
+    "meeting": "Meeting",
+    "todo": "To do",
+    "payment_reminder": "Payment reminder",
+    "visit": "Visit"
   }
 }
