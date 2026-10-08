@@ -14,7 +14,7 @@
       // Replace with the Hyperdrive config id after `wrangler hyperdrive create`.
       // Store the Postgres connection string with the Hyperdrive config, not in this file.
       "binding": "HYPERDRIVE",
-      "id": "REPLACE_ME"
+      "id": "c513f2a82e374b7c87ec6fa07a7530ab"
     }
   ]
 }
