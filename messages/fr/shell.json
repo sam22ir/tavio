@@ -1,1 +1,28 @@
-{}
+{
+  "appName": "Tavio",
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "settings": "Paramètres",
+    "open": "Ouvrir le menu",
+    "close": "Fermer le menu",
+    "title": "Navigation"
+  },
+  "company": {
+    "label": "Entreprise active",
+    "switch": "Changer d'entreprise",
+    "error": "Impossible de changer d'entreprise."
+  },
+  "locale": {
+    "label": "Langue"
+  },
+  "user": {
+    "logout": "Se déconnecter",
+    "loggedInAs": "Connecté en tant que"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "greeting": "Bienvenue sur {company}",
+    "emptyTitle": "Aucun module pour le moment",
+    "emptyBody": "Les modules apparaîtront ici."
+  }
+}

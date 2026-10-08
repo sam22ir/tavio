@@ -1,1 +1,20 @@
-{}
+{
+  "title": "Paramètres",
+  "company": {
+    "title": "Informations de l'entreprise",
+    "legalName": "Raison sociale",
+    "displayName": "Nom affiché",
+    "nif": "NIF",
+    "nis": "NIS",
+    "rc": "RC",
+    "ai": "AI",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "address": "Adresse",
+    "wilayaCode": "Code wilaya",
+    "defaultLocale": "Langue par défaut",
+    "timezone": "Fuseau horaire",
+    "currency": "Devise",
+    "notFound": "Entreprise introuvable."
+  }
+}

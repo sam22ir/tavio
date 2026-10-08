@@ -1,1 +1,20 @@
-{}
+{
+  "title": "Settings",
+  "company": {
+    "title": "Company information",
+    "legalName": "Legal name",
+    "displayName": "Display name",
+    "nif": "NIF",
+    "nis": "NIS",
+    "rc": "RC",
+    "ai": "AI",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "wilayaCode": "Wilaya code",
+    "defaultLocale": "Default language",
+    "timezone": "Time zone",
+    "currency": "Currency",
+    "notFound": "Company not found."
+  }
+}

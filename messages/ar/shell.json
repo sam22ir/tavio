@@ -1,1 +1,28 @@
-{}
+{
+  "appName": "Tavio",
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "settings": "الإعدادات",
+    "open": "فتح القائمة",
+    "close": "إغلاق القائمة",
+    "title": "التنقل"
+  },
+  "company": {
+    "label": "الشركة النشطة",
+    "switch": "تغيير الشركة",
+    "error": "تعذر تغيير الشركة."
+  },
+  "locale": {
+    "label": "اللغة"
+  },
+  "user": {
+    "logout": "تسجيل الخروج",
+    "loggedInAs": "مسجل الدخول باسم"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "greeting": "مرحبا بك في {company}",
+    "emptyTitle": "لا توجد وحدات بعد",
+    "emptyBody": "ستظهر الوحدات هنا."
+  }
+}

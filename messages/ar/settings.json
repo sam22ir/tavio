@@ -1,1 +1,20 @@
-{}
+{
+  "title": "الإعدادات",
+  "company": {
+    "title": "معلومات الشركة",
+    "legalName": "الاسم القانوني",
+    "displayName": "الاسم المعروض",
+    "nif": "NIF",
+    "nis": "NIS",
+    "rc": "RC",
+    "ai": "AI",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "address": "العنوان",
+    "wilayaCode": "رمز الولاية",
+    "defaultLocale": "اللغة الافتراضية",
+    "timezone": "المنطقة الزمنية",
+    "currency": "العملة",
+    "notFound": "الشركة غير موجودة."
+  }
+}
