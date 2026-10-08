@@ -1,1 +1,67 @@
-{}
+{
+  "module": {
+    "name": "Credit sales"
+  },
+  "menu": {
+    "contracts": "Contracts",
+    "payments": "Payments",
+    "overdue": "Overdue"
+  },
+  "fields": {
+    "reference": "Reference",
+    "partnerId": "Customer",
+    "state": "Status",
+    "startDate": "Start date",
+    "frequency": "Frequency",
+    "installmentsCount": "Number of installments",
+    "cashPriceCents": "Cash price",
+    "markupRate": "Markup rate (%)",
+    "markupCents": "Markup",
+    "totalCents": "Total",
+    "downPaymentCents": "Down payment",
+    "financedCents": "Financed amount",
+    "notes": "Notes",
+    "method": "Method",
+    "amountCents": "Amount",
+    "receivedAt": "Received at",
+    "externalRef": "External reference",
+    "bankName": "Bank",
+    "chequeDueDate": "Cheque due date",
+    "note": "Note"
+  },
+  "options": {
+    "state": {
+      "draft": "Draft",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "defaulted": "Defaulted",
+      "posted": "Posted",
+      "reversed": "Reversed"
+    },
+    "frequency": {
+      "monthly": "Monthly",
+      "weekly": "Weekly"
+    },
+    "method": {
+      "cash": "Cash",
+      "ccp": "CCP",
+      "transfer": "Bank transfer",
+      "cib": "CIB card",
+      "edahabia": "Edahabia card",
+      "cheque": "Cheque"
+    }
+  },
+  "contract": {
+    "title": "Credit contracts",
+    "empty": "No credit contracts yet.",
+    "new": "New contract",
+    "edit": "Edit contract"
+  },
+  "payment": {
+    "title": "Payments",
+    "empty": "No payments yet.",
+    "new": "New payment",
+    "edit": "Edit payment"
+  }
+}

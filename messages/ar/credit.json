@@ -1,1 +1,67 @@
-{}
+{
+  "module": {
+    "name": "البيع بالتقسيط"
+  },
+  "menu": {
+    "contracts": "العقود",
+    "payments": "المدفوعات",
+    "overdue": "الأقساط المتأخرة"
+  },
+  "fields": {
+    "reference": "المرجع",
+    "partnerId": "الزبون",
+    "state": "الحالة",
+    "startDate": "تاريخ البداية",
+    "frequency": "التواتر",
+    "installmentsCount": "عدد الأقساط",
+    "cashPriceCents": "سعر النقد",
+    "markupRate": "نسبة الزيادة (%)",
+    "markupCents": "الزيادة",
+    "totalCents": "المجموع",
+    "downPaymentCents": "الدفعة الأولى",
+    "financedCents": "المبلغ الممول",
+    "notes": "ملاحظات",
+    "method": "طريقة الدفع",
+    "amountCents": "المبلغ",
+    "receivedAt": "تاريخ الاستلام",
+    "externalRef": "مرجع خارجي",
+    "bankName": "البنك",
+    "chequeDueDate": "تاريخ استحقاق الشيك",
+    "note": "ملاحظة"
+  },
+  "options": {
+    "state": {
+      "draft": "مسودة",
+      "active": "نشط",
+      "completed": "مكتمل",
+      "cancelled": "ملغى",
+      "defaulted": "متعثر",
+      "posted": "مسجّل",
+      "reversed": "معكوس"
+    },
+    "frequency": {
+      "monthly": "شهري",
+      "weekly": "أسبوعي"
+    },
+    "method": {
+      "cash": "نقدا",
+      "ccp": "CCP",
+      "transfer": "تحويل بنكي",
+      "cib": "بطاقة CIB",
+      "edahabia": "بطاقة الذهبية",
+      "cheque": "شيك"
+    }
+  },
+  "contract": {
+    "title": "عقود البيع بالتقسيط",
+    "empty": "لا توجد عقود بعد.",
+    "new": "عقد جديد",
+    "edit": "تعديل العقد"
+  },
+  "payment": {
+    "title": "المدفوعات",
+    "empty": "لا توجد مدفوعات بعد.",
+    "new": "دفعة جديدة",
+    "edit": "تعديل الدفعة"
+  }
+}

@@ -1,1 +1,67 @@
-{}
+{
+  "module": {
+    "name": "Ventes à crédit"
+  },
+  "menu": {
+    "contracts": "Contrats",
+    "payments": "Paiements",
+    "overdue": "Échéances en retard"
+  },
+  "fields": {
+    "reference": "Référence",
+    "partnerId": "Client",
+    "state": "Statut",
+    "startDate": "Date de début",
+    "frequency": "Fréquence",
+    "installmentsCount": "Nombre d’échéances",
+    "cashPriceCents": "Prix comptant",
+    "markupRate": "Taux de majoration (%)",
+    "markupCents": "Majoration",
+    "totalCents": "Total",
+    "downPaymentCents": "Acompte",
+    "financedCents": "Montant financé",
+    "notes": "Notes",
+    "method": "Mode de paiement",
+    "amountCents": "Montant",
+    "receivedAt": "Reçu le",
+    "externalRef": "Référence externe",
+    "bankName": "Banque",
+    "chequeDueDate": "Échéance du chèque",
+    "note": "Note"
+  },
+  "options": {
+    "state": {
+      "draft": "Brouillon",
+      "active": "Actif",
+      "completed": "Terminé",
+      "cancelled": "Annulé",
+      "defaulted": "Défaillant",
+      "posted": "Enregistré",
+      "reversed": "Extourné"
+    },
+    "frequency": {
+      "monthly": "Mensuelle",
+      "weekly": "Hebdomadaire"
+    },
+    "method": {
+      "cash": "Espèces",
+      "ccp": "CCP",
+      "transfer": "Virement",
+      "cib": "Carte CIB",
+      "edahabia": "Carte Edahabia",
+      "cheque": "Chèque"
+    }
+  },
+  "contract": {
+    "title": "Contrats à crédit",
+    "empty": "Aucun contrat à crédit pour le moment.",
+    "new": "Nouveau contrat",
+    "edit": "Modifier le contrat"
+  },
+  "payment": {
+    "title": "Paiements",
+    "empty": "Aucun paiement pour le moment.",
+    "new": "Nouveau paiement",
+    "edit": "Modifier le paiement"
+  }
+}
