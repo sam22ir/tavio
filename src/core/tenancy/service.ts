@@ -13,6 +13,8 @@ import type { TenantArgs } from '@/core/db/tenant';
 import type { Locale } from '@/core/ctx';
 import { err, ok, type Result } from '@/core/result';
 import { DEFAULT_MODULES, DEFAULT_ROLES } from './default-roles';
+import { activityTypes } from '@/modules/chatter/schema';
+import { ACTIVITY_TYPE_SEED } from '@/modules/chatter/entities';
 
 export interface CompanySummary { id: string; name: string; roleKey: string }
 export interface NewCompanyInput { legalName: string; phone?: string; address?: string; wilayaCode?: string }
@@ -95,6 +97,17 @@ export async function createCompany(
           version: MODULE_VERSION,
           enabled: true,
           enabledAt: now,
+          createdBy: userId,
+        })),
+      );
+
+      // Default activity types (name holds the stable key; the UI translates chatter.types.<name>).
+      await tx.insert(activityTypes).values(
+        ACTIVITY_TYPE_SEED.map((t) => ({
+          companyId: company.id,
+          name: t.key,
+          defaultDays: t.defaultDays,
+          icon: t.icon,
           createdBy: userId,
         })),
       );
