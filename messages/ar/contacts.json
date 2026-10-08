@@ -1,1 +1,41 @@
-{}
+{
+  "module": { "name": "جهات الاتصال" },
+  "menu": { "partners": "جهات الاتصال" },
+  "fields": {
+    "kind": "النوع",
+    "isCustomer": "زبون",
+    "isSupplier": "مورد",
+    "isProspect": "عميل محتمل",
+    "active": "نشط",
+    "displayName": "الاسم",
+    "firstName": "الاسم الأول",
+    "lastName": "اللقب",
+    "companyName": "اسم الشركة",
+    "nif": "NIF",
+    "nis": "NIS",
+    "rc": "RC",
+    "ai": "AI",
+    "nationalId": "رقم الهوية",
+    "phone": "الهاتف",
+    "phoneAlt": "هاتف بديل",
+    "email": "البريد الإلكتروني",
+    "address": "العنوان",
+    "wilayaCode": "الولاية",
+    "commune": "البلدية",
+    "employer": "جهة العمل",
+    "monthlyIncomeCents": "الدخل الشهري (دج)",
+    "notes": "ملاحظات"
+  },
+  "options": {
+    "kind": {
+      "individual": "شخص طبيعي",
+      "company": "شركة"
+    }
+  },
+  "partner": {
+    "title": "جهات الاتصال",
+    "empty": "لا توجد جهات اتصال بعد.",
+    "new": "جهة اتصال جديدة",
+    "edit": "تعديل جهة الاتصال"
+  }
+}
