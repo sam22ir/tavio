@@ -1,2 +1,3 @@
+import './events';
 export * from './schema';
 export { manifest } from './manifest';
