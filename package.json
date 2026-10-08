@@ -17,6 +17,7 @@
     "cf:preview": "opennextjs-cloudflare preview"
   },
   "dependencies": {
+    "aws4fetch": "^1.0.20",
     "better-auth": "^1.7.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
