@@ -1,1 +1,28 @@
-{}
+{
+  "appName": "Tavio",
+  "nav": {
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "open": "Open menu",
+    "close": "Close menu",
+    "title": "Navigation"
+  },
+  "company": {
+    "label": "Active company",
+    "switch": "Switch company",
+    "error": "Could not switch company."
+  },
+  "locale": {
+    "label": "Language"
+  },
+  "user": {
+    "logout": "Log out",
+    "loggedInAs": "Signed in as"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "greeting": "Welcome to {company}",
+    "emptyTitle": "No modules yet",
+    "emptyBody": "Modules will appear here."
+  }
+}

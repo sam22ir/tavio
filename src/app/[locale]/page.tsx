@@ -1,6 +1,7 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
-import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
+import { notFound, redirect } from 'next/navigation';
+import { getSession } from '@/core/auth/session';
 import { routing } from '@/i18n/routing';
 
 export default async function HomePage({
@@ -11,10 +12,7 @@ export default async function HomePage({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations('core.app');
-  return (
-    <main className="flex flex-1 items-center justify-center p-4">
-      <h1 className="text-3xl font-semibold">{t('name')}</h1>
-    </main>
-  );
+
+  const user = await getSession();
+  redirect(user ? `/${locale}/dashboard` : `/${locale}/login`);
 }
