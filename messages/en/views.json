@@ -1,1 +1,20 @@
-{}
+{
+  "save": "Save",
+  "cancel": "Cancel",
+  "saving": "Saving…",
+  "required": "This field is required",
+  "saved": "Saved",
+  "error": "Something went wrong. Please try again.",
+  "empty": "No records yet",
+  "search": "Search",
+  "filters": "Filters",
+  "prev": "Previous",
+  "next": "Next",
+  "page": "Page",
+  "kanban": {
+    "move": "Move to",
+    "empty_column": "No items"
+  },
+  "yes": "Yes",
+  "no": "No"
+}
