@@ -56,12 +56,115 @@
     "title": "عقود البيع بالتقسيط",
     "empty": "لا توجد عقود بعد.",
     "new": "عقد جديد",
-    "edit": "تعديل العقد"
+    "edit": "تعديل العقد",
+    "activate": "تفعيل",
+    "activated": "تم تفعيل العقد {number}",
+    "allStates": "كل الحالات",
+    "cancel": "إلغاء",
+    "cancelTitle": "إلغاء العقد",
+    "cancelBody": "اذكر السبب. يبقى العقد محفوظا في السجل.",
+    "cancelReason": "السبب",
+    "cancelConfirm": "إلغاء العقد",
+    "cancelled": "تم إلغاء العقد",
+    "filter": "تصفية",
+    "installments": "الأقساط",
+    "print": "طباعة العقد",
+    "status": {
+      "upcoming": "قادم",
+      "partial": "مدفوع جزئيا",
+      "paid": "مدفوع",
+      "late": "متأخر"
+    },
+    "form": {
+      "addLine": "إضافة سطر",
+      "cancel": "إلغاء",
+      "cash": "السعر نقدا",
+      "choosePartner": "اختر زبونا",
+      "createPartner": "إنشاء زبون",
+      "description": "الوصف",
+      "firstDue": "تاريخ أول قسط",
+      "lines": "الأسطر",
+      "noProduct": "سطر حر",
+      "preview": "معاينة جدول الأقساط",
+      "previewEmpty": "أدخل المبالغ والتواريخ لعرض جدول الأقساط.",
+      "price": "سعر الوحدة (دج)",
+      "product": "المنتج",
+      "qty": "الكمية",
+      "removeLine": "حذف",
+      "saveDraft": "حفظ المسودة",
+      "saved": "تم حفظ المسودة",
+      "seq": "رقم",
+      "errors": {
+        "partner": "اختر زبونا.",
+        "lines": "يجب أن يحتوي كل سطر على وصف وسعر وكمية.",
+        "down": "الدفعة الأولى ليست مبلغا صالحا.",
+        "date": "أدخل تاريخ أول قسط."
+      }
+    }
   },
   "payment": {
     "title": "المدفوعات",
     "empty": "لا توجد مدفوعات بعد.",
     "new": "دفعة جديدة",
-    "edit": "تعديل الدفعة"
+    "edit": "تعديل الدفعة",
+    "amount": "المبلغ",
+    "down_payment": "الدفعة الأولى",
+    "record": "تسجيل دفعة",
+    "method": "الطريقة",
+    "reference": "المرجع",
+    "success": "تم تسجيل الدفعة",
+    "overpayment": "المبلغ أكبر من الرصيد المتبقي."
+  },
+  "methods": {
+    "cash": "نقدا",
+    "ccp": "CCP",
+    "transfer": "تحويل بنكي",
+    "cib": "بطاقة CIB",
+    "edahabia": "بطاقة الذهبية",
+    "cheque": "شيك"
+  },
+  "overdue": {
+    "title": "متأخرات",
+    "days_late": "متأخر {days} يوما",
+    "call": "اتصال",
+    "whatsapp": "واتساب",
+    "empty": "لا توجد متأخرات.",
+    "upcoming": "مستحقة خلال 7 أيام"
+  },
+  "receipt": {
+    "title": "وصل",
+    "number": "رقم الوصل",
+    "received_from": "استلمت من",
+    "amount": "المبلغ",
+    "method": "الطريقة",
+    "date": "التاريخ",
+    "signature": "التوقيع",
+    "print": "طباعة",
+    "download_pdf": "تنزيل PDF"
+  },
+  "print": {
+    "contract_title": "عقد بيع بالتقسيط",
+    "seller": "البائع",
+    "buyer": "المشتري",
+    "schedule": "جدول الدفع",
+    "terms": "الشروط",
+    "signatures": "التوقيعات"
+  },
+  "score": {
+    "a": "تصنيف A",
+    "b": "تصنيف B",
+    "c": "تصنيف C",
+    "d": "تصنيف D",
+    "new": "زبون جديد"
+  },
+  "reminder": {
+    "due_soon": "قسط مستحق خلال 3 أيام: {contract}",
+    "overdue": "متأخر: {contract}"
+  },
+  "totals": {
+    "financed": "الممول",
+    "paid": "المدفوع",
+    "remaining": "المتبقي",
+    "late": "المتأخر"
   }
 }

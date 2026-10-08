@@ -56,12 +56,115 @@
     "title": "Credit contracts",
     "empty": "No credit contracts yet.",
     "new": "New contract",
-    "edit": "Edit contract"
+    "edit": "Edit contract",
+    "activate": "Activate",
+    "activated": "Contract {number} activated",
+    "allStates": "All statuses",
+    "cancel": "Cancel",
+    "cancelTitle": "Cancel contract",
+    "cancelBody": "Give a reason. The contract is kept for the record.",
+    "cancelReason": "Reason",
+    "cancelConfirm": "Cancel contract",
+    "cancelled": "Contract cancelled",
+    "filter": "Filter",
+    "installments": "Installments",
+    "print": "Print contract",
+    "status": {
+      "upcoming": "Upcoming",
+      "partial": "Partly paid",
+      "paid": "Paid",
+      "late": "Late"
+    },
+    "form": {
+      "addLine": "Add line",
+      "cancel": "Cancel",
+      "cash": "Cash price",
+      "choosePartner": "Choose a customer",
+      "createPartner": "Create a customer",
+      "description": "Description",
+      "firstDue": "First due date",
+      "lines": "Lines",
+      "noProduct": "Free line",
+      "preview": "Schedule preview",
+      "previewEmpty": "Enter the amounts and dates to see the schedule.",
+      "price": "Unit price (DZD)",
+      "product": "Product",
+      "qty": "Qty",
+      "removeLine": "Remove",
+      "saveDraft": "Save draft",
+      "saved": "Draft saved",
+      "seq": "No.",
+      "errors": {
+        "partner": "Choose a customer.",
+        "lines": "Each line needs a description, a price and a quantity.",
+        "down": "Down payment is not a valid amount.",
+        "date": "Enter the first due date."
+      }
+    }
   },
   "payment": {
     "title": "Payments",
     "empty": "No payments yet.",
     "new": "New payment",
-    "edit": "Edit payment"
+    "edit": "Edit payment",
+    "amount": "Amount",
+    "down_payment": "Down payment",
+    "record": "Record payment",
+    "method": "Method",
+    "reference": "Reference",
+    "success": "Payment recorded",
+    "overpayment": "The amount is more than the remaining balance."
+  },
+  "methods": {
+    "cash": "Cash",
+    "ccp": "CCP",
+    "transfer": "Bank transfer",
+    "cib": "CIB card",
+    "edahabia": "Edahabia card",
+    "cheque": "Cheque"
+  },
+  "overdue": {
+    "title": "Overdue",
+    "days_late": "{days} days late",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "empty": "Nothing overdue.",
+    "upcoming": "Due in the next 7 days"
+  },
+  "receipt": {
+    "title": "Receipt",
+    "number": "Receipt number",
+    "received_from": "Received from",
+    "amount": "Amount",
+    "method": "Method",
+    "date": "Date",
+    "signature": "Signature",
+    "print": "Print",
+    "download_pdf": "Download PDF"
+  },
+  "print": {
+    "contract_title": "Credit sale contract",
+    "seller": "Seller",
+    "buyer": "Buyer",
+    "schedule": "Payment schedule",
+    "terms": "Terms",
+    "signatures": "Signatures"
+  },
+  "score": {
+    "a": "Grade A",
+    "b": "Grade B",
+    "c": "Grade C",
+    "d": "Grade D",
+    "new": "New client"
+  },
+  "reminder": {
+    "due_soon": "Due in 3 days: {contract}",
+    "overdue": "Overdue: {contract}"
+  },
+  "totals": {
+    "financed": "Financed",
+    "paid": "Paid",
+    "remaining": "Remaining",
+    "late": "Late"
   }
 }
