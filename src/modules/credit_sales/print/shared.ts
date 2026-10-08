@@ -176,3 +176,17 @@ export function escapeHtml(value: string | null | undefined): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
+
+const METHOD_LABELS: Record<string, Record<Locale, string>> = {
+  cash: { fr: 'Espèces', ar: 'نقدًا', en: 'Cash' },
+  ccp: { fr: 'CCP', ar: 'CCP', en: 'CCP' },
+  transfer: { fr: 'Virement', ar: 'تحويل بنكي', en: 'Bank transfer' },
+  cib: { fr: 'CIB', ar: 'CIB', en: 'CIB' },
+  edahabia: { fr: 'Edahabia', ar: 'Edahabia', en: 'Edahabia' },
+  cheque: { fr: 'Chèque', ar: 'شيك', en: 'Cheque' },
+};
+
+/** Human label for a stored payment method. Unknown values are shown escaped as-is. */
+export function methodLabel(method: string, locale: Locale): string {
+  return METHOD_LABELS[method]?.[locale] ?? method;
+}

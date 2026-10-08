@@ -1,5 +1,5 @@
 import type { Locale } from '@/core/ctx';
-import { type CompanyPrint, type PartnerPrint, dirFor, escapeHtml, formatDate, labels, money } from './shared';
+import { type CompanyPrint, type PartnerPrint, dirFor, escapeHtml, formatDate, labels, methodLabel, money } from './shared';
 import { FONT_LINK, PRINT_CSS } from './print-styles';
 
 export interface ReceiptPrintInput {
@@ -52,7 +52,7 @@ ${FONT_LINK}
 
   <table style="margin-top:12px">
     <tbody>
-      <tr><th>${e(t.method)}</th><td>${e(input.method)}</td></tr>
+      <tr><th>${e(t.method)}</th><td>${e(methodLabel(input.method, input.locale))}</td></tr>
       <tr><th>${e(t.reference)}</th><td>${e(input.reference)}</td></tr>
       ${input.contractReference ? `<tr><th>${e(t.contract)}</th><td>${e(input.contractReference)}</td></tr>` : ''}
     </tbody>
