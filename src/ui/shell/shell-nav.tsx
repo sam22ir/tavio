@@ -19,7 +19,10 @@ export interface ShellNavProps {
 /** The full navigation panel: menu links, company switcher, locale switcher and user menu. */
 export function ShellNav({ items, companies, activeCompanyId, email, onNavigate }: ShellNavProps) {
   const t = useTranslations('shell');
+  const tAll = useTranslations();
   const pathname = usePathname();
+  // Menu labels are full i18n keys (e.g. contacts.menu.partners); fall back to the raw key when missing.
+  const labelOf = (key: string) => (tAll.has(key) ? tAll(key) : key);
 
   return (
     <div className="flex h-full flex-col gap-6 p-4">
@@ -37,7 +40,7 @@ export function ShellNav({ items, companies, activeCompanyId, email, onNavigate 
                 (active ? 'bg-accent font-medium text-accent-foreground' : 'text-foreground hover:bg-accent')
               }
             >
-              {item.label}
+              {labelOf(item.label)}
             </Link>
           );
         })}

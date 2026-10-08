@@ -3,7 +3,7 @@ import type { z } from 'zod';
 import type { Ctx, Locale } from '@/core/ctx';
 import { requireUser } from '@/core/auth/session';
 import { getActiveCompanyId } from '@/core/tenancy/active';
-import { enabledModules, loadTenantArgs } from '@/core/tenancy/service';
+import { enabledModules, listMyCompanies, loadTenantArgs } from '@/core/tenancy/service';
 import { withTenant } from '@/core/db/tenant';
 import { requirePerm } from '@/core/perms';
 import { err, type AppError, type Result } from '@/core/result';
@@ -32,7 +32,10 @@ export function defineAction<S extends z.ZodType, T>(
       const user = await requireUser();
       if (!user.ok) return user;
 
-      const companyId = await getActiveCompanyId();
+      // Active company from the cookie; falls back to the first membership when missing or invalid.
+      const memberships = await listMyCompanies(user.value.userId);
+      const stored = await getActiveCompanyId();
+      const companyId = (memberships.find((c) => c.id === stored) ?? memberships[0])?.id;
       if (!companyId) return err('FORBIDDEN', 'NO_COMPANY');
 
       const locale = (await getLocale()) as Locale;

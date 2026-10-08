@@ -21,8 +21,27 @@
   },
   "dashboard": {
     "title": "لوحة التحكم",
-    "greeting": "مرحبا بك في {company}",
-    "emptyTitle": "لا توجد وحدات بعد",
-    "emptyBody": "ستظهر الوحدات هنا."
+    "greeting": "مرحبًا بك في {company}",
+    "kpi": {
+      "dueToday": "مستحق اليوم",
+      "overdue": "متأخر",
+      "overdueCount": "{count, plural, =0 {لا توجد أقساط متأخرة} one {قسط متأخر واحد} other {# أقساط متأخرة}}",
+      "collectedThisMonth": "المحصّل هذا الشهر",
+      "activeContracts": "العقود النشطة",
+      "openLeads": "الفرص المفتوحة"
+    },
+    "due": {
+      "title": "المستحق اليوم والمتأخر",
+      "description": "الأقدم أولًا",
+      "empty": "لا يوجد شيء مستحق اليوم أو متأخر.",
+      "installment": "القسط {seq}",
+      "late": "متأخر {days} يومًا"
+    },
+    "quick": {
+      "title": "إجراءات سريعة",
+      "newContract": "عقد جديد",
+      "newContact": "جهة اتصال جديدة",
+      "newLead": "فرصة جديدة"
+    }
   }
 }

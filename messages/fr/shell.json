@@ -21,8 +21,27 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "greeting": "Bienvenue sur {company}",
-    "emptyTitle": "Aucun module pour le moment",
-    "emptyBody": "Les modules apparaîtront ici."
+    "greeting": "Bienvenue chez {company}",
+    "kpi": {
+      "dueToday": "Échéances du jour",
+      "overdue": "En retard",
+      "overdueCount": "{count, plural, =0 {Aucune échéance en retard} one {# échéance en retard} other {# échéances en retard}}",
+      "collectedThisMonth": "Encaissé ce mois-ci",
+      "activeContracts": "Contrats actifs",
+      "openLeads": "Prospects ouverts"
+    },
+    "due": {
+      "title": "Échéances du jour et en retard",
+      "description": "Les plus anciennes d'abord",
+      "empty": "Aucune échéance aujourd'hui ni en retard.",
+      "installment": "Échéance {seq}",
+      "late": "{days} jours de retard"
+    },
+    "quick": {
+      "title": "Actions rapides",
+      "newContract": "Nouveau contrat",
+      "newContact": "Nouveau contact",
+      "newLead": "Nouveau prospect"
+    }
   }
 }

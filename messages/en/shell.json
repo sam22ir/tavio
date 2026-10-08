@@ -22,7 +22,26 @@
   "dashboard": {
     "title": "Dashboard",
     "greeting": "Welcome to {company}",
-    "emptyTitle": "No modules yet",
-    "emptyBody": "Modules will appear here."
+    "kpi": {
+      "dueToday": "Due today",
+      "overdue": "Overdue",
+      "overdueCount": "{count, plural, =0 {No overdue installments} one {# overdue installment} other {# overdue installments}}",
+      "collectedThisMonth": "Collected this month",
+      "activeContracts": "Active contracts",
+      "openLeads": "Open leads"
+    },
+    "due": {
+      "title": "Due today and overdue",
+      "description": "Oldest first",
+      "empty": "Nothing due today or overdue.",
+      "installment": "Installment {seq}",
+      "late": "{days} days late"
+    },
+    "quick": {
+      "title": "Quick actions",
+      "newContract": "New contract",
+      "newContact": "New contact",
+      "newLead": "New lead"
+    }
   }
 }

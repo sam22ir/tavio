@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { createAuthClient } from 'better-auth/react';
+import { authClient } from '@/core/auth/client';
 import { Button } from '@/ui/primitives/button';
 
 export function UserMenu({ email }: { email: string }) {
@@ -15,7 +15,7 @@ export function UserMenu({ email }: { email: string }) {
   async function logout() {
     setPending(true);
     try {
-      await createAuthClient().signOut();
+      await authClient.signOut();
     } finally {
       router.push(`/${locale}/login`);
       router.refresh();
