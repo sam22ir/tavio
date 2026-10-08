@@ -153,7 +153,7 @@ AI suggestions never change money records without a human confirming.
 
 ## 12. Testing and CI
 - **Vitest** for unit tests on pure logic: money, schedules, sequences.
-- **Integration tests** run against Postgres from `docker compose -f docker-compose.test.yml`. Each test runs in a transaction that is rolled back. Tenant-isolation tests are required for every table.
+- **Integration tests** run against the dev Supabase project `tavio` (Paris), loaded from `~/.config/tavio/test.env` outside the repo. CI uses a postgres:17 service container. The dev machine runs no Docker. Each test runs in a transaction that is rolled back. Tenant-isolation tests are required for every table.
 - **Playwright** smoke tests: log in, create a contact, then a contract, then a payment.
 - **GitHub Actions:** typecheck → lint → unit → migrate a fresh Postgres → integration → build.
 - A task's done only when its stated `verification` commands pass.

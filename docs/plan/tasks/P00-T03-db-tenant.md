@@ -20,9 +20,9 @@ export async function withTenant<T>(args: TenantArgs, fn: (ctx: Ctx) => Promise<
 // Validate that companyId and userId are UUIDs; throw an Error if not.
 // If fn throws, the transaction rolls back and the error is rethrown.
 ```
-## Integration test (needs `pnpm db:up`)
+## Integration test (uses the dev Supabase database through loadDevEnv; never print credentials)
 - Inside withTenant, `current_setting('app.company_id', true)` equals the companyId.
 - After the transaction, a new connection gets '' or null.
 - A throw inside fn rolls back an insert into a temp table that the test creates.
 ## Verification
-`pnpm typecheck && pnpm db:up && pnpm test:int src/core/db`
+`pnpm typecheck && pnpm test:int src/core/db`

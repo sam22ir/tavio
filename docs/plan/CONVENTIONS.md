@@ -337,7 +337,7 @@ const total = subtotal + subtotal * 0.19;                          // forbidden
 | Migration | Runs on a fresh Postgres in CI |
 
 Rules:
-- Integration tests run against `docker compose -f docker-compose.test.yml`, each in a transaction that rolls back.
+- Integration tests run against the dev Supabase database (env loaded by `loadDevEnv()`; never print it), each in a transaction that rolls back.
 - Tests don't depend on each other's data or order.
 - Do not mock the database in service tests. Mock only external adapters (mail, storage, PDF, AI).
 - A bug fix includes a test that fails before the fix.

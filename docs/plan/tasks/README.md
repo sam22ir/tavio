@@ -7,7 +7,7 @@
 - **Integration after each wave** (orchestrator or reviewer):
   1. Merge the branches.
   2. Run `pnpm install` to regenerate the lockfile.
-  3. Run `pnpm db:generate` once. Tasks never generate migrations themselves.
+  3. Run `pnpm db:generate` once, and apply with `pnpm db:migrate` against the dev Supabase project. Tasks never generate migrations themselves.
   4. Run the full verification: `pnpm typecheck && pnpm lint && pnpm test && pnpm test:int && pnpm build`.
 - **Contract files** may only be changed by the task that lists them, or by the orchestrator:
   - `src/core/result.ts`
@@ -15,6 +15,7 @@
   - `src/core/db/types.ts`
   - `src/core/db/schema/index.ts`
   - `docs/plan/DATA_MODEL.md`
+- Secrets live in `~/.config/tavio/` (outside the repo). Agents may load them only through `loadDevEnv()` or `set -a; . ~/.config/tavio/test.env`, and must never print or copy them.
 - A task may add only the dependencies it lists. Everything else is installed by P00-T01.
 
 ## Waves

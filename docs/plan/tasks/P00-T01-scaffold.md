@@ -11,17 +11,17 @@ Create the empty Next.js app with all tooling and Wave 1 dependencies installed,
    ```
 2. Use the latest stable versions. Install:
    - **deps:** drizzle-orm, pg, better-auth, next-intl, zod, clsx, tailwind-merge
-   - **devDeps:** drizzle-kit, @types/pg, vitest, @vitejs/plugin-react, jsdom, @testing-library/react, @testing-library/jest-dom, tsx, @opennextjs/cloudflare, wrangler
+   - **devDeps:** drizzle-kit, dotenv, @types/pg, vitest, @vitejs/plugin-react, jsdom, @testing-library/react, @testing-library/jest-dom, tsx, @opennextjs/cloudflare, wrangler
 3. In `tsconfig.json`, set `"strict": true` and `"noUncheckedIndexedAccess": true`.
 4. Create `vitest.config.ts`:
    - Unit tests are `src/**/*.test.ts(x)`, excluding `*.int.test.ts`.
    - Use jsdom for `.tsx` tests.
    - Set up the `@/` alias.
 5. Create `vitest.int.config.ts` with `include: ['src/**/*.int.test.ts']` and node environment.
-6. Create `docker-compose.test.yml` with service `db`: image `postgres:17`, port `54329:5432`, user/password/db all `tavio`.
+6. Create `src/core/env/load-dev-env.ts`. It exports `loadDevEnv()`, which loads (with dotenv, without overriding existing vars) the file at `process.env.TAVIO_ENV_FILE ?? ~/.config/tavio/test.env`. It does nothing if that file is missing. Call it at the top of `vitest.int.config.ts` and `drizzle.config.ts`. This file holds the dev Supabase credentials. **Never print, cat, copy or log it.**
 7. Create `.env.example` with placeholder values only, no real secrets:
    ```
-   DATABASE_URL=postgres://tavio:tavio@localhost:54329/tavio
+   DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/postgres
    BETTER_AUTH_SECRET=change-me
    BETTER_AUTH_URL=http://localhost:3000
    ```
@@ -32,7 +32,6 @@ Create the empty Next.js app with all tooling and Wave 1 dependencies installed,
    - `typecheck`: `tsc --noEmit`
    - `test`: `vitest run`
    - `test:int`: `vitest run -c vitest.int.config.ts`
-   - `db:up`: `docker compose -f docker-compose.test.yml up -d`
    - `db:generate`: `drizzle-kit generate`
    - `db:migrate`: `drizzle-kit migrate`
    - `modules:gen`: `tsx scripts/gen-module-registry.ts`

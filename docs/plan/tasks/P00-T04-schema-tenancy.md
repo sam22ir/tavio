@@ -11,4 +11,4 @@ Drizzle `pgTable` definitions for `companies`, `memberships`, `roles`, `role_per
 - Don't reference auth tables with an FK object import. Use `uuid('user_id')` plus a comment. The integrator adds the FKs.
 - Don't generate migrations and don't write RLS here.
 ## Verification
-`pnpm typecheck && pnpm lint`, plus `pnpm db:up && pnpm drizzle-kit generate --name tmp_check` succeeds. Then delete the generated files in `drizzle/` before you finish.
+`pnpm typecheck && pnpm lint`, plus `pnpm drizzle-kit generate --name tmp_check` succeeds. Then delete the generated files in `drizzle/` before you finish.

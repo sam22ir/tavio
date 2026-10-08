@@ -48,7 +48,7 @@ Tavio is a fresh build. The old `installment-app` is not a code source. Its audi
 - `src/core/adapters/`: `Storage`, `PdfRenderer`, `JobRunner`, `Mailer`, `AiProvider`, with an in-memory impl and a cloud impl for each
 - `src/core/i18n/`: next-intl config, RTL helpers
 - `src/ui/`: design-system kit (shadcn-based), `DataList`, `RecordForm`, `Kanban` shells, `ChatterPanel` shell, `SearchBar`, app shell and menu filtering
-- Test harness, CI, dev `docker-compose.test.yml` and a local `docker compose` for postgres, app, gotenberg and minio
+- Test harness, CI, integration tests against the dev Supabase project, and an on-premise `docker compose` for postgres, app, gotenberg and minio
 
 **Features.**
 - Sign up, log in, log out, email invite, password reset (better-auth, same in cloud and on-prem)
@@ -82,7 +82,7 @@ Tavio is a fresh build. The old `installment-app` is not a code source. Its audi
 - [ ] A user in two companies sees both and can switch between them; switching changes the tenant used in queries
 - [ ] Locale switch: `ar` sets `dir="rtl"`; the lint rule rejects physical CSS properties (`ml-`, `pr-`, `left-` and so on)
 - [ ] Latency probe task P00-T18 is run from at least 3 Algerian lines (Djezzy, Mobilis, ADSL) and results are saved in `docs/plan/` ⚠
-- [ ] Local `docker compose` boots postgres, app, gotenberg and minio, and login works against it (customer-ready packaging is P8)
+- [ ] On-premise `docker compose` (tested on a separate machine or in CI) boots postgres, app, gotenberg and minio, and login works against it (customer-ready packaging is P8)
 - [ ] Restore smoke test: `pg_dump` from the test database restores into a fresh Postgres 15+ and the smoke script passes
 - [ ] Shared contracts listed in section 1 are frozen and recorded in the repo with their version
 
@@ -105,7 +105,7 @@ The contract freeze is sequential. One owner (the lead or one agent) writes the 
   - Adapter in-memory impls (Storage, PdfRenderer, JobRunner, Mailer)
   - UI kit components: `DataList`, `RecordForm`, `Kanban`, `ChatterPanel`, `SearchBar`, each against its prop types
   - i18n message skeletons (fr, ar, en) and the logical-properties lint rule
-  - CI workflow and `docker-compose.test.yml`
+  - CI workflow (postgres service container)
   - Latency probe script (P00-T18)
 - **Wave B (parallel, after Wave A merges).**
   - Cloud adapter impls: R2 storage, Browser Rendering PDF, Queues job runner
