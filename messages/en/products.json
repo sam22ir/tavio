@@ -1,6 +1,10 @@
 {
-  "module": { "name": "Products" },
-  "menu": { "products": "Products" },
+  "module": {
+    "name": "Products"
+  },
+  "menu": {
+    "products": "Products"
+  },
   "fields": {
     "name": "Name",
     "nameAr": "Name (Arabic)",
@@ -33,6 +37,9 @@
     "title": "Product categories",
     "new": "New category",
     "edit": "Edit category",
-    "empty": "No categories yet."
+    "empty": "No categories yet.",
+    "add": "Add category",
+    "create": "Create",
+    "cancel": "Cancel"
   }
 }
