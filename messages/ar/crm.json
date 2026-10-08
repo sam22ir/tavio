@@ -1,1 +1,61 @@
-{}
+{
+  "module": {
+    "name": "إدارة العلاقات مع العملاء"
+  },
+  "menu": {
+    "leads": "العملاء المحتملون"
+  },
+  "fields": {
+    "reference": "المرجع",
+    "type": "النوع",
+    "name": "العنوان",
+    "partnerId": "العميل",
+    "contactName": "اسم جهة الاتصال",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "wilayaCode": "الولاية",
+    "source": "المصدر",
+    "stageId": "المرحلة",
+    "status": "الحالة",
+    "probability": "الاحتمالية (%)",
+    "expectedRevenueCents": "الإيراد المتوقع",
+    "expectedCloseDate": "تاريخ الإغلاق المتوقع",
+    "salespersonId": "مندوب المبيعات",
+    "priority": "الأولوية",
+    "lostReasonId": "سبب الخسارة",
+    "lostAt": "تاريخ الخسارة",
+    "wonAt": "تاريخ الربح",
+    "convertedContractId": "العقد المحوَّل",
+    "active": "نشط"
+  },
+  "options": {
+    "type": {
+      "lead": "عميل محتمل",
+      "opportunity": "فرصة"
+    },
+    "source": {
+      "walk_in": "زيارة مباشرة",
+      "phone": "هاتف",
+      "facebook": "فيسبوك",
+      "instagram": "إنستغرام",
+      "whatsapp": "واتساب",
+      "referral": "توصية",
+      "other": "أخرى"
+    },
+    "status": {
+      "open": "مفتوح",
+      "won": "مربوح",
+      "lost": "خاسر"
+    },
+    "priority": {
+      "0": "عادية",
+      "1": "مرتفعة"
+    }
+  },
+  "lead": {
+    "title": "العملاء المحتملون",
+    "new": "عميل محتمل جديد",
+    "edit": "تعديل العميل المحتمل",
+    "empty": "لا يوجد عملاء محتملون بعد"
+  }
+}

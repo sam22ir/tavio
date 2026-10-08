@@ -1,1 +1,61 @@
-{}
+{
+  "module": {
+    "name": "CRM"
+  },
+  "menu": {
+    "leads": "Prospects"
+  },
+  "fields": {
+    "reference": "Référence",
+    "type": "Type",
+    "name": "Intitulé",
+    "partnerId": "Client",
+    "contactName": "Nom du contact",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "wilayaCode": "Wilaya",
+    "source": "Source",
+    "stageId": "Étape",
+    "status": "Statut",
+    "probability": "Probabilité (%)",
+    "expectedRevenueCents": "Chiffre d'affaires attendu",
+    "expectedCloseDate": "Date de clôture prévue",
+    "salespersonId": "Commercial",
+    "priority": "Priorité",
+    "lostReasonId": "Motif de perte",
+    "lostAt": "Perdu le",
+    "wonAt": "Gagné le",
+    "convertedContractId": "Contrat converti",
+    "active": "Actif"
+  },
+  "options": {
+    "type": {
+      "lead": "Prospect",
+      "opportunity": "Opportunité"
+    },
+    "source": {
+      "walk_in": "Passage",
+      "phone": "Téléphone",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "referral": "Recommandation",
+      "other": "Autre"
+    },
+    "status": {
+      "open": "Ouvert",
+      "won": "Gagné",
+      "lost": "Perdu"
+    },
+    "priority": {
+      "0": "Normale",
+      "1": "Haute"
+    }
+  },
+  "lead": {
+    "title": "Prospects",
+    "new": "Nouveau prospect",
+    "edit": "Modifier le prospect",
+    "empty": "Aucun prospect pour le moment"
+  }
+}
