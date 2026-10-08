@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
 import { Label } from '@/ui/primitives/label';
-import { formatDzd, parseDzd, roundHalfUp, type Cents } from '@/core/money';
+import { applyRate, formatDzd, parseDzd, roundHalfUp, type Cents } from '@/core/money';
 import type { Locale } from '@/core/ctx';
 import { buildSchedule, type ScheduleLine } from '../service/schedule';
 import { createDraft, updateDraft } from '../actions/contracts';
@@ -99,13 +99,11 @@ export function ContractForm({ partners, products, initial }: Props) {
       if (unit === null || q === 0n) continue;
       cash += roundHalfUp(unit * q, 1000n);
     }
-    const rateTenThousandths = /^\d+(\.\d{1,4})?$/.test(markupRate)
-      ? BigInt(Math.round(Number(markupRate) * 10000))
-      : 0n;
-    const markup = roundHalfUp(cash * rateTenThousandths, 1000000n);
-    const total = cash + markup;
     const down = parseDzd(downPayment) ?? 0n;
-    const financed = total - down;
+    // Same formula as service/contracts.ts: markup is charged on the price net of the down payment.
+    const markup = /^\d+(\.\d{1,4})?$/.test(markupRate) ? applyRate(cash - down, markupRate) : 0n;
+    const total = cash + markup;
+    const financed = cash - down + markup;
     return { cash, markup, total, down, financed };
   }, [lines, markupRate, downPayment]);
 
