@@ -11,9 +11,11 @@ import { Label } from '@/ui/primitives/label';
 
 export type AuthMode = 'login' | 'signup';
 
-function errorKeyFor(mode: AuthMode, status: number | undefined): string {
+const USER_EXISTS_CODES = new Set(['USER_ALREADY_EXISTS', 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL']);
+
+function errorKeyFor(mode: AuthMode, status: number | undefined, code: string | undefined): string {
   if (mode === 'login' && (status === 400 || status === 401)) return 'errors.invalid_credentials';
-  if (mode === 'signup' && status === 422) return 'errors.email_taken';
+  if (mode === 'signup' && code && USER_EXISTS_CODES.has(code)) return 'errors.email_taken';
   return 'errors.generic';
 }
 
@@ -37,7 +39,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
           ? await authClient.signIn.email({ email, password })
           : await authClient.signUp.email({ name: String(fd.get('name') ?? ''), email, password });
       if (result.error) {
-        setErrorKey(errorKeyFor(mode, result.error.status));
+        setErrorKey(errorKeyFor(mode, result.error.status, result.error.code));
         return;
       }
       router.push(`/${locale}/dashboard`);

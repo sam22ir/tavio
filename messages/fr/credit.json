@@ -100,6 +100,12 @@
         "down": "L'acompte n'est pas un montant valide.",
         "date": "Saisissez la première échéance."
       }
+    },
+    "table": {
+      "due_date": "Échéance",
+      "amount": "Montant",
+      "paid": "Payé",
+      "status": "Statut"
     }
   },
   "payment": {
@@ -112,7 +118,7 @@
     "record": "Enregistrer un paiement",
     "method": "Mode",
     "reference": "Référence",
-    "success": "Paiement enregistré",
+    "success": "Paiement enregistré : reçu {number}",
     "overpayment": "Le montant dépasse le solde restant."
   },
   "methods": {

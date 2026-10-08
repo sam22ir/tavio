@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
 import { Label } from '@/ui/primitives/label';
-import { formatDzd, parseDzd, roundHalfUp, type Cents } from '@/core/money';
+import { applyRate, formatDzd, parseDzd, roundHalfUp, type Cents } from '@/core/money';
 import type { Locale } from '@/core/ctx';
 import { buildSchedule, type ScheduleLine } from '../service/schedule';
 import { createDraft, updateDraft } from '../actions/contracts';
@@ -99,13 +99,11 @@ export function ContractForm({ partners, products, initial }: Props) {
       if (unit === null || q === 0n) continue;
       cash += roundHalfUp(unit * q, 1000n);
     }
-    const rateTenThousandths = /^\d+(\.\d{1,4})?$/.test(markupRate)
-      ? BigInt(Math.round(Number(markupRate) * 10000))
-      : 0n;
-    const markup = roundHalfUp(cash * rateTenThousandths, 1000000n);
-    const total = cash + markup;
     const down = parseDzd(downPayment) ?? 0n;
-    const financed = total - down;
+    // Same formula as service/contracts.ts: markup is charged on the price net of the down payment.
+    const markup = /^\d+(\.\d{1,4})?$/.test(markupRate) ? applyRate(cash - down, markupRate) : 0n;
+    const total = cash + markup;
+    const financed = cash - down + markup;
     return { cash, markup, total, down, financed };
   }, [lines, markupRate, downPayment]);
 
@@ -197,7 +195,7 @@ export function ContractForm({ partners, products, initial }: Props) {
             <div key={l.key} className="grid grid-cols-1 gap-2 rounded-md border p-3 sm:grid-cols-12">
               <select
                 aria-label={t('contract.form.product')}
-                className="h-9 rounded-md border bg-background px-2 text-sm sm:col-span-3"
+                className="h-11 rounded-md border bg-background px-2 text-sm sm:col-span-3 sm:h-9"
                 value={l.productId}
                 onChange={(e) => pickProduct(l.key, e.target.value)}
               >
@@ -208,28 +206,28 @@ export function ContractForm({ partners, products, initial }: Props) {
               </select>
               <Input
                 aria-label={t('contract.form.description')}
-                className="sm:col-span-4"
+                className="h-11 sm:col-span-5 sm:h-9"
                 value={l.description}
                 onChange={(e) => updateLine(l.key, { description: e.target.value })}
               />
               <Input
                 aria-label={t('contract.form.qty')}
                 inputMode="decimal"
-                className="sm:col-span-1"
+                className="h-11 sm:col-span-2 sm:h-9"
                 value={l.quantity}
                 onChange={(e) => updateLine(l.key, { quantity: e.target.value })}
               />
               <Input
                 aria-label={t('contract.form.price')}
                 inputMode="decimal"
-                className="sm:col-span-2"
+                className="h-11 tabular-nums sm:col-span-2 sm:h-9"
                 value={l.price}
                 onChange={(e) => updateLine(l.key, { price: e.target.value })}
               />
               <Button
                 type="button"
                 variant="ghost"
-                className="sm:col-span-2"
+                className="min-h-11 sm:col-span-12 sm:justify-self-end"
                 disabled={lines.length === 1}
                 onClick={() => setLines((prev) => prev.filter((x) => x.key !== l.key))}
               >

@@ -5,6 +5,7 @@ import { routing, type Locale } from '@/i18n/routing';
 import { loadShell } from '@/ui/shell/load-shell';
 import { MobileNav } from '@/ui/shell/mobile-nav';
 import { ShellNav } from '@/ui/shell/shell-nav';
+import { Toaster } from '@/ui/primitives/sonner';
 
 // Every page here reads the session; never prerender at build time.
 export const dynamic = 'force-dynamic';
@@ -48,6 +49,7 @@ export default async function AppLayout({
         </header>
         <main className="flex-1 p-4 md:p-6">{children}</main>
       </div>
+      <Toaster />
     </div>
   );
 }

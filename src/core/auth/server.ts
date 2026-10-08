@@ -3,9 +3,18 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { getDb } from '@/core/db/client';
 import { accounts, sessions, users, verifications } from '@/core/db/schema/auth';
 
+/** Origins allowed to call auth endpoints: BETTER_AUTH_URL plus comma-separated BETTER_AUTH_TRUSTED_ORIGINS. */
+function readTrustedOrigins(): string[] {
+  const extra = (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '').split(',').map((o) => o.trim()).filter(Boolean);
+  const self = process.env.BETTER_AUTH_URL?.trim();
+  return self ? [self, ...extra] : extra;
+}
+
 function createAuth() {
+  const trustedOrigins = readTrustedOrigins();
   return betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
+  trustedOrigins,
   database: drizzleAdapter(getDb(), {
     provider: 'pg',
     schema: { users, sessions, accounts, verifications },

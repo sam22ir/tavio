@@ -1,7 +1,7 @@
 import type { ContractPrintInput } from './contract-html';
 import type { ReceiptPrintInput } from './receipt-html';
 import { PRINT_CSS } from './print-styles';
-import { dirFor, formatDate, labels, money } from './shared';
+import { dirFor, formatDate, labels, methodLabel, money } from './shared';
 
 // React rendering of the same content as the HTML builders. Used by the print pages.
 
@@ -29,7 +29,7 @@ export function ReceiptView({ input }: { input: ReceiptPrintInput }) {
       <div>{t.phone}: {partner.phone ?? '—'}</div>
       <table className="mt-3 w-full text-start">
         <tbody>
-          <tr><th className="text-start">{t.method}</th><td>{input.method}</td></tr>
+          <tr><th className="text-start">{t.method}</th><td>{methodLabel(input.method, input.locale)}</td></tr>
           <tr><th className="text-start">{t.reference}</th><td>{input.reference}</td></tr>
           {input.contractReference ? (
             <tr><th className="text-start">{t.contract}</th><td>{input.contractReference}</td></tr>
