@@ -1,1 +1,20 @@
-{}
+{
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "saving": "Enregistrement…",
+  "required": "Ce champ est obligatoire",
+  "saved": "Enregistré",
+  "error": "Une erreur est survenue. Veuillez réessayer.",
+  "empty": "Aucun enregistrement pour le moment",
+  "search": "Rechercher",
+  "filters": "Filtres",
+  "prev": "Précédent",
+  "next": "Suivant",
+  "page": "Page",
+  "kanban": {
+    "move": "Déplacer vers",
+    "empty_column": "Aucun élément"
+  },
+  "yes": "Oui",
+  "no": "Non"
+}
