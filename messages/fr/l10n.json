@@ -1,1 +1,39 @@
-{}
+{
+  "module": {
+    "name": "Localisation Algérie"
+  },
+  "menu": {
+    "taxes": "Taxes"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Nom",
+    "kind": "Type",
+    "rate": "Taux (%)",
+    "scope": "Portée",
+    "validFrom": "Valide à partir du",
+    "validTo": "Valide jusqu'au",
+    "active": "Actif",
+    "legalRef": "Référence légale",
+    "isDefaultSale": "Par défaut pour les ventes",
+    "isDefaultPurchase": "Par défaut pour les achats"
+  },
+  "options": {
+    "kind": {
+      "vat": "TVA",
+      "stamp": "Timbre fiscal",
+      "other": "Autre"
+    },
+    "scope": {
+      "sale": "Ventes",
+      "purchase": "Achats",
+      "both": "Les deux"
+    }
+  },
+  "tax": {
+    "title": "Taxes",
+    "new": "Nouvelle taxe",
+    "edit": "Modifier la taxe",
+    "empty": "Aucune taxe configurée pour le moment."
+  }
+}
