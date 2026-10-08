@@ -11,6 +11,7 @@ import {
   roles,
   users,
 } from '@/core/db/schema';
+import { activityTypes } from '@/modules/chatter/schema';
 import { createCompany, enabledModules, listMyCompanies, loadTenantArgs } from './service';
 
 loadDevEnv();
@@ -29,6 +30,7 @@ async function makeUser(): Promise<void> {
 
 afterAll(async () => {
   if (createdCompanyIds.length > 0) {
+    await db.delete(activityTypes).where(inArray(activityTypes.companyId, createdCompanyIds));
     await db.delete(rolePermissions).where(inArray(rolePermissions.companyId, createdCompanyIds));
     await db.delete(memberships).where(inArray(memberships.companyId, createdCompanyIds));
     await db.delete(companyModules).where(inArray(companyModules.companyId, createdCompanyIds));
