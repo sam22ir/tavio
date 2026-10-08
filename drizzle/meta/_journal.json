@@ -36,6 +36,13 @@
       "when": 1791500054207,
       "tag": "0004_member_directory",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791501083512,
+      "tag": "0005_auth_id_defaults",
+      "breakpoints": true
     }
   ]
 }
