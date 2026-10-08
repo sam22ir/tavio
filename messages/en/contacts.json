@@ -1,1 +1,41 @@
-{}
+{
+  "module": { "name": "Contacts" },
+  "menu": { "partners": "Contacts" },
+  "fields": {
+    "kind": "Type",
+    "isCustomer": "Customer",
+    "isSupplier": "Supplier",
+    "isProspect": "Prospect",
+    "active": "Active",
+    "displayName": "Name",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "companyName": "Company name",
+    "nif": "NIF",
+    "nis": "NIS",
+    "rc": "RC",
+    "ai": "AI",
+    "nationalId": "National ID",
+    "phone": "Phone",
+    "phoneAlt": "Alternative phone",
+    "email": "Email",
+    "address": "Address",
+    "wilayaCode": "Wilaya",
+    "commune": "Commune",
+    "employer": "Employer",
+    "monthlyIncomeCents": "Monthly income (DZD)",
+    "notes": "Notes"
+  },
+  "options": {
+    "kind": {
+      "individual": "Individual",
+      "company": "Company"
+    }
+  },
+  "partner": {
+    "title": "Contacts",
+    "empty": "No contacts yet.",
+    "new": "New contact",
+    "edit": "Edit contact"
+  }
+}
