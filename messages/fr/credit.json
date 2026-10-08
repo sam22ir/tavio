@@ -56,12 +56,115 @@
     "title": "Contrats à crédit",
     "empty": "Aucun contrat à crédit pour le moment.",
     "new": "Nouveau contrat",
-    "edit": "Modifier le contrat"
+    "edit": "Modifier le contrat",
+    "activate": "Activer",
+    "activated": "Contrat {number} activé",
+    "allStates": "Tous les statuts",
+    "cancel": "Annuler",
+    "cancelTitle": "Annuler le contrat",
+    "cancelBody": "Indiquez un motif. Le contrat est conservé dans l'historique.",
+    "cancelReason": "Motif",
+    "cancelConfirm": "Annuler le contrat",
+    "cancelled": "Contrat annulé",
+    "filter": "Filtrer",
+    "installments": "Échéances",
+    "print": "Imprimer le contrat",
+    "status": {
+      "upcoming": "À venir",
+      "partial": "Partiellement payée",
+      "paid": "Payée",
+      "late": "En retard"
+    },
+    "form": {
+      "addLine": "Ajouter une ligne",
+      "cancel": "Annuler",
+      "cash": "Prix comptant",
+      "choosePartner": "Choisir un client",
+      "createPartner": "Créer un client",
+      "description": "Description",
+      "firstDue": "Première échéance",
+      "lines": "Lignes",
+      "noProduct": "Ligne libre",
+      "preview": "Aperçu de l'échéancier",
+      "previewEmpty": "Saisissez les montants et les dates pour voir l'échéancier.",
+      "price": "Prix unitaire (DA)",
+      "product": "Produit",
+      "qty": "Qté",
+      "removeLine": "Retirer",
+      "saveDraft": "Enregistrer le brouillon",
+      "saved": "Brouillon enregistré",
+      "seq": "N°",
+      "errors": {
+        "partner": "Choisissez un client.",
+        "lines": "Chaque ligne doit avoir une description, un prix et une quantité.",
+        "down": "L'acompte n'est pas un montant valide.",
+        "date": "Saisissez la première échéance."
+      }
+    }
   },
   "payment": {
     "title": "Paiements",
     "empty": "Aucun paiement pour le moment.",
     "new": "Nouveau paiement",
-    "edit": "Modifier le paiement"
+    "edit": "Modifier le paiement",
+    "amount": "Montant",
+    "down_payment": "Acompte",
+    "record": "Enregistrer un paiement",
+    "method": "Mode",
+    "reference": "Référence",
+    "success": "Paiement enregistré",
+    "overpayment": "Le montant dépasse le solde restant."
+  },
+  "methods": {
+    "cash": "Espèces",
+    "ccp": "CCP",
+    "transfer": "Virement bancaire",
+    "cib": "Carte CIB",
+    "edahabia": "Carte Edahabia",
+    "cheque": "Chèque"
+  },
+  "overdue": {
+    "title": "En retard",
+    "days_late": "{days} jours de retard",
+    "call": "Appeler",
+    "whatsapp": "WhatsApp",
+    "empty": "Aucun retard.",
+    "upcoming": "Échéances dans les 7 jours"
+  },
+  "receipt": {
+    "title": "Reçu",
+    "number": "N° de reçu",
+    "received_from": "Reçu de",
+    "amount": "Montant",
+    "method": "Mode",
+    "date": "Date",
+    "signature": "Signature",
+    "print": "Imprimer",
+    "download_pdf": "Télécharger le PDF"
+  },
+  "print": {
+    "contract_title": "Contrat de vente à crédit",
+    "seller": "Vendeur",
+    "buyer": "Acheteur",
+    "schedule": "Échéancier de paiement",
+    "terms": "Conditions",
+    "signatures": "Signatures"
+  },
+  "score": {
+    "a": "Note A",
+    "b": "Note B",
+    "c": "Note C",
+    "d": "Note D",
+    "new": "Nouveau client"
+  },
+  "reminder": {
+    "due_soon": "Échéance dans 3 jours : {contract}",
+    "overdue": "En retard : {contract}"
+  },
+  "totals": {
+    "financed": "Financé",
+    "paid": "Payé",
+    "remaining": "Restant",
+    "late": "En retard"
   }
 }
