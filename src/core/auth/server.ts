@@ -3,7 +3,8 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { getDb } from '@/core/db/client';
 import { accounts, sessions, users, verifications } from '@/core/db/schema/auth';
 
-export const auth = betterAuth({
+function createAuth() {
+  return betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(getDb(), {
     provider: 'pg',
@@ -22,6 +23,15 @@ export const auth = betterAuth({
       generateId: 'uuid',
     },
   },
-});
+  });
+}
 
-export type Auth = typeof auth;
+export type Auth = ReturnType<typeof createAuth>;
+
+let instance: Auth | undefined;
+
+/** Lazily creates the auth instance so importing this module never opens a DB connection (e.g. during build). */
+export function getAuth(): Auth {
+  instance ??= createAuth();
+  return instance;
+}

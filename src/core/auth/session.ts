@@ -1,11 +1,11 @@
 import { headers } from 'next/headers';
-import { auth } from '@/core/auth/server';
+import { getAuth } from '@/core/auth/server';
 import { err, type Result } from '@/core/result';
 
 export type SessionUser = { userId: string; email: string };
 
 export async function getSession(): Promise<SessionUser | null> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getAuth().api.getSession({ headers: await headers() });
   if (!session) return null;
   return { userId: session.user.id, email: session.user.email };
 }
