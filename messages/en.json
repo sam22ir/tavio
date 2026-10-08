@@ -1,0 +1,6 @@
+{
+  "core": {
+    "app": { "name": "Tavio", "tagline": "Run your business, simply." },
+    "nav": { "dashboard": "Dashboard", "settings": "Settings", "logout": "Log out" }
+  }
+}
