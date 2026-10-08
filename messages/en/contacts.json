@@ -1,6 +1,10 @@
 {
-  "module": { "name": "Contacts" },
-  "menu": { "partners": "Contacts" },
+  "module": {
+    "name": "Contacts"
+  },
+  "menu": {
+    "partners": "Contacts"
+  },
   "fields": {
     "kind": "Type",
     "isCustomer": "Customer",
@@ -36,6 +40,16 @@
     "title": "Contacts",
     "empty": "No contacts yet.",
     "new": "New contact",
-    "edit": "Edit contact"
+    "edit": "Edit contact",
+    "error": "Could not load contacts.",
+    "inactive": "Archived",
+    "archive": "Archive",
+    "activity": "Activity",
+    "roles": "Roles",
+    "back": "Back",
+    "tabs": {
+      "info": "Information",
+      "edit": "Edit"
+    }
   }
 }

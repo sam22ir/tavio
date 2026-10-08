@@ -1,6 +1,10 @@
 {
-  "module": { "name": "Contacts" },
-  "menu": { "partners": "Contacts" },
+  "module": {
+    "name": "Contacts"
+  },
+  "menu": {
+    "partners": "Contacts"
+  },
   "fields": {
     "kind": "Type",
     "isCustomer": "Client",
@@ -36,6 +40,16 @@
     "title": "Contacts",
     "empty": "Aucun contact pour le moment.",
     "new": "Nouveau contact",
-    "edit": "Modifier le contact"
+    "edit": "Modifier le contact",
+    "error": "Impossible de charger les contacts.",
+    "inactive": "Archivé",
+    "archive": "Archiver",
+    "activity": "Activité",
+    "roles": "Rôles",
+    "back": "Retour",
+    "tabs": {
+      "info": "Informations",
+      "edit": "Modifier"
+    }
   }
 }
