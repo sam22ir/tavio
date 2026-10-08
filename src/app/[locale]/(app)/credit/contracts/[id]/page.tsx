@@ -94,10 +94,10 @@ export default async function ContractDetailPage({
           locale={locale as 'fr' | 'ar' | 'en'}
           labels={{
             seq: t('contract.form.seq'),
-            dueDate: t('fields.startDate'),
-            amount: t('fields.amountCents'),
-            paid: t('payment.amount'),
-            statusHeader: t('fields.state'),
+            dueDate: t('contract.table.due_date'),
+            amount: t('contract.table.amount'),
+            paid: t('contract.table.paid'),
+            statusHeader: t('contract.table.status'),
             status: statusLabels,
             empty: t('contract.form.previewEmpty'),
           }}

@@ -100,6 +100,12 @@
         "down": "L'acompte n'est pas un montant valide.",
         "date": "Saisissez la première échéance."
       }
+    },
+    "table": {
+      "due_date": "Échéance",
+      "amount": "Montant",
+      "paid": "Payé",
+      "status": "Statut"
     }
   },
   "payment": {

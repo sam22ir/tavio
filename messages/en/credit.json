@@ -100,6 +100,12 @@
         "down": "Down payment is not a valid amount.",
         "date": "Enter the first due date."
       }
+    },
+    "table": {
+      "due_date": "Due date",
+      "amount": "Amount",
+      "paid": "Paid",
+      "status": "Status"
     }
   },
   "payment": {
