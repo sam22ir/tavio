@@ -1,1 +1,61 @@
-{}
+{
+  "module": {
+    "name": "CRM"
+  },
+  "menu": {
+    "leads": "Leads"
+  },
+  "fields": {
+    "reference": "Reference",
+    "type": "Type",
+    "name": "Title",
+    "partnerId": "Customer",
+    "contactName": "Contact name",
+    "phone": "Phone",
+    "email": "Email",
+    "wilayaCode": "Wilaya",
+    "source": "Source",
+    "stageId": "Stage",
+    "status": "Status",
+    "probability": "Probability (%)",
+    "expectedRevenueCents": "Expected revenue",
+    "expectedCloseDate": "Expected close date",
+    "salespersonId": "Salesperson",
+    "priority": "Priority",
+    "lostReasonId": "Lost reason",
+    "lostAt": "Lost on",
+    "wonAt": "Won on",
+    "convertedContractId": "Converted contract",
+    "active": "Active"
+  },
+  "options": {
+    "type": {
+      "lead": "Lead",
+      "opportunity": "Opportunity"
+    },
+    "source": {
+      "walk_in": "Walk-in",
+      "phone": "Phone",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "referral": "Referral",
+      "other": "Other"
+    },
+    "status": {
+      "open": "Open",
+      "won": "Won",
+      "lost": "Lost"
+    },
+    "priority": {
+      "0": "Normal",
+      "1": "High"
+    }
+  },
+  "lead": {
+    "title": "Leads",
+    "new": "New lead",
+    "edit": "Edit lead",
+    "empty": "No leads yet"
+  }
+}
