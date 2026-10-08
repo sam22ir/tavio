@@ -13,7 +13,7 @@ export const DEFAULT_ROLES: readonly DefaultRole[] = [
   {
     key: 'manager',
     name: 'Manager',
-    permissions: ['contacts.*', 'products.*', 'credit.*', 'crm.*', 'settings.read'],
+    permissions: ['contacts.*', 'products.*', 'credit_sales.*', 'crm.*', 'settings.read'],
   },
   {
     key: 'staff',
@@ -22,8 +22,8 @@ export const DEFAULT_ROLES: readonly DefaultRole[] = [
       'contacts.partner.read',
       'contacts.partner.write',
       'products.product.read',
-      'credit.contract.read',
-      'credit.payment.write',
+      'credit_sales.contract.read',
+      'credit_sales.payment.write',
       'crm.lead.*',
     ],
   },

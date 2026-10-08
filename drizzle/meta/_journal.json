@@ -15,6 +15,20 @@
       "when": 1791496615669,
       "tag": "0001_core_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791498290161,
+      "tag": "0002_modules_init",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791498318371,
+      "tag": "0003_modules_rls",
+      "breakpoints": true
     }
   ]
 }
