@@ -118,7 +118,7 @@ export default async function ContractDetailPage({
                   <span>{t(`methods.${p.method}`)}</span>
                   <span className="tabular-nums">{fmt(p.amountCents)}</span>
                   {receipt ? (
-                    <Link href={`/${locale}/credit/receipts/${receipt.id}`} className="underline">
+                    <Link href={`/${locale}/credit/receipts/${receipt.id}/print`} className="underline">
                       {t('receipt.title')} {receipt.number}
                     </Link>
                   ) : null}
