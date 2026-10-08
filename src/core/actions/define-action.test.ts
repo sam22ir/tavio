@@ -8,6 +8,7 @@ const m = vi.hoisted(() => ({
   getLocale: vi.fn(),
   loadTenantArgs: vi.fn(),
   enabledModules: vi.fn(),
+  listMyCompanies: vi.fn(),
   withTenant: vi.fn(),
 }));
 
@@ -17,6 +18,7 @@ vi.mock('next-intl/server', () => ({ getLocale: m.getLocale }));
 vi.mock('@/core/tenancy/service', () => ({
   loadTenantArgs: m.loadTenantArgs,
   enabledModules: m.enabledModules,
+  listMyCompanies: m.listMyCompanies,
 }));
 vi.mock('@/core/db/tenant', () => ({ withTenant: m.withTenant }));
 
@@ -31,6 +33,7 @@ const schema = z.object({ name: z.string().min(2) });
 function setHappyPath() {
   m.requireUser.mockResolvedValue({ ok: true, value: USER });
   m.getActiveCompanyId.mockResolvedValue(COMPANY);
+  m.listMyCompanies.mockResolvedValue([{ id: COMPANY, name: 'Shop', roleKey: 'owner' }]);
   m.getLocale.mockResolvedValue('fr');
   m.loadTenantArgs.mockResolvedValue({ ok: true, value: TENANT });
   m.enabledModules.mockResolvedValue(['contacts']);
@@ -55,12 +58,21 @@ describe('defineAction', () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
-  it('returns FORBIDDEN NO_COMPANY when no active company', async () => {
+  it('returns FORBIDDEN NO_COMPANY when the user has no memberships', async () => {
     m.getActiveCompanyId.mockResolvedValue(null);
+    m.listMyCompanies.mockResolvedValue([]);
     const action = defineAction({ perm: 'contacts.partner.write', schema }, vi.fn());
     const res = await action({ name: 'Ali' });
     expect(res.ok).toBe(false);
     if (!res.ok) expect(res.error).toMatchObject({ code: 'FORBIDDEN', message: 'NO_COMPANY' });
+  });
+
+  it('falls back to the first company when the active-company cookie is missing', async () => {
+    m.getActiveCompanyId.mockResolvedValue(null);
+    const action = defineAction({ perm: 'contacts.partner.write', schema }, async () => ({ ok: true, value: 1 }));
+    const res = await action({ name: 'Ali' });
+    expect(res.ok).toBe(true);
+    expect(m.loadTenantArgs).toHaveBeenCalledWith(USER.userId, COMPANY, 'fr');
   });
 
   it('passes the locale to loadTenantArgs', async () => {
