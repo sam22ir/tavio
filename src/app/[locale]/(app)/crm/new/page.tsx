@@ -15,8 +15,10 @@ export default async function NewLeadPage({ params }: { params: Promise<{ locale
 
   const t = await getTranslations('crm.ui');
   const pipeline = await withPageCtx(async (ctx) => {
-    const r = await crm.ensureDefaultPipeline(ctx);
-    return r.ok ? { stages: r.value.stages as { id: string; name: string }[] } : null;
+    const p = await crm.ensureDefaultPipeline(ctx);
+    if (!p.ok) return null;
+    const s = await crm.listStages(ctx, p.value.id);
+    return s.ok ? { stages: s.value.map((x) => ({ id: x.id, name: x.name })) } : null;
   });
 
   return (

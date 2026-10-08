@@ -18,13 +18,14 @@ export default async function CrmPage({ params }: { params: Promise<{ locale: st
   const t = await getTranslations('crm.ui');
   const board = await withPageCtx(async (ctx) => {
     const pipeline = await crm.ensureDefaultPipeline(ctx);
-    if (!pipeline.ok) return { error: pipeline.error.message as string };
-    const stages = pipeline.value.stages as { id: string; name: string }[];
-    const rows = await crm.leadsByStage(ctx, pipeline.value.pipelineId as string);
-    if (!rows.ok) return { error: rows.error.message as string };
+    if (!pipeline.ok) return { error: pipeline.error.message };
+    const stages = await crm.listStages(ctx, pipeline.value.id);
+    if (!stages.ok) return { error: stages.error.message };
+    const groups = await crm.leadsByStage(ctx, pipeline.value.id);
+    if (!groups.ok) return { error: groups.error.message };
     return {
-      columns: stages.map((s) => ({ id: s.id, label: s.name })),
-      rows: rows.value,
+      columns: stages.value.map((s) => ({ id: s.id, label: s.name })),
+      rows: groups.value.flatMap((g) => g.leads),
     };
   });
 
