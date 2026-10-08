@@ -4,6 +4,9 @@ import { notFound, redirect } from 'next/navigation';
 import { getSession } from '@/core/auth/session';
 import { routing } from '@/i18n/routing';
 
+// Reads the session to pick the redirect target, so it blocks navigation by design.
+export const instant = false;
+
 export default async function HomePage({
   params,
 }: {

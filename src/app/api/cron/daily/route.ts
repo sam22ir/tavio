@@ -2,7 +2,6 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb } from '@/core/db/client';
 import { runDailyReminders } from '@/modules/credit_sales/jobs/daily-reminders';
 
-export const dynamic = 'force-dynamic';
 
 // Reads CRON_SECRET from the Workers env when available, otherwise from process.env (Node).
 function cronSecret(): string | undefined {
