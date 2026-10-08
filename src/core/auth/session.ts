@@ -5,7 +5,8 @@ import { err, type Result } from '@/core/result';
 export type SessionUser = { userId: string; email: string };
 
 export async function getSession(): Promise<SessionUser | null> {
-  const session = await getAuth().api.getSession({ headers: await headers() });
+  const requestHeaders = await headers();
+  const session = await getAuth().api.getSession({ headers: requestHeaders });
   if (!session) return null;
   return { userId: session.user.id, email: session.user.email };
 }

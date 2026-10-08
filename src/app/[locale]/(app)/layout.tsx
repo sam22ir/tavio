@@ -6,8 +6,10 @@ import { loadShell } from '@/ui/shell/load-shell';
 import { MobileNav } from '@/ui/shell/mobile-nav';
 import { ShellNav } from '@/ui/shell/shell-nav';
 
+// Every page here reads the session; never prerender at build time.
+export const dynamic = 'force-dynamic';
+
 // Module pages read the session and tenant data, so they block navigation by design.
-export const instant = false;
 
 export default async function AppLayout({
   children,

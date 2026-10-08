@@ -8,8 +8,10 @@ import { Input } from '@/ui/primitives/input';
 import { Label } from '@/ui/primitives/label';
 import { createCompanyAction } from './actions';
 
+// Every page here reads the session; never prerender at build time.
+export const dynamic = 'force-dynamic';
+
 // Reads the session and the user's memberships, so it blocks navigation by design.
-export const instant = false;
 
 export default async function OnboardingPage({
   params,
