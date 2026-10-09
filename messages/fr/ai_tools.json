@@ -1,1 +1,45 @@
-{}
+{
+  "module": {
+    "name": "Outils IA"
+  },
+  "menu": {
+    "assistant": "Assistant",
+    "scan": "Scanner une facture fournisseur"
+  },
+  "scan": {
+    "title": "Scanner une facture fournisseur",
+    "hint": "Prenez une photo nette de la facture (JPEG, PNG ou WebP, 5 Mo max). Le brouillon n'est jamais validé automatiquement.",
+    "run": "Lire la facture",
+    "scanning": "Lecture de la facture…",
+    "review": "Vérifier avant l'enregistrement",
+    "supplier": "Fournisseur",
+    "number": "Numéro de facture",
+    "date": "Date",
+    "description": "Désignation",
+    "qty": "Quantité",
+    "unitPrice": "Prix unitaire (DZD)",
+    "tax": "Taxe",
+    "confirm": "Créer le brouillon",
+    "success": "Brouillon de facture créé",
+    "badType": "Utilisez une image JPEG, PNG ou WebP.",
+    "tooBig": "L'image dépasse 5 Mo.",
+    "noVision": "Configurez un modèle de vision (AI_VISION_MODEL ou un fournisseur Anthropic) pour scanner les factures."
+  },
+  "assistant": {
+    "title": "Assistant d'entreprise",
+    "placeholder": "Posez une question sur les ventes, les impayés, le stock…",
+    "ask": "Demander",
+    "thinking": "Réflexion…",
+    "empty": "Aucune ligne"
+  },
+  "errors": {
+    "generic": "Une erreur est survenue. Réessayez.",
+    "not_configured": "L'IA n'est pas configurée.",
+    "quota": "La limite quotidienne d'IA est atteinte.",
+    "no_tool": "Je n'ai pas pu relier cette question à un rapport. Reformulez-la.",
+    "invalid_bill": "La facture n'a pas pu être lue. Essayez une photo plus nette.",
+    "too_big": "L'image dépasse 5 Mo.",
+    "no_vision": "Aucun modèle de vision n'est configuré.",
+    "invalid_amount": "Saisissez un montant valide."
+  }
+}
