@@ -1,1 +1,53 @@
-{}
+{
+  "module": {
+    "name": "Projects"
+  },
+  "menu": {
+    "projects": "Projects"
+  },
+  "fields": {
+    "name": "Name",
+    "partner": "Customer",
+    "state": "State",
+    "priority": "Priority",
+    "deadline": "Deadline",
+    "description": "Description",
+    "date": "Date",
+    "hours": "Hours"
+  },
+  "options": {
+    "state": {
+      "active": "Active",
+      "done": "Done",
+      "archived": "Archived"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    }
+  },
+  "project": {
+    "title": "Projects",
+    "new": "New project",
+    "error": "Could not load projects.",
+    "set": {
+      "active": "Set active",
+      "done": "Mark done",
+      "archived": "Archive"
+    },
+    "tasks": "Tasks",
+    "newTask": "New task",
+    "activity": "Activity"
+  },
+  "task": {
+    "error": "Could not load this task.",
+    "due": "Due {date}",
+    "timesheets": "Timesheets",
+    "totalHours": "Total {hours} h",
+    "noTimesheets": "No time logged yet.",
+    "logTime": "Log time",
+    "activity": "Activity"
+  }
+}

@@ -1,1 +1,53 @@
-{}
+{
+  "module": {
+    "name": "Projets"
+  },
+  "menu": {
+    "projects": "Projets"
+  },
+  "fields": {
+    "name": "Nom",
+    "partner": "Client",
+    "state": "Statut",
+    "priority": "Priorité",
+    "deadline": "Échéance",
+    "description": "Description",
+    "date": "Date",
+    "hours": "Heures"
+  },
+  "options": {
+    "state": {
+      "active": "Actif",
+      "done": "Terminé",
+      "archived": "Archivé"
+    },
+    "priority": {
+      "low": "Basse",
+      "normal": "Normale",
+      "high": "Haute",
+      "urgent": "Urgente"
+    }
+  },
+  "project": {
+    "title": "Projets",
+    "new": "Nouveau projet",
+    "error": "Impossible de charger les projets.",
+    "set": {
+      "active": "Remettre actif",
+      "done": "Marquer terminé",
+      "archived": "Archiver"
+    },
+    "tasks": "Tâches",
+    "newTask": "Nouvelle tâche",
+    "activity": "Activité"
+  },
+  "task": {
+    "error": "Impossible de charger cette tâche.",
+    "due": "Échéance {date}",
+    "timesheets": "Feuilles de temps",
+    "totalHours": "Total {hours} h",
+    "noTimesheets": "Aucun temps saisi.",
+    "logTime": "Saisir du temps",
+    "activity": "Activité"
+  }
+}
