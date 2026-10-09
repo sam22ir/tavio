@@ -63,5 +63,11 @@
     "posted_immutable": "Cette commande est confirmée et ne peut plus être modifiée.",
     "unauthenticated": "Veuillez vous reconnecter.",
     "module_disabled": "Le module Achats est désactivé."
+  },
+  "suppliers": {
+    "title": "Fournisseurs préférés",
+    "sequence": "Priorité",
+    "add": "Ajouter ou modifier un fournisseur",
+    "save": "Enregistrer"
   }
 }
