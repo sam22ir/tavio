@@ -1,1 +1,85 @@
-{}
+{
+  "module": {
+    "name": "Stocks"
+  },
+  "menu": {
+    "stock": "Stocks",
+    "moves": "Mouvements de stock",
+    "adjustments": "Inventaire",
+    "low_stock": "Stock bas",
+    "warehouses": "Entrepôts"
+  },
+  "fields": {
+    "reference": "Référence",
+    "product": "Produit",
+    "quantity": "Quantité",
+    "state": "Statut",
+    "done_at": "Validé le",
+    "code": "Code",
+    "name": "Nom",
+    "wilaya_code": "Wilaya",
+    "active": "Actif",
+    "warehouse": "Entrepôt",
+    "min_qty": "Minimum",
+    "max_qty": "Maximum",
+    "from": "Depuis",
+    "to": "Vers",
+    "location": "Emplacement",
+    "counted": "Quantité comptée",
+    "on_hand": "En stock",
+    "to_order": "À commander"
+  },
+  "options": {
+    "state": {
+      "draft": "Brouillon",
+      "done": "Validé",
+      "cancelled": "Annulé"
+    }
+  },
+  "common": {
+    "error": "Une erreur est survenue. Réessayez.",
+    "submit": "Enregistrer",
+    "empty": "Aucun enregistrement.",
+    "back": "Retour",
+    "optional": "Facultatif"
+  },
+  "stock": {
+    "title": "Stock disponible",
+    "help": "Quantité en stock dans les emplacements internes, calculée à partir des mouvements validés."
+  },
+  "moves": {
+    "title": "Mouvements de stock",
+    "new": "Nouveau mouvement",
+    "validate": "Valider",
+    "cancel": "Annuler",
+    "detail": "Mouvement",
+    "validated": "Mouvement validé.",
+    "cancelled": "Mouvement annulé.",
+    "reference_hint": "Laisser vide pour une numérotation automatique",
+    "same_location": "Le départ et l'arrivée doivent être différents."
+  },
+  "warehouses": {
+    "title": "Entrepôts",
+    "new": "Nouvel entrepôt",
+    "created": "Entrepôt créé.",
+    "code_hint": "Lettres, chiffres, tirets (12 max)."
+  },
+  "adjustments": {
+    "title": "Ajustement d'inventaire",
+    "intro": "Saisissez la quantité comptée. L'écart est enregistré comme mouvement validé avec le compte d'ajustement.",
+    "applied": "Ajustement enregistré.",
+    "no_change": "Aucun écart: rien à enregistrer."
+  },
+  "low_stock": {
+    "title": "Stock bas",
+    "empty": "Aucun produit sous le seuil minimum.",
+    "new_rule": "Nouvelle règle de réapprovisionnement",
+    "rule_created": "Règle enregistrée.",
+    "rule_exists": "Une règle existe déjà pour ce produit et cet entrepôt."
+  },
+  "errors": {
+    "invalid_quantity": "Quantité invalide (positive, 3 décimales maximum).",
+    "move_not_draft": "Seuls les mouvements en brouillon peuvent être validés.",
+    "move_done": "Un mouvement validé ne peut pas être annulé."
+  }
+}
