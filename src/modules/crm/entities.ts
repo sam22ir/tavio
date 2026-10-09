@@ -3,7 +3,7 @@ import type { EntityDef } from '@/core/entities/types';
 export const leadEntity: EntityDef = {
   name: 'crm.lead',
   labelField: 'name',
-  kanban: { groupBy: 'stageId', titleField: 'name', subtitleField: 'partnerName' },
+  kanban: { groupBy: 'stageId', titleField: 'name', subtitleField: 'kanbanSubtitle' },
   defaultSort: { field: 'createdAt', dir: 'desc' },
   fields: [
     { name: 'reference', type: 'text', label: 'crm.fields.reference', readonly: true, list: true, search: true },
@@ -27,6 +27,21 @@ export const leadEntity: EntityDef = {
       relation: { entity: 'contacts.partner', labelField: 'name' },
       list: true,
       filter: true,
+    },
+    {
+      name: 'channel',
+      type: 'select',
+      label: 'crm.fields.channel',
+      list: true,
+      filter: true,
+      options: [
+        { value: 'phone', label: 'crm.options.channel.phone' },
+        { value: 'whatsapp', label: 'crm.options.channel.whatsapp' },
+        { value: 'showroom', label: 'crm.options.channel.showroom' },
+        { value: 'web', label: 'crm.options.channel.web' },
+        { value: 'referral', label: 'crm.options.channel.referral' },
+        { value: 'other', label: 'crm.options.channel.other' },
+      ],
     },
     { name: 'contactName', type: 'text', label: 'crm.fields.contactName', search: true },
     { name: 'phone', type: 'phone', label: 'crm.fields.phone', search: true },
@@ -69,6 +84,7 @@ export const leadEntity: EntityDef = {
         { value: 'lost', label: 'crm.options.status.lost' },
       ],
     },
+    { name: 'attemptCount', type: 'number', label: 'crm.fields.attemptCount', readonly: true, list: true },
     { name: 'probability', type: 'number', label: 'crm.fields.probability', list: true },
     { name: 'expectedRevenueCents', type: 'money', label: 'crm.fields.expectedRevenueCents', list: true },
     { name: 'expectedCloseDate', type: 'date', label: 'crm.fields.expectedCloseDate', list: true, filter: true },

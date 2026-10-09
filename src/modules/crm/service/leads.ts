@@ -2,6 +2,7 @@ import { and, asc, count, desc, eq, ilike, or, sql, type SQL } from 'drizzle-orm
 import { z } from 'zod';
 import type { Ctx } from '@/core/ctx';
 import { audit } from '@/core/audit';
+import { emit } from '@/core/events';
 import type { Tx } from '@/core/db/types';
 import type { ListQuery, ListResult } from '@/core/entities/types';
 import { requirePerm } from '@/core/perms';
@@ -13,6 +14,7 @@ import { postMessage } from '@/modules/chatter/service';
 import { activities } from '@/modules/chatter/schema';
 import { leads, lostReasons, stages } from '../schema';
 import { ensureDefaultPipeline } from './pipeline';
+import { LEAD_CHANNELS } from './lead-constants';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -33,6 +35,7 @@ export const leadInput = z.object({
     blank,
     z.enum(['walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other']).optional(),
   ),
+  channel: z.preprocess(blank, z.enum(LEAD_CHANNELS).optional()),
   stageId: uuid,
   probability: z.preprocess(blank, z.coerce.number().int().min(0).max(100).optional()),
   expectedRevenueCents: z.preprocess(blank, z.bigint().nonnegative().optional()),
@@ -68,6 +71,9 @@ export type LeadRow = {
   salespersonName: string | null;
   priority: number;
   nextActivityDate: string | null;
+  channel: string | null;
+  attemptCount: number;
+  daysInStage: number;
   active: boolean;
   wonAt: Date | null;
   convertedContractId: string | null;
@@ -100,6 +106,9 @@ const leadColumns = {
   salespersonName: sql<string | null>`(select md.name from member_directory md where md.company_id = ${leads.companyId} and md.user_id = ${leads.salespersonId})`,
   priority: leads.priority,
   nextActivityDate: activities.dueDate,
+  channel: leads.channel,
+  attemptCount: leads.attemptCount,
+  daysInStage: sql<number>`greatest(0, floor(extract(epoch from (now() - ${leads.stageEnteredAt})) / 86400))::int`,
   active: leads.active,
   wonAt: leads.wonAt,
   convertedContractId: leads.convertedContractId,
@@ -197,7 +206,7 @@ export async function listLeads(ctx: Ctx, q: ListQuery): Promise<Result<ListResu
 export async function leadsByStage(
   ctx: Ctx,
   pipelineId: string,
-): Promise<Result<{ stage: { id: string; name: string; position: number; probability: number; isWon: boolean }; leads: LeadRow[] }[]>> {
+): Promise<Result<{ stage: { id: string; name: string; position: number; probability: number; isWon: boolean; requirements: string | null }; leads: LeadRow[] }[]>> {
   const perm = requirePerm(ctx, 'crm.lead.read');
   if (!perm.ok) return perm;
   if (!UUID_RE.test(pipelineId)) return err('VALIDATION', 'Invalid pipeline id');
@@ -209,6 +218,7 @@ export async function leadsByStage(
       position: stages.position,
       probability: stages.probability,
       isWon: stages.isWon,
+      requirements: stages.requirements,
     })
     .from(stages)
     .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipelineId)))
@@ -309,8 +319,10 @@ export async function createLead(
       email: data.email,
       wilayaCode: data.wilayaCode,
       source: data.source,
+      channel: data.channel,
       pipelineId: stage.pipelineId,
       stageId: stage.id,
+      stageEnteredAt: new Date(),
       status: 'open',
       probability: data.probability ?? stage.probability,
       expectedRevenueCents: data.expectedRevenueCents,
@@ -324,6 +336,10 @@ export async function createLead(
   if (!row) return err('INTERNAL', 'Lead insert returned no row');
 
   await audit(ctx, { entity: 'crm.lead', recordId: row.id, action: 'create', after: { reference, name: data.name, stageId: stage.id } });
+  await emit(ctx, {
+    name: 'crm.lead.created',
+    payload: { leadId: row.id, stageId: stage.id, userId: ctx.userId, teamId: null },
+  });
   return ok({ id: row.id, reference: row.reference });
 }
 
@@ -380,6 +396,7 @@ export async function moveLead(ctx: Ctx, id: string, stageId: string): Promise<R
   const won = target.isWon;
   const patch = {
     stageId: target.id,
+    stageEnteredAt: now,
     probability: target.probability,
     status: won ? 'won' : 'open',
     wonAt: won ? (lead.wonAt ?? now) : null,
@@ -402,6 +419,14 @@ export async function moveLead(ctx: Ctx, id: string, stageId: string): Promise<R
     body: `Stage: ${previous?.name ?? '?'} -> ${target.name}${won ? ' (won)' : ''}`,
   });
   if (!posted.ok) return posted;
+
+  await emit(ctx, {
+    name: 'crm.lead.stage_changed',
+    payload: { leadId: id, fromStageId: lead.stageId, toStageId: target.id, userId: ctx.userId },
+  });
+  if (won && lead.status !== 'won') {
+    await emit(ctx, { name: 'crm.lead.won', payload: { leadId: id } });
+  }
   return ok({ id });
 }
 
@@ -452,6 +477,7 @@ export async function markLost(
     const noted = await postMessage(ctx, { entity: 'crm.lead', recordId: id, kind: 'note', body: note.trim() });
     if (!noted.ok) return noted;
   }
+  await emit(ctx, { name: 'crm.lead.lost', payload: { leadId: id, lostReasonId } });
   return ok({ id });
 }
 
@@ -488,6 +514,31 @@ export async function reopenLead(ctx: Ctx, id: string): Promise<Result<{ id: str
   const posted = await postMessage(ctx, { entity: 'crm.lead', recordId: id, kind: 'system', body: 'Lead reopened' });
   if (!posted.ok) return posted;
   return ok({ id });
+}
+
+/** Counts one contact attempt on the lead. */
+export async function logAttempt(ctx: Ctx, id: string): Promise<Result<{ id: string; attemptCount: number }>> {
+  const perm = requirePerm(ctx, 'crm.lead.write');
+  if (!perm.ok) return perm;
+
+  const lead = await lockLead(ctx, id);
+  if (!lead) return err('NOT_FOUND', 'Lead not found');
+
+  const [row] = await ctx.tx
+    .update(leads)
+    .set({ attemptCount: sql`${leads.attemptCount} + 1`, updatedAt: new Date() })
+    .where(eq(leads.id, id))
+    .returning({ attemptCount: leads.attemptCount });
+  if (!row) return err('INTERNAL', 'Attempt was not recorded');
+
+  await audit(ctx, {
+    entity: 'crm.lead',
+    recordId: id,
+    action: 'log_attempt',
+    before: { attemptCount: lead.attemptCount },
+    after: { attemptCount: row.attemptCount },
+  });
+  return ok({ id, attemptCount: row.attemptCount });
 }
 
 export type ConvertInput = Omit<DraftContractInput, 'leadId' | 'partnerId'>;
@@ -538,6 +589,10 @@ export async function convertToContract(
           updatedAt: now,
         })
         .where(eq(leads.id, leadId));
+
+      if (lead.status !== 'won') {
+        await emit(spCtx, { name: 'crm.lead.won', payload: { leadId } });
+      }
 
       await audit(spCtx, {
         entity: 'crm.lead',
