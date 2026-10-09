@@ -4,25 +4,51 @@
       "title": "About Tavio",
       "description": "Tavio is a simple, modern alternative to heavy ERPs, built for Algerian shops, in French and Arabic."
     },
-    "title": "A simple management tool, built for Algerian shops",
-    "body": "Traditional ERPs are heavy, expensive and built for large companies. Tavio brings credit sales, customers, invoicing and stock into one app, in French and Arabic.",
+    "eyebrow": "About",
+    "title": "A *modern* alternative to heavy ERPs, built for Algeria",
+    "body": "Classic ERPs are heavy, expensive and built for large companies. Tavio brings credit sales, customers, invoicing and stock into one app, in French and Arabic.",
     "principles": {
       "title": "Our principles",
       "items": [
-        { "title": "French and Arabic", "body": "The app and its documents work in both languages, for the whole team, from the owner to the salesperson." },
-        { "title": "Simple and fast", "body": "A clear interface that runs well on an entry-level phone, even on a modest connection." },
-        { "title": "Fair prices in dinars", "body": "Indicative prices in DZD, per user, detailed on the Pricing page." },
-        { "title": "Your data stays yours", "body": "Your data stays in the Tavio cloud, hosted in the European Union, or on your own servers." }
+        {
+          "title": "French and Arabic",
+          "body": "The app and its documents work in both languages, for the whole team, from the owner to the salesperson."
+        },
+        {
+          "title": "Simple and fast",
+          "body": "A clear interface that runs well on an entry-level phone, even on a modest connection."
+        },
+        {
+          "title": "Fair prices in dinars",
+          "body": "Indicative prices in DZD, per user, detailed on the Pricing page."
+        },
+        {
+          "title": "Your data stays yours",
+          "body": "Your data stays in the Tavio cloud, hosted in the European Union, or on your own servers."
+        }
       ]
     },
     "roadmap": {
-      "title": "Where we are going",
-      "body": "We build Tavio closely with shop owners. Our priorities for the coming months:",
-      "items": [
-        "Stronger payment reminders and due-date tracking",
-        "Accounting based on the SCF chart of accounts, extended further",
-        "A better experience on phones",
-        "More integrations through the API and webhooks"
+      "eyebrow": "Where we're going",
+      "title": "A roadmap built with shopkeepers",
+      "body": "We move step by step, listening to the shops that use Tavio.",
+      "steps": [
+        {
+          "title": "Credit sales",
+          "body": "Today: instalment plans, payment tracking and reminders for overdue balances."
+        },
+        {
+          "title": "The full suite",
+          "body": "Customers, stock, invoicing and SCF accounting, together in one app."
+        },
+        {
+          "title": "AI helpers",
+          "body": "Optional help to write, follow up and analyse, with the provider you choose."
+        },
+        {
+          "title": "On-premise and partners",
+          "body": "Installation on your own servers in Algeria, and integrations with your partners."
+        }
       ]
     },
     "cta": {
@@ -65,7 +91,17 @@
       "invalid": "Please check the highlighted fields.",
       "rateLimited": "Too many messages sent from your connection. Try again later, or write to us on WhatsApp.",
       "failed": "The message could not be sent. Try again, or write to us directly by email."
-    }
+    },
+    "emailBody": "For a quote, a demo or an account question.",
+    "pilot": {
+      "title": "Pilot program",
+      "body": "We support our first shops in Sétif, Algiers and Oran, from setup to the first invoice."
+    },
+    "response": {
+      "title": "Response time",
+      "body": "We usually reply within two working days, in French or Arabic."
+    },
+    "eyebrow": "Contact"
   },
   "faq": {
     "meta": {
@@ -78,46 +114,96 @@
       {
         "title": "Product",
         "items": [
-          { "question": "Does Tavio work in Arabic and French?", "answer": "Yes. The interface and documents are available in French, Arabic and English. Each user picks their language." },
-          { "question": "Can I manage credit sales and instalments?", "answer": "Yes. You create an instalment plan, track every due date and follow up with customers who are late." },
-          { "question": "Does Tavio work on a phone?", "answer": "Yes. The app is built for entry-level phones as well as computers." },
-          { "question": "Can I turn on only some modules?", "answer": "Yes. You choose the modules your business needs. They share the same customers, products and invoices." }
+          {
+            "question": "Does Tavio work in Arabic and French?",
+            "answer": "Yes. The interface and documents are available in French, Arabic and English. Each user picks their language."
+          },
+          {
+            "question": "Can I manage credit sales and instalments?",
+            "answer": "Yes. You create an instalment plan, track every due date and follow up with customers who are late."
+          },
+          {
+            "question": "Does Tavio work on a phone?",
+            "answer": "Yes. The app is built for entry-level phones as well as computers."
+          },
+          {
+            "question": "Can I turn on only some modules?",
+            "answer": "Yes. You choose the modules your business needs. They share the same customers, products and invoices."
+          }
         ]
       },
       {
         "title": "Pricing and payment",
         "items": [
-          { "question": "Are prices in dinars?", "answer": "Yes. Prices are shown in DZD, per user, as indicative prices. The details are on the Pricing page." },
-          { "question": "Which payment methods do you accept?", "answer": "You can pay by CCP, bank transfer or cash. The exact terms are confirmed when you subscribe." },
-          { "question": "Is there a minimum commitment?", "answer": "The subscription term and cancellation conditions are set out in our Terms of use." }
+          {
+            "question": "Are prices in dinars?",
+            "answer": "Yes. Prices are shown in DZD, per user, as indicative prices. The details are on the Pricing page."
+          },
+          {
+            "question": "Which payment methods do you accept?",
+            "answer": "You can pay by CCP, bank transfer or cash. The exact terms are confirmed when you subscribe."
+          },
+          {
+            "question": "Is there a minimum commitment?",
+            "answer": "The subscription term and cancellation conditions are set out in our Terms of use."
+          }
         ]
       },
       {
         "title": "Data and security",
         "items": [
-          { "question": "Where is my data stored?", "answer": "In the Tavio cloud, hosted in the European Union (Paris), or on your own servers with the On-premise offer." },
-          { "question": "Is my data protected by law?", "answer": "We process personal data in line with Algerian Law 18-07. Our privacy policy sets out these commitments." },
-          { "question": "Who can access my data?", "answer": "You decide who can access your workspace, with roles and permissions for each user. Your data is not sold to third parties." }
+          {
+            "question": "Where is my data stored?",
+            "answer": "In the Tavio cloud, hosted in the European Union (Paris), or on your own servers with the On-premise offer."
+          },
+          {
+            "question": "Is my data protected by law?",
+            "answer": "We process personal data in line with Algerian Law 18-07. Our privacy policy sets out these commitments."
+          },
+          {
+            "question": "Who can access my data?",
+            "answer": "You decide who can access your workspace, with roles and permissions for each user. Your data is not sold to third parties."
+          }
         ]
       },
       {
         "title": "On-premise offer",
         "items": [
-          { "question": "What is the On-premise offer?", "answer": "Tavio installed on your own servers, with Docker, so your data stays in Algeria." },
-          { "question": "Who handles backups?", "answer": "You manage backups on your infrastructure, following the documented procedure. Our support helps you set up restores." }
+          {
+            "question": "What is the On-premise offer?",
+            "answer": "Tavio installed on your own servers, with Docker, so your data stays in Algeria."
+          },
+          {
+            "question": "Who handles backups?",
+            "answer": "You manage backups on your infrastructure, following the documented procedure. Our support helps you set up restores."
+          }
         ]
       },
       {
         "title": "AI assistant",
         "items": [
-          { "question": "Which AI does Tavio use?", "answer": "The AI helpers are optional and work with the provider of your choice." },
-          { "question": "Does my data go to the AI provider?", "answer": "Only the information you send to the assistant is passed to the provider you chose. You can turn these features off." },
-          { "question": "Can I use Tavio without AI?", "answer": "Yes. All management features work without the AI assistant." }
+          {
+            "question": "Which AI does Tavio use?",
+            "answer": "The AI helpers are optional and work with the provider of your choice."
+          },
+          {
+            "question": "Does my data go to the AI provider?",
+            "answer": "Only the information you send to the assistant is passed to the provider you chose. You can turn these features off."
+          },
+          {
+            "question": "Can I use Tavio without AI?",
+            "answer": "Yes. All management features work without the AI assistant."
+          }
         ]
       }
     ],
-    "stillQuestions": "Didn't find your answer?",
-    "contactLink": "Write to us"
+    "eyebrow": "Help",
+    "all": "All",
+    "cta": {
+      "title": "Another question? Write to us",
+      "body": "Our team replies in French or Arabic.",
+      "primary": "Write to us"
+    }
   },
   "legal": {
     "privacy": {
@@ -127,11 +213,13 @@
       },
       "title": "Privacy policy",
       "updated": "Last updated: [date to be completed]",
-      "review": "Draft text. It must be reviewed by a lawyer before publication.",
+      "review": "To be reviewed by a lawyer before publication.",
       "sections": [
         {
           "title": "Data controller",
-          "body": ["The data controller is [company name to be completed], [NIF to be completed], [RC to be completed], [address to be completed]. Contact: [email to be completed]."]
+          "body": [
+            "The data controller is [company name to be completed], [NIF to be completed], [RC to be completed], [address to be completed]. Contact: [email to be completed]."
+          ]
         },
         {
           "title": "Data we collect",
@@ -142,23 +230,33 @@
         },
         {
           "title": "Purposes",
-          "body": ["To answer your requests, provide the service, issue and track your invoices, keep the platform secure and improve the product using aggregated statistics."]
+          "body": [
+            "To answer your requests, provide the service, issue and track your invoices, keep the platform secure and improve the product using aggregated statistics."
+          ]
         },
         {
           "title": "Where data is stored",
-          "body": ["By default, data is hosted in the Tavio cloud, in the European Union (Paris). Customers who prefer can host their data in Algeria, on their own servers (On-premise offer)."]
+          "body": [
+            "By default, data is hosted in the Tavio cloud, in the European Union (Paris). Customers who prefer can host their data in Algeria, on their own servers (On-premise offer)."
+          ]
         },
         {
           "title": "Retention",
-          "body": ["Data is kept for the duration of your subscription, then as long as legal obligations require. Contact requests are kept only as long as needed to answer them."]
+          "body": [
+            "Data is kept for the duration of your subscription, then as long as legal obligations require. Contact requests are kept only as long as needed to answer them."
+          ]
         },
         {
           "title": "Your rights",
-          "body": ["Under Law 18-07, you can ask to access, correct or delete your personal data, and object to certain processing. Send your request to the contact address above."]
+          "body": [
+            "Under Law 18-07, you can ask to access, correct or delete your personal data, and object to certain processing. Send your request to the contact address above."
+          ]
         },
         {
           "title": "Processors",
-          "body": ["We use technical providers (hosting, email delivery). They process data only for our needs and on our instructions."]
+          "body": [
+            "We use technical providers (hosting, email delivery). They process data only for our needs and on our instructions."
+          ]
         }
       ]
     },
@@ -169,37 +267,52 @@
       },
       "title": "Terms of use",
       "updated": "Last updated: [date to be completed]",
-      "review": "Draft text. It must be reviewed by a lawyer before publication.",
+      "review": "To be reviewed by a lawyer before publication.",
       "sections": [
         {
           "title": "Purpose",
-          "body": ["These terms govern access to and use of the Tavio platform, published by [company name to be completed]."]
+          "body": [
+            "These terms govern access to and use of the Tavio platform, published by [company name to be completed]."
+          ]
         },
         {
           "title": "Account and access",
-          "body": ["You are responsible for keeping your login details confidential and for actions taken from your account. You must give accurate information when you sign up."]
+          "body": [
+            "You are responsible for keeping your login details confidential and for actions taken from your account. You must give accurate information when you sign up."
+          ]
         },
         {
           "title": "Subscription and payment",
-          "body": ["Subscriptions are billed in Algerian dinars (DZD), per user, according to the plan you choose. Prices shown are indicative and may change with prior notice."]
+          "body": [
+            "Subscriptions are billed in Algerian dinars (DZD), per user, according to the plan you choose. Prices shown are indicative and may change with prior notice."
+          ]
         },
         {
           "title": "Your data",
-          "body": ["You remain the owner of the data you enter and are responsible for its accuracy and lawfulness. Personal data processing is described in our privacy policy."]
+          "body": [
+            "You remain the owner of the data you enter and are responsible for its accuracy and lawfulness. Personal data processing is described in our privacy policy."
+          ]
         },
         {
           "title": "Service availability",
-          "body": ["We work to keep the platform available, but we cannot guarantee uninterrupted operation. Maintenance is announced in advance where possible."]
+          "body": [
+            "We work to keep the platform available, but we cannot guarantee uninterrupted operation. Maintenance is announced in advance where possible."
+          ]
         },
         {
           "title": "Cancellation",
-          "body": ["You can cancel your subscription at any time under the terms that apply to your plan. We may suspend an account used in breach of the law or of these terms."]
+          "body": [
+            "You can cancel your subscription at any time under the terms that apply to your plan. We may suspend an account used in breach of the law or of these terms."
+          ]
         },
         {
           "title": "Governing law",
-          "body": ["These terms are governed by Algerian law. Any dispute falls under the jurisdiction of the courts of [city to be completed]."]
+          "body": [
+            "These terms are governed by Algerian law. Any dispute falls under the jurisdiction of the courts of [city to be completed]."
+          ]
         }
       ]
-    }
+    },
+    "tocTitle": "On this page"
   }
 }

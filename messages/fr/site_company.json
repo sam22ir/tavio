@@ -4,25 +4,51 @@
       "title": "À propos de Tavio",
       "description": "Tavio est une alternative simple et moderne aux ERP lourds, pensée pour les commerces algériens, en français et en arabe."
     },
-    "title": "Un outil de gestion simple, pensé pour les commerces algériens",
-    "body": "Les ERP classiques sont lourds, chers et conçus pour de grandes entreprises. Tavio réunit les ventes à crédit, les clients, la facturation et le stock dans une seule application, en français et en arabe.",
+    "eyebrow": "À propos",
+    "title": "Une alternative *moderne* aux ERP lourds, pensée pour l'Algérie",
+    "body": "Les ERP classiques sont lourds, chers et pensés pour les grandes entreprises. Tavio réunit ventes à crédit, clients, facturation et stock dans une seule application, en français et en arabe.",
     "principles": {
       "title": "Nos principes",
       "items": [
-        { "title": "Français et arabe", "body": "L'application et les documents existent dans les deux langues, pour toute l'équipe, du gérant au vendeur." },
-        { "title": "Simple et rapide", "body": "Une interface claire qui fonctionne sur un téléphone d'entrée de gamme, même avec une connexion modeste." },
-        { "title": "Prix justes en dinars", "body": "Des tarifs indicatifs en DZD, par utilisateur, détaillés sur la page Tarifs." },
-        { "title": "Vos données vous appartiennent", "body": "Vos données restent dans le cloud Tavio, hébergé dans l'Union européenne, ou sur vos propres serveurs." }
+        {
+          "title": "Français et arabe",
+          "body": "L'application et les documents existent dans les deux langues, pour toute l'équipe, du gérant au vendeur."
+        },
+        {
+          "title": "Simple et rapide",
+          "body": "Une interface claire qui fonctionne sur un téléphone d'entrée de gamme, même avec une connexion modeste."
+        },
+        {
+          "title": "Prix justes en dinars",
+          "body": "Des tarifs indicatifs en DZD, par utilisateur, détaillés sur la page Tarifs."
+        },
+        {
+          "title": "Vos données vous appartiennent",
+          "body": "Vos données restent dans le cloud Tavio, hébergé dans l'Union européenne, ou sur vos propres serveurs."
+        }
       ]
     },
     "roadmap": {
-      "title": "Où nous allons",
-      "body": "Nous développons Tavio en étroite relation avec les commerçants. Nos priorités pour les prochains mois :",
-      "items": [
-        "Renforcer les relances de paiement et le suivi des échéances",
-        "Étendre la comptabilité basée sur le plan comptable SCF",
-        "Améliorer l'expérience sur téléphone",
-        "Ouvrir davantage d'intégrations via l'API et les webhooks"
+      "eyebrow": "Où nous allons",
+      "title": "Une feuille de route construite avec les commerçants",
+      "body": "Nous avançons par étapes, en écoutant les commerçants qui utilisent Tavio.",
+      "steps": [
+        {
+          "title": "Ventes à crédit",
+          "body": "Aujourd'hui : échéanciers, suivi des paiements et relances des impayés."
+        },
+        {
+          "title": "La suite complète",
+          "body": "Clients, stock, facturation et comptabilité SCF réunis dans une seule application."
+        },
+        {
+          "title": "Assistants IA",
+          "body": "Aides optionnelles pour rédiger, relancer et analyser, avec le fournisseur de votre choix."
+        },
+        {
+          "title": "On-premise et partenaires",
+          "body": "Installation sur vos propres serveurs en Algérie, et intégrations avec vos partenaires."
+        }
       ]
     },
     "cta": {
@@ -65,7 +91,17 @@
       "invalid": "Vérifiez les champs signalés.",
       "rateLimited": "Trop de messages envoyés depuis votre connexion. Réessayez plus tard, ou écrivez-nous sur WhatsApp.",
       "failed": "Le message n'a pas pu être envoyé. Réessayez ou écrivez-nous directement par e-mail."
-    }
+    },
+    "emailBody": "Pour un devis, une démo ou un problème de compte.",
+    "pilot": {
+      "title": "Programme pilote",
+      "body": "Nous accompagnons nos premiers commerces à Sétif, Alger et Oran, de la configuration à la première facture."
+    },
+    "response": {
+      "title": "Délai de réponse",
+      "body": "Nous répondons en général sous deux jours ouvrés, en français ou en arabe."
+    },
+    "eyebrow": "Contact"
   },
   "faq": {
     "meta": {
@@ -78,46 +114,96 @@
       {
         "title": "Produit",
         "items": [
-          { "question": "Tavio fonctionne-t-il en arabe et en français ?", "answer": "Oui. L'interface et les documents sont disponibles en français, en arabe et en anglais. Chaque utilisateur choisit sa langue." },
-          { "question": "Puis-je gérer les ventes à crédit et les échéances ?", "answer": "Oui. Vous créez un plan d'échelonnement, suivez chaque échéance et relancez les clients en retard." },
-          { "question": "Tavio fonctionne-t-il sur téléphone ?", "answer": "Oui. L'application est conçue pour les téléphones d'entrée de gamme comme pour les ordinateurs." },
-          { "question": "Puis-je n'activer que certains modules ?", "answer": "Oui. Vous choisissez les modules utiles à votre activité. Ils partagent les mêmes clients, produits et factures." }
+          {
+            "question": "Tavio fonctionne-t-il en arabe et en français ?",
+            "answer": "Oui. L'interface et les documents sont disponibles en français, en arabe et en anglais. Chaque utilisateur choisit sa langue."
+          },
+          {
+            "question": "Puis-je gérer les ventes à crédit et les échéances ?",
+            "answer": "Oui. Vous créez un plan d'échelonnement, suivez chaque échéance et relancez les clients en retard."
+          },
+          {
+            "question": "Tavio fonctionne-t-il sur téléphone ?",
+            "answer": "Oui. L'application est conçue pour les téléphones d'entrée de gamme comme pour les ordinateurs."
+          },
+          {
+            "question": "Puis-je n'activer que certains modules ?",
+            "answer": "Oui. Vous choisissez les modules utiles à votre activité. Ils partagent les mêmes clients, produits et factures."
+          }
         ]
       },
       {
         "title": "Tarifs et paiement",
         "items": [
-          { "question": "Les prix sont-ils en dinars ?", "answer": "Oui. Les tarifs sont indiqués en DZD, par utilisateur, à titre indicatif. Le détail est sur la page Tarifs." },
-          { "question": "Quels moyens de paiement acceptez-vous ?", "answer": "Vous pouvez régler par CCP, par virement bancaire ou en espèces. Les modalités exactes vous sont précisées à la souscription." },
-          { "question": "Y a-t-il un engagement de durée ?", "answer": "La durée de l'abonnement et les conditions de résiliation sont précisées dans nos Conditions d'utilisation." }
+          {
+            "question": "Les prix sont-ils en dinars ?",
+            "answer": "Oui. Les tarifs sont indiqués en DZD, par utilisateur, à titre indicatif. Le détail est sur la page Tarifs."
+          },
+          {
+            "question": "Quels moyens de paiement acceptez-vous ?",
+            "answer": "Vous pouvez régler par CCP, par virement bancaire ou en espèces. Les modalités exactes vous sont précisées à la souscription."
+          },
+          {
+            "question": "Y a-t-il un engagement de durée ?",
+            "answer": "La durée de l'abonnement et les conditions de résiliation sont précisées dans nos Conditions d'utilisation."
+          }
         ]
       },
       {
         "title": "Données et sécurité",
         "items": [
-          { "question": "Où sont stockées mes données ?", "answer": "Dans le cloud Tavio, hébergé dans l'Union européenne (Paris), ou sur vos propres serveurs avec l'offre On-premise." },
-          { "question": "Mes données sont-elles protégées par la loi ?", "answer": "Nous traitons les données personnelles dans le respect de la loi 18-07. Notre politique de confidentialité détaille ces engagements." },
-          { "question": "Qui peut accéder à mes données ?", "answer": "Vous décidez qui accède à votre espace, avec des rôles et des permissions par utilisateur. Vos données ne sont pas vendues à des tiers." }
+          {
+            "question": "Où sont stockées mes données ?",
+            "answer": "Dans le cloud Tavio, hébergé dans l'Union européenne (Paris), ou sur vos propres serveurs avec l'offre On-premise."
+          },
+          {
+            "question": "Mes données sont-elles protégées par la loi ?",
+            "answer": "Nous traitons les données personnelles dans le respect de la loi 18-07. Notre politique de confidentialité détaille ces engagements."
+          },
+          {
+            "question": "Qui peut accéder à mes données ?",
+            "answer": "Vous décidez qui accède à votre espace, avec des rôles et des permissions par utilisateur. Vos données ne sont pas vendues à des tiers."
+          }
         ]
       },
       {
         "title": "Offre On-premise",
         "items": [
-          { "question": "Qu'est-ce que l'offre On-premise ?", "answer": "Tavio installé sur vos propres serveurs, avec Docker, pour garder vos données en Algérie." },
-          { "question": "Qui gère les sauvegardes ?", "answer": "Vous gérez les sauvegardes sur votre infrastructure, selon la procédure documentée. Notre support vous aide à configurer la restauration." }
+          {
+            "question": "Qu'est-ce que l'offre On-premise ?",
+            "answer": "Tavio installé sur vos propres serveurs, avec Docker, pour garder vos données en Algérie."
+          },
+          {
+            "question": "Qui gère les sauvegardes ?",
+            "answer": "Vous gérez les sauvegardes sur votre infrastructure, selon la procédure documentée. Notre support vous aide à configurer la restauration."
+          }
         ]
       },
       {
         "title": "Assistant IA",
         "items": [
-          { "question": "Quelle IA utilise Tavio ?", "answer": "Les fonctions d'aide par IA sont optionnelles et fonctionnent avec le fournisseur de votre choix." },
-          { "question": "Mes données partent-elles chez le fournisseur IA ?", "answer": "Seules les informations que vous envoyez à l'assistant sont transmises au fournisseur choisi. Vous pouvez désactiver ces fonctions." },
-          { "question": "Puis-je utiliser Tavio sans l'IA ?", "answer": "Oui. Toutes les fonctions de gestion fonctionnent sans l'assistant IA." }
+          {
+            "question": "Quelle IA utilise Tavio ?",
+            "answer": "Les fonctions d'aide par IA sont optionnelles et fonctionnent avec le fournisseur de votre choix."
+          },
+          {
+            "question": "Mes données partent-elles chez le fournisseur IA ?",
+            "answer": "Seules les informations que vous envoyez à l'assistant sont transmises au fournisseur choisi. Vous pouvez désactiver ces fonctions."
+          },
+          {
+            "question": "Puis-je utiliser Tavio sans l'IA ?",
+            "answer": "Oui. Toutes les fonctions de gestion fonctionnent sans l'assistant IA."
+          }
         ]
       }
     ],
-    "stillQuestions": "Vous ne trouvez pas votre réponse ?",
-    "contactLink": "Écrivez-nous"
+    "eyebrow": "Aide",
+    "all": "Toutes",
+    "cta": {
+      "title": "Une autre question ? Écrivez-nous",
+      "body": "Notre équipe vous répond en français ou en arabe.",
+      "primary": "Nous écrire"
+    }
   },
   "legal": {
     "privacy": {
@@ -127,11 +213,13 @@
       },
       "title": "Politique de confidentialité",
       "updated": "Dernière mise à jour : [date à compléter]",
-      "review": "Texte en cours de rédaction. Il doit être relu par un avocat avant publication.",
+      "review": "À faire relire par un avocat avant publication.",
       "sections": [
         {
           "title": "Responsable du traitement",
-          "body": ["Le responsable du traitement est [raison sociale à compléter], [NIF à compléter], [RC à compléter], [adresse à compléter]. Contact : [e-mail à compléter]."]
+          "body": [
+            "Le responsable du traitement est [raison sociale à compléter], [NIF à compléter], [RC à compléter], [adresse à compléter]. Contact : [e-mail à compléter]."
+          ]
         },
         {
           "title": "Données collectées",
@@ -142,23 +230,33 @@
         },
         {
           "title": "Finalités",
-          "body": ["Répondre à vos demandes, fournir le service, émettre et suivre vos factures, assurer la sécurité de la plateforme et améliorer le produit à partir de statistiques agrégées."]
+          "body": [
+            "Répondre à vos demandes, fournir le service, émettre et suivre vos factures, assurer la sécurité de la plateforme et améliorer le produit à partir de statistiques agrégées."
+          ]
         },
         {
           "title": "Lieu de stockage",
-          "body": ["Par défaut, les données sont hébergées dans le cloud Tavio, dans l'Union européenne (Paris). Les clients qui le souhaitent peuvent héberger leurs données en Algérie, sur leurs propres serveurs (offre On-premise)."]
+          "body": [
+            "Par défaut, les données sont hébergées dans le cloud Tavio, dans l'Union européenne (Paris). Les clients qui le souhaitent peuvent héberger leurs données en Algérie, sur leurs propres serveurs (offre On-premise)."
+          ]
         },
         {
           "title": "Durée de conservation",
-          "body": ["Les données sont conservées pendant la durée de votre abonnement, puis selon les obligations légales applicables. Les demandes de contact sont conservées le temps nécessaire pour y répondre."]
+          "body": [
+            "Les données sont conservées pendant la durée de votre abonnement, puis selon les obligations légales applicables. Les demandes de contact sont conservées le temps nécessaire pour y répondre."
+          ]
         },
         {
           "title": "Vos droits",
-          "body": ["Conformément à la loi 18-07, vous pouvez demander l'accès, la rectification ou l'effacement de vos données personnelles, et vous opposer à certains traitements. Adressez votre demande à l'adresse de contact indiquée ci-dessus."]
+          "body": [
+            "Conformément à la loi 18-07, vous pouvez demander l'accès, la rectification ou l'effacement de vos données personnelles, et vous opposer à certains traitements. Adressez votre demande à l'adresse de contact indiquée ci-dessus."
+          ]
         },
         {
           "title": "Sous-traitants",
-          "body": ["Nous faisons appel à des prestataires techniques (hébergement, envoi d'e-mails). Ils traitent les données uniquement pour nos besoins et selon nos instructions."]
+          "body": [
+            "Nous faisons appel à des prestataires techniques (hébergement, envoi d'e-mails). Ils traitent les données uniquement pour nos besoins et selon nos instructions."
+          ]
         }
       ]
     },
@@ -169,37 +267,52 @@
       },
       "title": "Conditions d'utilisation",
       "updated": "Dernière mise à jour : [date à compléter]",
-      "review": "Texte en cours de rédaction. Il doit être relu par un avocat avant publication.",
+      "review": "À faire relire par un avocat avant publication.",
       "sections": [
         {
           "title": "Objet",
-          "body": ["Ces conditions régissent l'accès et l'utilisation de la plateforme Tavio, éditée par [raison sociale à compléter]."]
+          "body": [
+            "Ces conditions régissent l'accès et l'utilisation de la plateforme Tavio, éditée par [raison sociale à compléter]."
+          ]
         },
         {
           "title": "Compte et accès",
-          "body": ["Vous êtes responsable de la confidentialité de vos identifiants et des actions effectuées depuis votre compte. Vous devez fournir des informations exactes lors de l'inscription."]
+          "body": [
+            "Vous êtes responsable de la confidentialité de vos identifiants et des actions effectuées depuis votre compte. Vous devez fournir des informations exactes lors de l'inscription."
+          ]
         },
         {
           "title": "Abonnement et paiement",
-          "body": ["Les abonnements sont facturés en dinars algériens (DZD), par utilisateur, selon le plan choisi. Les tarifs affichés sont indicatifs et peuvent évoluer avec un préavis."]
+          "body": [
+            "Les abonnements sont facturés en dinars algériens (DZD), par utilisateur, selon le plan choisi. Les tarifs affichés sont indicatifs et peuvent évoluer avec un préavis."
+          ]
         },
         {
           "title": "Vos données",
-          "body": ["Vous restez propriétaire des données que vous saisissez. Vous êtes responsable de leur exactitude et de leur licéité. Le traitement des données personnelles est décrit dans notre politique de confidentialité."]
+          "body": [
+            "Vous restez propriétaire des données que vous saisissez. Vous êtes responsable de leur exactitude et de leur licéité. Le traitement des données personnelles est décrit dans notre politique de confidentialité."
+          ]
         },
         {
           "title": "Disponibilité du service",
-          "body": ["Nous mettons tout en œuvre pour assurer la disponibilité de la plateforme, sans pouvoir garantir un fonctionnement ininterrompu. Les opérations de maintenance sont annoncées dans la mesure du possible."]
+          "body": [
+            "Nous mettons tout en œuvre pour assurer la disponibilité de la plateforme, sans pouvoir garantir un fonctionnement ininterrompu. Les opérations de maintenance sont annoncées dans la mesure du possible."
+          ]
         },
         {
           "title": "Résiliation",
-          "body": ["Vous pouvez résilier votre abonnement à tout moment selon les modalités prévues. Nous pouvons suspendre un compte en cas d'usage contraire à la loi ou à ces conditions."]
+          "body": [
+            "Vous pouvez résilier votre abonnement à tout moment selon les modalités prévues. Nous pouvons suspendre un compte en cas d'usage contraire à la loi ou à ces conditions."
+          ]
         },
         {
           "title": "Droit applicable",
-          "body": ["Ces conditions sont régies par le droit algérien. Tout litige relève de la compétence des tribunaux de [ville à compléter]."]
+          "body": [
+            "Ces conditions sont régies par le droit algérien. Tout litige relève de la compétence des tribunaux de [ville à compléter]."
+          ]
         }
       ]
-    }
+    },
+    "tocTitle": "Sommaire"
   }
 }
