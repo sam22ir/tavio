@@ -24,8 +24,14 @@ export default async function CrmListPage({
 
   const sp = await searchParams;
   const query = parseListQuery(sp, leadEntity);
+  const teamParam = typeof sp.teamId === 'string' ? sp.teamId : '';
+  if (teamParam) query.filters = { ...query.filters, teamId: teamParam };
   const t = await getTranslations('crm.ui');
-  const result = await withPageCtx((ctx) => crm.listLeads(ctx, query));
+  const data = await withPageCtx(async (ctx) => {
+    const [result, teams] = await Promise.all([crm.listLeads(ctx, query), crm.listTeams(ctx)]);
+    return { result, teams: teams.ok ? teams.value : [] };
+  });
+  const result = data.result;
 
   return (
     <section className="flex flex-col gap-4">
@@ -41,8 +47,26 @@ export default async function CrmListPage({
           <Link href={`/${locale}/crm/new`} className={cn(buttonVariants({ size: 'sm' }))}>
             {t('newLead')}
           </Link>
+          <Link href={`/${locale}/crm/teams`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+            {t('teams')}
+          </Link>
         </nav>
       </div>
+
+      <form method="get" className="flex items-center gap-2 text-sm">
+        <label htmlFor="team-filter">{t('teamFilter')}</label>
+        <select id="team-filter" name="teamId" defaultValue={teamParam} className="h-9 rounded-md border bg-background px-3">
+          <option value="">{t('allTeams')}</option>
+          {data.teams.map((team) => (
+            <option key={team.id} value={team.id}>
+              {team.name}
+            </option>
+          ))}
+        </select>
+        <button type="submit" className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+          {t('applyFilter')}
+        </button>
+      </form>
 
       {result.ok ? (
         <DataList

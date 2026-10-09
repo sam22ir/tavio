@@ -100,6 +100,44 @@ export const lostReasons = pgTable(
   ],
 );
 
+// Sales teams. Tenant table. A leader sees every lead of the team.
+export const salesTeams = pgTable(
+  'sales_teams',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    name: text('name').notNull(),
+    // FK → users.id (added by integrator). Null when the team has no leader
+    leaderId: uuid('leader_id'),
+  },
+  (t) => [
+    index('sales_teams_company_id_idx').on(t.companyId),
+    uniqueIndex('sales_teams_company_id_name_key').on(t.companyId, t.name),
+  ],
+);
+
+// Sales team members. Tenant table. A user belongs to at most one team per company.
+export const salesTeamMembers = pgTable(
+  'sales_team_members',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    teamId: uuid('team_id')
+      .notNull()
+      .references(() => salesTeams.id, { onDelete: 'cascade' }),
+    // FK → users.id (added by integrator)
+    userId: uuid('user_id').notNull(),
+  },
+  (t) => [
+    index('sales_team_members_company_id_team_id_idx').on(t.companyId, t.teamId),
+    uniqueIndex('sales_team_members_company_id_user_id_key').on(t.companyId, t.userId),
+  ],
+);
+
 // Leads and opportunities (DATA_MODEL.md 5.4). Tenant table.
 // One table for leads and opportunities (type field), as in Odoo's crm.lead.
 export const leads = pgTable(
@@ -160,6 +198,8 @@ export const leads = pgTable(
     // denormalized pointer for kanban, optional (guess in DATA_MODEL.md)
     // FK → activities.id (added by integrator)
     nextActivityId: uuid('next_activity_id'),
+    // sales team of the lead. Defaults to the team of the salesperson at save time
+    teamId: uuid('team_id').references(() => salesTeams.id, { onDelete: 'set null' }),
   },
   (t) => [
     index('leads_company_id_pipeline_id_stage_id_idx').on(t.companyId, t.pipelineId, t.stageId),
@@ -170,6 +210,7 @@ export const leads = pgTable(
       t.status,
     ),
     index('leads_company_id_partner_id_idx').on(t.companyId, t.partnerId),
+    index('leads_company_id_team_id_idx').on(t.companyId, t.teamId),
     index('leads_company_id_phone_idx').on(t.companyId, t.phone),
     uniqueIndex('leads_company_id_reference_key')
       .on(t.companyId, t.reference)
@@ -252,6 +293,10 @@ export type LostReason = typeof lostReasons.$inferSelect;
 export type NewLostReason = typeof lostReasons.$inferInsert;
 export type Lead = typeof leads.$inferSelect;
 export type NewLead = typeof leads.$inferInsert;
+export type SalesTeam = typeof salesTeams.$inferSelect;
+export type NewSalesTeam = typeof salesTeams.$inferInsert;
+export type SalesTeamMember = typeof salesTeamMembers.$inferSelect;
+export type NewSalesTeamMember = typeof salesTeamMembers.$inferInsert;
 export type Tag = typeof tags.$inferSelect;
 export type NewTag = typeof tags.$inferInsert;
 export type TagLink = typeof tagLinks.$inferSelect;

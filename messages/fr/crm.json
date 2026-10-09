@@ -28,7 +28,8 @@
     "convertedContractId": "Contrat converti",
     "active": "Actif",
     "channel": "Canal",
-    "attemptCount": "Tentatives"
+    "attemptCount": "Tentatives",
+    "teamName": "Équipe"
   },
   "options": {
     "type": {
@@ -96,6 +97,19 @@
     "convert": "Convertir en contrat à crédit",
     "logAttempt": "Enregistrer une tentative",
     "daysInStage": "{count, plural, one {# jour en étape} other {# jours en étape}}",
-    "stageRequirements": "Exigences de cette étape"
+    "stageRequirements": "Exigences de cette étape",
+    "teams": "Équipes",
+    "teamsTitle": "Équipes commerciales",
+    "newTeam": "Nouvelle équipe",
+    "teamName": "Nom de l’équipe",
+    "teamLeader": "Responsable",
+    "noLeader": "Aucun responsable",
+    "teamMembers": "Membres",
+    "saveTeam": "Enregistrer l’équipe",
+    "teamSaved": "Équipe enregistrée",
+    "noTeams": "Aucune équipe pour le moment.",
+    "allTeams": "Toutes les équipes",
+    "teamFilter": "Équipe",
+    "applyFilter": "Appliquer"
   }
 }

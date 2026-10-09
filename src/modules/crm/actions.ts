@@ -7,6 +7,7 @@ import { defineAction, toFormAction } from '@/core/actions/define-action';
 import type { FormState } from '@/core/entities/types';
 import { parseDzd } from '@/core/money';
 import * as crm from '@/modules/crm/service';
+import { saveTeamInput } from '@/modules/crm/service/teams';
 import { LEAD_CHANNELS } from '@/modules/crm/service/lead-constants';
 
 const emptyToUndef = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
@@ -96,6 +97,11 @@ const reopenLeadDefined = defineAction(
   (ctx, input) => crm.reopenLead(ctx, input.id),
 );
 
+const saveTeamDefined = defineAction(
+  { perm: 'crm.lead.write', schema: saveTeamInput, module: 'crm' },
+  (ctx, input) => crm.saveTeam(ctx, input),
+);
+
 function refresh() {
   revalidatePath('/', 'layout');
 }
@@ -142,4 +148,24 @@ export async function reopenLeadAction(input: { id: string }) {
   const result = await reopenLeadDefined(input);
   if (result.ok) refresh();
   return result;
+}
+
+/** Creates or updates a sales team from the team settings form. Member ids come as repeated userIds fields. */
+export async function saveTeamFormAction(prev: FormState, fd: FormData): Promise<FormState> {
+  void prev;
+  const text = (key: string): string | undefined => {
+    const v = fd.get(key);
+    return typeof v === 'string' && v.trim() !== '' ? v : undefined;
+  };
+  const result = await saveTeamDefined({
+    id: text('id'),
+    name: text('name') ?? '',
+    leaderId: text('leaderId') ?? null,
+    userIds: fd.getAll('userIds').filter((v): v is string => typeof v === 'string' && v !== ''),
+  });
+  if (result.ok) {
+    refresh();
+    return { ok: true, message: 'saved' };
+  }
+  return { ok: false, message: result.error.code };
 }

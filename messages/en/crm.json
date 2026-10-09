@@ -28,7 +28,8 @@
     "convertedContractId": "Converted contract",
     "active": "Active",
     "channel": "Channel",
-    "attemptCount": "Attempts"
+    "attemptCount": "Attempts",
+    "teamName": "Team"
   },
   "options": {
     "type": {
@@ -96,6 +97,19 @@
     "convert": "Convert to credit contract",
     "logAttempt": "Log attempt",
     "daysInStage": "{count, plural, one {# day in stage} other {# days in stage}}",
-    "stageRequirements": "Requirements for this stage"
+    "stageRequirements": "Requirements for this stage",
+    "teams": "Teams",
+    "teamsTitle": "Sales teams",
+    "newTeam": "New team",
+    "teamName": "Team name",
+    "teamLeader": "Leader",
+    "noLeader": "No leader",
+    "teamMembers": "Members",
+    "saveTeam": "Save team",
+    "teamSaved": "Team saved",
+    "noTeams": "No teams yet.",
+    "allTeams": "All teams",
+    "teamFilter": "Team",
+    "applyFilter": "Apply"
   }
 }
