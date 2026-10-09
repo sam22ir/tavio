@@ -1,5 +1,4 @@
 import { randomUUID } from 'node:crypto';
-import { inArray } from 'drizzle-orm';
 import { afterAll, describe, expect, it } from 'vitest';
 import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
