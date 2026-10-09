@@ -1,1 +1,132 @@
-{}
+{
+  "brand": { "name": "Tavio", "tagline": "Ventes à crédit, clients et facturation pour les commerces algériens" },
+  "nav": {
+    "mainLabel": "Navigation principale",
+    "features": "Modules",
+    "solutions": "Solutions",
+    "pricing": "Tarifs",
+    "onPremise": "On-premise",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Se connecter",
+    "startFree": "Commencer gratuitement",
+    "openApp": "Ouvrir l'application",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "menuTitle": "Menu",
+    "language": "Langue"
+  },
+  "footer": {
+    "tagline": "Un seul outil pour vendre à crédit, suivre vos clients et facturer, en français et en arabe.",
+    "product": "Produit",
+    "solutions": "Solutions",
+    "company": "Entreprise",
+    "legal": "Légal",
+    "contact": "Contact",
+    "whatsapp": "Écrire sur WhatsApp",
+    "rights": "Tous droits réservés.",
+    "links": {
+      "features": "Modules",
+      "pricing": "Tarifs",
+      "onPremise": "On-premise",
+      "solutionsIndex": "Toutes les solutions",
+      "electromenagerCredit": "Électroménager à crédit",
+      "carDealers": "Concessions auto",
+      "clinics": "Cliniques",
+      "trainingCenters": "Centres de formation",
+      "retailPos": "Commerce de détail",
+      "about": "À propos",
+      "contact": "Nous contacter",
+      "faq": "Questions fréquentes",
+      "privacy": "Confidentialité",
+      "terms": "Conditions d'utilisation"
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Tavio : vente à crédit, CRM et facturation pour l'Algérie",
+      "description": "Vendez à crédit, suivez vos clients et facturez avec TVA, en dinars, dans une seule application en français et en arabe."
+    },
+    "hero": {
+      "title": "Ventes à crédit, clients et factures dans une seule application",
+      "subtitle": "Tavio réunit ventes à crédit, CRM, facturation et stock pour les commerces algériens, en français et en arabe.",
+      "primary": "Commencer gratuitement",
+      "secondary": "Voir les modules"
+    },
+    "pain": {
+      "title": "Vos crédits clients sont encore dans des carnets ?",
+      "items": [
+        { "problem": "Les échéances sont oubliées et les impayés s'accumulent", "solution": "Chaque échéance est suivie, avec un rappel envoyé au client." },
+        { "problem": "Les factures sont faites à la main et les totaux ne tombent pas juste", "solution": "Factures et TVA sont calculées automatiquement, prêtes à imprimer." },
+        { "problem": "Clients et stock sont dispersés entre papier et téléphone", "solution": "Un seul dossier client et un stock unique, toujours à jour." }
+      ]
+    },
+    "modules": {
+      "title": "Tous vos modules, reliés entre eux",
+      "body": "Activez ce dont votre commerce a besoin. Les modules partagent les mêmes clients, produits et factures.",
+      "items": [
+        { "slug": "credit-sales", "title": "Vente à crédit", "body": "Plans d'échelonnement, échéances et relances de paiement." },
+        { "slug": "crm", "title": "CRM", "body": "Pipeline commercial, historique des échanges et suivi des prospects." },
+        { "slug": "sales-invoicing", "title": "Ventes et facturation", "body": "Devis, bons de commande et factures conformes à la TVA." },
+        { "slug": "inventory-purchases", "title": "Stock et achats", "body": "Entrepôts, réceptions fournisseurs et alertes de rupture." },
+        { "slug": "accounting", "title": "Comptabilité", "body": "Journaux, écritures et états basés sur le plan comptable SCF." },
+        { "slug": "pos", "title": "Caisse (POS)", "body": "Encaissement rapide au comptoir, sessions de caisse et tickets." },
+        { "slug": "hr", "title": "Ressources humaines", "body": "Employés, congés et présences de votre équipe." },
+        { "slug": "website-shop", "title": "Site et boutique", "body": "Une vitrine en ligne reliée à votre stock et à vos commandes." }
+      ]
+    },
+    "algeria": {
+      "title": "Conçu pour l'Algérie",
+      "body": "Les réalités du commerce algérien sont intégrées dès le premier jour.",
+      "items": [
+        { "title": "Dinar algérien (DZD)", "body": "Prix, paiements et états en dinars, sans conversion." },
+        { "title": "TVA algérienne", "body": "Taux et mentions de TVA sur vos factures et vos ventes." },
+        { "title": "Plan comptable SCF", "body": "Une structure comptable conforme au Système comptable financier." },
+        { "title": "NIF et RC", "body": "Champs NIF et registre de commerce sur les factures, à valider avec votre expert-comptable." },
+        { "title": "CCP, virement et espèces", "body": "Enregistrez les paiements par CCP, virement ou en espèces." },
+        { "title": "Fonctionne sur les téléphones simples", "body": "Interface légère, pensée pour les appareils modestes et les connexions faibles." }
+      ]
+    },
+    "how": {
+      "title": "Démarrer en trois étapes",
+      "items": [
+        { "title": "Créez votre espace", "body": "Inscrivez votre commerce et choisissez vos modules." },
+        { "title": "Importez vos données", "body": "Ajoutez produits, clients et stock, puis invitez votre équipe." },
+        { "title": "Vendez et encaissez", "body": "Vendez à crédit ou au comptoir, facturez et suivez les paiements." }
+      ]
+    },
+    "ai": {
+      "title": "Une aide IA, si vous la voulez",
+      "body": "Un assistant peut rédiger vos relances, résumer vos ventes ou répondre aux questions sur vos produits. Il est facultatif et fonctionne avec le fournisseur d'IA de votre choix."
+    },
+    "pricing": {
+      "title": "Des tarifs simples, en dinars",
+      "body": "Un prix par utilisateur et par mois. Les tarifs sont indicatifs et seront confirmés avant le lancement.",
+      "cta": "Voir tous les tarifs",
+      "free": "Gratuit",
+      "perUser": "/ utilisateur / mois",
+      "users": "Jusqu'à {count} utilisateurs",
+      "popular": "Le plus choisi",
+      "features": {
+        "free": ["Modules de base", "Vente à crédit", "Contacts"],
+        "pro": ["Ventes, facturation et CRM", "Stock, achats et caisse (POS)", "Automatisation"],
+        "business": ["Tous les modules", "Comptabilité et ressources humaines", "Projets, support et API"]
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": [
+        { "question": "Mes données sont-elles en sécurité ?", "answer": "Vos données sont hébergées en Europe, ou sur vos propres serveurs en version on-premise. Vous restez propriétaire de vos données." },
+        { "question": "Puis-je utiliser Tavio en arabe ?", "answer": "Oui. L'interface est disponible en arabe, en français et en anglais, avec une mise en page de droite à gauche pour l'arabe." },
+        { "question": "Combien d'utilisateurs puis-je ajouter ?", "answer": "Cela dépend de votre formule, de 1 à 25 utilisateurs selon le plan choisi." },
+        { "question": "Les factures sont-elles conformes en Algérie ?", "answer": "Tavio applique la TVA algérienne et propose les champs NIF et RC. Faites valider le modèle de facture par votre expert-comptable." },
+        { "question": "Puis-je installer Tavio sur mes propres serveurs ?", "answer": "Oui. L'offre on-premise garde vos données en Algérie, avec installation Docker, sauvegardes et support." }
+      ]
+    },
+    "cta": {
+      "title": "Prêt à quitter les carnets ?",
+      "body": "Créez votre espace en quelques minutes et commencez avec la formule gratuite.",
+      "primary": "Commencer gratuitement"
+    }
+  }
+}
