@@ -1,1 +1,91 @@
-{}
+{
+  "module": {
+    "name": "Website and shop"
+  },
+  "menu": {
+    "settings": "Website",
+    "orders": "Web orders"
+  },
+  "fields": {
+    "enabled": "Online shop enabled",
+    "slug": "Shop identifier (URL)",
+    "title": "Display name",
+    "about": "About",
+    "phoneWhatsapp": "WhatsApp",
+    "showPrices": "Show prices",
+    "number": "Number",
+    "customerName": "Customer",
+    "phone": "Phone",
+    "wilayaCode": "Wilaya",
+    "totalCents": "Total (DZD)",
+    "state": "Status",
+    "address": "Address"
+  },
+  "options": {
+    "state": {
+      "new": "New",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "settings": {
+    "title": "Website and shop",
+    "hint": "The public shop is available at /shop/identifier once enabled. Payment is cash on delivery.",
+    "save": "Save",
+    "error": "Could not load settings.",
+    "open_shop": "Open shop"
+  },
+  "orders": {
+    "title": "Web orders",
+    "error": "Could not load orders.",
+    "convert": "Convert (confirm)",
+    "cancel": "Cancel order",
+    "activity": "Activity",
+    "line": {
+      "product": "Product",
+      "quantity": "Qty",
+      "subtotal": "Subtotal"
+    }
+  },
+  "shop": {
+    "home": "Home",
+    "cart": "Cart",
+    "products": "Products",
+    "no_products": "No products are available right now.",
+    "add_to_cart": "Add to cart",
+    "added": "Added to your cart.",
+    "view_cart": "View cart"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "continue_shopping": "Continue shopping",
+    "whatsapp_intro": "Hello, I would like to order:",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "remove": "Remove",
+    "total": "Total",
+    "checkout": "Order (cash on delivery)",
+    "order_whatsapp": "Order on WhatsApp"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "cod_note": "Pay in cash on delivery.",
+    "fields": {
+      "customerName": "Full name",
+      "phone": "Phone number",
+      "wilayaCode": "Wilaya code (01 to 58)",
+      "address": "Delivery address"
+    },
+    "wilaya_hint": "Enter your two-digit wilaya code, for example 16 for Algiers.",
+    "submit": "Confirm order",
+    "sending": "Sending…",
+    "done_title": "Order received",
+    "done_body": "Thank you. Your order number is {number}. We will contact you for delivery.",
+    "errors": {
+      "rate_limited": "Too many orders were placed with this number. Try again later or contact the shop.",
+      "invalid": "Check the details you entered, especially the phone number and wilaya.",
+      "generic": "The order could not be saved. Try again."
+    }
+  }
+}
