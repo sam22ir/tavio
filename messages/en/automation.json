@@ -1,1 +1,64 @@
-{}
+{
+  "module": {
+    "name": "Automation"
+  },
+  "menu": {
+    "rules": "Automation"
+  },
+  "title": "Automation rules",
+  "empty": "No rules yet. Create one below.",
+  "new": "New rule",
+  "save": "Save",
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "fields": {
+    "name": "Name",
+    "triggerEvent": "When this happens",
+    "condition": "Only if (optional)",
+    "condField": "Payload field, e.g. totalCents",
+    "condOp": "Operator",
+    "condValue": "Value",
+    "action": "Do this",
+    "entity": "Record type, e.g. sales.order",
+    "recordIdField": "Payload field holding the record id, e.g. orderId",
+    "typeKey": "Activity type key",
+    "summary": "Activity summary",
+    "dueInDays": "Due in (days)",
+    "body": "Note text. Use {field} for payload values",
+    "url": "Webhook URL (https)",
+    "active": "Active"
+  },
+  "hints": {
+    "condition": "Leave the field empty to run on every event. Amounts are compared as numbers.",
+    "body": "Example: Payment of {totalCents} cents recorded."
+  },
+  "triggers": {
+    "sales.order.confirmed": "Sales order confirmed",
+    "invoicing.invoice.posted": "Invoice posted",
+    "invoicing.payment.registered": "Payment registered",
+    "purchases.order.received": "Purchase order received",
+    "pos.order.paid": "POS order paid",
+    "inventory.move.done": "Stock move done",
+    "credit_sales.payment.recorded": "Instalment payment recorded"
+  },
+  "ops": {
+    "eq": "equals",
+    "neq": "not equal to",
+    "gt": "greater than",
+    "gte": "greater or equal",
+    "lt": "less than",
+    "lte": "less or equal"
+  },
+  "actions": {
+    "create_activity": "Create activity",
+    "post_note": "Post note",
+    "webhook": "Call webhook"
+  },
+  "errors": {
+    "invalid": "The rule is not valid. Check the fields.",
+    "actionConfig": "The action settings are incomplete."
+  },
+  "forbidden": "You do not have access to automation."
+}

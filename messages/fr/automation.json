@@ -1,1 +1,64 @@
-{}
+{
+  "module": {
+    "name": "Automatisation"
+  },
+  "menu": {
+    "rules": "Automatisation"
+  },
+  "title": "Règles d'automatisation",
+  "empty": "Aucune règle pour l'instant. Créez-en une ci-dessous.",
+  "new": "Nouvelle règle",
+  "save": "Enregistrer",
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "fields": {
+    "name": "Nom",
+    "triggerEvent": "Quand ceci se produit",
+    "condition": "Seulement si (facultatif)",
+    "condField": "Champ de l'événement, ex. totalCents",
+    "condOp": "Opérateur",
+    "condValue": "Valeur",
+    "action": "Faire ceci",
+    "entity": "Type d'enregistrement, ex. sales.order",
+    "recordIdField": "Champ contenant l'identifiant, ex. orderId",
+    "typeKey": "Clé du type d'activité",
+    "summary": "Résumé de l'activité",
+    "dueInDays": "Échéance (jours)",
+    "body": "Texte de la note. Utilisez {champ} pour les valeurs",
+    "url": "URL du webhook (https)",
+    "active": "Active"
+  },
+  "hints": {
+    "condition": "Laissez le champ vide pour exécuter sur chaque événement. Les montants sont comparés comme des nombres.",
+    "body": "Exemple : paiement de {totalCents} centimes enregistré."
+  },
+  "triggers": {
+    "sales.order.confirmed": "Commande de vente confirmée",
+    "invoicing.invoice.posted": "Facture validée",
+    "invoicing.payment.registered": "Paiement enregistré",
+    "purchases.order.received": "Commande d'achat reçue",
+    "pos.order.paid": "Vente caisse payée",
+    "inventory.move.done": "Mouvement de stock effectué",
+    "credit_sales.payment.recorded": "Paiement d'échéance enregistré"
+  },
+  "ops": {
+    "eq": "égal à",
+    "neq": "différent de",
+    "gt": "supérieur à",
+    "gte": "supérieur ou égal à",
+    "lt": "inférieur à",
+    "lte": "inférieur ou égal à"
+  },
+  "actions": {
+    "create_activity": "Créer une activité",
+    "post_note": "Publier une note",
+    "webhook": "Appeler un webhook"
+  },
+  "errors": {
+    "invalid": "La règle n'est pas valide. Vérifiez les champs.",
+    "actionConfig": "Les paramètres de l'action sont incomplets."
+  },
+  "forbidden": "Vous n'avez pas accès à l'automatisation."
+}
