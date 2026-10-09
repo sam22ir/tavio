@@ -1,3 +1,4 @@
+import { DEFAULT_MODULES } from './default-roles';
 import { randomUUID } from 'node:crypto';
 import { eq, inArray } from 'drizzle-orm';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -59,13 +60,7 @@ describe('tenancy service', () => {
     expect(seededRoles.map((r) => r.key).sort()).toEqual(['admin', 'manager', 'owner', 'staff']);
 
     const modules = await enabledModules(companyId, db);
-    expect(modules.sort()).toEqual(
-      [
-        'accounting', 'automation', 'chatter', 'contacts', 'core', 'credit_sales', 'crm', 'hr', 'helpdesk',
-        'inventory', 'invoicing', 'l10n_dz', 'marketing', 'platform', 'pos', 'products', 'projects', 'purchases',
-        'sales', 'subscriptions', 'website',
-      ].sort(),
-    );
+    expect(modules.sort()).toEqual([...DEFAULT_MODULES].sort());
   });
 
   it('lists the company for its owner with the owner role', async () => {
