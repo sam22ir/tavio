@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -38,7 +39,7 @@ export default async function DeliveriesPage({ params }: { params: Promise<{ loc
                   const open = row.state === 'draft' || row.state === 'ready';
                   return (
                     <tr key={row.id} className="border-t">
-                      <td className="p-3">{row.number}</td>
+                      <td className="p-3"><Link href={`/${locale}/inventory/deliveries/${row.id}`} className="underline">{row.number}</Link></td>
                       <td className="p-3 text-end tabular-nums">{row.lineCount}</td>
                       <td className="p-3">{row.scheduledDate ?? '–'}</td>
                       <td className="p-3">{row.deliveredAt ? row.deliveredAt.slice(0, 10) : '–'}</td>

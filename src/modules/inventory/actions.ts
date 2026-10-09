@@ -10,7 +10,14 @@ import { cancelMove, createMove, validateMove } from './service/moves';
 import { createAdjustment } from './service/adjustments';
 import { createReorderRule } from './service/stock';
 import { createWarehouse } from './service/warehouses';
-import { cancelDelivery, validateDelivery } from './service/deliveries';
+import {
+  attachDeliveryFile,
+  cancelDelivery,
+  setDeliverySignedBy,
+  validateDelivery,
+  SIGNED_BY_NAME_MAX,
+} from './service/deliveries';
+import { MAX_FILE_BYTES } from '@/core/files/service';
 
 const MODULE = 'inventory';
 
@@ -66,6 +73,35 @@ const adjustmentAction = defineAction(
 const deliveryValidateAction = defineAction(
   { perm: 'inventory.delivery.post', schema: idInput, module: MODULE },
   (ctx, { id }) => validateDelivery(ctx, id),
+);
+const deliverySignedByAction = defineAction(
+  {
+    perm: 'inventory.delivery.post',
+    schema: z.object({ id: uuid, signedByName: z.string().max(SIGNED_BY_NAME_MAX) }),
+    module: MODULE,
+  },
+  (ctx, { id, signedByName }) => setDeliverySignedBy(ctx, { deliveryId: id, signedByName }),
+);
+const deliveryFileAction = defineAction(
+  {
+    perm: 'inventory.delivery.post',
+    schema: z.object({
+      id: uuid,
+      kind: z.enum(['signature', 'proof']),
+      fileName: z.string().min(1).max(200),
+      contentType: z.string().max(100),
+      bytes: z.instanceof(Uint8Array).refine((b) => b.byteLength > 0 && b.byteLength <= MAX_FILE_BYTES, 'invalid size'),
+    }),
+    module: MODULE,
+  },
+  (ctx, input) =>
+    attachDeliveryFile(ctx, {
+      deliveryId: input.id,
+      kind: input.kind,
+      fileName: input.fileName,
+      contentType: input.contentType,
+      bytes: input.bytes,
+    }),
 );
 const deliveryCancelAction = defineAction(
   { perm: 'inventory.delivery.cancel', schema: idInput, module: MODULE },
@@ -142,4 +178,34 @@ export async function cancelDeliveryForm(formData: FormData): Promise<void> {
   const id = String(formData.get('id') ?? '');
   const r = await deliveryCancelAction({ id });
   redirect(`/${locale}/inventory/deliveries${failureQuery(r)}`);
+}
+
+/** Signed-by name form on the delivery detail page. */
+export async function saveDeliverySignedByForm(formData: FormData): Promise<void> {
+  const locale = await getLocale();
+  const id = String(formData.get('id') ?? '');
+  const raw = formData.get('signedByName');
+  const r = await deliverySignedByAction({ id, signedByName: typeof raw === 'string' ? raw : '' });
+  redirect(`/${locale}/inventory/deliveries/${id}${failureQuery(r)}`);
+}
+
+/** Signature or proof upload on the delivery detail page. */
+export async function uploadDeliveryFileForm(formData: FormData): Promise<void> {
+  const locale = await getLocale();
+  const id = String(formData.get('id') ?? '');
+  const kindRaw = formData.get('kind');
+  const file = formData.get('file');
+  const back = `/${locale}/inventory/deliveries/${id}`;
+  if (!(file instanceof File) || (kindRaw !== 'signature' && kindRaw !== 'proof')) {
+    redirect(`${back}?error=VALIDATION`);
+  }
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const r = await deliveryFileAction({
+    id,
+    kind: kindRaw,
+    fileName: file.name || 'file',
+    contentType: file.type,
+    bytes,
+  });
+  redirect(`${back}${failureQuery(r)}`);
 }

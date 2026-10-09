@@ -34,7 +34,8 @@
     "scheduled_date": "Scheduled on",
     "delivered_at": "Delivered on",
     "reserved": "Reserved",
-    "available": "Available"
+    "available": "Available",
+    "partner": "Partner"
   },
   "options": {
     "state": {
@@ -93,11 +94,26 @@
   "errors": {
     "invalid_quantity": "Invalid quantity (positive, up to 3 decimals).",
     "move_not_draft": "Only draft moves can be validated.",
-    "move_done": "A validated move cannot be cancelled."
+    "move_done": "A validated move cannot be cancelled.",
+    "signed_by_required": "Enter who signed for the delivery before validating it.",
+    "signed_by_too_long": "The name is too long."
   },
   "deliveries": {
     "title": "Deliveries",
     "validate": "Validate delivery",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "signed_by": "Signed by (name)",
+    "signed_by_hint": "Enter the name of the person who received the delivery before validating it.",
+    "save": "Save name",
+    "signature": "Signature",
+    "proof": "Proof of delivery",
+    "upload": "Upload",
+    "uploaded": "Uploaded",
+    "not_uploaded": "Not uploaded",
+    "view_file": "View file",
+    "source_contract": "Source contract",
+    "view_contract": "Open contract",
+    "lines_title": "Lines",
+    "receipt_title": "Receipt"
   }
 }

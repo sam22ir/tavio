@@ -34,7 +34,8 @@
     "scheduled_date": "Prévue le",
     "delivered_at": "Livrée le",
     "reserved": "Réservé",
-    "available": "Disponible"
+    "available": "Disponible",
+    "partner": "Partenaire"
   },
   "options": {
     "state": {
@@ -93,11 +94,26 @@
   "errors": {
     "invalid_quantity": "Quantité invalide (positive, 3 décimales maximum).",
     "move_not_draft": "Seuls les mouvements en brouillon peuvent être validés.",
-    "move_done": "Un mouvement validé ne peut pas être annulé."
+    "move_done": "Un mouvement validé ne peut pas être annulé.",
+    "signed_by_required": "Saisissez le nom du signataire avant de valider la livraison.",
+    "signed_by_too_long": "Le nom est trop long."
   },
   "deliveries": {
     "title": "Livraisons",
     "validate": "Valider la livraison",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "signed_by": "Signé par (nom)",
+    "signed_by_hint": "Saisissez le nom de la personne qui a reçu la livraison avant de la valider.",
+    "save": "Enregistrer le nom",
+    "signature": "Signature",
+    "proof": "Preuve de livraison",
+    "upload": "Téléverser",
+    "uploaded": "Téléversé",
+    "not_uploaded": "Non téléversé",
+    "view_file": "Voir le fichier",
+    "source_contract": "Contrat source",
+    "view_contract": "Ouvrir le contrat",
+    "lines_title": "Lignes",
+    "receipt_title": "Réception"
   }
 }

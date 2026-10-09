@@ -1,9 +1,11 @@
 import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
+import { fileUrl, uploadFile } from '@/core/files/service';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { nextNumber } from '@/core/sequences';
+import { products } from '@/modules/products/schema';
 import { deliveries, deliveryLines, type Delivery } from '../schema';
 import { closeReservations, aggregateLines, type ReservableLine } from './reservations';
 import { fromMilli } from './quantity';
@@ -11,6 +13,23 @@ import { moveLines } from './moves';
 import { ensureDefaultWarehouse } from './warehouses';
 
 export const DELIVERY_SOURCE_ENTITY = 'inventory.delivery';
+export const CONTRACT_SOURCE_ENTITY = 'credit_sales.contract';
+export const SIGNED_BY_NAME_MAX = 200;
+
+/**
+ * Pure rule: a delivery can only be validated once the person who received it is named.
+ * Returns the trimmed name, or a VALIDATION error with an i18n key for the UI.
+ */
+export function requireSignedByName(name: string | null | undefined): Result<string> {
+  const trimmed = (name ?? '').trim();
+  if (trimmed.length === 0) {
+    return err('VALIDATION', 'signed_by_name is required to validate a delivery');
+  }
+  if (trimmed.length > SIGNED_BY_NAME_MAX) {
+    return err('VALIDATION', 'signed_by_name is too long');
+  }
+  return ok(trimmed);
+}
 
 export interface DeliveryRow {
   id: string;
@@ -99,6 +118,8 @@ export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Re
     .for('update');
   if (!delivery) return err('NOT_FOUND', 'Delivery not found');
   if (delivery.state !== 'draft' && delivery.state !== 'ready') return err('CONFLICT', 'Delivery cannot be validated in this state');
+  const signer = requireSignedByName(delivery.signedByName);
+  if (!signer.ok) return signer;
 
   const lines = await ctx.tx
     .select({ productId: deliveryLines.productId, quantity: deliveryLines.quantity })
@@ -194,4 +215,127 @@ export async function listDeliveries(ctx: Ctx, opts: { limit?: number } = {}): P
       deliveredAt: r.deliveredAt ? r.deliveredAt.toISOString() : null,
     })),
   );
+}
+
+export type DeliveryFileKind = 'signature' | 'proof';
+
+export interface DeliveryDetail {
+  id: string;
+  number: string;
+  partnerId: string;
+  sourceEntity: string | null;
+  sourceId: string | null;
+  state: Delivery['state'];
+  scheduledDate: string | null;
+  deliveredAt: string | null;
+  signedByName: string | null;
+  signatureFileId: string | null;
+  proofFileId: string | null;
+  note: string | null;
+  lines: { productId: string; productName: string; quantity: string }[];
+}
+
+/** One delivery with its lines, for the detail page. */
+export async function getDelivery(ctx: Ctx, deliveryId: string): Promise<Result<DeliveryDetail>> {
+  const perm = requirePerm(ctx, 'inventory.delivery.read');
+  if (!perm.ok) return perm;
+  const [row] = await ctx.tx
+    .select()
+    .from(deliveries)
+    .where(and(eq(deliveries.id, deliveryId), eq(deliveries.companyId, ctx.companyId)));
+  if (!row) return err('NOT_FOUND', 'Delivery not found');
+  const lines = await ctx.tx
+    .select({
+      productId: deliveryLines.productId,
+      productName: products.name,
+      quantity: deliveryLines.quantity,
+    })
+    .from(deliveryLines)
+    .innerJoin(products, eq(products.id, deliveryLines.productId))
+    .where(and(eq(deliveryLines.deliveryId, row.id), eq(deliveryLines.companyId, ctx.companyId)));
+  return ok({
+    id: row.id,
+    number: row.number,
+    partnerId: row.partnerId,
+    sourceEntity: row.sourceEntity,
+    sourceId: row.sourceId,
+    state: row.state as Delivery['state'],
+    scheduledDate: row.scheduledDate,
+    deliveredAt: row.deliveredAt ? row.deliveredAt.toISOString() : null,
+    signedByName: row.signedByName,
+    signatureFileId: row.signatureFileId,
+    proofFileId: row.proofFileId,
+    note: row.note,
+    lines,
+  });
+}
+
+/** Sets the name of the person who signed for the delivery. An empty name clears it. Open deliveries only. */
+export async function setDeliverySignedBy(
+  ctx: Ctx,
+  input: { deliveryId: string; signedByName: string },
+): Promise<Result<void>> {
+  const perm = requirePerm(ctx, 'inventory.delivery.post');
+  if (!perm.ok) return perm;
+  const name = input.signedByName.trim();
+  if (name.length > SIGNED_BY_NAME_MAX) return err('VALIDATION', 'signed_by_name is too long');
+
+  const [delivery] = await ctx.tx
+    .select({ id: deliveries.id, state: deliveries.state })
+    .from(deliveries)
+    .where(and(eq(deliveries.id, input.deliveryId), eq(deliveries.companyId, ctx.companyId)))
+    .for('update');
+  if (!delivery) return err('NOT_FOUND', 'Delivery not found');
+  if (delivery.state !== 'draft' && delivery.state !== 'ready') return err('CONFLICT', 'Delivery is already closed');
+
+  await ctx.tx
+    .update(deliveries)
+    .set({ signedByName: name.length > 0 ? name : null, updatedAt: sql`now()` })
+    .where(eq(deliveries.id, delivery.id));
+  await audit(ctx, { entity: 'inventory.delivery', recordId: delivery.id, action: 'update', after: { signedByName: name.length > 0 } });
+  return ok(undefined);
+}
+
+/**
+ * Stores a signature or proof file through the shared file service and points the delivery at it.
+ * Open deliveries only.
+ */
+export async function attachDeliveryFile(
+  ctx: Ctx,
+  input: { deliveryId: string; kind: DeliveryFileKind; fileName: string; contentType: string; bytes: Uint8Array },
+): Promise<Result<{ fileId: string }>> {
+  const perm = requirePerm(ctx, 'inventory.delivery.post');
+  if (!perm.ok) return perm;
+
+  const [delivery] = await ctx.tx
+    .select({ id: deliveries.id, state: deliveries.state })
+    .from(deliveries)
+    .where(and(eq(deliveries.id, input.deliveryId), eq(deliveries.companyId, ctx.companyId)))
+    .for('update');
+  if (!delivery) return err('NOT_FOUND', 'Delivery not found');
+  if (delivery.state !== 'draft' && delivery.state !== 'ready') return err('CONFLICT', 'Delivery is already closed');
+
+  const up = await uploadFile(ctx, {
+    entity: DELIVERY_SOURCE_ENTITY,
+    recordId: delivery.id,
+    fileName: input.fileName,
+    contentType: input.contentType,
+    bytes: input.bytes,
+    kind: `delivery_${input.kind}`,
+  });
+  if (!up.ok) return up;
+
+  await ctx.tx
+    .update(deliveries)
+    .set(input.kind === 'signature' ? { signatureFileId: up.value.id, updatedAt: sql`now()` } : { proofFileId: up.value.id, updatedAt: sql`now()` })
+    .where(eq(deliveries.id, delivery.id));
+  await audit(ctx, { entity: 'inventory.delivery', recordId: delivery.id, action: 'update', after: { [input.kind]: up.value.id } });
+  return ok({ fileId: up.value.id });
+}
+
+/** Signed GET URL for a delivery's signature or proof file. */
+export async function deliveryFileUrl(ctx: Ctx, fileId: string): Promise<Result<string>> {
+  const perm = requirePerm(ctx, 'inventory.delivery.read');
+  if (!perm.ok) return perm;
+  return fileUrl(ctx, fileId);
 }
