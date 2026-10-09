@@ -60,7 +60,11 @@ describe('tenancy service', () => {
 
     const modules = await enabledModules(companyId, db);
     expect(modules.sort()).toEqual(
-      ['chatter', 'contacts', 'core', 'credit_sales', 'crm', 'l10n_dz', 'products'].sort(),
+      [
+        'accounting', 'automation', 'chatter', 'contacts', 'core', 'credit_sales', 'crm', 'hr', 'helpdesk',
+        'inventory', 'invoicing', 'l10n_dz', 'marketing', 'platform', 'pos', 'products', 'projects', 'purchases',
+        'sales', 'subscriptions', 'website',
+      ].sort(),
     );
   });
 

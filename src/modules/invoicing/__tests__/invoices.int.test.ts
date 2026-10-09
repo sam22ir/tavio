@@ -62,7 +62,8 @@ describe.skipIf(!enabled)('invoicing lifecycle', { timeout: 60_000 }, () => {
     const pay = await withTenant(f.args, (ctx) => registerPayment(ctx, id, { amountCents: BigInt(50000), method: 'cash' }));
     expect(pay.ok).toBe(true);
     const [row] = await db.select().from(invoices).where(inArray(invoices.id, [id]));
-    expect(row?.stampCents).toBe(BigInt(200));
+    // 500 DZD falls in the 300 to 30000 DA tier, duty 1 DA (100 cents). ⚠ needs accountant verification
+    expect(row?.stampCents).toBe(BigInt(100));
     const over = await withTenant(f.args, (ctx) => registerPayment(ctx, id, { amountCents: BigInt(10_000_000), method: 'transfer' }));
     expect(!over.ok && over.error.code).toBe('VALIDATION');
   });

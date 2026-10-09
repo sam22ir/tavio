@@ -9,5 +9,8 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['src/**/*.int.test.ts'],
+    // The dev database is remote, so a single transaction with several round trips can pass 5 seconds.
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
   },
 });

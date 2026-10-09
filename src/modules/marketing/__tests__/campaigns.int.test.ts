@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { inArray } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { loadDevEnv } from '@/core/env/load-dev-env';
+import { deleteTestCompanies } from '@/testing/db-cleanup';
 import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
@@ -53,7 +54,7 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('marketing campaigns (db)', () => {
   });
 
   afterAll(async () => {
-    await db.delete(companies).where(inArray(companies.id, [companyA, companyB]));
+    await deleteTestCompanies(db, [companyA, companyB]);
     await db.delete(users).where(inArray(users.id, [userId]));
   });
 

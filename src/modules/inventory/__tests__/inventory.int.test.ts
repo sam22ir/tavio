@@ -28,7 +28,7 @@ async function fixture(): Promise<{ args: TenantArgs; productId: string; uomId: 
   createdCompanies.push(companyId);
   await db.insert(companies).values({ id: companyId, legalName: 'Inv Test SARL', displayName: 'Inv' });
   await db.insert(users).values({ id: userId, name: 'inventory test', email: `inv-${userId}@test.invalid` });
-  await db.insert(uoms).values({ id: uomId, code: `pc-${uomId.slice(0, 8)}`, nameFr: 'Pièce', category: 'unit', factorToRef: '1', isReference: true });
+  await db.insert(uoms).values({ id: uomId, code: `pc-${uomId.slice(0, 8)}`, nameFr: 'Pièce', category: 'unit', factorToRef: '1', isReference: false });
   await db.insert(products).values({
     id: productId,
     companyId,

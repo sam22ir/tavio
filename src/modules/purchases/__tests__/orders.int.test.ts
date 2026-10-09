@@ -77,7 +77,8 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('purchase orders (integration)', () =>
     if (!created.ok) return;
     const detail = await withTenant(args, (ctx) => getOrder(ctx, created.value.id), db);
     expect(detail.ok && detail.value.order.number).toBeFalsy();
-    expect(detail.ok && detail.value.order.totalCents).toBe(BigInt(220000));
+    // 2 x 1000 DZD + 1.5 x 200 DZD = 2300 DZD
+    expect(detail.ok && detail.value.order.totalCents).toBe(BigInt(230000));
   });
 
   it('confirms with a gap-free PO number and blocks edits afterwards', async () => {

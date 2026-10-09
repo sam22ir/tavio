@@ -38,6 +38,10 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('pos service (integration)', () => {
     expect(first.ok).toBe(true);
     const second = await withTenant(argsFor(), (ctx) => openSession(ctx, { openingCash: '0' }));
     expect(second).toMatchObject({ ok: false, error: { code: 'STATE' } });
+    // Close it so the later tests can open their own session for this company.
+    if (first.ok) {
+      await withTenant(argsFor(), (ctx) => closeSession(ctx, { sessionId: first.value.sessionId, closingCash: '5000' }));
+    }
   });
 
   it('closes with expected cash = opening + cash sales and reports the difference', async () => {

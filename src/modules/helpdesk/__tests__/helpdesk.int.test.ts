@@ -5,6 +5,7 @@ import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import { loadDevEnv } from '@/core/env/load-dev-env';
+import { deleteTestCompanies } from '@/testing/db-cleanup';
 import { createTicket, moveTicketStage } from '../service/tickets';
 
 loadDevEnv();
@@ -23,7 +24,7 @@ async function fixture(perms: ReadonlySet<string> = PERMS): Promise<TenantArgs> 
 }
 
 afterAll(async () => {
-  if (companyIds.length > 0) await db.delete(companies).where(inArray(companies.id, companyIds));
+  await deleteTestCompanies(db, companyIds);
 });
 
 describe.skipIf(!process.env.TAVIO_W5_DB)('helpdesk services (db)', () => {
