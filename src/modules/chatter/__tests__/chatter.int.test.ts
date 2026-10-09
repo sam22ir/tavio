@@ -5,16 +5,19 @@ import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import { loadDevEnv } from '@/core/env/load-dev-env';
-import { activityTypes } from '../schema';
+import { activities, activityTypes } from '../schema';
 import { ACTIVITY_TYPE_SEED } from '../entities';
 import {
   completeActivity,
   ensureActivity,
+  listPlans,
   listThread,
   myOpenActivities,
   postMessage,
+  savePlan,
   scheduleActivity,
 } from '../service';
+import { cancelPlanRuns, launchPlan } from '../service/plans';
 
 loadDevEnv();
 
@@ -74,7 +77,7 @@ describe('chatter service', () => {
     expect(open.length).toBe(1);
     expect(open[0]!.typeName).toBe('call');
 
-    const done = await withTenant(a, (ctx) => completeActivity(ctx, open[0]!.id, 'reached client'), db);
+    const done = await withTenant(a, (ctx) => completeActivity(ctx, open[0]!.id, { result: 'reached client' }), db);
     expect(done.ok).toBe(true);
     const again = await withTenant(a, (ctx) => completeActivity(ctx, open[0]!.id), db);
     expect(again.ok).toBe(false);
@@ -96,5 +99,60 @@ describe('chatter service', () => {
     const b = args(otherCompanyId);
     const otherThread = await withTenant(b, (ctx) => listThread(ctx, entity, recordId), db);
     expect(otherThread.length).toBe(0);
+  });
+
+  it('requires a result when the activity type says so', async () => {
+    const a = args(companyId);
+    const rid = randomUUID();
+    const typeId = await withTenant(a, async (ctx) => {
+      const [row] = await ctx.tx.select().from(activityTypes).where(eq(activityTypes.name, 'meeting'));
+      return row!.id;
+    }, db);
+    await db.update(activityTypes).set({ requireResult: true }).where(eq(activityTypes.id, typeId));
+    const sched = await withTenant(a, (ctx) => scheduleActivity(ctx, { entity, recordId: rid, activityTypeId: typeId, summary: 'Meet', dueDate: '2026-10-10' }), db);
+    expect(sched.ok).toBe(true);
+    const id = sched.ok ? sched.value.id : '';
+    const missing = await withTenant(a, (ctx) => completeActivity(ctx, id, {}), db);
+    expect(missing.ok).toBe(false);
+    const done = await withTenant(a, (ctx) => completeActivity(ctx, id, { result: 'signed' }), db);
+    expect(done.ok).toBe(true);
+    await db.update(activityTypes).set({ requireResult: false }).where(eq(activityTypes.id, typeId));
+  });
+
+  it('launches a plan, replaces earlier runs, and keeps plans tenant-scoped', async () => {
+    const a = args(companyId);
+    const rid = randomUUID();
+    const todoId = await withTenant(a, async (ctx) => {
+      const [row] = await ctx.tx.select().from(activityTypes).where(eq(activityTypes.name, 'todo'));
+      return row!.id;
+    }, db);
+    const plan = await withTenant(a, (ctx) => savePlan(ctx, {
+      name: 'Follow-up',
+      entity,
+      active: true,
+      steps: [
+        { activityTypeId: todoId, summary: 'Day 1 call', offsetDays: 1, responsible: 'record_owner', userId: null },
+        { activityTypeId: todoId, summary: 'Day 3 call', offsetDays: 3, responsible: 'record_owner', userId: null },
+      ],
+    }), db);
+    expect(plan.ok).toBe(true);
+    const planId = plan.ok ? plan.value.id : '';
+
+    const run1 = await withTenant(a, (ctx) => launchPlan(ctx, planId, entity, rid, '2026-10-10', userId), db);
+    expect(run1.ok).toBe(true);
+    const run2 = await withTenant(a, (ctx) => launchPlan(ctx, planId, entity, rid, '2026-10-20', userId), db);
+    expect(run2.ok).toBe(true);
+    const runId2 = run2.ok ? run2.value.runId : '';
+    const cancelled = await withTenant(a, (ctx) => cancelPlanRuns(ctx, entity, rid, { exceptRunId: runId2 }), db);
+    expect(cancelled).toEqual({ ok: true, value: { cancelledRuns: 1, deletedActivities: 2 } });
+
+    const open = await db.select().from(activities).where(eq(activities.recordId, rid));
+    expect(open.length).toBe(2);
+    expect(open.every((x) => x.planRunId === runId2)).toBe(true);
+
+    const otherPlans = await withTenant(args(otherCompanyId), (ctx) => listPlans(ctx), db);
+    expect(otherPlans.length).toBe(0);
+    const foreign = await withTenant(args(otherCompanyId), (ctx) => launchPlan(ctx, planId, entity, rid, '2026-10-10', userId), db);
+    expect(foreign.ok).toBe(false);
   });
 });
