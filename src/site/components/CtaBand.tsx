@@ -1,4 +1,5 @@
 import { CtaLink } from './CtaLink';
+import { Emphasis } from './Emphasis';
 import type { SiteAction } from './types';
 
 /**
@@ -14,7 +15,9 @@ export function CtaBand({ title, body, primary, secondary }: {
   return (
     <div className="s-cta-band flex flex-col items-start justify-between gap-8 px-6 py-14 md:flex-row md:items-center md:px-14">
       <div className="flex max-w-2xl flex-col gap-3">
-        <h2 className="s-h2 text-balance">{title}</h2>
+        <h2 className="s-h2 text-balance">
+          <Emphasis text={title} />
+        </h2>
         {body ? <p className="text-[17px] leading-relaxed text-white/80">{body}</p> : null}
       </div>
       <div className="flex flex-wrap gap-3">

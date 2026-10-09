@@ -277,6 +277,11 @@
           "Comptabilité et ressources humaines",
           "Projets, support et API"
         ]
+      },
+      "planNames": {
+        "free": "Gratuit",
+        "pro": "Pro",
+        "business": "Business"
       }
     },
     "faq": {

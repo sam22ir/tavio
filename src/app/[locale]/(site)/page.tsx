@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { BookOpen, FileText, Landmark, Smartphone, Banknote, Percent } from 'lucide-react';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -24,6 +25,9 @@ import {
 } from '@/site/components';
 
 export const dynamic = 'force-dynamic';
+
+/** Icons for the Algeria bento tiles, in message order. */
+const ALGERIA_ICONS = [Banknote, Percent, BookOpen, FileText, Landmark, Smartphone];
 
 /** Formats a whole-DZD amount with thin-space thousands separators. */
 function formatDzd(amount: number): string {
@@ -65,7 +69,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     const dzd = Number(plan.pricePerUserCents / 100n);
     const isPro = plan.code === 'pro';
     return {
-      name: plan.name,
+      name: t(`pricing.planNames.${plan.code}`),
       price: dzd === 0 ? t('pricing.free') : formatDzd(dzd),
       period: dzd === 0 ? '' : t('pricing.perUser'),
       users: t('pricing.users', { count: plan.maxUsers }),
@@ -97,15 +101,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
 
           <div className="relative mx-auto mt-16 w-full max-w-5xl">
-            <DeviceFrame name="dashboard" locale={locale} device="laptop" priority className="w-full" />
+            <DeviceFrame name="dashboard" locale={locale} device="laptop" priority className="hidden w-full md:block" />
             <DeviceFrame
               name="phone-dashboard"
               locale={locale}
               device="phone"
-              className="s-float absolute -bottom-10 end-2 hidden w-[24%] max-w-[230px] md:block"
+              priority
+              className="s-float mx-auto w-[72%] max-w-[300px] md:absolute md:-bottom-10 md:end-2 md:w-[24%] md:max-w-[230px]"
             />
             <FloatingBadges
-              labels={['DZD', 'CCP', 'WhatsApp', t('badges.invoice'), 'TVA']}
+              items={[
+                { kind: 'dzd', label: 'DZD' },
+                { kind: 'ccp', label: 'CCP' },
+                { kind: 'whatsapp', label: 'WhatsApp' },
+                { kind: 'invoice', label: t('badges.invoice') },
+                { kind: 'tva', label: 'TVA' },
+              ]}
             />
           </div>
         </div>
@@ -167,18 +178,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Section tone="muted">
         <div className="flex flex-col gap-12">
           <SectionHeading eyebrow={t('algeria.eyebrow')} title={t('algeria.title')} body={t('algeria.body')} />
-          <ul className="grid grid-cols-1 gap-4 md:grid-cols-6">
-            {algeria.map((item, i) => (
-              <li
-                key={item.title}
-                className={`s-panel flex flex-col justify-between gap-6 p-7 md:p-8 ${
-                  i === 0 ? 'md:col-span-4' : i === 1 ? 'md:col-span-2' : 'md:col-span-2'
-                } ${i === 0 ? 'bg-[var(--s-accent-soft)]' : ''}`}
-              >
-                <h3 className="text-xl">{item.title}</h3>
-                <p className="leading-relaxed text-[color:var(--s-muted)]">{item.body}</p>
-              </li>
-            ))}
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {algeria.map((item, i) => {
+              const Icon = ALGERIA_ICONS[i] ?? Banknote;
+              return (
+                <li key={item.title} className="s-panel flex flex-col justify-between gap-6 p-7 md:p-8">
+                  <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
+                    <Icon size={20} strokeWidth={1.75} aria-hidden />
+                  </span>
+                  <h3 className="text-xl">{item.title}</h3>
+                  <p className="leading-relaxed text-[color:var(--s-muted)]">{item.body}</p>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </Section>

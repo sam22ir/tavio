@@ -33,8 +33,15 @@ export function DeviceFrame({
   const { w, h } = SIZE[device];
   return (
     <div className={cn('relative', className)}>
-      <div className="s-shell">
+      <div className="s-shell shadow-[0_28px_60px_-30px_rgba(15,26,23,0.35)]">
         <div className="s-core">
+          {device === 'laptop' ? (
+            <div aria-hidden className="flex h-7 items-center gap-1.5 border-b border-[rgba(15,26,23,0.06)] bg-[#ebe6da] px-3">
+              <span className="size-2.5 rounded-full bg-[#e0a58a]" />
+              <span className="size-2.5 rounded-full bg-[#e6d7a0]" />
+              <span className="size-2.5 rounded-full bg-[#a9cbbd]" />
+            </div>
+          ) : null}
           <Image
             src={screenSrc(name, locale)}
             alt={alt}
@@ -42,7 +49,7 @@ export function DeviceFrame({
             height={h}
             priority={priority}
             sizes={device === 'phone' ? '(min-width: 768px) 260px, 60vw' : '(min-width: 1024px) 760px, 92vw'}
-            className="block h-auto w-full"
+            className="block h-auto w-full bg-[#f6f1e7]"
           />
         </div>
       </div>
