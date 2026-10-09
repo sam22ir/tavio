@@ -6,7 +6,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { buildMetadata } from '@/site/seo';
-import { BlueHero, Section } from '@/site/components';
+import { PageHero, Section } from '@/site/components';
 import { ContactForm } from '@/site/contact/ContactForm';
 import { CONTACT_TYPES, type ContactType } from '@/site/contact/schema';
 
@@ -66,7 +66,7 @@ export default async function ContactPage({
 
   return (
     <>
-      <BlueHero uppercase={locale !== 'ar'} eyebrow={t('eyebrow')} title={t('title')} subtitle={t('body')} />
+      <PageHero eyebrow={t('eyebrow')} title={t('title')} subtitle={t('body')} />
 
       <Section className="pt-12 md:pt-16">
         <div className="grid min-w-0 items-start gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-16">

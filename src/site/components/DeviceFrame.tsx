@@ -39,7 +39,7 @@ export function DeviceFrame({
             <div aria-hidden className="flex h-7 items-center gap-1.5 border-b border-[rgba(15,26,23,0.06)] bg-[#ebe6da] px-3">
               <span className="size-2.5 rounded-full bg-[#e0a58a]" />
               <span className="size-2.5 rounded-full bg-[#e6d7a0]" />
-              <span className="size-2.5 rounded-full bg-[#a9cbbd]" />
+              <span className="size-2.5 rounded-full bg-[#A9C4FF]" />
             </div>
           ) : null}
           <Image

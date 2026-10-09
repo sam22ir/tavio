@@ -8,7 +8,7 @@ import { routing } from '@/i18n/routing';
 import { getFeature } from '@/site/content/features';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata, FEATURE_SLUGS } from '@/site/seo';
-import { BlueHero, CtaBand, CtaLink, DeviceFrame, FeatureList, PillLabel, Reveal, Section } from '@/site/components';
+import { PageHero, CtaBand, CtaLink, DeviceFrame, FeatureList, PillLabel, Reveal, Section } from '@/site/components';
 
 interface FeatureCopy {
   title: string;
@@ -45,8 +45,7 @@ export default async function FeatureDetailPage({ params }: { params: Params }) 
 
   return (
     <>
-<BlueHero
-          uppercase={locale !== 'ar'}
+<PageHero
           eyebrow={item.title}
           title={item.headline}
           subtitle={item.tagline}

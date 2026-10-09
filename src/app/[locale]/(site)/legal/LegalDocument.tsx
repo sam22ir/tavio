@@ -1,5 +1,5 @@
-import { getLocale, getTranslations } from 'next-intl/server';
-import { BlueHero } from '@/site/components';
+import { getTranslations } from 'next-intl/server';
+import { PageHero } from '@/site/components';
 
 /**
  * Shared layout for legal texts. The reading column is capped at ~70ch on a white panel.
@@ -11,11 +11,9 @@ export async function LegalDocument({ namespace }: { namespace: 'site_company.le
   const tCommon = await getTranslations('site_company.legal');
   const sections = t.raw('sections') as { title: string; body: string[] }[];
 
-  const locale = (await getLocale()) as string;
-
   return (
     <>
-    <BlueHero uppercase={locale !== 'ar'} title={t('title')} subtitle={t('updated')} />
+    <PageHero title={t('title')} subtitle={t('updated')} />
     <div className="mx-auto w-full max-w-6xl px-4 pb-20 pt-12 md:pt-16">
       <div className="grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-16">
         <nav aria-label={tCommon('tocTitle')} className="lg:sticky lg:top-28 lg:self-start">

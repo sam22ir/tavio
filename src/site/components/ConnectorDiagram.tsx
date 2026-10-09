@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from 'motion/react';
 const EASE = [0.32, 0.72, 0, 1] as const;
 
 /**
- * Before/after diagram. Left column: "before" cards with a red cross. Centre: Revora mark.
+ * Before/after diagram. Left column: "before" cards with a red cross. Centre: Tavio mark.
  * Right column: "after" cards with a green tick. When in view the SVG connectors draw themselves,
  * then the tick items pop in. SVG connectors are flipped under RTL. Mobile: stacked, connectors hidden.
  */
@@ -66,7 +66,7 @@ export function ConnectorDiagram({
             key={`a${y}`}
             d={`M0 50 C 50 50, 50 ${y}, 100 ${y}`}
             className="s-connector-line"
-            stroke="#1f5f55"
+            stroke="#08409D"
             variants={draw(0.6 + i * 0.05, reduce)}
           />
         ))}

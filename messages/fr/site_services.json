@@ -5,7 +5,7 @@
   },
   "hero": {
     "pill": "Accompagnement",
-    "title": "*NOUS CONSTRUISONS* / VOTRE SYSTÈME DE CROISSANCE.",
+    "title": "*Nous construisons* votre système de croissance.",
     "subtitle": "Une équipe qui a réellement travaillé en marketing, en vente et en back office. Nous relions acquisition, ventes, opérations et données, pour que votre croissance soit visible et maîtrisée.",
     "primary": "Demander un audit gratuit",
     "secondary": "Voir la plateforme"
@@ -60,17 +60,37 @@
   "audience": {
     "title": "Pour qui ?",
     "body": "Toutes les entreprises algériennes qui veulent mieux comprendre leur croissance, quelle que soit leur taille ou leur secteur.",
-    "chips": ["Commerce de détail", "Distribution", "Automobile", "Santé", "Formation", "Services", "Industrie"]
+    "chips": [
+      "Commerce de détail",
+      "Distribution",
+      "Automobile",
+      "Santé",
+      "Formation",
+      "Services",
+      "Industrie"
+    ]
   },
   "process": {
     "eyebrow": "Notre méthode",
     "title": "Comment nous *travaillons*",
     "body": "Nous commençons par comprendre comment votre entreprise fonctionne, puis nous construisons les systèmes qui améliorent vos performances.",
     "steps": [
-      { "title": "Comprendre", "body": "Nous étudions votre activité, vos clients, vos équipes et vos outils actuels." },
-      { "title": "Diagnostiquer", "body": "Nous identifions où la croissance se perd : ventes non suivies, stock, délais, données éparpillées." },
-      { "title": "Construire", "body": "Nous mettons en place le système adapté : processus, plateforme, rôles et tableaux de bord." },
-      { "title": "Faire croître", "body": "Nous suivons les résultats ensemble et ajustons le système au fil des mois." }
+      {
+        "title": "Comprendre",
+        "body": "Nous étudions votre activité, vos clients, vos équipes et vos outils actuels."
+      },
+      {
+        "title": "Diagnostiquer",
+        "body": "Nous identifions où la croissance se perd : ventes non suivies, stock, délais, données éparpillées."
+      },
+      {
+        "title": "Construire",
+        "body": "Nous mettons en place le système adapté : processus, plateforme, rôles et tableaux de bord."
+      },
+      {
+        "title": "Faire croître",
+        "body": "Nous suivons les résultats ensemble et ajustons le système au fil des mois."
+      }
     ]
   },
   "faq": {

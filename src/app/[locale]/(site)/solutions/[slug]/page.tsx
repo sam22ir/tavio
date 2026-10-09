@@ -1,3 +1,4 @@
+import { RevoraLogo } from '@/site/components/brand/RevoraLogo';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { hasLocale } from 'next-intl';
@@ -15,7 +16,7 @@ import {
 } from '@/site/content/solutions';
 import {
   ConnectorDiagram,
-  BlueHero,
+  PageHero,
   CtaBand,
   CtaLink,
   DeviceFrame,
@@ -23,7 +24,6 @@ import {
   FeatureList,
   PillLabel,
   Reveal,
-  RevoraLogo,
   Section,
 } from '@/site/components';
 
@@ -61,8 +61,7 @@ export default async function SolutionPage({ params }: { params: Params }) {
 
   return (
     <>
-<BlueHero
-          uppercase={locale !== 'ar'}
+<PageHero
           eyebrow={t('indexEyebrow')}
           title={item('headline')}
           subtitle={item('short')}
@@ -89,7 +88,7 @@ export default async function SolutionPage({ params }: { params: Params }) {
               afterLabel={t('afterLabel')}
               before={before}
               after={after}
-              center={<span className="inline-flex size-16 items-center justify-center rounded-2xl bg-white shadow-[var(--s-shadow)]"><RevoraLogo variant="mark" className="h-8 w-8" /></span>}
+              center={<span className="inline-flex size-16 items-center justify-center rounded-2xl bg-white shadow-md"><RevoraLogo variant="mark" className="h-8 w-8" /></span>}
             />
           </div>
         </Section>

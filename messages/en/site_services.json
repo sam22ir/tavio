@@ -5,7 +5,7 @@
   },
   "hero": {
     "pill": "Support",
-    "title": "*WE BUILD* / YOUR GROWTH SYSTEM.",
+    "title": "We build your *growth system*.",
     "subtitle": "A team with real marketing, sales and back-office experience. We connect customer acquisition, sales, operations and data, so your growth is visible and under control.",
     "primary": "Request a free audit",
     "secondary": "See the platform"
@@ -60,17 +60,37 @@
   "audience": {
     "title": "Who is it for?",
     "body": "Any Algerian business that wants to understand its growth better, whatever its size or sector.",
-    "chips": ["Retail", "Distribution", "Automotive", "Health", "Training", "Services", "Industry"]
+    "chips": [
+      "Retail",
+      "Distribution",
+      "Automotive",
+      "Health",
+      "Training",
+      "Services",
+      "Industry"
+    ]
   },
   "process": {
     "eyebrow": "How we work",
     "title": "How we *work*",
     "body": "We start by understanding how your business works, then we build the systems that improve its performance.",
     "steps": [
-      { "title": "Understand", "body": "We study your business, your customers, your teams and the tools you use today." },
-      { "title": "Diagnose", "body": "We find where growth is lost: untracked sales, stock, delays, scattered data." },
-      { "title": "Build", "body": "We put in place the right system: processes, platform, roles and dashboards." },
-      { "title": "Grow", "body": "We follow the results together and adjust the system over the months." }
+      {
+        "title": "Understand",
+        "body": "We study your business, your customers, your teams and the tools you use today."
+      },
+      {
+        "title": "Diagnose",
+        "body": "We find where growth is lost: untracked sales, stock, delays, scattered data."
+      },
+      {
+        "title": "Build",
+        "body": "We put in place the right system: processes, platform, roles and dashboards."
+      },
+      {
+        "title": "Grow",
+        "body": "We follow the results together and adjust the system over the months."
+      }
     ]
   },
   "faq": {

@@ -22,7 +22,7 @@ import { routing } from '@/i18n/routing';
 import { FEATURES, PILLARS, type FeatureSlug } from '@/site/content/features';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
-import { BlueHero, CtaBand, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
+import { PageHero, CtaBand, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
 
 /** One icon per module, shown in a soft blue circle on each card. */
 const MODULE_ICONS: Record<FeatureSlug, LucideIcon> = {
@@ -59,7 +59,7 @@ export default async function FeaturesOverviewPage({ params }: { params: Promise
 
   return (
     <>
-      <BlueHero eyebrow={t('overview.eyebrow')} title={t('overview.title')} subtitle={t('overview.body')} />
+      <PageHero eyebrow={t('overview.eyebrow')} title={t('overview.title')} subtitle={t('overview.body')} />
 
       {/* The five growth pillars, each with its module cards linking to the detail pages. */}
       {PILLARS.map((pillar, pi) => {

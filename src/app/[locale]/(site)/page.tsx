@@ -7,7 +7,10 @@ import { notFound } from 'next/navigation';
 import { SAAS_PLAN_SEED } from '@/modules/subscriptions/plans';
 import { routing } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
+import { RevoraLogo } from '@/site/components/brand/RevoraLogo';
 import {
+  ConnectorDiagram,
+  CtaBand,
   CtaLink,
   CurvedTimeline,
   DeviceFrame,
@@ -24,8 +27,6 @@ import {
   Section,
   type PricingPlan,
 } from '@/site/components';
-import { Watermark } from '@/site/components/brand/Watermark';
-import { RevoraLogo } from '@/site/components/brand/RevoraLogo';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,12 +49,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 type Row = { eyebrow: string; title: string; body: string; screen: string; items: { title: string; body: string }[] };
 
-/** Uppercase section heading with a pill label, shared by the sections below. */
+/** Section heading with a pill label, shared by the sections below. */
 function SectionTitle({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
   return (
     <div className="flex max-w-2xl flex-col gap-5">
       <PillLabel>{eyebrow}</PillLabel>
-      <h2 className="s-h2 s-uppercase">
+      <h2 className="s-h2">
         <Emphasis text={title} />
       </h2>
       {body ? <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{body}</p> : null}
@@ -96,44 +97,35 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      {/* Hero: brand gradient panel, uppercase headline with a sky first line, chips, then the screenshots. */}
-      <section className="px-4 pt-6 md:pt-10">
-        <div className="s-blue-hero relative mx-auto max-w-6xl px-6 pb-0 pt-14 md:px-16 md:pt-20">
-          <Watermark />
-          <div className="relative z-10 flex flex-col gap-8">
-            <div className="flex max-w-3xl flex-col items-start gap-6">
-              <PillLabel>{t('hero.pill')}</PillLabel>
-              <h1 className="s-h1 s-uppercase text-balance text-white">
-                <span className="block s-accent">{t('hero.titleLine1')}</span>
-                <span className="block">{t('hero.titleLine2')}</span>
-              </h1>
-              <p className="max-w-[56ch] text-[17px] leading-relaxed md:text-lg">{t('hero.subtitle')}</p>
-              <div className="flex flex-wrap items-center gap-3">
-                <CtaLink href={localeHref(locale, '/contact?type=audit')} label={t('hero.primary')} variant="light" />
-                <Link
-                  href={localeHref(locale, '/features/platform')}
-                  className="inline-flex items-center rounded-full border border-white/60 px-6 py-3 text-[15px] font-medium text-white transition hover:bg-white/10"
-                >
-                  {t('hero.secondary')}
-                </Link>
-              </div>
-              <ul className="flex flex-wrap gap-2">
-                {(t.raw('hero.chips') as string[]).map((chip) => (
-                  <li key={chip} className="s-chip-outline">
-                    {chip}
-                  </li>
-                ))}
-              </ul>
+      {/* Hero: cream, pill label, sentence-case headline with one serif accent word, then the screenshots. */}
+      <section className="px-4 pt-10 md:pt-16">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10">
+          <div className="flex max-w-3xl flex-col items-start gap-6">
+            <PillLabel>{t('hero.pill')}</PillLabel>
+            <h1 className="s-h1 text-balance">
+              <Emphasis text={t('hero.title')} />
+            </h1>
+            <p className="max-w-[56ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('hero.subtitle')}</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <CtaLink href={localeHref(locale, '/contact?type=audit')} label={t('hero.primary')} />
+              <CtaLink href={localeHref(locale, '/features/platform')} label={t('hero.secondary')} variant="light" arrow={false} />
             </div>
+            <ul className="flex flex-wrap gap-2">
+              {(t.raw('hero.chips') as string[]).map((chip) => (
+                <li key={chip} className="s-chip-outline">
+                  {chip}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            <div className="relative mt-4 w-full pb-12 md:pb-16">
-              <Parallax distance={24} className="hidden w-full md:block">
-                <DeviceFrame name="dashboard" locale={locale} device="laptop" priority className="w-full" />
-              </Parallax>
-              <Parallax distance={70} className="mx-auto w-[72%] max-w-[300px] md:absolute md:-bottom-10 md:end-2 md:w-[24%] md:max-w-[230px]">
-                <DeviceFrame name="phone-dashboard" locale={locale} device="phone" priority />
-              </Parallax>
-            </div>
+          <div className="relative mt-4 w-full pb-12 md:pb-16">
+            <Parallax distance={24} className="hidden w-full md:block">
+              <DeviceFrame name="dashboard" locale={locale} device="laptop" priority className="w-full" />
+            </Parallax>
+            <Parallax distance={70} className="mx-auto w-[72%] max-w-[300px] md:absolute md:-bottom-10 md:end-2 md:w-[24%] md:max-w-[230px]">
+              <DeviceFrame name="phone-dashboard" locale={locale} device="phone" priority />
+            </Parallax>
           </div>
         </div>
       </section>
@@ -142,32 +134,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Reveal><Section>
         <div className="flex flex-col gap-12">
           <SectionTitle eyebrow={t('contrast.eyebrow')} title={t('contrast.title')} />
-          <div className="grid gap-5 md:grid-cols-2">
-            <div className="flex flex-col gap-6 rounded-[24px] bg-[#EEF1F6] p-8 md:p-10">
-              <span className="text-[13px] font-bold tracking-[0.08em] text-[#C2410C]">{t('contrast.withoutLabel')}</span>
-              <h3 className="text-2xl text-[color:var(--s-muted)]">{t('contrast.withoutTitle')}</h3>
-              <ul className="flex flex-col gap-4">
-                {withoutItems.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-[16px] text-[color:var(--s-muted)]">
-                    <span aria-hidden className="mt-0.5 font-bold text-[#C2410C]">✕</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex flex-col gap-6 rounded-[24px] border-2 border-[var(--s-accent)] bg-white p-8 shadow-[0_12px_32px_-12px_rgba(8,64,157,.18)] md:p-10">
-              <span className="text-[13px] font-bold tracking-[0.08em] text-[color:var(--s-accent)]">{t('contrast.withLabel')}</span>
-              <h3 className="text-2xl text-[color:var(--s-accent)]">{t('contrast.withTitle')}</h3>
-              <ul className="flex flex-col gap-4">
-                {withItems.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-[16px]">
-                    <span aria-hidden className="mt-0.5 font-bold text-[#16A34A]">✓</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <ConnectorDiagram
+            before={withoutItems}
+            after={withItems}
+            beforeLabel={t('contrast.withoutTitle')}
+            afterLabel={t('contrast.withTitle')}
+            center={<span className="grid size-16 place-items-center rounded-2xl bg-white shadow-md"><RevoraLogo variant="mark" tone="blue" className="h-8 w-auto" /></span>}
+          />
         </div>
       </Section></Reveal>
 
@@ -215,7 +188,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="flex flex-col gap-24">
           <div className="flex max-w-2xl flex-col gap-5">
             <PillLabel>{t('platform.eyebrow')}</PillLabel>
-            <h2 className="s-h2 s-uppercase">
+            <h2 className="s-h2">
               <Emphasis text={t('platform.title')} />
             </h2>
             <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('platform.body')}</p>
@@ -305,18 +278,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </Section></Reveal>
 
-      {/* Final CTA: brand panel. */}
+      {/* Final CTA: Revora blue band. */}
       <Reveal><section className="px-4 pb-24 md:pb-32">
-        <div className="s-blue-hero relative mx-auto max-w-6xl px-6 py-16 md:px-16 md:py-24">
-          <Watermark />
-          <div className="relative z-10 flex max-w-3xl flex-col items-start gap-6">
-            <h2 className="s-h2 s-uppercase text-balance text-white">
-              <Emphasis text={t('cta.title')} />
-            </h2>
-            <p className="max-w-[56ch] text-[17px] leading-relaxed md:text-lg">{t('cta.body')}</p>
-            <CtaLink href={localeHref(locale, '/contact?type=audit')} label={t('cta.primary')} variant="light" />
-          </div>
-        </div>
+        <CtaBand
+          title={t('cta.title')}
+          body={t('cta.body')}
+          primary={{ href: localeHref(locale, '/contact?type=audit'), label: t('cta.primary') }}
+        />
       </section></Reveal>
     </>
   );

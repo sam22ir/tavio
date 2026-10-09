@@ -57,8 +57,7 @@
     },
     "hero": {
       "pill": "Business growth solutions",
-      "titleLine1": "GROWTH",
-      "titleLine2": "IS A SYSTEM.",
+      "title": "Growth is *a system*.",
       "subtitle": "Revora connects acquisition, sales, operations, data and technology to find where your growth is being lost, and fix it.",
       "primary": "Request a free audit",
       "secondary": "See the platform",

@@ -4,7 +4,7 @@ import { cn } from '@/ui/lib/cn';
 export type MockVariant = 'installments' | 'kanban' | 'invoice' | 'pos' | 'dashboard';
 
 /**
- * HTML/CSS illustration of a Revora screen, with DZD amounts and French/Arabic labels.
+ * HTML/CSS illustration of a Tavio screen, with DZD amounts and French/Arabic labels.
  * Decorative only: hidden from assistive tech. Not a real screenshot.
  * Mobile: fills its column and scrolls internally if needed.
  */
@@ -18,7 +18,7 @@ export function MockScreen({ variant, className }: { variant: MockVariant; class
     >
       <div className="flex items-center justify-between border-b border-border px-4 py-3 text-xs">
         <span className="font-semibold">{TITLES[variant]}</span>
-        <span className="text-muted-foreground">Revora</span>
+        <span className="text-muted-foreground">Tavio</span>
       </div>
       <div className="p-4 md:p-5">{BODY[variant]}</div>
     </div>
