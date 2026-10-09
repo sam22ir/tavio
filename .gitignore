@@ -47,3 +47,4 @@ supabase/.temp
 .wrangler/
 .claude/
 .dev.vars*
+previews/
