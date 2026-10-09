@@ -62,7 +62,7 @@ export default async function SolutionPage({ params }: { params: Params }) {
       {/* Hero: pill, headline with the accent phrase, short intro and the two CTAs. */}
       <section className="relative overflow-hidden px-4 pb-16 pt-14 md:pb-20 md:pt-24">
         <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[14%] h-[440px] w-[680px] -translate-x-1/2 rounded-full" />
+        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[14%] h-[440px] w-[min(680px,100%)] -translate-x-1/2 rounded-full" />
         <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-7 text-center">
           <PillLabel>{t('indexEyebrow')}</PillLabel>
           <h1 className="s-h1 max-w-[18ch] text-balance">

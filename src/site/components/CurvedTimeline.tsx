@@ -1,17 +1,27 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 
 const EASE = [0.32, 0.72, 0, 1] as const;
 
 /**
  * Steps set on a wave that runs in its own band above the step texts. The dotted path draws itself
- * when in view and the numbered markers pop in sequence. Desktop: wave band over three columns.
+ * when in view and the numbered markers pop in sequence. Desktop: wave band over one column per step.
  * Mobile: a dashed vertical line on the start edge (mirrors in RTL).
  */
 export function CurvedTimeline({ steps }: { steps: { title: string; body: string }[] }) {
   const reduce = useReducedMotion();
   const hidden = reduce ? false : 'hidden';
+  const count = Math.max(steps.length, 1);
+  const width = 1000 / count;
+  const centre = (i: number) => (i + 0.5) * width;
+  // Wave through every column centre, alternating crest and trough between markers.
+  const path = [
+    `M0 40 L${centre(0)} 40`,
+    ...steps.slice(1).map((_, k) => `Q${(centre(k) + centre(k + 1)) / 2} ${k % 2 === 0 ? 0 : 80} ${centre(k + 1)} 40`),
+    `L1000 40`,
+  ].join(' ');
   return (
     <motion.div className="relative" initial={hidden} whileInView="show" viewport={{ once: true, margin: '0px 0px -15% 0px' }}>
       <svg
@@ -22,12 +32,15 @@ export function CurvedTimeline({ steps }: { steps: { title: string; body: string
       >
         <motion.path
           className="s-timeline-path"
-          d="M0 40 Q 83 0 166.67 40 T 500 40 T 833.33 40 T 1000 40"
+          d={path}
           variants={{ hidden: { pathLength: reduce ? 1 : 0 }, show: { pathLength: 1, transition: { duration: 1.6, ease: EASE } } }}
         />
       </svg>
       <div aria-hidden className="pointer-events-none absolute inset-y-5 start-[1.375rem] w-0 border-s-2 border-dashed border-[color:var(--s-accent)] md:hidden" />
-      <ol className="relative grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
+      <ol
+        className="relative grid grid-cols-1 gap-10 md:gap-8 md:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]"
+        style={{ '--cols': count } as CSSProperties}
+      >
         {steps.map((step, i) => (
           <li key={step.title} className="relative flex flex-col gap-4 ps-16 md:ps-0">
             <motion.div

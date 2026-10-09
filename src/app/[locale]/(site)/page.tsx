@@ -90,7 +90,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* Hero: pill, headline, CTAs, then the laptop with a phone and floating badges over a soft glow and grid. */}
       <section className="relative overflow-hidden px-4 pb-20 pt-14 md:pt-24">
         <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[18%] h-[480px] w-[720px] -translate-x-1/2 rounded-full" />
+        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[18%] h-[480px] w-[min(720px,100%)] -translate-x-1/2 rounded-full" />
         <div className="relative mx-auto max-w-6xl">
           <div className="flex flex-col items-center gap-7 text-center">
             <PillLabel>{t('hero.eyebrow')}</PillLabel>

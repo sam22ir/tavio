@@ -29,13 +29,13 @@ function ChannelCard({
   children?: ReactNode;
 }) {
   return (
-    <div className="s-panel flex flex-col gap-4 p-6 md:p-7">
+    <div className="s-panel flex min-w-0 flex-col gap-4 p-6 md:p-7">
       <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
         <Icon size={20} strokeWidth={1.75} aria-hidden />
       </span>
-      <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
-        <p className="leading-relaxed text-[color:var(--s-muted)]">{body}</p>
+      <div className="flex min-w-0 flex-col gap-2">
+        <h3 className="break-words text-lg font-semibold tracking-tight">{title}</h3>
+        <p className="break-words leading-relaxed text-[color:var(--s-muted)]">{body}</p>
       </div>
       {children}
     </div>
@@ -54,17 +54,17 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <Section className="pt-12 md:pt-20">
-      <div className="grid items-start gap-12 md:grid-cols-[1fr_1.15fr] md:gap-16">
-        <div className="flex flex-col gap-10">
+      <div className="grid min-w-0 items-start gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-16">
+        <div className="flex min-w-0 flex-col gap-10">
           <div className="flex flex-col gap-6">
             <PillLabel>{t('eyebrow')}</PillLabel>
-            <h1 className="s-h2">
+            <h1 className="s-h2 break-words">
               <Emphasis text={t('title')} />
             </h1>
             <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('body')}</p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+          <div className="grid min-w-0 gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
             {whatsapp ? (
               <ChannelCard icon={MessageCircle} title={t('whatsapp.title')} body={t('whatsapp.body')}>
                 <a

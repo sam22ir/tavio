@@ -21,8 +21,8 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className={cn('px-4 py-20 md:py-32', tone === 'muted' && 'bg-muted/60', className)}>
-      <div className="mx-auto w-full max-w-6xl">{children}</div>
+    <section id={id} className={cn('overflow-x-clip px-4 py-20 md:py-32', tone === 'muted' && 'bg-muted/60', className)}>
+      <div className="mx-auto w-full min-w-0 max-w-6xl">{children}</div>
     </section>
   );
 }
