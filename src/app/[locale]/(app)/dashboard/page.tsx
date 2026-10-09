@@ -12,6 +12,10 @@ import { formatDzd } from '@/core/money';
 import { loadShell } from '@/ui/shell/load-shell';
 import { AppTiles } from '@/ui/shell/app-tiles';
 import { myOpenActivities, todayIso } from '@/modules/chatter/service';
+import { hasSampleData } from '@/core/demo/sample-data';
+import { SampleDataBanner } from '@/core/demo/sample-data-banner';
+import { GettingStartedChecklist } from '@/core/demo/getting-started-checklist';
+import { tenantForUser } from '@/core/tenancy/tenant-access';
 
 export default async function DashboardPage({
   params,
@@ -30,6 +34,9 @@ export default async function DashboardPage({
   const tAll = await getTranslations();
   const modules = new Set(await enabledModules(shell.active.id));
   const creditOn = modules.has('credit_sales');
+
+  const tenant = await tenantForUser({ locale, companyId: shell.active.id });
+  const sampleActive = tenant.ok ? await hasSampleData(tenant.value) : false;
 
   const { name, kpis, due, activities } = await withPageCtx(async (ctx) => {
     // users is not readable by the app role; member_directory is the tenant-scoped view of members.
@@ -61,6 +68,8 @@ export default async function DashboardPage({
         <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('hello', { name })}</h1>
         <p className="text-sm text-muted-foreground">{dateLabel}</p>
       </header>
+
+      <SampleDataBanner active={sampleActive} />
 
       <section className="app-panel flex flex-col gap-5 p-5">
         <h2 className="text-lg font-semibold">{t('today')}</h2>
@@ -131,6 +140,8 @@ export default async function DashboardPage({
           </div>
         </div>
       </section>
+
+      <GettingStartedChecklist locale={locale} />
 
       <section className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">{t('applications')}</h2>

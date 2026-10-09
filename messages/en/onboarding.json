@@ -83,6 +83,7 @@
     "product": "Add a product",
     "customer": "Add a customer",
     "sale": "Make a first sale or contract",
-    "team": "Invite a teammate"
+    "team": "Invite a teammate",
+    "hide": "Hide"
   }
 }

@@ -83,6 +83,7 @@
     "product": "Ajouter un produit",
     "customer": "Ajouter un client",
     "sale": "Faire une première vente ou un contrat",
-    "team": "Inviter un collaborateur"
+    "team": "Inviter un collaborateur",
+    "hide": "Masquer"
   }
 }
