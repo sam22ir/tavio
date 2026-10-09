@@ -1,1 +1,85 @@
-{}
+{
+  "module": {
+    "name": "Inventory"
+  },
+  "menu": {
+    "stock": "Stock",
+    "moves": "Stock moves",
+    "adjustments": "Adjustments",
+    "low_stock": "Low stock",
+    "warehouses": "Warehouses"
+  },
+  "fields": {
+    "reference": "Reference",
+    "product": "Product",
+    "quantity": "Quantity",
+    "state": "Status",
+    "done_at": "Validated on",
+    "code": "Code",
+    "name": "Name",
+    "wilaya_code": "Wilaya",
+    "active": "Active",
+    "warehouse": "Warehouse",
+    "min_qty": "Minimum",
+    "max_qty": "Maximum",
+    "from": "From",
+    "to": "To",
+    "location": "Location",
+    "counted": "Counted quantity",
+    "on_hand": "On hand",
+    "to_order": "To order"
+  },
+  "options": {
+    "state": {
+      "draft": "Draft",
+      "done": "Done",
+      "cancelled": "Cancelled"
+    }
+  },
+  "common": {
+    "error": "Something went wrong. Please try again.",
+    "submit": "Save",
+    "empty": "No records.",
+    "back": "Back",
+    "optional": "Optional"
+  },
+  "stock": {
+    "title": "Stock on hand",
+    "help": "Quantity in internal locations, computed from done moves."
+  },
+  "moves": {
+    "title": "Stock moves",
+    "new": "New move",
+    "validate": "Validate",
+    "cancel": "Cancel",
+    "detail": "Move",
+    "validated": "Move validated.",
+    "cancelled": "Move cancelled.",
+    "reference_hint": "Leave empty to number automatically",
+    "same_location": "Source and destination must differ."
+  },
+  "warehouses": {
+    "title": "Warehouses",
+    "new": "New warehouse",
+    "created": "Warehouse created.",
+    "code_hint": "Letters, digits and dashes (12 max)."
+  },
+  "adjustments": {
+    "title": "Inventory adjustment",
+    "intro": "Enter the counted quantity. The difference is recorded as a done move against the adjustment location.",
+    "applied": "Adjustment recorded.",
+    "no_change": "No difference: nothing to record."
+  },
+  "low_stock": {
+    "title": "Low stock",
+    "empty": "No product below its minimum.",
+    "new_rule": "New reorder rule",
+    "rule_created": "Rule saved.",
+    "rule_exists": "A rule already exists for this product and warehouse."
+  },
+  "errors": {
+    "invalid_quantity": "Invalid quantity (positive, up to 3 decimals).",
+    "move_not_draft": "Only draft moves can be validated.",
+    "move_done": "A validated move cannot be cancelled."
+  }
+}
