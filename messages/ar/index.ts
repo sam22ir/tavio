@@ -1,15 +1,29 @@
-import core from './core.json';
+import accounting from './accounting.json';
 import auth from './auth.json';
-import shell from './shell.json';
-import views from './views.json';
-import settings from './settings.json';
-import contacts from './contacts.json';
-import products from './products.json';
-import l10n from './l10n.json';
+import automation from './automation.json';
 import chatter from './chatter.json';
+import contacts from './contacts.json';
+import core from './core.json';
 import credit from './credit.json';
 import crm from './crm.json';
+import helpdesk from './helpdesk.json';
+import hr from './hr.json';
+import inventory from './inventory.json';
+import invoicing from './invoicing.json';
+import l10n from './l10n.json';
+import marketing from './marketing.json';
+import platform from './platform.json';
+import pos from './pos.json';
+import products from './products.json';
+import projects from './projects.json';
+import purchases from './purchases.json';
+import sales from './sales.json';
+import settings from './settings.json';
+import shell from './shell.json';
+import subscriptions from './subscriptions.json';
+import views from './views.json';
+import website from './website.json';
 
 // Each namespace file is owned by one module or feature. Add keys there, never here.
-const messages = { core, auth, shell, views, settings, contacts, products, l10n, chatter, credit, crm };
+const messages = { accounting, auth, automation, chatter, contacts, core, credit, crm, helpdesk, hr, inventory, invoicing, l10n, marketing, platform, pos, products, projects, purchases, sales, settings, shell, subscriptions, views, website };
 export default messages;
