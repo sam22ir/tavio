@@ -54,6 +54,20 @@ describe('stampDutyCents', () => {
   it('is zero below 300 DA', () => {
     expect(stampDutyCents(c(299 * 100))).toBe(c(0));
   });
+  it('places each boundary amount in the tier that starts there', () => {
+    // Tiers are [min, max): 300 DA starts the 1 DA tier, 30 000 DA starts the 1.5 DA tier, 100 000 DA starts the 2 DA tier.
+    expect(stampDutyCents(c(300 * 100))).toBe(c(100));
+    expect(stampDutyCents(c(300 * 100 - 1))).toBe(c(0));
+    expect(stampDutyCents(c(30000 * 100 - 1))).toBe(c(100));
+    expect(stampDutyCents(c(30000 * 100))).toBe(c(150));
+    expect(stampDutyCents(c(100000 * 100 - 1))).toBe(c(150));
+    expect(stampDutyCents(c(100000 * 100))).toBe(c(200));
+  });
+  it('drops centimes when choosing the tier', () => {
+    // 299.99 DA is still in the zero tier, 300.00 DA is the first taxed amount.
+    expect(stampDutyCents(c(29999))).toBe(c(0));
+    expect(stampDutyCents(c(30000))).toBe(c(100));
+  });
 });
 
 describe('paymentStateFor', () => {

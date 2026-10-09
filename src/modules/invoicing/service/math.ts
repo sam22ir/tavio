@@ -61,7 +61,7 @@ function normalizeRate(rate: string): string {
 
 /**
  * Timbre fiscal for a cash payment, from DZ_STAMP_DUTY_TIERS. Amount is whole DA (centimes dropped).
- * A tier covers [minAmountDa, maxAmountDa) so boundary amounts fall in exactly one tier.
+ * A tier covers [minAmountDa, maxAmountDa), the upper bound excluded, so 30 000 DA falls in the 1.5 DA tier.
  * ⚠ needs accountant verification
  */
 export function stampDutyCents(amountCents: Cents): Cents {

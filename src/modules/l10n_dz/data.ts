@@ -48,8 +48,8 @@ export const DZ_TAX_DEFAULTS: readonly TaxDefault[] = [
 // as data outside the taxes table (P1 taxes.kind only allows vat).
 // Applied to the whole amount, not per bracket. Finance Law 2025 tiers. ⚠ needs accountant verification
 export interface StampDutyTier {
-  minAmountDa: number; // inclusive lower bound
-  maxAmountDa: number | null; // inclusive upper bound, null = no upper bound
+  minAmountDa: number; // inclusive lower bound. A tier covers [minAmountDa, maxAmountDa)
+  maxAmountDa: number | null; // exclusive upper bound (equals the next tier's minAmountDa), null = no upper bound
   dutyDa: number;
   validFrom: string;
   legalRef: string;
