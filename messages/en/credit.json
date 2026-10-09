@@ -119,7 +119,10 @@
     "method": "Method",
     "reference": "Reference",
     "success": "Payment recorded: receipt {number}",
-    "overpayment": "The amount is more than the remaining balance."
+    "overpayment": "The amount is more than the remaining balance.",
+    "cheque_number": "Cheque number",
+    "cheque_due_date": "Cheque due date",
+    "cheque_due_required": "A cheque payment needs a due date."
   },
   "methods": {
     "cash": "Cash",

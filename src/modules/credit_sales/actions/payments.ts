@@ -11,6 +11,8 @@ const recordPaymentSchema = z.object({
   method: z.enum(['cash', 'ccp', 'transfer', 'cib', 'edahabia', 'cheque']),
   reference: z.string().trim().max(120).optional(),
   isDownPayment: z.boolean().optional(),
+  chequeNumber: z.string().trim().max(60).optional(),
+  chequeDueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 });
 
 export const recordPaymentAction = defineAction(
@@ -28,6 +30,8 @@ export const recordPaymentAction = defineAction(
       method: input.method,
       reference: input.reference || undefined,
       isDownPayment: input.isDownPayment ?? false,
+      chequeNumber: input.chequeNumber || undefined,
+      chequeDueDate: input.chequeDueDate || undefined,
     });
   },
 );

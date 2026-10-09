@@ -20,8 +20,7 @@ import {
 } from '@/ui/primitives/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/ui/primitives/select';
 
-// 'cheque' is hidden until the form collects the cheque due date the database requires.
-const METHODS = ['cash', 'ccp', 'transfer', 'cib', 'edahabia'] as const;
+const METHODS = ['cash', 'ccp', 'transfer', 'cib', 'edahabia', 'cheque'] as const;
 
 /** Formats integer cents as a plain DZD string that parseDzd accepts, e.g. 150050 -> "1500.50". */
 function centsToInput(cents: string): string {
@@ -46,15 +45,32 @@ export function RecordPaymentButton({
   const [amount, setAmount] = useState(nextDueCents ? centsToInput(nextDueCents) : '');
   const [method, setMethod] = useState<(typeof METHODS)[number]>('cash');
   const [reference, setReference] = useState('');
+  const [chequeNumber, setChequeNumber] = useState('');
+  const [chequeDueDate, setChequeDueDate] = useState('');
   const [isDownPayment, setIsDownPayment] = useState(false);
   const [pending, startTransition] = useTransition();
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     startTransition(async () => {
-      const result = await recordPaymentAction({ contractId, amount, method, reference, isDownPayment });
+      const isCheque = method === 'cheque';
+      const result = await recordPaymentAction({
+        contractId,
+        amount,
+        method,
+        reference: isCheque ? undefined : reference,
+        chequeNumber: isCheque ? chequeNumber : undefined,
+        chequeDueDate: isCheque ? chequeDueDate : undefined,
+        isDownPayment,
+      });
       if (!result.ok) {
-        toast.error(result.error.code === 'VALIDATION' ? t('payment.amount') : result.error.message);
+        const msg =
+          result.error.code === 'VALIDATION' && result.error.message === 'CHEQUE_DUE_DATE_REQUIRED'
+            ? t('payment.cheque_due_required')
+            : result.error.code === 'VALIDATION'
+              ? t('payment.amount')
+              : result.error.message;
+        toast.error(msg);
         return;
       }
       toast.success(t('payment.success', { number: result.value.receiptNumber }), {
@@ -66,6 +82,8 @@ export function RecordPaymentButton({
       });
       setOpen(false);
       setReference('');
+      setChequeNumber('');
+      setChequeDueDate('');
       setIsDownPayment(false);
       router.refresh();
     });
@@ -110,15 +128,42 @@ export function RecordPaymentButton({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor={`pay-ref-${contractId}`}>{t('payment.reference')}</Label>
-            <Input
-              id={`pay-ref-${contractId}`}
-              value={reference}
-              onChange={(e) => setReference(e.target.value)}
-              maxLength={120}
-            />
-          </div>
+          {method === 'cheque' ? (
+            <>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={`pay-cheque-no-${contractId}`}>{t('payment.cheque_number')}</Label>
+                <Input
+                  id={`pay-cheque-no-${contractId}`}
+                  dir="ltr"
+                  value={chequeNumber}
+                  onChange={(e) => setChequeNumber(e.target.value)}
+                  maxLength={60}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={`pay-cheque-due-${contractId}`}>{t('payment.cheque_due_date')}</Label>
+                <Input
+                  id={`pay-cheque-due-${contractId}`}
+                  type="date"
+                  dir="ltr"
+                  value={chequeDueDate}
+                  onChange={(e) => setChequeDueDate(e.target.value)}
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Label htmlFor={`pay-ref-${contractId}`}>{t('payment.reference')}</Label>
+              <Input
+                id={`pay-ref-${contractId}`}
+                value={reference}
+                onChange={(e) => setReference(e.target.value)}
+                maxLength={120}
+              />
+            </div>
+          )}
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
