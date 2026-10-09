@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ilike, or, type SQL } from 'drizzle-orm';
+import { and, asc, count, desc, eq, getTableColumns, ilike, or, type SQL } from 'drizzle-orm';
 import { z } from 'zod';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
@@ -6,7 +6,8 @@ import type { ListQuery, ListResult } from '@/core/entities/types';
 import { nextNumber } from '@/core/sequences';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
-import { tickets, type Ticket } from '../schema';
+import { helpdeskTeams, tickets, type Ticket } from '../schema';
+import { partners } from '@/modules/contacts/schema';
 import {
   TICKET_CHANNELS,
   TICKET_NUMBER_PADDING,
@@ -100,7 +101,10 @@ function listWhere(ctx: Ctx, query: ListQuery): SQL | undefined {
   return and(...conditions);
 }
 
-export async function listTickets(ctx: Ctx, query: ListQuery): Promise<Result<ListResult<Ticket>>> {
+export async function listTickets(
+  ctx: Ctx,
+  query: ListQuery,
+): Promise<Result<ListResult<Ticket & { partnerIdLabel: string | null; teamIdLabel: string | null }>>> {
   const perm = requirePerm(ctx, 'helpdesk.ticket.read');
   if (!perm.ok) return perm;
 
@@ -111,8 +115,14 @@ export async function listTickets(ctx: Ctx, query: ListQuery): Promise<Result<Li
 
   const [totalRow] = await ctx.tx.select({ n: count() }).from(tickets).where(where);
   const rows = await ctx.tx
-    .select()
+    .select({
+      ...getTableColumns(tickets),
+      partnerIdLabel: partners.displayName,
+      teamIdLabel: helpdeskTeams.name,
+    })
     .from(tickets)
+    .leftJoin(partners, eq(partners.id, tickets.partnerId))
+    .leftJoin(helpdeskTeams, eq(helpdeskTeams.id, tickets.teamId))
     .where(where)
     .orderBy(order, asc(tickets.id))
     .limit(pageSize)
