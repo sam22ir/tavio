@@ -52,4 +52,5 @@ export const DEFAULT_MODULES: readonly string[] = [
   'platform',
   'automation',
   'subscriptions',
+  'ai_features',
 ];
