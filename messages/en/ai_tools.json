@@ -1,1 +1,45 @@
-{}
+{
+  "module": {
+    "name": "AI tools"
+  },
+  "menu": {
+    "assistant": "Assistant",
+    "scan": "Scan vendor bill"
+  },
+  "scan": {
+    "title": "Scan a vendor bill",
+    "hint": "Take a clear photo of the bill (JPEG, PNG or WebP, 5 MB max). The draft is never posted automatically.",
+    "run": "Read the bill",
+    "scanning": "Reading the bill…",
+    "review": "Review before saving",
+    "supplier": "Supplier",
+    "number": "Bill number",
+    "date": "Date",
+    "description": "Description",
+    "qty": "Quantity",
+    "unitPrice": "Unit price (DZD)",
+    "tax": "Tax",
+    "confirm": "Create draft bill",
+    "success": "Draft bill created",
+    "badType": "Use a JPEG, PNG or WebP image.",
+    "tooBig": "The image is larger than 5 MB.",
+    "noVision": "Configure a vision model (AI_VISION_MODEL or an Anthropic provider) to scan bills."
+  },
+  "assistant": {
+    "title": "Business assistant",
+    "placeholder": "Ask about sales, overdue payments, stock…",
+    "ask": "Ask",
+    "thinking": "Thinking…",
+    "empty": "No rows"
+  },
+  "errors": {
+    "generic": "Something went wrong. Try again.",
+    "not_configured": "AI is not configured.",
+    "quota": "The daily AI limit is reached.",
+    "no_tool": "I could not match this question to a report. Try rephrasing it.",
+    "invalid_bill": "The bill could not be read. Try a clearer photo.",
+    "too_big": "The image is larger than 5 MB.",
+    "no_vision": "No vision model is configured.",
+    "invalid_amount": "Enter a valid amount."
+  }
+}
