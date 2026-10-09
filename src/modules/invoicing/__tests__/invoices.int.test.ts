@@ -6,8 +6,9 @@ import { companies, sequences, users } from '@/core/db/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import { loadDevEnv } from '@/core/env/load-dev-env';
 import { partners } from '@/modules/contacts/schema';
-import { invoices } from '../schema';
+import { invoiceLines, invoices } from '../schema';
 import { createInvoice } from '../service/create';
+import { updateDraftInvoice } from '../service/update';
 import { cancelInvoice, createRefund, postInvoice, registerPayment } from '../service/invoices';
 
 loadDevEnv();
@@ -80,5 +81,72 @@ describe.skipIf(!enabled)('invoicing lifecycle', { timeout: 60_000 }, () => {
     const refundId = refund.ok ? refund.value.id : '';
     const posted = await withTenant(f.args, (ctx) => postInvoice(ctx, refundId));
     expect(posted.ok && posted.value.number).toMatch(/^AV-\d{4}-00001$/);
+  });
+
+  it('creates a draft with several lines and computes the totals from all of them', async () => {
+    const f = await fixture();
+    const created = await withTenant(f.args, (ctx) =>
+      createInvoice(ctx, {
+        type: 'out_invoice',
+        partnerId: f.partnerId,
+        lines: [
+          { description: 'A', quantity: '2', unitPriceCents: BigInt(10000), taxId: null },
+          { description: 'B', quantity: '1.5', unitPriceCents: BigInt(5001), taxId: null },
+          { description: 'C', quantity: '1', unitPriceCents: BigInt(1000), taxId: null },
+        ],
+      }),
+    );
+    expect(created.ok).toBe(true);
+    const id = created.ok ? created.value.id : '';
+    const [row] = await db.select().from(invoices).where(inArray(invoices.id, [id]));
+    expect(row?.untaxedCents).toBe(BigInt(20000 + 7502 + 1000));
+    expect(row?.totalCents).toBe(BigInt(28502));
+    const lines = await db.select().from(invoiceLines).where(inArray(invoiceLines.invoiceId, [id]));
+    expect(lines).toHaveLength(3);
+  });
+
+  it('replaces the lines of a draft and recomputes its totals', async () => {
+    const f = await fixture();
+    const created = await withTenant(f.args, (ctx) =>
+      createInvoice(ctx, { type: 'out_invoice', partnerId: f.partnerId, lines: [{ description: 'Old', quantity: '1', unitPriceCents: BigInt(1000), taxId: null }] }),
+    );
+    const id = created.ok ? created.value.id : '';
+    const updated = await withTenant(f.args, (ctx) =>
+      updateDraftInvoice(ctx, id, {
+        type: 'out_invoice',
+        partnerId: f.partnerId,
+        date: '2026-03-01',
+        lines: [
+          { description: 'New 1', quantity: '3', unitPriceCents: BigInt(2000), taxId: null },
+          { description: 'New 2', quantity: '1', unitPriceCents: BigInt(500), taxId: null },
+        ],
+      }),
+    );
+    expect(updated.ok).toBe(true);
+    const [row] = await db.select().from(invoices).where(inArray(invoices.id, [id]));
+    expect(row?.totalCents).toBe(BigInt(6500));
+    expect(String(row?.date)).toBe('2026-03-01');
+    expect(row?.state).toBe('draft');
+    const lines = await db.select().from(invoiceLines).where(inArray(invoiceLines.invoiceId, [id]));
+    expect(lines.map((l) => l.description).sort()).toEqual(['New 1', 'New 2']);
+  });
+
+  it('refuses to update a posted invoice and leaves its lines unchanged', async () => {
+    const f = await fixture();
+    const created = await withTenant(f.args, (ctx) =>
+      createInvoice(ctx, { type: 'out_invoice', partnerId: f.partnerId, lines: [{ description: 'Kept', quantity: '1', unitPriceCents: BigInt(1000), taxId: null }] }),
+    );
+    const id = created.ok ? created.value.id : '';
+    await withTenant(f.args, (ctx) => postInvoice(ctx, id));
+    const attempt = await withTenant(f.args, (ctx) =>
+      updateDraftInvoice(ctx, id, {
+        type: 'out_invoice',
+        partnerId: f.partnerId,
+        lines: [{ description: 'Changed', quantity: '5', unitPriceCents: BigInt(9999), taxId: null }],
+      }),
+    );
+    expect(!attempt.ok && attempt.error.code).toBe('POSTED_IMMUTABLE');
+    const lines = await db.select().from(invoiceLines).where(inArray(invoiceLines.invoiceId, [id]));
+    expect(lines.map((l) => l.description)).toEqual(['Kept']);
   });
 });

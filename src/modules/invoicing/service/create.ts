@@ -1,7 +1,7 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
-
+import type { Cents } from '@/core/money';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { partners } from '@/modules/contacts/schema';
@@ -21,20 +21,33 @@ export interface NewInvoice {
   lines: NewInvoiceLine[];
 }
 
+/** Validated, computed draft content shared by create and update. Totals come from math.ts only. */
+export interface DraftPlan {
+  date: string;
+  dueDate: string | null;
+  untaxedCents: Cents;
+  taxCents: Cents;
+  lineRows: {
+    sequence: number;
+    productId: string | null;
+    description: string;
+    quantity: string;
+    unitPriceCents: bigint;
+    taxId: string | null;
+    taxRate: string;
+    subtotalCents: Cents;
+    taxCents: Cents;
+  }[];
+}
+
 const TYPE_PERM = { write: 'invoicing.invoice.write' } as const;
 const DAY_FMT = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Algiers', year: 'numeric', month: '2-digit', day: '2-digit' });
 export const today = (): string => DAY_FMT.format(new Date());
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
-/** Shared by createInvoice and refunds. Rates are copied from taxes at creation time. */
-export async function insertDraft(
-  ctx: Ctx,
-  input: NewInvoice,
-  extra: { refundOfId?: string } = {},
-): Promise<Result<{ id: string }>> {
-  const perm = requirePerm(ctx, TYPE_PERM.write);
-  if (!perm.ok) return perm;
+/** Validates partner, dates, lines and taxes, then computes totals. Writes nothing. */
+export async function planDraft(ctx: Ctx, input: NewInvoice): Promise<Result<DraftPlan>> {
   if (input.lines.length === 0) return err('VALIDATION', 'invoice needs at least one line', { field: 'lines' });
   if (input.date && !ISO_DAY.test(input.date)) return err('VALIDATION', 'invalid date', { field: 'date' });
   if (input.dueDate && !ISO_DAY.test(input.dueDate)) return err('VALIDATION', 'invalid due date', { field: 'dueDate' });
@@ -72,35 +85,12 @@ export async function insertDraft(
     return err('VALIDATION', (e as Error).message, { field: 'lines' });
   }
 
-  const date = input.date ?? today();
-  const [inv] = await ctx.tx
-    .insert(invoices)
-    .values({
-      companyId: ctx.companyId,
-      type: input.type,
-      partnerId: input.partnerId,
-      state: 'draft',
-      date,
-      dueDate: input.dueDate ?? null,
-      origin: input.origin ?? null,
-      sourceEntity: input.sourceEntity ?? null,
-      sourceId: input.sourceId ?? null,
-      refundOfId: extra.refundOfId ?? null,
-      untaxedCents: totals.untaxedCents,
-      taxCents: totals.taxCents,
-      stampCents: BigInt(0),
-      totalCents: totals.untaxedCents + totals.taxCents,
-      paidCents: BigInt(0),
-      paymentState: 'not_paid',
-      createdBy: ctx.userId,
-    })
-    .returning({ id: invoices.id });
-  if (!inv) return err('INTERNAL', 'insert failed');
-
-  await ctx.tx.insert(invoiceLines).values(
-    input.lines.map((l, i) => ({
-      companyId: ctx.companyId,
-      invoiceId: inv.id,
+  return ok({
+    date: input.date ?? today(),
+    dueDate: input.dueDate ?? null,
+    untaxedCents: totals.untaxedCents,
+    taxCents: totals.taxCents,
+    lineRows: input.lines.map((l, i) => ({
       sequence: (i + 1) * 10,
       productId: l.productId ?? null,
       description: l.description.trim(),
@@ -110,8 +100,48 @@ export async function insertDraft(
       taxRate: lineInputs[i]?.ratePercent ?? '0',
       subtotalCents: totals.lines[i]!.subtotalCents,
       taxCents: totals.lines[i]!.taxCents,
-      createdBy: ctx.userId,
     })),
+  });
+}
+
+/** Shared by createInvoice and refunds. Rates are copied from taxes at creation time. */
+export async function insertDraft(
+  ctx: Ctx,
+  input: NewInvoice,
+  extra: { refundOfId?: string } = {},
+): Promise<Result<{ id: string }>> {
+  const perm = requirePerm(ctx, TYPE_PERM.write);
+  if (!perm.ok) return perm;
+  const plan = await planDraft(ctx, input);
+  if (!plan.ok) return plan;
+  const { value } = plan;
+
+  const [inv] = await ctx.tx
+    .insert(invoices)
+    .values({
+      companyId: ctx.companyId,
+      type: input.type,
+      partnerId: input.partnerId,
+      state: 'draft',
+      date: value.date,
+      dueDate: value.dueDate,
+      origin: input.origin ?? null,
+      sourceEntity: input.sourceEntity ?? null,
+      sourceId: input.sourceId ?? null,
+      refundOfId: extra.refundOfId ?? null,
+      untaxedCents: value.untaxedCents,
+      taxCents: value.taxCents,
+      stampCents: BigInt(0),
+      totalCents: value.untaxedCents + value.taxCents,
+      paidCents: BigInt(0),
+      paymentState: 'not_paid',
+      createdBy: ctx.userId,
+    })
+    .returning({ id: invoices.id });
+  if (!inv) return err('INTERNAL', 'insert failed');
+
+  await ctx.tx.insert(invoiceLines).values(
+    value.lineRows.map((r) => ({ ...r, companyId: ctx.companyId, invoiceId: inv.id, createdBy: ctx.userId })),
   );
   await audit(ctx, { entity: 'invoicing.invoice', recordId: inv.id, action: 'create', after: { type: input.type, partnerId: input.partnerId } });
   return ok({ id: inv.id });
@@ -121,4 +151,3 @@ export async function insertDraft(
 export async function createInvoice(ctx: Ctx, input: NewInvoice): Promise<Result<{ id: string }>> {
   return insertDraft(ctx, input);
 }
-

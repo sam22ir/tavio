@@ -1,13 +1,25 @@
 {
-  "module": { "name": "الفوترة" },
-  "menu": { "customers": "فواتير الزبائن", "vendors": "فواتير الموردين" },
+  "module": {
+    "name": "الفوترة"
+  },
+  "menu": {
+    "customers": "فواتير الزبائن",
+    "vendors": "فواتير الموردين"
+  },
   "list": {
     "customers": "فواتير الزبائن",
     "vendors": "فواتير الموردين",
     "new": "فاتورة جديدة",
     "newVendor": "فاتورة مورد جديدة",
     "empty": "لا توجد فواتير بعد.",
-    "col": { "number": "الرقم", "date": "التاريخ", "partner": "الشريك", "total": "المجموع", "state": "الحالة", "payment": "الدفع" }
+    "col": {
+      "number": "الرقم",
+      "date": "التاريخ",
+      "partner": "الشريك",
+      "total": "المجموع",
+      "state": "الحالة",
+      "payment": "الدفع"
+    }
   },
   "form": {
     "type": "النوع",
@@ -27,9 +39,24 @@
     "in_invoice": "فاتورة مورد",
     "in_refund": "فاتورة إرجاع مورد"
   },
-  "state": { "draft": "مسودة", "posted": "مرحّلة", "cancelled": "ملغاة" },
-  "payment": { "not_paid": "غير مدفوعة", "partial": "مدفوعة جزئياً", "paid": "مدفوعة" },
-  "method": { "cash": "نقداً", "ccp": "CCP", "transfer": "تحويل", "cib": "CIB", "edahabia": "الذهبية", "cheque": "شيك" },
+  "state": {
+    "draft": "مسودة",
+    "posted": "مرحّلة",
+    "cancelled": "ملغاة"
+  },
+  "payment": {
+    "not_paid": "غير مدفوعة",
+    "partial": "مدفوعة جزئياً",
+    "paid": "مدفوعة"
+  },
+  "method": {
+    "cash": "نقداً",
+    "ccp": "CCP",
+    "transfer": "تحويل",
+    "cib": "CIB",
+    "edahabia": "الذهبية",
+    "cheque": "شيك"
+  },
   "detail": {
     "title": "الوثيقة",
     "post": "ترحيل",
@@ -52,7 +79,8 @@
       "submit": "تسجيل"
     },
     "payments": "الدفعات",
-    "noPayments": "لا توجد دفعات."
+    "noPayments": "لا توجد دفعات.",
+    "edit": "تعديل"
   },
   "error": {
     "VALIDATION": "بيانات غير صالحة.",
@@ -82,5 +110,17 @@
     "stampDuty": "رسم الطابع",
     "totalInWords": "المجموع بالأرقام",
     "print": "طباعة"
+  },
+  "editor": {
+    "line": "السطر {n}",
+    "product": "المنتج",
+    "noProduct": "سطر حر",
+    "addLine": "إضافة سطر",
+    "removeLine": "حذف",
+    "untaxed": "المجموع دون رسم",
+    "tax": "الرسم على القيمة المضافة",
+    "total": "المجموع",
+    "save": "حفظ المسودة",
+    "editTitle": "تعديل المسودة"
   }
 }

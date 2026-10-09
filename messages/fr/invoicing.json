@@ -1,13 +1,25 @@
 {
-  "module": { "name": "Facturation" },
-  "menu": { "customers": "Factures clients", "vendors": "Factures fournisseurs" },
+  "module": {
+    "name": "Facturation"
+  },
+  "menu": {
+    "customers": "Factures clients",
+    "vendors": "Factures fournisseurs"
+  },
   "list": {
     "customers": "Factures clients",
     "vendors": "Factures fournisseurs",
     "new": "Nouvelle facture",
     "newVendor": "Nouvelle facture fournisseur",
     "empty": "Aucune facture pour le moment.",
-    "col": { "number": "Numéro", "date": "Date", "partner": "Partenaire", "total": "Total", "state": "Statut", "payment": "Paiement" }
+    "col": {
+      "number": "Numéro",
+      "date": "Date",
+      "partner": "Partenaire",
+      "total": "Total",
+      "state": "Statut",
+      "payment": "Paiement"
+    }
   },
   "form": {
     "type": "Type",
@@ -27,9 +39,24 @@
     "in_invoice": "Facture fournisseur",
     "in_refund": "Avoir fournisseur"
   },
-  "state": { "draft": "Brouillon", "posted": "Comptabilisée", "cancelled": "Annulée" },
-  "payment": { "not_paid": "Non payée", "partial": "Partiellement payée", "paid": "Payée" },
-  "method": { "cash": "Espèces", "ccp": "CCP", "transfer": "Virement", "cib": "CIB", "edahabia": "Edahabia", "cheque": "Chèque" },
+  "state": {
+    "draft": "Brouillon",
+    "posted": "Comptabilisée",
+    "cancelled": "Annulée"
+  },
+  "payment": {
+    "not_paid": "Non payée",
+    "partial": "Partiellement payée",
+    "paid": "Payée"
+  },
+  "method": {
+    "cash": "Espèces",
+    "ccp": "CCP",
+    "transfer": "Virement",
+    "cib": "CIB",
+    "edahabia": "Edahabia",
+    "cheque": "Chèque"
+  },
   "detail": {
     "title": "Document",
     "post": "Comptabiliser",
@@ -52,7 +79,8 @@
       "submit": "Enregistrer"
     },
     "payments": "Paiements",
-    "noPayments": "Aucun paiement."
+    "noPayments": "Aucun paiement.",
+    "edit": "Modifier"
   },
   "error": {
     "VALIDATION": "Données invalides.",
@@ -82,5 +110,17 @@
     "stampDuty": "Droit de timbre",
     "totalInWords": "Total en chiffres",
     "print": "Imprimer"
+  },
+  "editor": {
+    "line": "Ligne {n}",
+    "product": "Produit",
+    "noProduct": "Ligne libre",
+    "addLine": "Ajouter une ligne",
+    "removeLine": "Supprimer",
+    "untaxed": "Total HT",
+    "tax": "TVA",
+    "total": "Total TTC",
+    "save": "Enregistrer le brouillon",
+    "editTitle": "Modifier le brouillon"
   }
 }

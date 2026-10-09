@@ -63,3 +63,31 @@ describe('paymentStateFor', () => {
     expect(paymentStateFor(c(100), c(100))).toBe('paid');
   });
 });
+
+describe('computeTotals with several lines', () => {
+  it('sums untaxed and tax across mixed rates and rounds each line half-up', () => {
+    const t = computeTotals([
+      { quantity: '2', unitPriceCents: c(10000), ratePercent: '19' },
+      { quantity: '1.5', unitPriceCents: c(5001), ratePercent: '0' },
+      { quantity: '1', unitPriceCents: c(1000), ratePercent: '9' },
+    ]);
+    expect(t.lines.map((l) => l.subtotalCents)).toEqual([c(20000), c(7502), c(1000)]);
+    expect(t.untaxedCents).toBe(c(28502));
+    expect(t.taxCents).toBe(c(3890));
+    expect(t.taxGroups.map((g) => [g.ratePercent, g.baseCents, g.taxCents])).toEqual([
+      ['19', c(20000), c(3800)],
+      ['0', c(7502), c(0)],
+      ['9', c(1000), c(90)],
+    ]);
+  });
+
+  it('returns zero totals for an empty list and rejects an invalid line anywhere in the list', () => {
+    expect(computeTotals([]).untaxedCents).toBe(c(0));
+    expect(() =>
+      computeTotals([
+        { quantity: '1', unitPriceCents: c(100), ratePercent: '19' },
+        { quantity: '0', unitPriceCents: c(100), ratePercent: '19' },
+      ]),
+    ).toThrow(RangeError);
+  });
+});
