@@ -68,6 +68,8 @@ export const stages = pgTable(
     isWon: boolean('is_won').notNull().default(false),
     // collapsed in kanban
     fold: boolean('fold').notNull().default(false),
+    // shown as a hint on the kanban column and the lead form
+    requirements: text('requirements'),
   },
   (t) => [
     index('stages_company_id_pipeline_id_position_idx').on(t.companyId, t.pipelineId, t.position),
@@ -149,6 +151,12 @@ export const leads = pgTable(
     // converted_quote_id uuid
     // Archived leads are active = false
     active: boolean('active').notNull().default(true),
+    // when the lead entered its current stage. Set on create and on every stage change
+    stageEnteredAt: timestamp('stage_entered_at', { withTimezone: true }).notNull().defaultNow(),
+    // number of contact attempts logged on the lead
+    attemptCount: integer('attempt_count').notNull().default(0),
+    // how the lead came in: phone, whatsapp, showroom, web, referral, other
+    channel: text('channel'),
     // denormalized pointer for kanban, optional (guess in DATA_MODEL.md)
     // FK → activities.id (added by integrator)
     nextActivityId: uuid('next_activity_id'),
@@ -183,6 +191,11 @@ export const leads = pgTable(
       sql`${t.status} <> 'lost' or (${t.lostReasonId} is not null and ${t.lostAt} is not null)`,
     ),
     check('leads_won_check', sql`${t.status} <> 'won' or ${t.wonAt} is not null`),
+    check('leads_attempt_count_check', sql`${t.attemptCount} >= 0`),
+    check(
+      'leads_channel_check',
+      sql`${t.channel} is null or ${t.channel} in ('phone', 'whatsapp', 'showroom', 'web', 'referral', 'other')`,
+    ),
   ],
 );
 

@@ -26,7 +26,9 @@
     "lostAt": "تاريخ الخسارة",
     "wonAt": "تاريخ الربح",
     "convertedContractId": "العقد المحوَّل",
-    "active": "نشط"
+    "active": "نشط",
+    "channel": "القناة",
+    "attemptCount": "المحاولات"
   },
   "options": {
     "type": {
@@ -50,6 +52,14 @@
     "priority": {
       "0": "عادية",
       "1": "مرتفعة"
+    },
+    "channel": {
+      "phone": "الهاتف",
+      "whatsapp": "واتساب",
+      "showroom": "صالة العرض",
+      "web": "الويب",
+      "referral": "إحالة",
+      "other": "أخرى"
     }
   },
   "lead": {
@@ -83,6 +93,9 @@
     "expected": "الإيراد المتوقع",
     "call": "اتصال",
     "whatsapp": "واتساب",
-    "convert": "تحويل إلى عقد بيع بالتقسيط"
+    "convert": "تحويل إلى عقد بيع بالتقسيط",
+    "logAttempt": "تسجيل محاولة",
+    "daysInStage": "{count, plural, one {يوم واحد في المرحلة} two {يومان في المرحلة} few {# أيام في المرحلة} many {# يومًا في المرحلة} other {# يوم في المرحلة}}",
+    "stageRequirements": "متطلبات هذه المرحلة"
   }
 }

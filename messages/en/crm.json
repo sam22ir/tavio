@@ -26,7 +26,9 @@
     "lostAt": "Lost on",
     "wonAt": "Won on",
     "convertedContractId": "Converted contract",
-    "active": "Active"
+    "active": "Active",
+    "channel": "Channel",
+    "attemptCount": "Attempts"
   },
   "options": {
     "type": {
@@ -50,6 +52,14 @@
     "priority": {
       "0": "Normal",
       "1": "High"
+    },
+    "channel": {
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "showroom": "Showroom",
+      "web": "Web",
+      "referral": "Referral",
+      "other": "Other"
     }
   },
   "lead": {
@@ -83,6 +93,9 @@
     "expected": "Expected revenue",
     "call": "Call",
     "whatsapp": "WhatsApp",
-    "convert": "Convert to credit contract"
+    "convert": "Convert to credit contract",
+    "logAttempt": "Log attempt",
+    "daysInStage": "{count, plural, one {# day in stage} other {# days in stage}}",
+    "stageRequirements": "Requirements for this stage"
   }
 }

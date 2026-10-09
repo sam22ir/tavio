@@ -28,9 +28,11 @@ interface LeadStatusActionsProps {
   markWon: Action<{ id: string }>;
   markLost: Action<{ id: string; lostReasonId?: string; note?: string }>;
   reopen: Action<{ id: string }>;
+  /** Optional until the lead page passes it. Logs one contact attempt. */
+  logAttempt?: Action<{ id: string }>;
 }
 
-export function LeadStatusActions({ id, status, reasons, markWon, markLost, reopen }: LeadStatusActionsProps) {
+export function LeadStatusActions({ id, status, reasons, markWon, markLost, reopen, logAttempt }: LeadStatusActionsProps) {
   const t = useTranslations('crm.ui');
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -52,6 +54,11 @@ export function LeadStatusActions({ id, status, reasons, markWon, markLost, reop
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {logAttempt ? (
+        <Button size="sm" variant="outline" disabled={pending} onClick={() => run(() => logAttempt({ id }))}>
+          {t('logAttempt')}
+        </Button>
+      ) : null}
       {status === 'open' ? (
         <>
           <Button size="sm" disabled={pending} onClick={() => run(() => markWon({ id }))}>
