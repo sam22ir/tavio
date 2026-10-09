@@ -9,6 +9,8 @@ import { partnerEntity } from '@/modules/contacts/entities';
 import { getPartner, partnerFormValues, type PartnerRow } from '@/modules/contacts/service/partners';
 import { Chatter } from '@/modules/chatter/ui/chatter';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
+import { listCustomFieldDefs } from '@/modules/platform/service/custom-fields';
+import { CustomFieldsEditor, type CustomFieldView } from '@/modules/platform/ui/custom-fields-editor';
 import { Button } from '@/ui/primitives/button';
 import { RecordForm } from '@/ui/views/record-form';
 import { formatCell } from '@/ui/views/format';
@@ -48,6 +50,21 @@ export default async function ContactDetailPage({
     );
   }
   const partner: PartnerRow = result.value;
+
+  const defsResult = await withPageCtx((ctx) => listCustomFieldDefs(ctx, 'contacts.partner'));
+  const customFields: CustomFieldView[] = defsResult.ok
+    ? defsResult.value.map((d) => ({
+        key: d.key,
+        labelFr: d.labelFr,
+        labelAr: d.labelAr,
+        labelEn: d.labelEn,
+        fieldType: d.fieldType as CustomFieldView['fieldType'],
+        options: (d.options as string[] | null) ?? [],
+        required: d.required,
+      }))
+    : [];
+  const customValues = (partner.custom ?? {}) as Record<string, string | number | boolean | null>;
+  const tPlatform = await getTranslations('platform');
 
   const kindLabel = partner.kind === 'company' ? t('contacts.options.kind.company') : t('contacts.options.kind.individual');
   const roles = [
@@ -112,6 +129,13 @@ export default async function ContactDetailPage({
           </div>
         }
       />
+
+      <section aria-labelledby="partner-custom" className="flex flex-col gap-3">
+        <h2 id="partner-custom" className="text-base font-semibold">
+          {tPlatform('custom.title')}
+        </h2>
+        <CustomFieldsEditor entity="contacts.partner" recordId={id} fields={customFields} values={customValues} />
+      </section>
 
       <section aria-labelledby="partner-activity" className="flex flex-col gap-3">
         <h2 id="partner-activity" className="text-base font-semibold">
