@@ -134,6 +134,43 @@ export interface PosPaidForPosting {
   taxCents: bigint;
 }
 
+export interface CreditPaymentForPosting {
+  partnerId: string;
+  amountCents: bigint;
+  method: string;
+  reference: string;
+}
+
+/** Instalment receipt: Dr 53 (cash) or 512 (other methods) / Cr 411 client. */
+export function creditPaymentLines(p: CreditPaymentForPosting): DraftLine[] {
+  return [
+    ...line(treasuryAccount(p.method), 'debit', p.amountCents, null, p.reference),
+    ...line('411', 'credit', p.amountCents, p.partnerId, p.reference),
+  ];
+}
+
+export interface CreditContractForPosting {
+  partnerId: string;
+  number: string;
+  financedCents: bigint;
+  downPaymentCents: bigint;
+  cashPriceCents: bigint;
+  markupCents: bigint;
+}
+
+/**
+ * Instalment contract activation: Dr 411 (financed + down payment) / Cr 700 cash price / Cr 708 markup.
+ * Financed + down payment equals cash price + markup, so the entry balances.
+ * ⚠ Needs accountant verification: markup account (708) and whether it belongs in 700 or a financial income account.
+ */
+export function creditContractLines(c: CreditContractForPosting): DraftLine[] {
+  return [
+    ...line('411', 'debit', c.financedCents + c.downPaymentCents, c.partnerId, c.number),
+    ...line('700', 'credit', c.cashPriceCents, null, c.number),
+    ...line('708', 'credit', c.markupCents, null, c.number),
+  ];
+}
+
 /** POS sale: Dr 53 (cash) or 512 (card) total / Cr 700 untaxed / Cr 4457 VAT. */
 export function posLines(p: PosPaidForPosting): DraftLine[] {
   return [

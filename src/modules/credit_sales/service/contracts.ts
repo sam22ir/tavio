@@ -343,7 +343,15 @@ export async function activateContract(ctx: Ctx, id: string): Promise<Result<{ i
   });
   await emit(ctx, {
     name: 'credit_sales.contract.activated',
-    payload: { contractId: id, number, partnerId: contract.partnerId, financedCents: contract.financedCents.toString() },
+    payload: {
+      contractId: id,
+      number,
+      partnerId: contract.partnerId,
+      cashPriceCents: contract.cashPriceCents.toString(),
+      markupCents: contract.markupCents.toString(),
+      downPaymentCents: contract.downPaymentCents.toString(),
+      financedCents: contract.financedCents.toString(),
+    },
   });
   const posted = await postMessage(ctx, { entity: ENTITY, recordId: id, body: `Contract ${number} activated`, kind: 'system' });
   if (!posted.ok) return posted;

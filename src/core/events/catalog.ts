@@ -21,6 +21,11 @@ export interface InvoicePaymentRegistered {
   /** Timbre fiscal added to the invoice by this cash payment. Present only when > 0. ⚠ needs accountant verification */
   stampCents?: string;
 }
+export interface CreditPaymentRecorded { contractId: string; partnerId: string; paymentId: string; amountCents: string }
+export interface CreditContractActivated {
+  contractId: string; number: string; partnerId: string;
+  cashPriceCents: string; markupCents: string; downPaymentCents: string; financedCents: string;
+}
 export interface PurchaseOrderReceived { orderId: string; number: string; lines: QtyLine[] }
 export interface PosOrderPaid {
   orderId: string; sessionId: string; number: string; method: string;
@@ -35,7 +40,8 @@ export interface EventCatalog {
   'purchases.order.received': PurchaseOrderReceived;
   'pos.order.paid': PosOrderPaid;
   'inventory.move.done': StockMoveDone;
-  'credit_sales.payment.recorded': { contractId: string; partnerId: string; paymentId: string; amountCents: string };
+  'credit_sales.payment.recorded': CreditPaymentRecorded;
+  'credit_sales.contract.activated': CreditContractActivated;
 }
 export type EventName = keyof EventCatalog;
 
@@ -48,6 +54,7 @@ export const EVENT_NAMES = [
   'pos.order.paid',
   'inventory.move.done',
   'credit_sales.payment.recorded',
+  'credit_sales.contract.activated',
 ] as const satisfies readonly EventName[];
 
 type UnlistedEvent = Exclude<EventName, (typeof EVENT_NAMES)[number]>;

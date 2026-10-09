@@ -1,10 +1,17 @@
 import { on } from '@/core/events';
 import type { Ctx } from '@/core/ctx';
-import type { InvoicePaymentRegistered, InvoicePosted, PosOrderPaid } from '@/core/events/catalog';
+import type {
+  CreditContractActivated,
+  CreditPaymentRecorded,
+  InvoicePaymentRegistered,
+  InvoicePosted,
+  PosOrderPaid,
+} from '@/core/events/catalog';
 import { and, eq } from 'drizzle-orm';
 import { invoices } from '@/modules/invoicing/schema';
+import { creditContracts, creditPayments } from '@/modules/credit_sales/schema';
 import { postEntry } from './service/entries';
-import { invoiceLines, paymentLines, posLines } from './service/posting';
+import { creditContractLines, creditPaymentLines, invoiceLines, paymentLines, posLines } from './service/posting';
 
 // Side-effect module: imported from src/modules/accounting/index.ts so the handlers are registered.
 // Handlers run in the emitter's transaction. A failed post throws so the emitter's transaction rolls back.
@@ -80,6 +87,56 @@ on('pos.order.paid', async (ctx, event) => {
       totalCents: bigOrZero(p.totalCents),
       untaxedCents: bigOrZero(p.untaxedCents),
       taxCents: bigOrZero(p.taxCents),
+    }),
+  });
+});
+
+const ALGIERS_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Algiers', year: 'numeric', month: '2-digit', day: '2-digit' });
+
+on('credit_sales.contract.activated', async (ctx, event) => {
+  const p = event.payload as CreditContractActivated;
+  await mustPost(ctx, {
+    journalCode: 'VT',
+    date: ALGIERS_DAY.format(new Date()),
+    ref: p.number,
+    sourceEntity: 'credit_sales.contract',
+    sourceId: p.contractId,
+    lines: creditContractLines({
+      partnerId: p.partnerId,
+      number: p.number,
+      financedCents: bigOrZero(p.financedCents),
+      downPaymentCents: bigOrZero(p.downPaymentCents),
+      cashPriceCents: bigOrZero(p.cashPriceCents),
+      markupCents: bigOrZero(p.markupCents),
+    }),
+  });
+});
+
+on('credit_sales.payment.recorded', async (ctx, event) => {
+  const p = event.payload as CreditPaymentRecorded;
+  const [payment] = await ctx.tx
+    .select({ method: creditPayments.method, receivedAt: creditPayments.receivedAt })
+    .from(creditPayments)
+    .where(and(eq(creditPayments.id, p.paymentId), eq(creditPayments.companyId, ctx.companyId)))
+    .limit(1);
+  if (!payment) throw new Error(`accounting: credit payment ${p.paymentId} not found`);
+  const [contract] = await ctx.tx
+    .select({ reference: creditContracts.reference })
+    .from(creditContracts)
+    .where(and(eq(creditContracts.id, p.contractId), eq(creditContracts.companyId, ctx.companyId)))
+    .limit(1);
+  const reference = contract?.reference ?? p.contractId;
+  await mustPost(ctx, {
+    journalCode: payment.method === 'cash' ? 'CA' : 'BQ',
+    date: ALGIERS_DAY.format(payment.receivedAt),
+    ref: reference,
+    sourceEntity: 'credit_sales.payment',
+    sourceId: p.paymentId,
+    lines: creditPaymentLines({
+      partnerId: p.partnerId,
+      amountCents: bigOrZero(p.amountCents),
+      method: payment.method,
+      reference,
     }),
   });
 });
