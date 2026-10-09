@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { ACTIVITY_TYPE_SEED } from '../entities';
 import { completeActivityAction, postMessageAction, scheduleActivityAction } from '../actions';
+import type { NextSuggestion } from '../service';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
 import { Label } from '@/ui/primitives/label';
@@ -67,17 +67,21 @@ export function Composer({ entity, recordId }: Common) {
   );
 }
 
-/** Schedule form: type, summary, due date and assignee (default: me). */
+/** Schedule form: activity type, summary, due date and assignee (default: me). */
 export function ScheduleActivityForm({
   entity,
   recordId,
   currentUserId,
   assignees,
-}: Common & { currentUserId: string; assignees: { id: string; name: string }[] }) {
+  types,
+}: Common & {
+  currentUserId: string;
+  assignees: { id: string; name: string }[];
+  types: { id: string; label: string }[];
+}) {
   const t = useTranslations('chatter.activity');
-  const tt = useTranslations('chatter.type');
   const router = useRouter();
-  const [typeKey, setTypeKey] = useState<string>(ACTIVITY_TYPE_SEED[0].key);
+  const [activityTypeId, setActivityTypeId] = useState<string>(types[0]?.id ?? '');
   const [summary, setSummary] = useState('');
   const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
   const [assigneeId, setAssigneeId] = useState(currentUserId);
@@ -90,7 +94,7 @@ export function ScheduleActivityForm({
       const res = await scheduleActivityAction({
         entity,
         recordId,
-        typeKey: typeKey as (typeof ACTIVITY_TYPE_SEED)[number]['key'],
+        activityTypeId,
         summary,
         dueDate,
         assigneeId,
@@ -113,11 +117,11 @@ export function ScheduleActivityForm({
           <select
             id="activity-type"
             className="h-9 rounded-md border bg-background px-3 text-sm"
-            value={typeKey}
-            onChange={(e) => setTypeKey(e.target.value)}
+            value={activityTypeId}
+            onChange={(e) => setActivityTypeId(e.target.value)}
           >
-            {ACTIVITY_TYPE_SEED.map((s) => (
-              <option key={s.key} value={s.key}>{tt(s.key)}</option>
+            {types.map((ty) => (
+              <option key={ty.id} value={ty.id}>{ty.label}</option>
             ))}
           </select>
         </div>
@@ -145,7 +149,11 @@ export function ScheduleActivityForm({
       </div>
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
       <div className="flex justify-end">
-        <Button type="button" onClick={submit} disabled={pending || summary.trim().length === 0 || !dueDate}>
+        <Button
+          type="button"
+          onClick={submit}
+          disabled={pending || summary.trim().length === 0 || !dueDate || !activityTypeId}
+        >
           {t('submit')}
         </Button>
       </div>
@@ -153,34 +161,113 @@ export function ScheduleActivityForm({
   );
 }
 
-/** "Mark done" for one open activity. */
-export function MarkDoneButton({ id }: { id: string }) {
+/**
+ * Per-activity controls. Open: "Mark done" with a result (required when the type says so) and an optional note.
+ * Done: offers the suggested next activity from chaining_type = suggest.
+ * Stays mounted after the activity is completed, so the suggestion survives router.refresh().
+ */
+export function ActivityActions({
+  id,
+  entity,
+  recordId,
+  requireResult,
+  open,
+}: Common & { id: string; requireResult: boolean; open: boolean }) {
   const t = useTranslations('chatter.activity');
   const te = useTranslations('chatter.thread');
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [result, setResult] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [next, setNext] = useState<NextSuggestion | null>(null);
+
+  function complete() {
+    setError(null);
+    startTransition(async () => {
+      const res = await completeActivityAction({ id, result: result.trim() || undefined, feedback: feedback.trim() || undefined });
+      if (!res.ok) {
+        setError(res.error.code === 'VALIDATION' ? t('resultRequired') : te('error'));
+        return;
+      }
+      setNext(res.value.next);
+      setExpanded(false);
+      setResult('');
+      setFeedback('');
+      router.refresh();
+    });
+  }
+
+  function scheduleNext(suggestion: NextSuggestion) {
+    setError(null);
+    startTransition(async () => {
+      const res = await scheduleActivityAction({
+        entity,
+        recordId,
+        activityTypeId: suggestion.activityTypeId,
+        summary: suggestion.summary,
+        dueDate: suggestion.dueDate,
+        assigneeId: suggestion.assigneeId,
+      });
+      if (!res.ok) {
+        setError(te('error'));
+        return;
+      }
+      setNext(null);
+      router.refresh();
+    });
+  }
+
+  if (!open) {
+    if (!next) return null;
+    return (
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 text-sm">
+        <span>{t('suggestedNext', { date: next.dueDate })}</span>
+        <Button type="button" size="sm" variant="outline" disabled={pending} onClick={() => scheduleNext(next)}>
+          {t('scheduleNext')}
+        </Button>
+      </div>
+    );
+  }
+
+  if (!expanded) {
+    return (
+      <div className="flex justify-end">
+        <Button type="button" size="sm" variant="outline" onClick={() => setExpanded(true)}>
+          {t('markDone')}
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <span className="inline-flex flex-col items-end gap-1">
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        disabled={pending}
-        onClick={() =>
-          startTransition(async () => {
-            const res = await completeActivityAction({ id });
-            if (!res.ok) {
-              setError(true);
-              return;
-            }
-            router.refresh();
-          })
-        }
-      >
-        {t('markDone')}
-      </Button>
-      {error ? <span role="alert" className="text-xs text-destructive">{te('error')}</span> : null}
-    </span>
+    <div className="flex flex-col gap-2 border-t pt-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <Input
+          aria-label={t('result')}
+          placeholder={requireResult ? t('resultPlaceholderRequired') : t('resultPlaceholder')}
+          value={result}
+          maxLength={100}
+          onChange={(e) => setResult(e.target.value)}
+        />
+        <Input
+          aria-label={t('feedbackPlaceholder')}
+          placeholder={t('feedbackPlaceholder')}
+          value={feedback}
+          maxLength={1000}
+          onChange={(e) => setFeedback(e.target.value)}
+        />
+      </div>
+      {error ? <p role="alert" className="text-xs text-destructive">{error}</p> : null}
+      <div className="flex justify-end gap-2">
+        <Button type="button" size="sm" variant="ghost" onClick={() => setExpanded(false)}>
+          {t('cancel')}
+        </Button>
+        <Button type="button" size="sm" variant="outline" disabled={pending || (requireResult && !result.trim())} onClick={complete}>
+          {t('markDone')}
+        </Button>
+      </div>
+    </div>
   );
 }
