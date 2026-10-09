@@ -171,7 +171,7 @@
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 1), 0 18px 30px -16px rgba(31, 95, 85, 0.45);
   font-size: 13px; font-weight: 600; white-space: nowrap;
 }
-.s-badge i { width: 1.5rem; height: 1.5rem; border-radius: 9px; flex: none; }
+.s-badge-tile { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 12px; color: #fff; flex: none; }
 
 /* Connector diagram */
 .s-flip-rtl { transform-origin: center; }
@@ -200,6 +200,7 @@
 
 /* Cinematic CTA band */
 .s-cta-band { background: var(--s-accent); color: #fff; border-radius: 2rem; }
+.s-cta-band .s-accent { color: #cfe9dd; }
 
 /* Scroll entry and float. Static when scroll-driven animations are unsupported. */
 @supports (animation-timeline: view()) {

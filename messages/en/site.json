@@ -277,6 +277,11 @@
           "Accounting and HR",
           "Projects, support and API"
         ]
+      },
+      "planNames": {
+        "free": "Free",
+        "pro": "Pro",
+        "business": "Business"
       }
     },
     "faq": {
