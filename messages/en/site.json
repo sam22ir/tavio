@@ -1,12 +1,13 @@
 {
   "brand": {
-    "name": "Tavio",
-    "tagline": "Credit sales, customers and invoicing for Algerian shops"
+    "name": "Revora",
+    "tagline": "Growth Is a System."
   },
   "nav": {
     "mainLabel": "Main navigation",
-    "features": "Modules",
+    "features": "Platform",
     "solutions": "Solutions",
+    "services": "Services",
     "pricing": "Pricing",
     "onPremise": "On-premise",
     "about": "About",
@@ -17,19 +18,18 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "menuTitle": "Menu",
-    "language": "Language"
+    "language": "Language",
+    "requestAudit": "Request an audit"
   },
   "footer": {
-    "tagline": "One tool for credit sales, customer follow-up and invoicing, in French and Arabic.",
-    "product": "Product",
-    "solutions": "Solutions",
+    "tagline": "Growth Is a System.",
     "company": "Company",
     "legal": "Legal",
     "contact": "Contact",
     "whatsapp": "Message us on WhatsApp",
     "rights": "All rights reserved.",
     "links": {
-      "features": "Modules",
+      "features": "Platform",
       "pricing": "Pricing",
       "onPremise": "On-premise",
       "solutionsIndex": "All solutions",
@@ -42,18 +42,23 @@
       "contact": "Contact us",
       "faq": "FAQ",
       "privacy": "Privacy",
-      "terms": "Terms of use"
-    }
+      "terms": "Terms of use",
+      "services": "Services"
+    },
+    "platform": "Platform",
+    "services": "Services",
+    "location": "Algiers, Algeria",
+    "solutions": "Solutions"
   },
   "home": {
     "meta": {
-      "title": "Tavio: credit sales, CRM and invoicing for Algeria",
+      "title": "Revora: credit sales, CRM and invoicing for Algeria",
       "description": "Sell on credit, track your customers and invoice with VAT in dinars, in one app in French and Arabic."
     },
     "hero": {
       "eyebrow": "New · Built for Algeria",
       "title": "Your credit sales, *finally* under control.",
-      "subtitle": "Instalments, WhatsApp reminders, VAT invoices and stock: Tavio brings your whole shop into one app, in French and Arabic.",
+      "subtitle": "Instalments, WhatsApp reminders, VAT invoices and stock: Revora brings your whole shop into one app, in French and Arabic.",
       "primary": "Start for free",
       "secondary": "See the demo"
     },
@@ -67,9 +72,9 @@
     "before": {
       "eyebrow": "The daily grind",
       "title": "From the notebook *to one dashboard*.",
-      "body": "What most shops selling on credit deal with today, and what Tavio changes.",
+      "body": "What most shops selling on credit deal with today, and what Revora changes.",
       "beforeLabel": "Before",
-      "afterLabel": "With Tavio",
+      "afterLabel": "With Revora",
       "before": [
         "Instalments tracked in a notebook",
         "Invoices typed by hand, totals often off",
@@ -105,7 +110,7 @@
       {
         "eyebrow": "Collections",
         "title": "Overdue payments, *chased* on time.",
-        "body": "Tavio spots late instalments and prepares the WhatsApp reminder to send to your customer.",
+        "body": "Revora spots late instalments and prepares the WhatsApp reminder to send to your customer.",
         "screen": "overdue",
         "items": [
           {
@@ -224,14 +229,14 @@
     "dark": {
       "eyebrow": "AI and hosting",
       "title": "AI on your side, *your data* in Algeria.",
-      "body": "Tavio stays simple and safe: AI is optional, and so is where your data lives.",
+      "body": "Revora stays simple and safe: AI is optional, and so is where your data lives.",
       "ai": {
         "title": "Optional AI assistant",
         "body": "It can draft your reminders, summarise your sales and answer questions about your products. It is optional and works with the AI provider you choose."
       },
       "onPremise": {
         "title": "On-premise, in Algeria",
-        "body": "Run Tavio on your own servers: your data stays in Algeria, with Docker installation, backups and support."
+        "body": "Run Revora on your own servers: your data stays in Algeria, with Docker installation, backups and support."
       }
     },
     "how": {
@@ -293,7 +298,7 @@
           "answer": "Your data is hosted in Europe, or on your own servers with the on-premise option. You remain the owner of your data."
         },
         {
-          "question": "Can I use Tavio in Arabic?",
+          "question": "Can I use Revora in Arabic?",
           "answer": "Yes. The interface is available in Arabic, French and English, with a right-to-left layout for Arabic."
         },
         {
@@ -302,10 +307,10 @@
         },
         {
           "question": "Are the invoices compliant in Algeria?",
-          "answer": "Tavio applies Algerian VAT and provides NIF and RC fields. Have your accountant validate the invoice template."
+          "answer": "Revora applies Algerian VAT and provides NIF and RC fields. Have your accountant validate the invoice template."
         },
         {
-          "question": "Can I install Tavio on my own servers?",
+          "question": "Can I install Revora on my own servers?",
           "answer": "Yes. The on-premise offer keeps your data in Algeria, with Docker installation, backups and support."
         }
       ]

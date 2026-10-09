@@ -29,23 +29,26 @@ export function Section({
 
 /**
  * Section headline with optional pill label and body. Left aligned.
- * `*word*` in title renders in the accent style.
+ * `*word*` in title renders in the emphasis style.
  */
 export function SectionHeading({
   title,
   body,
   eyebrow,
   as: Tag = 'h2',
+  uppercase = true,
 }: {
   title: string;
   body?: string;
   eyebrow?: string;
   as?: 'h1' | 'h2';
+  /** Big section titles are uppercase; Arabic is never uppercase. */
+  uppercase?: boolean;
 }) {
   return (
     <div className="flex max-w-2xl flex-col gap-5">
       {eyebrow ? <PillLabel>{eyebrow}</PillLabel> : null}
-      <Tag className="s-h2">
+      <Tag className={cn("s-h2", uppercase && "s-uppercase")}>
         <Emphasis text={title} />
       </Tag>
       {body ? <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{body}</p> : null}

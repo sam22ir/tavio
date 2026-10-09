@@ -102,7 +102,7 @@ export function buildMetadata(opts: {
       title: opts.title,
       description: opts.description,
       url,
-      siteName: 'Tavio',
+      siteName: 'Revora',
       locale: opts.locale,
       type: 'website',
       images: [OG_IMAGE],
