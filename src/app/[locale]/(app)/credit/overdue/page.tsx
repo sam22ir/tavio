@@ -8,6 +8,7 @@ import { formatDzd, sumCents, type Cents } from '@/core/money';
 import { loadShell } from '@/ui/shell/load-shell';
 import { buildReminderMessage, whatsappLink } from '@/modules/credit_sales/service/reminders';
 import { listDueSoon, listOverdue, type OverdueRow } from '@/modules/credit_sales/service/payments';
+import { AiDraftButton } from './ai-draft-button';
 
 interface PartnerGroup {
   partnerId: string;
@@ -86,6 +87,7 @@ export default async function OverduePage({ params }: { params: Promise<{ locale
               {t('overdue.whatsapp')}
             </a>
           ) : null}
+          <AiDraftButton contractId={r.contractId} phone={phone} />
         </div>
       </li>
     );

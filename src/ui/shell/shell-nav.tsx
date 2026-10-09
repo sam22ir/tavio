@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { CommandSearch } from '@/ui/shell/command-search';
 import { CompanySwitcher } from '@/ui/shell/company-switcher';
 import { LocaleSwitcher } from '@/ui/shell/locale-switcher';
 import { UserMenu } from '@/ui/shell/user-menu';
@@ -26,6 +27,7 @@ export function ShellNav({ items, companies, activeCompanyId, email, onNavigate 
 
   return (
     <div className="flex h-full flex-col gap-6 p-4">
+      <CommandSearch />
       <nav aria-label={t('nav.title')} className="flex flex-col gap-1">
         {items.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
