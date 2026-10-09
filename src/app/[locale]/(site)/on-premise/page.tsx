@@ -1,13 +1,22 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Check } from 'lucide-react';
+import { Check, Database, Server, ShieldCheck, Sparkles } from 'lucide-react';
 import { routing } from '@/i18n/routing';
-import { buildMetadata } from '@/site/seo';
 import { localeHref } from '@/site/content/nav';
-import { CtaBand, Section, SectionHeading, Steps } from '@/site/components';
+import { buildMetadata } from '@/site/seo';
+import {
+  CtaBand,
+  CtaLink,
+  CurvedTimeline,
+  Emphasis,
+  PillLabel,
+  Reveal,
+  RevealItem,
+  RevealList,
+  Section,
+} from '@/site/components';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -16,18 +25,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({ locale, path: '/on-premise', title: t('title'), description: t('description') });
 }
 
-function CheckList({ items }: { items: string[] }) {
-  return (
-    <ul className="mt-8 grid gap-4">
-      {items.map((item) => (
-        <li key={item} className="flex gap-3 text-base leading-relaxed">
-          <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden />
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
+/** Icons for the guarantee tiles, in message order. */
+const GUARANTEE_ICONS = [Server, Database, Sparkles, ShieldCheck];
 
 export default async function OnPremisePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -36,65 +35,113 @@ export default async function OnPremisePage({ params }: { params: Promise<{ loca
   const t = await getTranslations('site_pricing.onPremise');
   const requirements = t.raw('requirements') as string[];
   const steps = t.raw('steps') as { title: string; body: string }[];
+  const guarantees = t.raw('guarantees') as { title: string; body: string }[];
   const backups = t.raw('backups') as string[];
-  const included = t.raw('included') as string[];
   const contactHref = localeHref(locale, '/contact');
 
   return (
     <>
-      <Section className="pt-12 md:pt-20">
-        <div className="flex max-w-3xl flex-col gap-5">
-          <h1 className="text-4xl font-semibold tracking-tighter md:text-6xl">{t('title')}</h1>
-          <p className="max-w-[65ch] text-base leading-relaxed text-muted-foreground md:text-lg">{t('body')}</p>
-          <p className="rounded-xl border border-border bg-card p-4 text-sm leading-relaxed text-muted-foreground">{t('legal')}</p>
-        </div>
-      </Section>
-
-      <Section tone="muted">
-        <div className="grid gap-12 md:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('requirementsTitle')}</h2>
-            <CheckList items={requirements} />
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('includedTitle')}</h2>
-            <CheckList items={included} />
-          </div>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeading title={t('stepsTitle')} />
-        <div className="mt-10">
-          <Steps steps={steps} />
-        </div>
-      </Section>
-
-      <Section tone="muted">
-        <div className="grid gap-12 md:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('backupsTitle')}</h2>
-            <CheckList items={backups} />
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('supportTitle')}</h2>
-            <p className="mt-8 text-base leading-relaxed text-muted-foreground">{t('support')}</p>
-            <p className="mt-6 text-sm">
-              <Link href={localeHref(locale, '/pricing')} className="font-medium text-primary underline-offset-4 hover:underline">
-                {t('pricingCta')}
-              </Link>
-            </p>
-          </div>
-        </div>
-      </Section>
-
-      <Section>
-        <CtaBand
-          title={t('ctaTitle')}
-          body={t('ctaBody')}
-          primary={{ label: t('cta'), href: contactHref }}
+      {/* Dark hero: the one cinematic dark band, with the accent headline. */}
+      <section className="s-dark relative overflow-hidden px-4 pb-24 pt-20 md:pb-36 md:pt-32">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-full"
+          style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(127,209,178,0.16), transparent 70%)' }}
         />
-      </Section>
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-7 text-center">
+          <PillLabel tone="dark">{t('eyebrow')}</PillLabel>
+          <h1 className="s-h1 text-balance">
+            <Emphasis text={t('title')} />
+          </h1>
+          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('body')}</p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <CtaLink href={contactHref} label={t('cta')} variant="light" />
+          </div>
+        </div>
+      </section>
+
+      {/* Guarantees: a bento of four tiles. */}
+      <Reveal>
+        <Section>
+          <div className="flex flex-col gap-12">
+            <RevealList className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {guarantees.map((item, i) => {
+                const Icon = GUARANTEE_ICONS[i] ?? ShieldCheck;
+                return (
+                  <RevealItem key={item.title} className="s-panel flex flex-col gap-5 p-7 md:p-9">
+                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
+                      <Icon size={20} strokeWidth={1.75} aria-hidden />
+                    </span>
+                    <h3 className="text-xl">{item.title}</h3>
+                    <p className="leading-relaxed text-[color:var(--s-muted)]">{item.body}</p>
+                  </RevealItem>
+                );
+              })}
+            </RevealList>
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* Install steps on the curved timeline. */}
+      <Reveal>
+        <Section tone="muted">
+          <div className="flex flex-col gap-16">
+            <h2 className="s-h2 max-w-2xl !text-[2.25rem] md:!text-[2.75rem]">
+              <Emphasis text={t('stepsTitle')} />
+            </h2>
+            <CurvedTimeline steps={steps} />
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* Requirements, backups and the legal note, side by side. */}
+      <Reveal>
+        <Section>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="s-panel flex flex-col gap-6 p-7 md:p-9">
+              <h2 className="text-xl">{t('requirementsTitle')}</h2>
+              <ul className="flex flex-col gap-4">
+                {requirements.map((item) => (
+                  <li key={item} className="flex gap-3 leading-relaxed">
+                    <Check className="mt-1 size-4 shrink-0 text-[color:var(--s-accent)]" aria-hidden />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="s-panel flex flex-col gap-6 p-7 md:p-9">
+              <h2 className="text-xl">{t('backupsTitle')}</h2>
+              <ul className="flex flex-col gap-4">
+                {backups.map((item) => (
+                  <li key={item} className="flex gap-3 leading-relaxed">
+                    <Check className="mt-1 size-4 shrink-0 text-[color:var(--s-accent)]" aria-hidden />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="s-panel flex flex-col gap-4 p-7 md:p-9">
+              <h2 className="text-xl">{t('supportTitle')}</h2>
+              <p className="leading-relaxed text-[color:var(--s-muted)]">{t('support')}</p>
+            </div>
+            <div className="flex flex-col gap-4 rounded-[28px] border border-dashed border-[color:var(--s-accent)] bg-[var(--s-accent-soft)] p-7 md:p-9">
+              <p className="text-sm font-semibold text-[color:var(--s-accent)]">{t('legalTitle')}</p>
+              <p className="text-[15px] leading-relaxed">{t('legal')}</p>
+            </div>
+          </div>
+        </Section>
+      </Reveal>
+
+      <Reveal>
+        <Section className="pt-0">
+          <CtaBand
+            title={t('ctaTitle')}
+            body={t('ctaBody')}
+            primary={{ label: t('cta'), href: contactHref }}
+            secondary={{ label: t('pricingCta'), href: localeHref(locale, '/pricing') }}
+          />
+        </Section>
+      </Reveal>
     </>
   );
 }

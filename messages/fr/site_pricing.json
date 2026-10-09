@@ -72,7 +72,8 @@
       "body": "Créez votre compte, ajoutez vos clients et votre première vente à crédit en quelques minutes."
     },
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "eyebrow": "Tarifs"
   },
   "solutions": {
     "indexMeta": {
@@ -110,6 +111,18 @@
           "credit",
           "crm",
           "invoicing"
+        ],
+        "headline": "Vendez à crédit, *sans perdre une échéance*.",
+        "problemLine": "Vos échéances sont notées sur des cahiers.",
+        "before": [
+          "Échéances notées sur des cahiers",
+          "Garants et reconnaissances de dette sur papier",
+          "Retards découverts trop tard"
+        ],
+        "after": [
+          "Contrats numérotés, liés à chaque client",
+          "Échéanciers et rappels automatiques",
+          "Relances WhatsApp et suivi des retards"
         ]
       },
       "car-dealers": {
@@ -121,6 +134,18 @@
           "crm",
           "invoicing",
           "inventory"
+        ],
+        "headline": "Chaque véhicule, *son dossier complet*.",
+        "problemLine": "Contrats, acomptes et prospects sont dispersés.",
+        "before": [
+          "Contrats papier et garants à retrouver",
+          "Prospects dispersés entre messages et carnets",
+          "Acomptes notés à la main"
+        ],
+        "after": [
+          "Contrats numérotés et factures liées",
+          "Pipeline commercial pour chaque prospect",
+          "Échéanciers d'acomptes et rappels"
         ]
       },
       "clinics": {
@@ -132,6 +157,18 @@
           "crm",
           "credit",
           "invoicing"
+        ],
+        "headline": "Vos patients paient en plusieurs fois, *sans friction*.",
+        "problemLine": "Les paiements échelonnés se suivent mal.",
+        "before": [
+          "Dossiers patients difficiles à retrouver",
+          "Factures TVA faites à la main",
+          "Paiements échelonnés suivis sur un cahier"
+        ],
+        "after": [
+          "Fiches clients consultables partout",
+          "Factures claires avec TVA",
+          "Échéanciers et relances automatiques"
         ]
       },
       "training-centers": {
@@ -143,6 +180,18 @@
           "crm",
           "credit",
           "accounting"
+        ],
+        "headline": "Inscriptions et tranches, *au même endroit*.",
+        "problemLine": "Les inscriptions et les tranches arrivent par plusieurs canaux.",
+        "before": [
+          "Inscriptions reçues par plusieurs canaux",
+          "Tranches de paiement suivies à la main",
+          "Comptabilité en retard sur les ventes"
+        ],
+        "after": [
+          "Prospects et inscriptions dans un seul pipeline",
+          "Échéanciers de paiement par élève",
+          "Comptabilité alimentée par les ventes"
         ]
       },
       "retail-pos": {
@@ -154,17 +203,45 @@
           "pos",
           "inventory",
           "invoicing"
+        ],
+        "headline": "Caisse, stock et factures, *enfin synchronisés*.",
+        "problemLine": "La caisse, le stock et la comptabilité ne se parlent pas.",
+        "before": [
+          "Ruptures de stock découvertes trop tard",
+          "Caisse et factures non rapprochées",
+          "Comptabilité refaite à la main"
+        ],
+        "after": [
+          "Stock mis à jour à chaque vente",
+          "Alertes de réapprovisionnement",
+          "Factures prêtes à imprimer"
         ]
       }
     },
-    "cta": "Commencer gratuitement"
+    "cta": "Commencer gratuitement",
+    "indexEyebrow": "Solutions par métier",
+    "beforeLabel": "Avant Tavio",
+    "afterLabel": "Avec Tavio",
+    "moduleBodies": {
+      "credit": "Plans d'échelonnement, échéances payées ou en retard, relances.",
+      "crm": "Fiches clients, pipeline commercial et historique des échanges.",
+      "invoicing": "Factures et devis en DZD, avec TVA et numérotation.",
+      "pos": "Caisse rapide et reçus pour chaque encaissement.",
+      "inventory": "Stock par produit, réapprovisionnement et achats.",
+      "accounting": "Comptabilité générale alimentée par vos ventes.",
+      "hr": "Fiches employés et suivi de base.",
+      "helpdesk": "Tickets de support et projets suivis par équipe.",
+      "website": "Site et boutique reliés à votre stock et à vos commandes.",
+      "platform": "API et automatisations pour connecter Tavio à vos outils."
+    },
+    "open": "Voir la solution"
   },
   "onPremise": {
     "meta": {
       "title": "On-premise | Tavio",
       "description": "Installez Tavio sur vos propres serveurs en Algérie, avec Docker, sauvegardes et support d'installation."
     },
-    "title": "Gardez vos données en Algérie",
+    "title": "Vos données *restent en Algérie*",
     "body": "Certaines entreprises doivent garder leurs données sur le territoire algérien. Tavio peut être installé sur vos propres serveurs, avec Docker.",
     "legal": "⚠ Cadre juridique (loi 18-07 sur la protection des données personnelles) : à valider par un juriste avant publication.",
     "requirementsTitle": "Ce qu'il faut pour l'installer",
@@ -176,16 +253,20 @@
     "stepsTitle": "Installation en trois étapes",
     "steps": [
       {
-        "title": "Préparer le serveur",
-        "body": "Installez Docker, ouvrez uniquement le port HTTPS vers le proxy et gardez la base de données fermée à Internet."
+        "title": "Installer Docker",
+        "body": "Préparez le serveur, ouvrez uniquement le port HTTPS et gardez la base de données fermée à Internet."
       },
       {
-        "title": "Configurer et démarrer",
-        "body": "Renseignez le fichier d'environnement (secrets, URL publique, stockage S3) puis lancez les conteneurs. Les migrations s'appliquent automatiquement."
+        "title": "Migrer la base",
+        "body": "Renseignez le fichier d'environnement, puis lancez les conteneurs. Les migrations s'appliquent automatiquement."
       },
       {
-        "title": "Mettre à jour",
-        "body": "Sauvegardez, récupérez la nouvelle version et relancez les conteneurs. Les migrations déjà appliquées ne sont pas rejouées."
+        "title": "Activer les sauvegardes",
+        "body": "Une sauvegarde compressée de la base est créée par script et conservée 14 jours."
+      },
+      {
+        "title": "Support",
+        "body": "Un accompagnement d'installation et un contrat de support sont disponibles sur demande."
       }
     ],
     "backupsTitle": "Sauvegardes et restauration",
@@ -206,6 +287,26 @@
     "ctaTitle": "Parlons de votre installation",
     "ctaBody": "Dites-nous combien d'utilisateurs vous êtes et quelles contraintes de données vous avez. Nous revenons vers vous.",
     "cta": "Nous contacter",
-    "pricingCta": "Voir les tarifs"
+    "pricingCta": "Voir les tarifs",
+    "eyebrow": "On-premise",
+    "guarantees": [
+      {
+        "title": "Données sur vos serveurs",
+        "body": "Tavio tourne sur votre infrastructure, en Algérie. Vous gardez la main sur vos données."
+      },
+      {
+        "title": "Sauvegardes planifiées",
+        "body": "Base et fichiers sont sauvegardés selon le même calendrier. La restauration est documentée."
+      },
+      {
+        "title": "Mises à jour contrôlées",
+        "body": "Sauvegardez, récupérez la nouvelle version et relancez. Les migrations déjà appliquées ne sont pas rejouées."
+      },
+      {
+        "title": "Toutes les fonctions",
+        "body": "L'application complète, avec les modules de votre plan et les tâches planifiées."
+      }
+    ],
+    "legalTitle": "Avis juridique"
   }
 }

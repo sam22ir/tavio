@@ -2,12 +2,20 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Check, Minus } from 'lucide-react';
+import { Check, Banknote, Landmark, Mailbox, Minus } from 'lucide-react';
 import { SAAS_PLAN_SEED, type SaasPlanSeed } from '@/modules/subscriptions/plans';
 import { routing } from '@/i18n/routing';
 import { buildMetadata } from '@/site/seo';
 import { localeHref } from '@/site/content/nav';
-import { CtaBand, Faq, Section, SectionHeading, type PricingPlan } from '@/site/components';
+import {
+  CtaBand,
+  Emphasis,
+  Faq,
+  PillLabel,
+  Reveal,
+  Section,
+  type PricingPlan,
+} from '@/site/components';
 import type { SolutionModuleKey } from '@/site/content/solutions';
 import { PricingToggle } from './PricingToggle';
 
@@ -24,6 +32,9 @@ const ROWS: { key: SolutionModuleKey; moduleId: string }[] = [
   { key: 'website', moduleId: 'website' },
   { key: 'platform', moduleId: 'platform' },
 ];
+
+/** Payment method icons, in the order of `pricing.payment.items`. */
+const PAYMENT_ICONS = [Mailbox, Landmark, Banknote];
 
 /** Formats a whole-DZD amount with space thousands separators. */
 function formatDzd(amount: number): string {
@@ -42,21 +53,22 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('site_pricing');
+  const tHome = await getTranslations('site.home');
 
   const moduleLabel = (key: SolutionModuleKey) => t(`solutions.modules.${key}`);
   const signupHref = localeHref(locale, '/signup');
+  const planFeatures = tHome.raw('pricing.features') as Record<string, string[]>;
 
   const buildPlans = (plan: SaasPlanSeed, period: 'monthly' | 'yearly'): PricingPlan => {
     const monthlyDzd = Number(plan.pricePerUserCents / 100n);
     const dzd = period === 'monthly' ? monthlyDzd : monthlyDzd * 10;
-    const included = ROWS.filter((row) => plan.modules.includes(row.moduleId)).map((row) => moduleLabel(row.key));
     const isPro = plan.code === 'pro';
     return {
-      name: plan.name,
+      name: tHome(`pricing.planNames.${plan.code}`),
       price: dzd === 0 ? t('pricing.free') : formatDzd(dzd),
       period: dzd === 0 ? '' : t(period === 'monthly' ? 'pricing.perUserMonth' : 'pricing.perUserYear'),
       users: t('pricing.usersLimit', { count: plan.maxUsers }),
-      features: included,
+      features: planFeatures[plan.code] ?? [],
       href: signupHref,
       cta: t('pricing.cta'),
       highlighted: isPro,
@@ -71,99 +83,140 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <Section className="pt-12 md:pt-20">
-        <div className="flex max-w-3xl flex-col gap-5">
-          <h1 className="text-4xl font-semibold tracking-tighter md:text-6xl">{t('pricing.title')}</h1>
-          <p className="max-w-[65ch] text-base leading-relaxed text-muted-foreground md:text-lg">{t('pricing.body')}</p>
-          <p className="text-sm text-muted-foreground">{t('pricing.indicative')}</p>
+      {/* Hero: pill, headline with accent, intro, indicative note. */}
+      <section className="relative overflow-hidden px-4 pb-6 pt-14 md:pt-24">
+        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
+        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[420px] w-[680px] -translate-x-1/2 rounded-full" />
+        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+          <PillLabel>{t('pricing.eyebrow')}</PillLabel>
+          <h1 className="s-h1 text-balance">
+            <Emphasis text={t('pricing.title')} />
+          </h1>
+          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('pricing.body')}</p>
         </div>
-        <div className="mt-12">
-          <PricingToggle
-            monthly={monthly}
-            yearly={yearly}
-            labels={{ monthly: t('pricing.monthly'), yearly: t('pricing.yearly'), badge: t('pricing.yearlyBadge') }}
-          />
-        </div>
-      </Section>
+      </section>
 
-      <Section tone="muted">
-        <SectionHeading title={t('pricing.compareTitle')} />
-        <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-card">
-          <table className="w-full min-w-[560px] border-collapse text-start text-sm">
-            <caption className="sr-only">{t('pricing.compareCaption')}</caption>
-            <thead>
-              <tr className="border-b border-border">
-                <th scope="col" className="p-4 text-start font-medium text-muted-foreground">
-                  {t('pricing.compareFeature')}
-                </th>
-                {SAAS_PLAN_SEED.map((plan) => (
-                  <th key={plan.code} scope="col" className="p-4 text-start font-semibold">
-                    {plan.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-border">
-                <th scope="row" className="p-4 text-start font-medium">
-                  {t('pricing.compareUsers')}
-                </th>
-                {SAAS_PLAN_SEED.map((plan) => (
-                  <td key={plan.code} className="p-4 tabular-nums">
-                    {t('pricing.usersLimit', { count: plan.maxUsers })}
-                  </td>
-                ))}
-              </tr>
-              {ROWS.map((row) => (
-                <tr key={row.key} className="border-b border-border last:border-0">
-                  <th scope="row" className="p-4 text-start font-medium">
-                    {moduleLabel(row.key)}
-                  </th>
-                  {SAAS_PLAN_SEED.map((plan) => {
-                    const has = plan.modules.includes(row.moduleId);
-                    return (
-                      <td key={plan.code} className="p-4">
-                        {has ? (
-                          <Check className="size-4 text-primary" aria-label={t('pricing.yes')} />
-                        ) : (
-                          <Minus className="size-4 text-muted-foreground" aria-label={t('pricing.no')} />
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionHeading title={t('pricing.payment.title')} body={t('pricing.payment.body')} />
-        <ul className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {payment.map((item) => (
-            <li key={item.title} className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-6">
-              <p className="font-semibold">{item.title}</p>
-              <p className="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section tone="muted">
-        <SectionHeading title={t('pricing.faq.title')} />
-        <div className="mt-10">
-          <Faq items={faq} />
-        </div>
-      </Section>
-
-      <Section>
-        <CtaBand
-          title={t('pricing.bottomCta.title')}
-          body={t('pricing.bottomCta.body')}
-          primary={{ label: t('pricing.cta'), href: signupHref }}
+      {/* Plans: monthly / yearly toggle and the plan cards. */}
+      <Section className="pt-10 md:pt-14">
+        <PricingToggle
+          monthly={monthly}
+          yearly={yearly}
+          labels={{ monthly: t('pricing.monthly'), yearly: t('pricing.yearly'), badge: t('pricing.yearlyBadge') }}
         />
+        <p className="mt-8 text-center text-sm text-[color:var(--s-muted)]">{t('pricing.indicative')}</p>
       </Section>
+
+      {/* Comparison: a white panel with hairline rows and soft green ticks. */}
+      <Reveal>
+        <Section tone="muted">
+          <div className="flex flex-col gap-10">
+            <h2 className="s-h2 !text-[2.25rem] md:!text-[2.75rem]">
+              <Emphasis text={t('pricing.compareTitle')} />
+            </h2>
+            <div className="s-panel overflow-x-auto">
+              <table className="w-full min-w-[560px] border-collapse text-start text-[15px]">
+                <caption className="sr-only">{t('pricing.compareCaption')}</caption>
+                <thead>
+                  <tr className="border-b border-[rgba(15,26,23,0.08)]">
+                    <th scope="col" className="p-5 text-start text-sm font-medium text-[color:var(--s-muted)]">
+                      {t('pricing.compareFeature')}
+                    </th>
+                    {SAAS_PLAN_SEED.map((plan) => (
+                      <th key={plan.code} scope="col" className="p-5 text-start text-base font-semibold">
+                        {tHome(`pricing.planNames.${plan.code}`)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-[rgba(15,26,23,0.08)]">
+                    <th scope="row" className="p-5 text-start font-medium">
+                      {t('pricing.compareUsers')}
+                    </th>
+                    {SAAS_PLAN_SEED.map((plan) => (
+                      <td key={plan.code} className="p-5 tabular-nums text-[color:var(--s-muted)]">
+                        {t('pricing.usersLimit', { count: plan.maxUsers })}
+                      </td>
+                    ))}
+                  </tr>
+                  {ROWS.map((row) => (
+                    <tr key={row.key} className="border-b border-[rgba(15,26,23,0.08)] last:border-0">
+                      <th scope="row" className="p-5 text-start font-medium">
+                        {moduleLabel(row.key)}
+                      </th>
+                      {SAAS_PLAN_SEED.map((plan) => {
+                        const has = plan.modules.includes(row.moduleId);
+                        return (
+                          <td key={plan.code} className="p-5">
+                            {has ? (
+                              <span className="inline-flex size-7 items-center justify-center rounded-full bg-[#E3EFEA] text-[#1F5F55]">
+                                <Check className="size-4" strokeWidth={2} aria-label={t('pricing.yes')} />
+                              </span>
+                            ) : (
+                              <Minus className="size-4 text-[color:var(--s-muted)]" aria-label={t('pricing.no')} />
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* Payment methods as icon chips. */}
+      <Reveal>
+        <Section>
+          <div className="flex flex-col gap-12">
+            <div className="flex max-w-2xl flex-col gap-5">
+              <h2 className="s-h2 !text-[2.25rem] md:!text-[2.75rem]">
+                <Emphasis text={t('pricing.payment.title')} />
+              </h2>
+              <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)]">{t('pricing.payment.body')}</p>
+            </div>
+            <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {payment.map((item, i) => {
+                const Icon = PAYMENT_ICONS[i] ?? Banknote;
+                return (
+                  <li key={item.title} className="s-panel flex flex-col gap-5 p-7 md:p-8">
+                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
+                      <Icon size={20} strokeWidth={1.75} aria-hidden />
+                    </span>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-xl">{item.title}</h3>
+                      <p className="leading-relaxed text-[color:var(--s-muted)]">{item.body}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </Section>
+      </Reveal>
+
+      <Reveal>
+        <Section tone="muted">
+          <div className="grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
+            <h2 className="s-h2 !text-[2.25rem] md:!text-[2.75rem]">
+              <Emphasis text={t('pricing.faq.title')} />
+            </h2>
+            <Faq items={faq} />
+          </div>
+        </Section>
+      </Reveal>
+
+      <Reveal>
+        <Section className="pt-0">
+          <CtaBand
+            title={t('pricing.bottomCta.title')}
+            body={t('pricing.bottomCta.body')}
+            primary={{ label: t('pricing.cta'), href: signupHref }}
+          />
+        </Section>
+      </Reveal>
     </>
   );
 }

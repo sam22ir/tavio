@@ -72,7 +72,8 @@
       "body": "Create your account, add your customers and your first credit sale in a few minutes."
     },
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "eyebrow": "Pricing"
   },
   "solutions": {
     "indexMeta": {
@@ -110,6 +111,18 @@
           "credit",
           "crm",
           "invoicing"
+        ],
+        "headline": "Sell on credit, *without missing an installment*.",
+        "problemLine": "Your installments are written in notebooks.",
+        "before": [
+          "Installments written in notebooks",
+          "Guarantors and IOUs on paper",
+          "Late payments found too late"
+        ],
+        "after": [
+          "Numbered contracts linked to each customer",
+          "Payment schedules and automatic reminders",
+          "WhatsApp reminders and late-payment tracking"
         ]
       },
       "car-dealers": {
@@ -121,6 +134,18 @@
           "crm",
           "invoicing",
           "inventory"
+        ],
+        "headline": "Every vehicle, *its full file*.",
+        "problemLine": "Contracts, deposits and prospects are scattered.",
+        "before": [
+          "Paper contracts and guarantors to dig up",
+          "Prospects spread across messages and notebooks",
+          "Deposits noted by hand"
+        ],
+        "after": [
+          "Numbered contracts with linked invoices",
+          "A sales pipeline for every prospect",
+          "Deposit schedules and reminders"
         ]
       },
       "clinics": {
@@ -132,6 +157,18 @@
           "crm",
           "credit",
           "invoicing"
+        ],
+        "headline": "Your patients pay in installments, *smoothly*.",
+        "problemLine": "Installment payments are hard to follow.",
+        "before": [
+          "Patient files hard to find",
+          "VAT invoices done by hand",
+          "Installment plans tracked in a notebook"
+        ],
+        "after": [
+          "Patient records available anywhere",
+          "Clear invoices with VAT",
+          "Payment schedules and automatic reminders"
         ]
       },
       "training-centers": {
@@ -143,6 +180,18 @@
           "crm",
           "credit",
           "accounting"
+        ],
+        "headline": "Enrolments and payment plans, *in one place*.",
+        "problemLine": "Enrolments and payment plans arrive through many channels.",
+        "before": [
+          "Enrolments arriving through many channels",
+          "Payment plans tracked by hand",
+          "Accounts lagging behind sales"
+        ],
+        "after": [
+          "Prospects and enrolments in one pipeline",
+          "Payment schedules per learner",
+          "Accounts fed by your sales"
         ]
       },
       "retail-pos": {
@@ -154,17 +203,45 @@
           "pos",
           "inventory",
           "invoicing"
+        ],
+        "headline": "Till, stock and invoices, *finally in sync*.",
+        "problemLine": "The till, stock and accounts do not talk to each other.",
+        "before": [
+          "Stock-outs found too late",
+          "Till and invoices not reconciled",
+          "Accounts redone by hand"
+        ],
+        "after": [
+          "Stock updated with every sale",
+          "Restock alerts",
+          "Invoices ready to print"
         ]
       }
     },
-    "cta": "Start for free"
+    "cta": "Start for free",
+    "indexEyebrow": "Solutions by business",
+    "beforeLabel": "Before Tavio",
+    "afterLabel": "With Tavio",
+    "moduleBodies": {
+      "credit": "Payment plans, paid or overdue installments, and reminders.",
+      "crm": "Customer records, sales pipeline and conversation history.",
+      "invoicing": "Invoices and quotes in DZD, with VAT and numbering.",
+      "pos": "A fast till and a receipt for every payment.",
+      "inventory": "Stock per product, restocking and purchases.",
+      "accounting": "General ledger fed by your sales.",
+      "hr": "Employee records and basic follow-up.",
+      "helpdesk": "Support tickets and projects tracked per team.",
+      "website": "A site and a shop linked to your stock and orders.",
+      "platform": "API and automation to connect Tavio to your tools."
+    },
+    "open": "View solution"
   },
   "onPremise": {
     "meta": {
       "title": "On-premise | Tavio",
       "description": "Install Tavio on your own servers in Algeria, with Docker, backups and installation support."
     },
-    "title": "Keep your data in Algeria",
+    "title": "Your data *stays in Algeria*",
     "body": "Some companies must keep their data on Algerian soil. Tavio can run on your own servers, with Docker.",
     "legal": "⚠ Legal framework (Law 18-07 on personal data protection): to be reviewed by a lawyer before publication.",
     "requirementsTitle": "What you need to install it",
@@ -176,16 +253,20 @@
     "stepsTitle": "Installation in three steps",
     "steps": [
       {
-        "title": "Prepare the server",
-        "body": "Install Docker, open only the HTTPS port to the proxy, and keep the database closed to the internet."
+        "title": "Install Docker",
+        "body": "Prepare the server, open only the HTTPS port and keep the database closed to the Internet."
       },
       {
-        "title": "Configure and start",
-        "body": "Fill in the environment file (secrets, public URL, S3 storage), then start the containers. Migrations apply automatically."
+        "title": "Migrate the database",
+        "body": "Fill in the environment file, then start the containers. Migrations apply automatically."
       },
       {
-        "title": "Update",
-        "body": "Back up, fetch the new release and restart the containers. Migrations already applied are not run again."
+        "title": "Turn on backups",
+        "body": "A compressed database backup is created by script and kept for 14 days."
+      },
+      {
+        "title": "Support",
+        "body": "Installation help and a support contract are available on request."
       }
     ],
     "backupsTitle": "Backups and restore",
@@ -206,6 +287,26 @@
     "ctaTitle": "Let's talk about your installation",
     "ctaBody": "Tell us how many users you are and what data constraints you have. We will get back to you.",
     "cta": "Contact us",
-    "pricingCta": "See pricing"
+    "pricingCta": "See pricing",
+    "eyebrow": "On-premise",
+    "guarantees": [
+      {
+        "title": "Data on your servers",
+        "body": "Tavio runs on your infrastructure, in Algeria. You stay in control of your data."
+      },
+      {
+        "title": "Scheduled backups",
+        "body": "Database and files are backed up on the same schedule. Restore steps are documented."
+      },
+      {
+        "title": "Controlled updates",
+        "body": "Back up, pull the new version and restart. Migrations already applied are not replayed."
+      },
+      {
+        "title": "Full application",
+        "body": "The complete app with the modules of your plan and scheduled tasks."
+      }
+    ],
+    "legalTitle": "Legal note"
   }
 }
