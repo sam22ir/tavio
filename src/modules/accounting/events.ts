@@ -67,7 +67,7 @@ on('invoicing.payment.registered', async (ctx, event) => {
 on('pos.order.paid', async (ctx, event) => {
   const p = event.payload as PosOrderPaid;
   await mustPost(ctx, {
-    journalCode: 'CA',
+    journalCode: p.method === 'cash' ? 'CA' : 'BQ',
     date: new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Algiers' }).format(new Date()),
     ref: p.number,
     sourceEntity: 'pos.order',
