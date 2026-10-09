@@ -1,1 +1,151 @@
-{}
+{
+  "overview": {
+    "metaTitle": "Modules Tavio : gestion commerciale pour PME algériennes",
+    "metaDescription": "Crédit, CRM, facturation, stock, comptabilité, caisse, RH, projets et boutique en ligne, dans une seule application.",
+    "title": "Tous les modules Tavio",
+    "body": "Une seule application pour vendre, facturer, gérer le stock et suivre votre équipe. Choisissez un module pour voir ce qu'il fait."
+  },
+  "detail": {
+    "cta": "Commencer gratuitement",
+    "secondary": "Voir les tarifs",
+    "capabilitiesTitle": "Ce que vous pouvez faire",
+    "relatedTitle": "Modules liés",
+    "ctaTitle": "Essayez Tavio avec vos propres données",
+    "ctaBody": "Créez votre espace en quelques minutes, puis importez vos clients et vos produits.",
+    "ctaPrimary": "Commencer gratuitement"
+  },
+  "items": {
+    "credit-sales": {
+      "title": "Ventes à crédit",
+      "tagline": "Plans d'échelonnement, échéances et relances, sans cahier papier.",
+      "body": "Vendez à crédit en toute sérénité : chaque contrat a son échéancier, chaque versement est enregistré et les retards sont visibles.",
+      "capabilities": [
+        "Contrats d'échelonnement avec échéancier détaillé",
+        "Enregistrement des versements échéance par échéance",
+        "Relances de paiement pour les échéances en retard",
+        "Annulation d'un contrat avec historique conservé",
+        "Impression des contrats et des reçus"
+      ]
+    },
+    "crm": {
+      "title": "CRM",
+      "tagline": "Pipeline commercial, historique des échanges et suivi des prospects.",
+      "body": "Suivez chaque prospect, de la première prise de contact jusqu'à la vente, sans rien oublier.",
+      "capabilities": [
+        "Pipeline des prospects par étapes",
+        "Déplacement d'un prospect d'une étape à l'autre",
+        "Marquer une affaire gagnée ou perdue, et la rouvrir si besoin",
+        "Formulaires de création et de modification des prospects",
+        "Fiche client avec l'historique des interactions"
+      ]
+    },
+    "sales-invoicing": {
+      "title": "Ventes et facturation",
+      "tagline": "Devis, bons de commande et factures conformes à la TVA algérienne.",
+      "body": "Créez un devis, transformez-le en facture et encaissez, avec les mentions et les taux de TVA attendus.",
+      "capabilities": [
+        "Brouillons de vente et de devis",
+        "Validation des factures avec numérotation",
+        "Paiements partiels ou complets enregistrés sur la facture",
+        "Avoirs et remboursements tracés",
+        "Calcul de la TVA ligne par ligne"
+      ]
+    },
+    "inventory-purchases": {
+      "title": "Stock et achats",
+      "tagline": "Entrepôts, mouvements de stock, bons de commande et factures fournisseurs.",
+      "body": "Sachez toujours ce qu'il vous reste en stock, et réapprovisionnez avant la rupture.",
+      "capabilities": [
+        "Plusieurs entrepôts",
+        "Mouvements de stock validés ou annulés",
+        "Ajustements d'inventaire",
+        "Règles de réapprovisionnement par seuil",
+        "Bons de commande fournisseurs, réception et factures d'achat"
+      ]
+    },
+    "accounting": {
+      "title": "Comptabilité",
+      "tagline": "Écritures comptables, plan comptable et contrôle de vos comptes.",
+      "body": "Gardez une trace comptable claire de vos ventes, de vos achats et de vos paiements, en dinars.",
+      "capabilities": [
+        "Plan comptable structuré selon le SCF",
+        "Écritures comptables manuelles",
+        "Contre-passation d'une écriture en un clic",
+        "Écritures liées aux ventes, aux achats et aux paiements",
+        "Montants en dinars algériens, sans conversion"
+      ]
+    },
+    "pos": {
+      "title": "Caisse (POS)",
+      "tagline": "Encaissez au comptoir, avec une session de caisse ouverte et fermée chaque jour.",
+      "body": "Un point de vente simple pour les boutiques, qui reste relié à votre stock et à vos ventes.",
+      "capabilities": [
+        "Ouverture et fermeture de session de caisse",
+        "Encaissement des commandes au comptoir",
+        "Ventes reliées au stock et à la facturation",
+        "Utilisable sur téléphone et tablette",
+        "Suivi des encaissements par session"
+      ]
+    },
+    "hr": {
+      "title": "Ressources humaines",
+      "tagline": "Employés, départements, congés et pointage.",
+      "body": "Gérez votre équipe, les demandes de congé et les heures de présence, sans tableur.",
+      "capabilities": [
+        "Fiches employés et départements",
+        "Types de congés et demandes de congé",
+        "Validation des congés par un responsable",
+        "Pointage d'arrivée et de départ par l'employé",
+        "Désactiver un employé sans le supprimer"
+      ]
+    },
+    "projects-helpdesk": {
+      "title": "Projets et support",
+      "tagline": "Projets, tâches, temps passé et tickets d'assistance client.",
+      "body": "Organisez le travail de votre équipe, des chantiers jusqu'aux demandes de service après-vente.",
+      "capabilities": [
+        "Projets découpés en tâches par étapes",
+        "Déplacement des tâches d'une étape à l'autre",
+        "Saisie du temps passé par tâche",
+        "Tickets d'assistance répartis par équipe",
+        "Suivi des tickets par étape jusqu'à leur clôture"
+      ]
+    },
+    "website-shop": {
+      "title": "Site et boutique",
+      "tagline": "Commandes reçues en ligne, converties en vente ou annulées en un clic.",
+      "body": "Recevez les commandes de votre boutique en ligne directement dans votre gestion, avec le même stock et les mêmes clients.",
+      "capabilities": [
+        "Paramètres du site et de la boutique",
+        "Commandes web reçues dans Tavio",
+        "Conversion d'une commande web en vente",
+        "Annulation d'une commande web",
+        "Même stock et mêmes clients que votre caisse"
+      ]
+    },
+    "ai": {
+      "title": "Assistant IA",
+      "tagline": "Un assistant qui répond à vos questions à partir de vos propres données.",
+      "body": "Posez vos questions en français ou en arabe, et laissez l'assistant chercher et préparer les rappels à votre place.",
+      "capabilities": [
+        "Questions en français et en arabe sur vos données",
+        "Recherche parmi vos clients, produits et ventes",
+        "Lecture de documents (OCR) pour alléger la saisie",
+        "Rappels pour les tâches et les échéances",
+        "Compatible avec plusieurs fournisseurs d'IA"
+      ]
+    },
+    "platform": {
+      "title": "Plateforme",
+      "tagline": "API, webhooks, champs personnalisés et automatisations.",
+      "body": "Adaptez Tavio à votre activité et reliez-le à vos outils existants.",
+      "capabilities": [
+        "Clés API pour vos intégrations",
+        "Webhooks pour recevoir les événements en temps réel",
+        "Champs personnalisés sur vos fiches",
+        "Règles d'automatisation sans code",
+        "Révocation d'une clé API à tout moment"
+      ]
+    }
+  }
+}

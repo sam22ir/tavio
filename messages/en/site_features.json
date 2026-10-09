@@ -1,1 +1,151 @@
-{}
+{
+  "overview": {
+    "metaTitle": "Tavio modules: business management for Algerian SMEs",
+    "metaDescription": "Credit sales, CRM, invoicing, stock, accounting, point of sale, HR, projects and online shop, in one app.",
+    "title": "All Tavio modules",
+    "body": "One app to sell, invoice, manage stock and keep your team on track. Pick a module to see what it does."
+  },
+  "detail": {
+    "cta": "Start free",
+    "secondary": "See pricing",
+    "capabilitiesTitle": "What you can do",
+    "relatedTitle": "Related modules",
+    "ctaTitle": "Try Tavio with your own data",
+    "ctaBody": "Set up your space in a few minutes, then import your customers and products.",
+    "ctaPrimary": "Start free"
+  },
+  "items": {
+    "credit-sales": {
+      "title": "Credit sales",
+      "tagline": "Instalment plans, due dates and payment reminders, without paper ledgers.",
+      "body": "Sell on credit with confidence: every contract has its schedule, every payment is recorded and late balances are visible.",
+      "capabilities": [
+        "Instalment contracts with a detailed schedule",
+        "Payments recorded against each due date",
+        "Payment reminders for overdue instalments",
+        "Contract cancellation with history kept",
+        "Printable contracts and receipts"
+      ]
+    },
+    "crm": {
+      "title": "CRM",
+      "tagline": "Sales pipeline, interaction history and prospect follow-up.",
+      "body": "Follow every prospect from the first contact to the sale, without losing track.",
+      "capabilities": [
+        "Prospect pipeline organised by stage",
+        "Move a prospect from one stage to the next",
+        "Mark a deal won or lost, and reopen it if needed",
+        "Forms to create and edit prospects",
+        "Customer record with the history of interactions"
+      ]
+    },
+    "sales-invoicing": {
+      "title": "Sales and invoicing",
+      "tagline": "Quotes, purchase orders and invoices that follow Algerian VAT rules.",
+      "body": "Create a quote, turn it into an invoice and get paid, with the mentions and VAT rates you need.",
+      "capabilities": [
+        "Sales drafts and quotes",
+        "Invoice posting with automatic numbering",
+        "Partial or full payments recorded on the invoice",
+        "Credit notes and refunds, fully traced",
+        "VAT calculated line by line"
+      ]
+    },
+    "inventory-purchases": {
+      "title": "Stock and purchases",
+      "tagline": "Warehouses, stock movements, purchase orders and supplier bills.",
+      "body": "Always know what is left in stock, and restock before you run out.",
+      "capabilities": [
+        "Multiple warehouses",
+        "Stock movements validated or cancelled",
+        "Stock count adjustments",
+        "Reorder rules based on thresholds",
+        "Supplier orders, goods receipt and purchase bills"
+      ]
+    },
+    "accounting": {
+      "title": "Accounting",
+      "tagline": "Journal entries, chart of accounts and control of your books.",
+      "body": "Keep a clear accounting trail of your sales, purchases and payments, in dinars.",
+      "capabilities": [
+        "Chart of accounts structured under the SCF",
+        "Manual journal entries",
+        "Reverse an entry in one click",
+        "Entries generated from sales, purchases and payments",
+        "Amounts in Algerian dinars, no conversion"
+      ]
+    },
+    "pos": {
+      "title": "Point of sale",
+      "tagline": "Take payments at the counter, with a cash session opened and closed each day.",
+      "body": "A simple till for shops that stays connected to your stock and your sales.",
+      "capabilities": [
+        "Open and close cash sessions",
+        "Pay orders at the counter",
+        "Sales linked to stock and invoicing",
+        "Works on phones and tablets",
+        "Payments tracked per cash session"
+      ]
+    },
+    "hr": {
+      "title": "HR",
+      "tagline": "Employees, departments, leave and attendance.",
+      "body": "Manage your team, leave requests and working hours without a spreadsheet.",
+      "capabilities": [
+        "Employee and department records",
+        "Leave types and leave requests",
+        "Leave approval by a manager",
+        "Check-in and check-out by the employee",
+        "Deactivate an employee without deleting them"
+      ]
+    },
+    "projects-helpdesk": {
+      "title": "Projects and helpdesk",
+      "tagline": "Projects, tasks, time spent and customer support tickets.",
+      "body": "Organise your team's work, from site jobs to after-sales requests.",
+      "capabilities": [
+        "Projects split into tasks by stage",
+        "Move tasks from one stage to the next",
+        "Time logged per task",
+        "Support tickets assigned by team",
+        "Ticket tracking by stage until it is closed"
+      ]
+    },
+    "website-shop": {
+      "title": "Website and shop",
+      "tagline": "Online orders received, then turned into a sale or cancelled in one click.",
+      "body": "Receive orders from your online shop directly in your management app, with the same stock and customers.",
+      "capabilities": [
+        "Website and shop settings",
+        "Web orders received in Tavio",
+        "Convert a web order into a sale",
+        "Cancel a web order",
+        "Same stock and customers as your till"
+      ]
+    },
+    "ai": {
+      "title": "AI assistant",
+      "tagline": "An assistant that answers your questions from your own data.",
+      "body": "Ask in French, Arabic or English, and let the assistant search and prepare reminders for you.",
+      "capabilities": [
+        "Questions in French, Arabic and English about your data",
+        "Search across your customers, products and sales",
+        "Document reading (OCR) to reduce manual entry",
+        "Reminders for tasks and due dates",
+        "Works with several AI providers"
+      ]
+    },
+    "platform": {
+      "title": "Platform",
+      "tagline": "API, webhooks, custom fields and automations.",
+      "body": "Adapt Tavio to your business and connect it to the tools you already use.",
+      "capabilities": [
+        "API keys for your integrations",
+        "Webhooks to receive events in real time",
+        "Custom fields on your records",
+        "No-code automation rules",
+        "Revoke an API key at any time"
+      ]
+    }
+  }
+}
