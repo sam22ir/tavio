@@ -1,1 +1,62 @@
-{}
+{
+  "module": {
+    "name": "Helpdesk"
+  },
+  "menu": {
+    "tickets": "Helpdesk"
+  },
+  "fields": {
+    "number": "Number",
+    "subject": "Subject",
+    "partner": "Customer",
+    "team": "Team",
+    "teamName": "Team name",
+    "channel": "Channel",
+    "priority": "Priority",
+    "stage": "Stage",
+    "description": "Description"
+  },
+  "options": {
+    "channel": {
+      "whatsapp": "WhatsApp",
+      "phone": "Phone",
+      "email": "Email",
+      "walk_in": "Walk-in"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "stage": {
+      "new": "New",
+      "in_progress": "In progress",
+      "waiting": "Waiting",
+      "solved": "Solved",
+      "closed": "Closed"
+    }
+  },
+  "ticket": {
+    "title": "Helpdesk",
+    "list": "List",
+    "board": "Board",
+    "new": "New ticket",
+    "error": "Could not load tickets.",
+    "views": "Views",
+    "activity": "Activity",
+    "set": {
+      "new": "Set new",
+      "in_progress": "Start",
+      "waiting": "Wait for customer",
+      "solved": "Mark solved",
+      "closed": "Close"
+    }
+  },
+  "team": {
+    "title": "Teams",
+    "new": "New team",
+    "empty": "No teams yet.",
+    "error": "Could not load teams."
+  }
+}

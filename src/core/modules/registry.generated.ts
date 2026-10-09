@@ -4,7 +4,9 @@ import { manifest as m_chatter } from '@/modules/chatter/manifest';
 import { manifest as m_contacts } from '@/modules/contacts/manifest';
 import { manifest as m_credit_sales } from '@/modules/credit_sales/manifest';
 import { manifest as m_crm } from '@/modules/crm/manifest';
+import { manifest as m_helpdesk } from '@/modules/helpdesk/manifest';
 import { manifest as m_l10n_dz } from '@/modules/l10n_dz/manifest';
 import { manifest as m_products } from '@/modules/products/manifest';
+import { manifest as m_projects } from '@/modules/projects/manifest';
 
-export const modules: readonly ModuleManifest[] = [m_chatter, m_contacts, m_credit_sales, m_crm, m_l10n_dz, m_products];
+export const modules: readonly ModuleManifest[] = [m_chatter, m_contacts, m_credit_sales, m_crm, m_helpdesk, m_l10n_dz, m_products, m_projects];

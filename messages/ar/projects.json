@@ -1,1 +1,53 @@
-{}
+{
+  "module": {
+    "name": "المشاريع"
+  },
+  "menu": {
+    "projects": "المشاريع"
+  },
+  "fields": {
+    "name": "الاسم",
+    "partner": "الزبون",
+    "state": "الحالة",
+    "priority": "الأولوية",
+    "deadline": "الموعد النهائي",
+    "description": "الوصف",
+    "date": "التاريخ",
+    "hours": "الساعات"
+  },
+  "options": {
+    "state": {
+      "active": "نشط",
+      "done": "مكتمل",
+      "archived": "مؤرشف"
+    },
+    "priority": {
+      "low": "منخفضة",
+      "normal": "عادية",
+      "high": "مرتفعة",
+      "urgent": "عاجلة"
+    }
+  },
+  "project": {
+    "title": "المشاريع",
+    "new": "مشروع جديد",
+    "error": "تعذر تحميل المشاريع.",
+    "set": {
+      "active": "إعادة التفعيل",
+      "done": "وضع علامة مكتمل",
+      "archived": "أرشفة"
+    },
+    "tasks": "المهام",
+    "newTask": "مهمة جديدة",
+    "activity": "النشاط"
+  },
+  "task": {
+    "error": "تعذر تحميل هذه المهمة.",
+    "due": "الموعد {date}",
+    "timesheets": "سجلات الوقت",
+    "totalHours": "المجموع {hours} ساعة",
+    "noTimesheets": "لم يتم تسجيل وقت بعد.",
+    "logTime": "تسجيل الوقت",
+    "activity": "النشاط"
+  }
+}

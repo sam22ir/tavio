@@ -1,1 +1,62 @@
-{}
+{
+  "module": {
+    "name": "Support client"
+  },
+  "menu": {
+    "tickets": "Support client"
+  },
+  "fields": {
+    "number": "Numéro",
+    "subject": "Objet",
+    "partner": "Client",
+    "team": "Équipe",
+    "teamName": "Nom de l’équipe",
+    "channel": "Canal",
+    "priority": "Priorité",
+    "stage": "Étape",
+    "description": "Description"
+  },
+  "options": {
+    "channel": {
+      "whatsapp": "WhatsApp",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "walk_in": "Au comptoir"
+    },
+    "priority": {
+      "low": "Basse",
+      "normal": "Normale",
+      "high": "Haute",
+      "urgent": "Urgente"
+    },
+    "stage": {
+      "new": "Nouveau",
+      "in_progress": "En cours",
+      "waiting": "En attente",
+      "solved": "Résolu",
+      "closed": "Clos"
+    }
+  },
+  "ticket": {
+    "title": "Support client",
+    "list": "Liste",
+    "board": "Tableau",
+    "new": "Nouveau ticket",
+    "error": "Impossible de charger les tickets.",
+    "views": "Vues",
+    "activity": "Activité",
+    "set": {
+      "new": "Remettre nouveau",
+      "in_progress": "Commencer",
+      "waiting": "Attendre le client",
+      "solved": "Marquer résolu",
+      "closed": "Clore"
+    }
+  },
+  "team": {
+    "title": "Équipes",
+    "new": "Nouvelle équipe",
+    "empty": "Aucune équipe pour le moment.",
+    "error": "Impossible de charger les équipes."
+  }
+}
