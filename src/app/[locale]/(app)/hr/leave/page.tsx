@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ErrorToast } from '@/ui/feedback/error-toast';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { withPageCtx } from '@/core/actions/page-ctx';
@@ -29,6 +30,8 @@ export default async function LeavePage({
   const sp = await searchParams;
   const state = typeof sp.state === 'string' ? sp.state : undefined;
   const t = await getTranslations('hr');
+  const tViews = await getTranslations('views');
+  const failed = typeof sp.error === 'string';
 
   const data = await withPageCtx(async (ctx) => {
     const [requests, types, people] = await Promise.all([
@@ -46,6 +49,7 @@ export default async function LeavePage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
+      {failed ? <ErrorToast message={tViews('error')} /> : null}
       <h1 className="text-xl font-semibold">{t('leave.title')}</h1>
 
       {requests && types && people ? (

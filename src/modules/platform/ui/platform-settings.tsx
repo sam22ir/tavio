@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -96,7 +97,7 @@ function CustomFieldsSection({ fields }: { fields: FieldRow[] }) {
         position: Number(str('position') || 0),
       });
       if (!r.ok) {
-        setStatus({ kind: 'error', text: r.error.code === 'VALIDATION' || r.error.code === 'CONFLICT' ? r.error.message : t('errors.generic') });
+        setStatus({ kind: 'error', text: r.error.code === 'VALIDATION' || r.error.code === 'CONFLICT' ? r.error.message : t('errors.generic') }); toast.error(r.error.code === 'VALIDATION' || r.error.code === 'CONFLICT' ? r.error.message : t('errors.generic'));
         return;
       }
       formRef.current?.reset();
@@ -109,6 +110,7 @@ function CustomFieldsSection({ fields }: { fields: FieldRow[] }) {
     start(async () => {
       const r = await deleteCustomFieldAction({ id });
       setStatus(r.ok ? { kind: 'ok', text: t('custom.deleted') } : { kind: 'error', text: t('errors.generic') });
+      if (!r.ok) toast.error(t('errors.generic'));
       if (r.ok) router.refresh();
     });
   }
@@ -216,7 +218,7 @@ function ApiKeysSection({ keys }: { keys: KeyRow[] }) {
     start(async () => {
       const r = await createApiKeyAction({ name: String(fd.get('name') ?? ''), scopes: [...scopes] });
       if (!r.ok) {
-        setStatus({ kind: 'error', text: t('errors.generic') });
+        setStatus({ kind: 'error', text: t('errors.generic') }); toast.error(t('errors.generic'));
         return;
       }
       setRevealed(r.value.token);
@@ -320,7 +322,7 @@ function WebhooksSection({ hooks }: { hooks: HookRow[] }) {
     start(async () => {
       const r = await createWebhookAction({ url: String(fd.get('url') ?? ''), events: [...events] });
       if (!r.ok) {
-        setStatus({ kind: 'error', text: r.error.code === 'VALIDATION' ? r.error.message : t('errors.generic') });
+        setStatus({ kind: 'error', text: r.error.code === 'VALIDATION' ? r.error.message : t('errors.generic') }); toast.error(r.error.code === 'VALIDATION' ? r.error.message : t('errors.generic'));
         return;
       }
       setRevealed(r.value.secret);

@@ -1,6 +1,7 @@
 'use client';
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useFormErrorToast } from '@/ui/feedback/use-form-error-toast';
 import type { FormState } from '@/core/entities/types';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
@@ -39,6 +40,7 @@ export function EmployeeForm({
 }) {
   const t = useTranslations('hr');
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, {});
+  useFormErrorToast(state, state.ok === false ? (state.message ?? '') : '');
   const v = values ?? {};
   const err = (name: string) => state.fieldErrors?.[name];
 

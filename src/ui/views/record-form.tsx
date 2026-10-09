@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { useFormErrorToast } from '@/ui/feedback/use-form-error-toast';
 import type { EntityDef, FormState, Row } from "@/core/entities/types"
 import { Button } from "@/ui/primitives/button"
 import { FieldWidget } from "@/ui/views/fields"
@@ -29,6 +30,7 @@ export function RecordForm({
   const t = useTranslations()
   const router = useRouter()
   const [state, formAction, pending] = React.useActionState(action, INITIAL_STATE)
+  useFormErrorToast(state, state.ok === false && state.message ? (t.has(state.message) ? t(state.message) : state.message) : '')
 
   React.useEffect(() => {
     if (state.redirectTo) router.push(state.redirectTo)

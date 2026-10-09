@@ -1,4 +1,5 @@
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
+import { ErrorToast } from '@/ui/feedback/error-toast';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -39,9 +40,12 @@ export default async function PosSessionsPage({
           {t('sessions.open')}
         </Button>
         {query.error ? (
-          <p role="alert" className="text-sm text-destructive">
-            {t('errors.failed')}
-          </p>
+          <>
+            <p role="alert" className="text-sm text-destructive">
+              {t('errors.failed')}
+            </p>
+            <ErrorToast message={t('errors.failed')} />
+          </>
         ) : null}
       </form>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
@@ -63,6 +64,7 @@ export function OrderForm({
         : await createSaleOrderAction(payload);
       if (!result.ok) {
         setError(errorText(result.error.code));
+        toast.error(errorText(result.error.code));
         return;
       }
       router.push(`/${locale}/sales/${result.value.id}`);

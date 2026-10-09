@@ -1,7 +1,9 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useMemo, useState, useTransition } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { formatDzd, parseDzd, type Cents } from '@/core/money';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
@@ -53,6 +55,7 @@ export function PosScreen({
   products: PosProduct[];
 }) {
   const t = useTranslations('pos');
+  const router = useRouter();
   const locale = useLocale() as 'fr' | 'ar' | 'en';
   const [search, setSearch] = useState('');
   const [cart, setCart] = useState<Record<string, number>>({});
@@ -110,7 +113,9 @@ export function PosScreen({
     startTransition(async () => {
       const r = await payOrderAct(payload);
       if (!r.ok) {
-        setError(t(`errors.${errorKey(r.error.message)}`));
+        const text = t(`errors.${errorKey(r.error.message)}`);
+        setError(text);
+        toast.error(text);
         return;
       }
       const done: WirePaidOrder = r.value;
@@ -123,6 +128,7 @@ export function PosScreen({
       });
       setCart({});
       setTendered('');
+      router.refresh();
     });
   }
 

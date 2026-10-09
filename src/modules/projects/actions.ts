@@ -47,7 +47,11 @@ export async function createProjectForm(prev: FormState, formData: FormData): Pr
 
 /** Form action for a new task on a project page. */
 export async function createTaskForm(prev: FormState, formData: FormData): Promise<FormState> {
-  return toFormAction(createTaskAction, { schema: taskInput })(prev, formData);
+  const locale = await getLocale();
+  return toFormAction(createTaskAction, {
+    schema: taskInput,
+    redirectTo: ({ id }) => `/${locale}/projects/tasks/${id}`,
+  })(prev, formData);
 }
 
 /** Form action for logging time on a task. */

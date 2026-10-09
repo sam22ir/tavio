@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useFormErrorToast } from '@/ui/feedback/use-form-error-toast';
 import { createManualEntryForm } from '../actions';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
@@ -20,6 +21,7 @@ export function ManualEntryForm({ accounts, journals }: { accounts: AccountOptio
   const t = useTranslations('accounting');
   const locale = useLocale();
   const [state, formAction, pending] = useActionState(createManualEntryForm, initial);
+  useFormErrorToast(state, state.ok === false ? (state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')) : '');
   const [lines, setLines] = useState<LineState[]>([EMPTY_LINE(1), EMPTY_LINE(2)]);
   const [nextKey, setNextKey] = useState(3);
 

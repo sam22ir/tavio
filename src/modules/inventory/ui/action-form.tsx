@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useFormErrorToast } from '@/ui/feedback/use-form-error-toast';
 import type { FormState } from '@/core/entities/types';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
@@ -32,6 +33,7 @@ export function ActionForm({
   const t = useTranslations('inventory');
   const router = useRouter();
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, {});
+  useFormErrorToast(state, state.ok === false && (!state.fieldErrors || state.fieldErrors._form) ? t('common.error') : '');
 
   useEffect(() => {
     if (state.redirectTo) router.push(state.redirectTo);

@@ -1,6 +1,7 @@
 'use client';
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useFormErrorToast } from '@/ui/feedback/use-form-error-toast';
 import type { FormState } from '@/core/entities/types';
 import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
@@ -23,6 +24,7 @@ export function LeaveRequestForm({
 }) {
   const t = useTranslations('hr');
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, {});
+  useFormErrorToast(state, state.ok === false ? (state.message ?? '') : '');
   const err = (name: string) => state.fieldErrors?.[name];
   return (
     <form action={formAction} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -90,6 +92,7 @@ export function LeaveTypeForm({
 }) {
   const t = useTranslations('hr');
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, {});
+  useFormErrorToast(state, state.ok === false ? (state.message ?? '') : '');
   return (
     <form action={formAction} className="flex flex-col gap-3 sm:flex-row sm:items-end">
       <div className="flex flex-1 flex-col gap-1.5">

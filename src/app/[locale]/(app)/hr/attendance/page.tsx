@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ErrorToast } from '@/ui/feedback/error-toast';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { withPageCtx } from '@/core/actions/page-ctx';
@@ -27,6 +28,8 @@ export default async function AttendancePage({
   const rawMonth = typeof sp.month === 'string' ? sp.month : '';
   const month = MONTH_RE.test(rawMonth) ? rawMonth : new Date().toISOString().slice(0, 7);
   const t = await getTranslations('hr');
+  const tViews = await getTranslations('views');
+  const failed = typeof sp.error === 'string';
 
   const data = await withPageCtx(async (ctx) => {
     const me = await getEmployeeForUser(ctx);
@@ -44,6 +47,7 @@ export default async function AttendancePage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
+      {failed ? <ErrorToast message={tViews('error')} /> : null}
       <h1 className="text-xl font-semibold">{t('attendance.title')}</h1>
 
       <section aria-labelledby="attendance-self" className="flex flex-col items-start gap-3 rounded-md border p-4">

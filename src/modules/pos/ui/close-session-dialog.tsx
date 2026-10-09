@@ -1,7 +1,9 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useState, useTransition } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { formatDzd } from '@/core/money';
 import { Button } from '@/ui/primitives/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/ui/primitives/dialog';
@@ -10,6 +12,7 @@ import { closeSessionAct, type WireSessionReport } from '../actions';
 
 export function CloseSessionDialog({ sessionId }: { sessionId: string }) {
   const t = useTranslations('pos');
+  const router = useRouter();
   const locale = useLocale() as 'fr' | 'ar' | 'en';
   const [open, setOpen] = useState(false);
   const [counted, setCounted] = useState('');
@@ -22,10 +25,13 @@ export function CloseSessionDialog({ sessionId }: { sessionId: string }) {
     startTransition(async () => {
       const r = await closeSessionAct({ sessionId, closingCash: counted });
       if (!r.ok) {
-        setError(t(r.error.message === 'INVALID_AMOUNT' ? 'errors.invalid' : 'errors.failed'));
+        const text = t(r.error.message === 'INVALID_AMOUNT' ? 'errors.invalid' : 'errors.failed');
+        setError(text);
+        toast.error(text);
         return;
       }
       setReport(r.value);
+      router.refresh();
     });
   }
 

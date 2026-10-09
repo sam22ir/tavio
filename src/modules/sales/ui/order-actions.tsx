@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
@@ -23,6 +24,7 @@ export function OrderActions({ id, state, invoiced, locale }: Props) {
       const result = await fn({ id });
       if (!result.ok) {
         setError(t('errors.failed'));
+        toast.error(t('errors.failed'));
         return;
       }
       if (after) after(id);

@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import Link from 'next/link';
 import { useMemo, useState, useSyncExternalStore, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
@@ -50,6 +51,7 @@ export function CheckoutForm({ slug, shopHref }: CheckoutFormProps) {
     const rateLimited = result.error.details?.reason === 'RATE_LIMITED';
     const reason = rateLimited ? 'rate_limited' : result.error.code === 'VALIDATION' ? 'invalid' : 'generic';
     setPhase({ kind: 'error', reason });
+    toast.error(t(`checkout.errors.${reason}`));
   }
 
   if (!ready) return null;

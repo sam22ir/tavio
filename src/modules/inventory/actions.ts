@@ -1,5 +1,6 @@
 'use server';
 
+import { failureQuery } from '@/ui/feedback/failure-query';
 import { redirect } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
@@ -106,14 +107,14 @@ export async function createReorderRuleForm(prev: FormState, formData: FormData)
 export async function validateMoveForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const id = String(formData.get('id') ?? '');
-  await validateMoveAction({ id });
-  redirect(`/${locale}/inventory/moves/${encodeURIComponent(id)}`);
+  const r = await validateMoveAction({ id });
+  redirect(`/${locale}/inventory/moves/${encodeURIComponent(id)}${failureQuery(r)}`);
 }
 
 /** Cancel button on a draft move. */
 export async function cancelMoveForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const id = String(formData.get('id') ?? '');
-  await cancelMoveAction({ id });
-  redirect(`/${locale}/inventory/moves/${encodeURIComponent(id)}`);
+  const r = await cancelMoveAction({ id });
+  redirect(`/${locale}/inventory/moves/${encodeURIComponent(id)}${failureQuery(r)}`);
 }

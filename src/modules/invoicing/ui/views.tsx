@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ErrorToast } from '@/ui/feedback/error-toast';
 import { formatDzd, type Cents } from '@/core/money';
 import type { Invoice, InvoiceLine, InvoicePayment } from '../schema';
 import { cancelInvoiceForm, postInvoiceForm, refundInvoiceForm, registerPaymentForm } from '../actions';
@@ -90,7 +91,7 @@ export function InvoiceDetail({
           {isPosted ? <Link href={`/${locale}/invoicing/print/${invoice.id}`} className={ghostCls}>{t('detail.print')}</Link> : null}
         </div>
       </div>
-      {error ? <p role="alert" className="text-sm text-destructive">{t(`error.${error}`)}</p> : null}
+      {error ? <><p role="alert" className="text-sm text-destructive">{t(`error.${error}`)}</p><ErrorToast message={t(`error.${error}`)} /></> : null}
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full text-sm">

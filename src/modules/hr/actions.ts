@@ -1,5 +1,6 @@
 'use server';
 
+import { failureQuery } from '@/ui/feedback/failure-query';
 import { redirect } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
@@ -128,25 +129,25 @@ export async function createLeaveTypeForm(prev: FormState, formData: FormData): 
 
 export async function submitLeaveForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
-  await submitLeaveAction({ id: String(formData.get('id') ?? '') });
-  redirect(`/${locale}/hr/leave`);
+  const r = await submitLeaveAction({ id: String(formData.get('id') ?? '') });
+  redirect(`/${locale}/hr/leave${failureQuery(r)}`);
 }
 
 export async function decideLeaveForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const decision = formData.get('decision') === 'refused' ? 'refused' : 'approved';
-  await decideLeaveAction({ id: String(formData.get('id') ?? ''), decision });
-  redirect(`/${locale}/hr/leave`);
+  const r = await decideLeaveAction({ id: String(formData.get('id') ?? ''), decision });
+  redirect(`/${locale}/hr/leave${failureQuery(r)}`);
 }
 
 export async function checkInSelfForm(): Promise<void> {
   const locale = await getLocale();
-  await checkInSelfAction({});
-  redirect(`/${locale}/hr/attendance`);
+  const r = await checkInSelfAction({});
+  redirect(`/${locale}/hr/attendance${failureQuery(r)}`);
 }
 
 export async function checkOutSelfForm(): Promise<void> {
   const locale = await getLocale();
-  await checkOutSelfAction({});
-  redirect(`/${locale}/hr/attendance`);
+  const r = await checkOutSelfAction({});
+  redirect(`/${locale}/hr/attendance${failureQuery(r)}`);
 }

@@ -1,5 +1,6 @@
 import '@/modules/event-handlers';
 import { getLocale } from 'next-intl/server';
+import { revalidatePath } from 'next/cache';
 import type { z } from 'zod';
 import type { Ctx, Locale } from '@/core/ctx';
 import { requireUser } from '@/core/auth/session';
@@ -20,6 +21,15 @@ export interface ActionOptions<S extends z.ZodType> {
 class ActionFailure extends Error {
   constructor(readonly appError: AppError) {
     super(appError.code);
+  }
+}
+
+/** Invalidates the router and data caches for every route. Throws outside a server action, so it is swallowed there. */
+function revalidateCurrentRoutes(): void {
+  try {
+    revalidatePath('/', 'layout');
+  } catch {
+    // Called outside a server action context (for example during render). Nothing to invalidate.
   }
 }
 
@@ -52,7 +62,7 @@ export function defineAction<S extends z.ZodType, T>(
       }
 
       try {
-        return await withTenant(args.value, async (ctx) => {
+        const result = await withTenant(args.value, async (ctx) => {
           const perm = requirePerm(ctx, opts.perm);
           if (!perm.ok) throw new ActionFailure(perm.error);
 
@@ -67,10 +77,13 @@ export function defineAction<S extends z.ZodType, T>(
             });
           }
 
-          const result = await fn(ctx, parsed.data);
-          if (!result.ok) throw new ActionFailure(result.error);
-          return result;
+          const outcome = await fn(ctx, parsed.data);
+          if (!outcome.ok) throw new ActionFailure(outcome.error);
+          return outcome;
         });
+        // Writes refresh the cached route tree so the page shows the new state. Reads are skipped.
+        if (!opts.perm.endsWith('.read')) revalidateCurrentRoutes();
+        return result;
       } catch (e) {
         if (e instanceof ActionFailure) return { ok: false, error: e.appError };
         throw e;

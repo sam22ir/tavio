@@ -9,15 +9,19 @@ import { cancelWebOrderForm, convertWebOrderForm } from '@/modules/website/actio
 import { getWebOrder } from '@/modules/website/service/orders';
 import { Chatter } from '@/modules/chatter/ui/chatter';
 import { Button } from '@/ui/primitives/button';
+import { ErrorToast } from '@/ui/feedback/error-toast';
 
 type Locale = 'fr' | 'ar' | 'en';
 
 export default async function WebOrderDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { locale, id } = await params;
+  const { error } = await searchParams;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
@@ -37,6 +41,7 @@ export default async function WebOrderDetailPage({
 
   return (
     <main className="flex flex-col gap-6">
+      {error ? <ErrorToast message={t('orders.error')} /> : null}
       <Link href={`/${currentLocale}/website/orders`} className="text-sm text-muted-foreground hover:underline">
         ← {t('orders.title')}
       </Link>
