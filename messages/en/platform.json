@@ -1,1 +1,81 @@
-{}
+{
+  "module": {
+    "name": "Platform"
+  },
+  "menu": {
+    "title": "Platform and API"
+  },
+  "settings": {
+    "title": "Platform",
+    "intro": "Custom fields, API keys and webhooks for your company."
+  },
+  "custom": {
+    "title": "Custom fields",
+    "intro": "Add fields to contact records. Values are kept even if a field is removed.",
+    "created": "Field created.",
+    "deleted": "Field removed.",
+    "empty": "No custom fields.",
+    "add": "Add field",
+    "remove": "Remove",
+    "saved": "Values saved.",
+    "invalid": "Some values are invalid.",
+    "none": "None",
+    "save": "Save",
+    "fields": {
+      "key": "Key",
+      "type": "Type",
+      "label_fr": "Label (French)",
+      "label_ar": "Label (Arabic)",
+      "label_en": "Label (English)",
+      "position": "Position",
+      "options": "Options",
+      "options_hint": "Comma separated",
+      "required": "Required"
+    },
+    "types": {
+      "text": "Text",
+      "number": "Number",
+      "date": "Date",
+      "boolean": "Yes / no",
+      "select": "Choice list"
+    }
+  },
+  "keys": {
+    "title": "API keys",
+    "intro": "Read or write access to the REST API. The full key is shown only once.",
+    "shown_once": "Copy this key now. It will not be shown again.",
+    "dismiss": "I copied the key",
+    "empty": "No API keys.",
+    "name": "Name",
+    "prefix": "Prefix",
+    "scopes": "Scopes",
+    "status": "Status",
+    "revoked": "Key revoked.",
+    "revoked_badge": "Revoked",
+    "active_badge": "Active",
+    "revoke": "Revoke",
+    "create": "Create key"
+  },
+  "hooks": {
+    "title": "Webhooks",
+    "intro": "Sends signed events (HMAC-SHA256 in the X-Tavio-Signature header) to your server.",
+    "secret_once": "Copy this secret now. It verifies signatures and will not be shown again.",
+    "empty": "No webhooks.",
+    "url": "URL (https)",
+    "events": "Events",
+    "status": "Status",
+    "active": "Active",
+    "paused": "Paused",
+    "pause": "Pause",
+    "resume": "Resume",
+    "create": "Create webhook",
+    "updated": "Webhook updated."
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "errors": {
+    "generic": "Something went wrong. Try again."
+  }
+}
