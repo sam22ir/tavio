@@ -14,6 +14,7 @@ export const manifest = defineModule({
     'projects.timesheet.read',
     'projects.timesheet.write',
   ],
+  app: { pillar: 'operations', icon: 'FolderKanban', label: 'shell.apps.projects', order: 8 },
   menus: [{ label: 'projects.menu.projects', href: '/projects', perm: 'projects.project.read', order: 61 }],
   entities: [projectEntity],
 });

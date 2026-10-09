@@ -5,7 +5,11 @@
     "settings": "Paramètres",
     "open": "Ouvrir le menu",
     "close": "Fermer le menu",
-    "title": "Navigation"
+    "title": "Navigation",
+    "launcher": "Applications",
+    "notifications": "Notifications",
+    "tabs": "Menus de l'application",
+    "account": "Ouvrir le menu du compte"
   },
   "company": {
     "label": "Entreprise active",
@@ -42,6 +46,40 @@
       "newContract": "Nouveau contrat",
       "newContact": "Nouveau contact",
       "newLead": "Nouveau prospect"
-    }
+    },
+    "hello": "Bonjour {name}",
+    "today": "Aujourd'hui",
+    "todayEmpty": "Rien à faire aujourd'hui.",
+    "applications": "Applications",
+    "applicationsEmpty": "Aucune application n'est accessible avec vos droits."
+  },
+  "pillars": {
+    "acquisition": "Acquisition",
+    "sales": "Ventes",
+    "operations": "Opérations",
+    "data": "Données",
+    "technology": "Technologie"
+  },
+  "apps": {
+    "crm": "CRM",
+    "website": "Site web",
+    "marketing": "Marketing",
+    "sales": "Ventes",
+    "credit_sales": "Ventes à crédit",
+    "pos": "Point de vente",
+    "contacts": "Contacts",
+    "products": "Produits",
+    "invoicing": "Facturation",
+    "inventory": "Stock",
+    "purchases": "Achats",
+    "accounting": "Comptabilité",
+    "hr": "RH",
+    "projects": "Projets",
+    "helpdesk": "Support",
+    "ai_features": "Assistant IA",
+    "platform": "Plateforme",
+    "automation": "Automatisation",
+    "subscriptions": "Abonnement",
+    "l10n_dz": "Fiscalité"
   }
 }

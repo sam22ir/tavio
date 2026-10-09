@@ -1,10 +1,9 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { loadShell } from '@/ui/shell/load-shell';
-import { MobileNav } from '@/ui/shell/mobile-nav';
-import { ShellNav } from '@/ui/shell/shell-nav';
+import { TopBar } from '@/ui/shell/top-bar';
 import { Toaster } from '@/ui/primitives/sonner';
 
 // Every page here reads the session; never prerender at build time.
@@ -24,36 +23,16 @@ export default async function AppLayout({
   setRequestLocale(locale);
 
   const shell = await loadShell(locale as Locale);
-  const t = await getTranslations('shell');
-
-  const items = [
-    { href: `/${locale}/dashboard`, label: t('nav.dashboard') },
-    ...shell.moduleItems,
-    { href: `/${locale}/settings`, label: t('nav.settings') },
-  ];
-  const navProps = {
-    items,
-    companies: shell.companies,
-    activeCompanyId: shell.active.id,
-    email: shell.email,
-  };
 
   return (
-    <div className="flex min-h-dvh">
-      <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 border-e bg-background md:block">
-        <div className="flex items-center gap-2 p-4 font-semibold">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/revora-mark-blue.svg" alt="" width={28} height={28} className="size-7" />
-          {t('appName')}
-        </div>
-        <ShellNav {...navProps} />
-      </aside>
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center border-b p-2 md:hidden">
-          <MobileNav {...navProps} appName={t('appName')} />
-        </header>
-        <main className="flex-1 p-4 md:p-6">{children}</main>
-      </div>
+    <div className="app-shell flex min-h-dvh flex-col">
+      <TopBar
+        apps={shell.apps}
+        companies={shell.companies}
+        activeCompanyId={shell.active.id}
+        email={shell.email}
+      />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-6 md:py-8">{children}</main>
       <Toaster />
     </div>
   );

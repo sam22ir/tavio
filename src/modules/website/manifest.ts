@@ -12,6 +12,7 @@ export const manifest = defineModule({
     'website.order.read',
     'website.order.write',
   ],
+  app: { pillar: 'acquisition', icon: 'Globe', label: 'shell.apps.website', order: 2 },
   menus: [
     { label: 'website.menu.settings', href: '/website', perm: 'website.settings.read', order: 60 },
     { label: 'website.menu.orders', href: '/website/orders', perm: 'website.order.read', order: 61 },

@@ -12,6 +12,7 @@ export const manifest = defineModule({
     'purchases.order.post',
     'purchases.order.cancel',
   ],
+  app: { pillar: 'operations', icon: 'Truck', label: 'shell.apps.purchases', order: 5 },
   menus: [{ label: 'purchases.menu.orders', href: '/purchases', perm: 'purchases.order.read', order: 53 }],
   events: { emits: ['purchases.order.received'] },
   entities: [purchaseOrderEntity],

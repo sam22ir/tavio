@@ -6,8 +6,20 @@ export interface MenuItem {
   order?: number;
 }
 
+export const APP_PILLARS = ['acquisition', 'sales', 'operations', 'data', 'technology'] as const;
+export type AppPillar = (typeof APP_PILLARS)[number];
+
+/** Launcher tile metadata: which pillar the app belongs to, its icon (lucide name) and i18n label key. */
+export interface AppMeta {
+  pillar: AppPillar;
+  icon: string;
+  label: string;
+  order: number;
+}
+
 export interface ModuleManifest {
   id: string;
+  app?: AppMeta;
   name: string;
   version: string;
   depends: readonly string[];

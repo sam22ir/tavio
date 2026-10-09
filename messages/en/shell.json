@@ -5,7 +5,11 @@
     "settings": "Settings",
     "open": "Open menu",
     "close": "Close menu",
-    "title": "Navigation"
+    "title": "Navigation",
+    "launcher": "Apps",
+    "notifications": "Notifications",
+    "tabs": "App menus",
+    "account": "Open account menu"
   },
   "company": {
     "label": "Active company",
@@ -42,6 +46,40 @@
       "newContract": "New contract",
       "newContact": "New contact",
       "newLead": "New lead"
-    }
+    },
+    "hello": "Hello {name}",
+    "today": "Today",
+    "todayEmpty": "Nothing to do today.",
+    "applications": "Applications",
+    "applicationsEmpty": "No app is available with your permissions."
+  },
+  "pillars": {
+    "acquisition": "Acquisition",
+    "sales": "Sales",
+    "operations": "Operations",
+    "data": "Data",
+    "technology": "Technology"
+  },
+  "apps": {
+    "crm": "CRM",
+    "website": "Website",
+    "marketing": "Marketing",
+    "sales": "Sales",
+    "credit_sales": "Credit sales",
+    "pos": "Point of sale",
+    "contacts": "Contacts",
+    "products": "Products",
+    "invoicing": "Invoicing",
+    "inventory": "Inventory",
+    "purchases": "Purchases",
+    "accounting": "Accounting",
+    "hr": "HR",
+    "projects": "Projects",
+    "helpdesk": "Helpdesk",
+    "ai_features": "AI assistant",
+    "platform": "Platform",
+    "automation": "Automation",
+    "subscriptions": "Subscriptions",
+    "l10n_dz": "Tax settings"
   }
 }

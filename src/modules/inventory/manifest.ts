@@ -18,6 +18,7 @@ export const manifest = defineModule({
     'inventory.reorder.write',
   ],
   entities: [stockMoveEntity, warehouseEntity, reorderRuleEntity],
+  app: { pillar: 'operations', icon: 'Warehouse', label: 'shell.apps.inventory', order: 4 },
   menus: [
     { label: 'inventory.menu.stock', href: '/inventory', perm: 'inventory.move.read', order: 52 },
     { label: 'inventory.menu.moves', href: '/inventory/moves', perm: 'inventory.move.read', order: 52 },

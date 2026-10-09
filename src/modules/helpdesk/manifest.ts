@@ -12,6 +12,7 @@ export const manifest = defineModule({
     'helpdesk.team.read',
     'helpdesk.team.write',
   ],
+  app: { pillar: 'operations', icon: 'LifeBuoy', label: 'shell.apps.helpdesk', order: 9 },
   menus: [{ label: 'helpdesk.menu.tickets', href: '/helpdesk', perm: 'helpdesk.ticket.read', order: 62 }],
   entities: [ticketEntity],
 });
