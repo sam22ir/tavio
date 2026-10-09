@@ -25,6 +25,7 @@ import {
   type PricingPlan,
 } from '@/site/components';
 import { Watermark } from '@/site/components/brand/Watermark';
+import { RevoraLogo } from '@/site/components/brand/RevoraLogo';
 
 export const dynamic = 'force-dynamic';
 
@@ -242,7 +243,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <SectionTitle eyebrow={t('orbit.eyebrow')} title={t('orbit.title')} body={t('orbit.body')} />
           <ModulesOrbit
             items={orbit.map((m) => ({ title: m.title, href: localeHref(locale, `/features/${m.slug}`) }))}
-            center={<span className="s-mark !size-14 !rounded-2xl !text-2xl">R</span>}
+            center={<span className="grid size-14 place-items-center rounded-2xl bg-white shadow-md"><RevoraLogo variant="mark" tone="blue" className="h-8 w-auto" /></span>}
           />
         </div>
       </Section></Reveal>
