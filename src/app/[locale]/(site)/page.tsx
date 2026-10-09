@@ -96,19 +96,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       {/* Hero: cream, pill label, sentence-case headline with one serif accent word, then the screenshots. */}
-      <section className="px-4 pt-10 md:pt-16">
+      <section className="px-5 pt-10 sm:px-8 md:pt-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-10">
-          <div className="flex max-w-3xl flex-col items-start gap-6">
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
             <PillLabel>{t('hero.pill')}</PillLabel>
             <h1 className="s-h1 text-balance">
               <Emphasis text={t('hero.title')} />
             </h1>
-            <p className="max-w-[56ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('hero.subtitle')}</p>
-            <div className="flex flex-wrap items-center gap-3">
+            <p className="mx-auto max-w-[56ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('hero.subtitle')}</p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <CtaLink href={localeHref(locale, '/contact?type=audit')} label={t('hero.primary')} />
               <CtaLink href={localeHref(locale, '/features/platform')} label={t('hero.secondary')} variant="light" arrow={false} />
             </div>
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-wrap justify-center gap-2">
               {(t.raw('hero.chips') as string[]).map((chip) => (
                 <li key={chip} className="s-chip-outline">
                   {chip}
