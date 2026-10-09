@@ -1,1 +1,81 @@
-{}
+{
+  "module": {
+    "name": "Plateforme"
+  },
+  "menu": {
+    "title": "Plateforme et API"
+  },
+  "settings": {
+    "title": "Plateforme",
+    "intro": "Champs personnalisés, clés API et webhooks de votre entreprise."
+  },
+  "custom": {
+    "title": "Champs personnalisés",
+    "intro": "Ajoutez des champs aux fiches contacts. Les valeurs sont conservées même si un champ est supprimé.",
+    "created": "Champ créé.",
+    "deleted": "Champ supprimé.",
+    "empty": "Aucun champ personnalisé.",
+    "add": "Ajouter le champ",
+    "remove": "Supprimer",
+    "saved": "Valeurs enregistrées.",
+    "invalid": "Certaines valeurs sont invalides.",
+    "none": "Aucun",
+    "save": "Enregistrer",
+    "fields": {
+      "key": "Clé",
+      "type": "Type",
+      "label_fr": "Libellé (français)",
+      "label_ar": "Libellé (arabe)",
+      "label_en": "Libellé (anglais)",
+      "position": "Position",
+      "options": "Options",
+      "options_hint": "Séparées par des virgules",
+      "required": "Obligatoire"
+    },
+    "types": {
+      "text": "Texte",
+      "number": "Nombre",
+      "date": "Date",
+      "boolean": "Oui / non",
+      "select": "Liste de choix"
+    }
+  },
+  "keys": {
+    "title": "Clés API",
+    "intro": "Accès en lecture ou écriture à l’API REST. La clé complète n’est affichée qu’une seule fois.",
+    "shown_once": "Copiez cette clé maintenant. Elle ne sera plus jamais affichée.",
+    "dismiss": "J’ai copié la clé",
+    "empty": "Aucune clé API.",
+    "name": "Nom",
+    "prefix": "Préfixe",
+    "scopes": "Droits",
+    "status": "Statut",
+    "revoked": "Clé révoquée.",
+    "revoked_badge": "Révoquée",
+    "active_badge": "Active",
+    "revoke": "Révoquer",
+    "create": "Créer la clé"
+  },
+  "hooks": {
+    "title": "Webhooks",
+    "intro": "Envoie les événements signés (HMAC-SHA256, en-tête X-Tavio-Signature) vers votre serveur.",
+    "secret_once": "Copiez ce secret maintenant. Il sert à vérifier la signature et ne sera plus affiché.",
+    "empty": "Aucun webhook.",
+    "url": "URL (https)",
+    "events": "Événements",
+    "status": "Statut",
+    "active": "Actif",
+    "paused": "En pause",
+    "pause": "Mettre en pause",
+    "resume": "Reprendre",
+    "create": "Créer le webhook",
+    "updated": "Webhook mis à jour."
+  },
+  "common": {
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "errors": {
+    "generic": "Une erreur est survenue. Réessayez."
+  }
+}
