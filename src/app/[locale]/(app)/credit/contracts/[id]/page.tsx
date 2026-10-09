@@ -7,6 +7,7 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd, type Cents } from '@/core/money';
 import { getContract } from '@/modules/credit_sales/service/contracts';
 import { listContractDocuments } from '@/modules/credit_sales/service/documents';
+import { listMembers } from '@/core/tenancy/members';
 import { ContractWorkflowSections } from '@/modules/credit_sales/ui/contract-workflow-sections';
 import { WorkflowBar } from '@/modules/credit_sales/ui/workflow-bar';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
@@ -32,7 +33,9 @@ export default async function ContractDetailPage({
   const { contract, partner, installments, payments, receipts, totals } = res.value;
   const workflow = await withPageCtx(async (ctx) => {
     const docs = await listContractDocuments(ctx, id);
-    return docs.ok ? { ok: true as const, value: { docs: docs.value, userId: ctx.userId } } : docs;
+    if (!docs.ok) return docs;
+    const members = await listMembers(ctx.companyId);
+    return { ok: true as const, value: { docs: docs.value, members } };
   });
   if (!workflow.ok) notFound();
   const fmt = (c: Cents) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
@@ -100,8 +103,7 @@ export default async function ContractDetailPage({
             status: d.status,
             note: d.note,
           })),
-          // Only the current user is offered until a members list is wired in (see report).
-          boOwners: [{ value: workflow.value.userId, label: t('workflow.bo.owner') }],
+          boOwners: workflow.value.members.map((m) => ({ value: m.userId, label: m.name || m.email })),
           bo: {
             sentAt: contract.sentToBoAt?.toISOString() ?? null,
             receivedAt: contract.receivedByBoAt?.toISOString() ?? null,
