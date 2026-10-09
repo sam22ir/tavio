@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import { loadDevEnv } from '@/core/env/load-dev-env';
 import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
@@ -50,15 +51,9 @@ beforeAll(async () => {
     { id: companyA, legalName: `products A ${companyA}`, displayName: `A ${companyA.slice(0, 8)}` },
     { id: companyB, legalName: `products B ${companyB}`, displayName: `B ${companyB.slice(0, 8)}` },
   ]);
-  uomId = randomUUID();
-  await db.insert(uoms).values({
-    id: uomId,
-    code: `t-${uomId.slice(0, 8)}`,
-    nameFr: 'Test unit',
-    category: 'unit',
-    factorToRef: '1',
-    isReference: false,
-  });
+  const [unitRow] = await db.select({ id: uoms.id }).from(uoms).where(eq(uoms.code, 'unit')).limit(1);
+  if (!unitRow) throw new Error('seeded uom "unit" missing: run scripts/seed-global.ts');
+  uomId = unitRow.id;
 });
 
 describe('products service', () => {
