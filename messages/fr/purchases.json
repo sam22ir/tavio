@@ -1,1 +1,65 @@
-{}
+{
+  "module": {
+    "name": "Achats"
+  },
+  "menu": {
+    "orders": "Commandes d’achat"
+  },
+  "order": {
+    "title": "Commandes d’achat",
+    "new": "Nouvelle commande",
+    "draft": "Brouillon",
+    "billed": "Facturée",
+    "actions": {
+      "confirm": "Confirmer",
+      "bill": "Créer la facture fournisseur",
+      "cancel": "Annuler"
+    },
+    "receive": {
+      "title": "Réception",
+      "remaining": "reste",
+      "partial": "Réceptionner la sélection",
+      "all": "Tout réceptionner"
+    }
+  },
+  "fields": {
+    "number": "Numéro",
+    "partner": "Fournisseur",
+    "state": "Statut",
+    "orderDate": "Date",
+    "expectedDate": "Date prévue",
+    "note": "Note",
+    "product": "Produit",
+    "description": "Désignation",
+    "quantity": "Quantité",
+    "received": "Reçu",
+    "unitPrice": "Prix unitaire (DA)",
+    "tax": "Taxe",
+    "untaxed": "Total HT",
+    "total": "Total TTC"
+  },
+  "form": {
+    "choose": "Choisir un fournisseur",
+    "lines": "Lignes",
+    "noProduct": "Sans produit",
+    "noTax": "Sans taxe",
+    "addLine": "Ajouter une ligne"
+  },
+  "state": {
+    "draft": "Brouillon",
+    "sent": "Envoyée",
+    "confirmed": "Confirmée",
+    "received": "Reçue",
+    "cancelled": "Annulée"
+  },
+  "errors": {
+    "validation": "Données invalides. Vérifiez le formulaire.",
+    "not_found": "Introuvable.",
+    "conflict": "Action impossible dans cet état.",
+    "forbidden": "Accès refusé.",
+    "internal": "Une erreur est survenue. Réessayez.",
+    "posted_immutable": "Cette commande est confirmée et ne peut plus être modifiée.",
+    "unauthenticated": "Veuillez vous reconnecter.",
+    "module_disabled": "Le module Achats est désactivé."
+  }
+}

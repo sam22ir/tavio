@@ -1,1 +1,65 @@
-{}
+{
+  "module": {
+    "name": "المشتريات"
+  },
+  "menu": {
+    "orders": "طلبات الشراء"
+  },
+  "order": {
+    "title": "طلبات الشراء",
+    "new": "طلب شراء جديد",
+    "draft": "مسودة",
+    "billed": "تمت الفوترة",
+    "actions": {
+      "confirm": "تأكيد",
+      "bill": "إنشاء فاتورة مورد",
+      "cancel": "إلغاء"
+    },
+    "receive": {
+      "title": "الاستلام",
+      "remaining": "المتبقي",
+      "partial": "استلام المحدد",
+      "all": "استلام الكل"
+    }
+  },
+  "fields": {
+    "number": "الرقم",
+    "partner": "المورد",
+    "state": "الحالة",
+    "orderDate": "تاريخ الطلب",
+    "expectedDate": "التاريخ المتوقع",
+    "note": "ملاحظة",
+    "product": "المنتج",
+    "description": "البيان",
+    "quantity": "الكمية",
+    "received": "المستلم",
+    "unitPrice": "سعر الوحدة (دج)",
+    "tax": "الضريبة",
+    "untaxed": "المجموع قبل الضريبة",
+    "total": "المجموع"
+  },
+  "form": {
+    "choose": "اختر موردًا",
+    "lines": "البنود",
+    "noProduct": "بدون منتج",
+    "noTax": "بدون ضريبة",
+    "addLine": "إضافة بند"
+  },
+  "state": {
+    "draft": "مسودة",
+    "sent": "مرسل",
+    "confirmed": "مؤكد",
+    "received": "مستلم",
+    "cancelled": "ملغى"
+  },
+  "errors": {
+    "validation": "بيانات غير صالحة. راجع النموذج.",
+    "not_found": "غير موجود.",
+    "conflict": "هذا الإجراء غير متاح في الحالة الحالية.",
+    "forbidden": "الوصول مرفوض.",
+    "internal": "حدث خطأ. حاول مرة أخرى.",
+    "posted_immutable": "هذا الطلب مؤكد ولا يمكن تعديله.",
+    "unauthenticated": "يرجى تسجيل الدخول مرة أخرى.",
+    "module_disabled": "وحدة المشتريات معطلة."
+  }
+}
