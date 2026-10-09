@@ -23,7 +23,7 @@ export function AppTiles({
             <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
               {pillarLabel(pillar)}
             </h2>
-            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
               {group.map((app) => {
                 const Icon = appIcon(app.icon);
                 const color = PILLAR_COLOR[pillar];
@@ -31,15 +31,15 @@ export function AppTiles({
                   <li key={app.id}>
                     <Link
                       href={app.href}
-                      className="app-panel flex h-full flex-col items-center gap-3 p-4 text-center transition-shadow hover:shadow-md"
+                      className="flex h-full flex-col items-center gap-2 rounded-2xl border bg-card p-2 text-center text-card-foreground shadow-sm transition-shadow hover:shadow-md"
                     >
                       <span
-                        className="flex size-12 items-center justify-center rounded-2xl"
+                        className="flex size-10 items-center justify-center rounded-2xl"
                         style={{ backgroundColor: `${color}1A`, color }}
                       >
-                        <Icon aria-hidden="true" className="size-6" />
+                        <Icon aria-hidden="true" className="size-5" />
                       </span>
-                      <span className="text-sm font-medium">{labelOf(app.label)}</span>
+                      <span className="text-xs leading-tight font-medium">{labelOf(app.label)}</span>
                     </Link>
                   </li>
                 );

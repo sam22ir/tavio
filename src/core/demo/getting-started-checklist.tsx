@@ -9,12 +9,16 @@ import { partners } from '@/modules/contacts/schema';
 import { products } from '@/modules/products/schema';
 import { saleOrders } from '@/modules/sales/schema';
 import { creditContracts } from '@/modules/credit_sales/schema';
+import { cookies } from 'next/headers';
+import { ChecklistHideButton } from './checklist-hide-button';
+import { CHECKLIST_HIDDEN_COOKIE } from './checklist-cookie';
 
 /**
  * First-steps list for the active company. Each step is checked by one count query.
  * Renders nothing when the user has no company.
  */
 export async function GettingStartedChecklist({ locale }: { locale: Locale }) {
+  if ((await cookies()).get(CHECKLIST_HIDDEN_COOKIE)?.value === '1') return null;
   const tenant = await tenantForUser({ locale });
   if (!tenant.ok) return null;
   const companyId = tenant.value.companyId;
@@ -50,12 +54,16 @@ export async function GettingStartedChecklist({ locale }: { locale: Locale }) {
     { key: 'team', href: `/${locale}/settings/team`, done: flags.team },
   ] as const;
   const done = items.filter((i) => i.done).length;
+  if (done === items.length) return null;
 
   return (
     <section className="flex flex-col gap-3 rounded-2xl border bg-card p-4 text-card-foreground">
-      <div className="flex flex-col gap-1">
-        <h2 className="text-base font-semibold">{t('checklist.title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('checklist.progress', { done, total: items.length })}</p>
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-base font-semibold">{t('checklist.title')}</h2>
+          <p className="text-sm text-muted-foreground">{t('checklist.progress', { done, total: items.length })}</p>
+        </div>
+        <ChecklistHideButton />
       </div>
       <ul className="flex flex-col gap-2">
         {items.map((item) => (
