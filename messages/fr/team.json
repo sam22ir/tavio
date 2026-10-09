@@ -1,1 +1,75 @@
-{}
+{
+  "settings_link": "Équipe et invitations",
+  "title": "Équipe",
+  "subtitle": "Gérez les membres de l’entreprise et invitez de nouvelles personnes.",
+  "members": {
+    "title": "Membres",
+    "empty": "Aucun membre actif.",
+    "name": "Nom",
+    "email": "E-mail",
+    "role": "Rôle",
+    "actions": "Actions",
+    "remove": "Retirer",
+    "confirm_remove": "Retirer ce membre de l’entreprise ?",
+    "you": "vous"
+  },
+  "invitations": {
+    "title": "Invitations en attente",
+    "empty": "Aucune invitation en attente.",
+    "expires": "expire le {date}",
+    "revoke": "Révoquer"
+  },
+  "invite": {
+    "title": "Inviter un membre",
+    "email": "E-mail",
+    "role": "Rôle",
+    "submit": "Créer l’invitation",
+    "submitting": "Création…",
+    "created": "Invitation créée. Le lien ne s’affiche qu’une fois.",
+    "email_sent": "Un e-mail d’invitation a été envoyé.",
+    "email_disabled": "L’envoi d’e-mails n’est pas configuré : partagez le lien manuellement.",
+    "link": "Lien d’invitation",
+    "copy": "Copier",
+    "copied": "Copié",
+    "whatsapp": "Partager sur WhatsApp",
+    "whatsapp_message": "Rejoignez notre équipe sur Tavio :"
+  },
+  "roles": {
+    "owner": "Propriétaire",
+    "admin": "Administrateur",
+    "manager": "Responsable",
+    "staff": "Employé"
+  },
+  "accept": {
+    "submit": "Accepter l’invitation",
+    "submitting": "Acceptation…"
+  },
+  "invite_page": {
+    "not_found": "Cette invitation est introuvable.",
+    "state_expired": "Cette invitation a expiré.",
+    "state_revoked": "Cette invitation a été révoquée.",
+    "state_accepted": "Cette invitation a déjà été acceptée.",
+    "details": "Vous êtes invité à rejoindre {company} en tant que {role}.",
+    "signed_out": "Connectez-vous ou créez un compte avec l’adresse e-mail invitée pour accepter.",
+    "signup": "Créer un compte",
+    "login": "Se connecter",
+    "signed_in_as": "Connecté en tant que {email}."
+  },
+  "errors": {
+    "generic": "Une erreur est survenue. Réessayez.",
+    "validation": "Les informations saisies ne sont pas valides.",
+    "unauthenticated": "Connectez-vous pour continuer.",
+    "forbidden": "Vous n’avez pas la permission de faire cela.",
+    "not_found": "Élément introuvable.",
+    "conflict": "Cette action est en conflit avec l’état actuel.",
+    "state": "Cette action n’est plus possible.",
+    "internal": "Une erreur interne est survenue.",
+    "already_member": "Cette personne est déjà membre de l’entreprise.",
+    "already_invited": "Une invitation est déjà en attente pour cette adresse.",
+    "last_owner": "Il doit toujours rester au moins un propriétaire.",
+    "wrong_email": "Cette invitation a été envoyée à une autre adresse e-mail.",
+    "accepted": "Cette invitation a déjà été acceptée.",
+    "expired": "Cette invitation a expiré.",
+    "revoked": "Cette invitation a été révoquée."
+  }
+}
