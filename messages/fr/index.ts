@@ -1,4 +1,5 @@
 import accounting from './accounting.json';
+import ai from './ai.json';
 import auth from './auth.json';
 import automation from './automation.json';
 import chatter from './chatter.json';
@@ -21,9 +22,10 @@ import sales from './sales.json';
 import settings from './settings.json';
 import shell from './shell.json';
 import subscriptions from './subscriptions.json';
+import team from './team.json';
 import views from './views.json';
 import website from './website.json';
 
 // Each namespace file is owned by one module or feature. Add keys there, never here.
-const messages = { accounting, auth, automation, chatter, contacts, core, credit, crm, helpdesk, hr, inventory, invoicing, l10n, marketing, platform, pos, products, projects, purchases, sales, settings, shell, subscriptions, views, website };
+const messages = { accounting, ai, auth, automation, chatter, contacts, core, credit, crm, helpdesk, hr, inventory, invoicing, l10n, marketing, platform, pos, products, projects, purchases, sales, settings, shell, subscriptions, team, views, website };
 export default messages;
