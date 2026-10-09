@@ -1,1 +1,92 @@
-{}
+{
+  "module": { "name": "الموارد البشرية" },
+  "menu": {
+    "employees": "الموظفون",
+    "departments": "الأقسام",
+    "leave": "الإجازات",
+    "attendance": "الحضور"
+  },
+  "fields": {
+    "displayName": "الاسم",
+    "firstName": "الاسم الأول",
+    "lastName": "اللقب",
+    "jobTitle": "المسمى الوظيفي",
+    "department": "القسم",
+    "departmentName": "اسم القسم",
+    "manager": "المسؤول المباشر",
+    "hireDate": "تاريخ التوظيف",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "nin": "رقم التعريف الوطني",
+    "active": "نشط",
+    "archived": "مؤرشف",
+    "noneOption": "لا شيء",
+    "employee": "الموظف",
+    "leaveType": "نوع الإجازة",
+    "leaveTypeName": "اسم نوع الإجازة",
+    "fromDate": "من",
+    "toDate": "إلى",
+    "period": "الفترة",
+    "days": "الأيام",
+    "reason": "السبب (اختياري)",
+    "state": "الحالة",
+    "choose": "اختر…",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "options": {
+    "leaveState": {
+      "draft": "مسودة",
+      "submitted": "مقدّم",
+      "approved": "موافق عليه",
+      "refused": "مرفوض"
+    }
+  },
+  "actions": {
+    "save": "حفظ",
+    "archive": "أرشفة",
+    "reactivate": "إعادة التنشيط",
+    "createRequest": "إنشاء الطلب",
+    "addLeaveType": "إضافة نوع إجازة",
+    "addDepartment": "إضافة قسم",
+    "submit": "تقديم",
+    "approve": "موافقة",
+    "refuse": "رفض",
+    "show": "عرض",
+    "label": "الإجراءات"
+  },
+  "employee": {
+    "title": "الموظفون",
+    "new": "موظف جديد",
+    "edit": "التفاصيل",
+    "activity": "النشاط",
+    "error": "تعذّر تحميل الموظفين."
+  },
+  "department": {
+    "title": "الأقسام",
+    "error": "تعذّر تحميل الأقسام."
+  },
+  "leave": {
+    "title": "الإجازات",
+    "new": "طلب إجازة جديد",
+    "types": "أنواع الإجازات",
+    "list": "الطلبات",
+    "filter": "تصفية الطلبات",
+    "all": "الكل",
+    "error": "تعذّر تحميل طلبات الإجازة."
+  },
+  "attendance": {
+    "title": "الحضور",
+    "mine": "حضوري",
+    "checkIn": "تسجيل الحضور",
+    "checkOut": "تسجيل الانصراف",
+    "noEmployee": "لا توجد بطاقة موظف مرتبطة بحسابك.",
+    "summary": "الملخص الشهري",
+    "month": "الشهر",
+    "daysPresent": "أيام الحضور",
+    "hours": "الساعات",
+    "open": "مفتوح",
+    "recent": "آخر تسجيلات الحضور",
+    "error": "تعذّر تحميل الحضور."
+  }
+}

@@ -1,1 +1,92 @@
-{}
+{
+  "module": { "name": "Ressources humaines" },
+  "menu": {
+    "employees": "Employés",
+    "departments": "Départements",
+    "leave": "Congés",
+    "attendance": "Présences"
+  },
+  "fields": {
+    "displayName": "Nom",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "jobTitle": "Poste",
+    "department": "Département",
+    "departmentName": "Nom du département",
+    "manager": "Responsable",
+    "hireDate": "Date d'embauche",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "nin": "Numéro d'identification nationale",
+    "active": "Actif",
+    "archived": "Archivé",
+    "noneOption": "Aucun",
+    "employee": "Employé",
+    "leaveType": "Type de congé",
+    "leaveTypeName": "Nom du type de congé",
+    "fromDate": "Du",
+    "toDate": "Au",
+    "period": "Période",
+    "days": "Jours",
+    "reason": "Motif (facultatif)",
+    "state": "Statut",
+    "choose": "Choisir…",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "options": {
+    "leaveState": {
+      "draft": "Brouillon",
+      "submitted": "Soumis",
+      "approved": "Approuvé",
+      "refused": "Refusé"
+    }
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "archive": "Archiver",
+    "reactivate": "Réactiver",
+    "createRequest": "Créer la demande",
+    "addLeaveType": "Ajouter un type de congé",
+    "addDepartment": "Ajouter un département",
+    "submit": "Soumettre",
+    "approve": "Approuver",
+    "refuse": "Refuser",
+    "show": "Afficher",
+    "label": "Actions"
+  },
+  "employee": {
+    "title": "Employés",
+    "new": "Nouvel employé",
+    "edit": "Détails",
+    "activity": "Activité",
+    "error": "Impossible de charger les employés."
+  },
+  "department": {
+    "title": "Départements",
+    "error": "Impossible de charger les départements."
+  },
+  "leave": {
+    "title": "Congés",
+    "new": "Nouvelle demande de congé",
+    "types": "Types de congé",
+    "list": "Demandes",
+    "filter": "Filtrer les demandes",
+    "all": "Toutes",
+    "error": "Impossible de charger les demandes de congé."
+  },
+  "attendance": {
+    "title": "Présences",
+    "mine": "Mes présences",
+    "checkIn": "Pointer l'arrivée",
+    "checkOut": "Pointer le départ",
+    "noEmployee": "Aucune fiche employé n'est liée à votre compte.",
+    "summary": "Récapitulatif mensuel",
+    "month": "Mois",
+    "daysPresent": "Jours de présence",
+    "hours": "Heures",
+    "open": "En cours",
+    "recent": "Pointages récents",
+    "error": "Impossible de charger les présences."
+  }
+}
