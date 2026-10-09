@@ -1,1 +1,86 @@
-{}
+{
+  "module": { "name": "Invoicing" },
+  "menu": { "customers": "Customer invoices", "vendors": "Vendor bills" },
+  "list": {
+    "customers": "Customer invoices",
+    "vendors": "Vendor bills",
+    "new": "New invoice",
+    "newVendor": "New vendor bill",
+    "empty": "No invoices yet.",
+    "col": { "number": "Number", "date": "Date", "partner": "Partner", "total": "Total", "state": "Status", "payment": "Payment" }
+  },
+  "form": {
+    "type": "Type",
+    "partner": "Partner",
+    "date": "Date",
+    "dueDate": "Due date",
+    "description": "Description",
+    "quantity": "Quantity",
+    "unitPrice": "Unit price (DA)",
+    "tax": "VAT",
+    "noTax": "No VAT",
+    "submit": "Create draft"
+  },
+  "type": {
+    "out_invoice": "Invoice",
+    "out_refund": "Credit note",
+    "in_invoice": "Vendor bill",
+    "in_refund": "Vendor credit note"
+  },
+  "state": { "draft": "Draft", "posted": "Posted", "cancelled": "Cancelled" },
+  "payment": { "not_paid": "Not paid", "partial": "Partially paid", "paid": "Paid" },
+  "method": { "cash": "Cash", "ccp": "CCP", "transfer": "Transfer", "cib": "CIB", "edahabia": "Edahabia", "cheque": "Cheque" },
+  "detail": {
+    "title": "Document",
+    "post": "Post",
+    "cancel": "Cancel draft",
+    "refund": "Create refund",
+    "print": "Print",
+    "lines": "Lines",
+    "untaxed": "Untaxed",
+    "tax": "VAT",
+    "stamp": "Stamp duty",
+    "total": "Total",
+    "paid": "Paid",
+    "residual": "Residual",
+    "payment": {
+      "title": "Register payment",
+      "amount": "Amount (DA)",
+      "method": "Method",
+      "date": "Date",
+      "reference": "Reference",
+      "submit": "Register"
+    },
+    "payments": "Payments",
+    "noPayments": "No payments."
+  },
+  "error": {
+    "VALIDATION": "Invalid data.",
+    "NOT_FOUND": "Not found.",
+    "FORBIDDEN": "Not allowed.",
+    "STATE": "This action is not possible in the current state.",
+    "POSTED_IMMUTABLE": "Posted document: edits are not allowed. Create a credit note.",
+    "INTERNAL": "Internal error."
+  },
+  "print": {
+    "title": "Invoice",
+    "seller": "Seller",
+    "buyer": "Buyer",
+    "nif": "NIF",
+    "nis": "NIS",
+    "rc": "RC",
+    "ai": "AI",
+    "address": "Address",
+    "number": "No.",
+    "date": "Date",
+    "description": "Description",
+    "qty": "Qty",
+    "unit": "Unit price",
+    "amount": "Amount",
+    "vatRate": "VAT rate",
+    "vat": "VAT",
+    "stampDuty": "Stamp duty",
+    "totalInWords": "Total in figures",
+    "print": "Print"
+  }
+}
