@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "title": "Services de croissance | Revora",
+    "description": "Audit, mise en place, formation et accompagnement continu : Revora aide les entreprises algériennes à construire un système de croissance qui tient dans la durée."
+  },
+  "hero": {
+    "pill": "Accompagnement",
+    "title": "*NOUS CONSTRUISONS* / VOTRE SYSTÈME DE CROISSANCE.",
+    "subtitle": "Une équipe qui a réellement travaillé en marketing, en vente et en back office. Nous relions acquisition, ventes, opérations et données, pour que votre croissance soit visible et maîtrisée.",
+    "primary": "Demander un audit gratuit",
+    "secondary": "Voir la plateforme"
+  },
+  "services": {
+    "eyebrow": "Nos services",
+    "title": "Quatre services, *un seul objectif* : progresser.",
+    "durationLabel": "Durée indicative",
+    "items": [
+      {
+        "title": "Audit de croissance",
+        "body": "Nous cartographions votre acquisition, vos ventes, vos opérations et vos données, puis nous identifions où la croissance se perd.",
+        "outcomes": [
+          "Cartographie de vos processus commerciaux et opérationnels",
+          "Diagnostic des points de fuite et des pertes de temps",
+          "Un rapport détaillé et un plan d'action prioritaire"
+        ],
+        "duration": "Environ 1 à 2 semaines"
+      },
+      {
+        "title": "Mise en place",
+        "body": "Nous configurons la plateforme Revora selon votre activité : modules, import de vos données, processus et rôles de chacun.",
+        "outcomes": [
+          "Modules activés selon vos besoins réels",
+          "Import et contrôle de vos données existantes",
+          "Processus, rôles et droits d'accès définis pour toute l'équipe"
+        ],
+        "duration": "Environ 2 à 4 semaines"
+      },
+      {
+        "title": "Formation",
+        "body": "Nous formons vos équipes (ventes, back office, managers) en français ou en arabe, sur place à Alger ou à distance.",
+        "outcomes": [
+          "Sessions adaptées à chaque métier et à chaque niveau",
+          "Supports en français et en arabe",
+          "Accompagnement pratique sur vos propres opérations"
+        ],
+        "duration": "Environ 1 à 3 jours"
+      },
+      {
+        "title": "Accompagnement continu",
+        "body": "Un partenaire long terme : nous suivons vos résultats, ajustons vos tableaux de bord et optimisons vos processus chaque mois.",
+        "outcomes": [
+          "Revue mensuelle de vos indicateurs clés",
+          "Tableaux de bord mis à jour et optimisation continue",
+          "Un interlocuteur dédié pour vos évolutions"
+        ],
+        "duration": "Mensuel, sans engagement de durée fixe"
+      }
+    ]
+  },
+  "audience": {
+    "title": "Pour qui ?",
+    "body": "Toutes les entreprises algériennes qui veulent mieux comprendre leur croissance, quelle que soit leur taille ou leur secteur.",
+    "chips": ["Commerce de détail", "Distribution", "Automobile", "Santé", "Formation", "Services", "Industrie"]
+  },
+  "process": {
+    "eyebrow": "Notre méthode",
+    "title": "Comment nous *travaillons*",
+    "body": "Nous commençons par comprendre comment votre entreprise fonctionne, puis nous construisons les systèmes qui améliorent vos performances.",
+    "steps": [
+      { "title": "Comprendre", "body": "Nous étudions votre activité, vos clients, vos équipes et vos outils actuels." },
+      { "title": "Diagnostiquer", "body": "Nous identifions où la croissance se perd : ventes non suivies, stock, délais, données éparpillées." },
+      { "title": "Construire", "body": "Nous mettons en place le système adapté : processus, plateforme, rôles et tableaux de bord." },
+      { "title": "Faire croître", "body": "Nous suivons les résultats ensemble et ajustons le système au fil des mois." }
+    ]
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "items": [
+      {
+        "question": "Combien coûtent les services ?",
+        "answer": "Le prix dépend de votre activité, de la taille de votre équipe et du périmètre choisi. Nous établissons un devis sur mesure après l'audit gratuit."
+      },
+      {
+        "question": "Combien de temps dure une mission ?",
+        "answer": "Les durées indiquées sur cette page sont indicatives. Un audit prend en général quelques semaines, et la mise en place dépend du nombre de modules et du volume de vos données."
+      },
+      {
+        "question": "Faut-il utiliser la plateforme Revora ?",
+        "answer": "Non, l'audit et l'accompagnement peuvent être faits sans la plateforme. Cependant, la plateforme Revora rend le suivi de votre croissance plus simple et plus visible au quotidien."
+      },
+      {
+        "question": "Mes données sont-elles confidentielles ?",
+        "answer": "Oui. Vos données restent votre propriété, ne sont jamais revendues et ne sont consultées que par l'équipe qui travaille sur votre dossier, dans le cadre d'un engagement de confidentialité."
+      },
+      {
+        "question": "Dans quelles langues intervenez-vous ?",
+        "answer": "Nous intervenons en français et en arabe, pour les formations, la documentation et les échanges avec vos équipes."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Où la croissance de votre entreprise *se perd-elle* ?",
+    "body": "Demandez un audit gratuit. Nous identifions avec vous les premiers gains possibles.",
+    "primary": "Demander un audit gratuit",
+    "secondary": "Nous contacter"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "title": "Growth services | Revora",
+    "description": "Audit, setup, training and ongoing support: Revora helps Algerian businesses build a growth system that lasts."
+  },
+  "hero": {
+    "pill": "Support",
+    "title": "*WE BUILD* / YOUR GROWTH SYSTEM.",
+    "subtitle": "A team with real marketing, sales and back-office experience. We connect customer acquisition, sales, operations and data, so your growth is visible and under control.",
+    "primary": "Request a free audit",
+    "secondary": "See the platform"
+  },
+  "services": {
+    "eyebrow": "Our services",
+    "title": "Four services, *one goal*: growth.",
+    "durationLabel": "Indicative duration",
+    "items": [
+      {
+        "title": "Growth audit",
+        "body": "We map your acquisition, sales, operations and data, and find where growth is being lost.",
+        "outcomes": [
+          "A map of your sales and operational processes",
+          "A diagnosis of leaks and wasted time",
+          "A detailed report and a priority action plan"
+        ],
+        "duration": "About 1 to 2 weeks"
+      },
+      {
+        "title": "Setup",
+        "body": "We configure the Revora platform for your business: modules, data import, processes and roles.",
+        "outcomes": [
+          "Modules enabled for your real needs",
+          "Import and checks of your existing data",
+          "Processes, roles and access rights set up for the whole team"
+        ],
+        "duration": "About 2 to 4 weeks"
+      },
+      {
+        "title": "Training",
+        "body": "We train your teams (sales, back office, managers) in French or Arabic, on site in Algiers or remotely.",
+        "outcomes": [
+          "Sessions tailored to each role and level",
+          "Materials in French and Arabic",
+          "Hands-on practice on your own operations"
+        ],
+        "duration": "About 1 to 3 days"
+      },
+      {
+        "title": "Ongoing support",
+        "body": "A long-term partner: we follow your results, update your dashboards and optimise your processes every month.",
+        "outcomes": [
+          "Monthly review of your key indicators",
+          "Up-to-date dashboards and continuous optimisation",
+          "A dedicated contact for your next steps"
+        ],
+        "duration": "Monthly, with no fixed minimum term"
+      }
+    ]
+  },
+  "audience": {
+    "title": "Who is it for?",
+    "body": "Any Algerian business that wants to understand its growth better, whatever its size or sector.",
+    "chips": ["Retail", "Distribution", "Automotive", "Health", "Training", "Services", "Industry"]
+  },
+  "process": {
+    "eyebrow": "How we work",
+    "title": "How we *work*",
+    "body": "We start by understanding how your business works, then we build the systems that improve its performance.",
+    "steps": [
+      { "title": "Understand", "body": "We study your business, your customers, your teams and the tools you use today." },
+      { "title": "Diagnose", "body": "We find where growth is lost: untracked sales, stock, delays, scattered data." },
+      { "title": "Build", "body": "We put in place the right system: processes, platform, roles and dashboards." },
+      { "title": "Grow", "body": "We follow the results together and adjust the system over the months." }
+    ]
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": [
+      {
+        "question": "How much do the services cost?",
+        "answer": "The price depends on your business, the size of your team and the scope you choose. We issue a tailored quote after the free audit."
+      },
+      {
+        "question": "How long does an engagement last?",
+        "answer": "The durations shown on this page are indicative. An audit usually takes a few weeks, and setup depends on the number of modules and the volume of your data."
+      },
+      {
+        "question": "Do we need the Revora platform?",
+        "answer": "No, the audit and support can be done without the platform. The Revora platform does make tracking your growth simpler and more visible day to day."
+      },
+      {
+        "question": "Is my data confidential?",
+        "answer": "Yes. Your data remains yours, is never sold, and is only accessed by the team working on your file, under a confidentiality commitment."
+      },
+      {
+        "question": "Which languages do you work in?",
+        "answer": "We work in French and Arabic, for training, documentation and exchanges with your teams."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Where is your business growth *being lost*?",
+    "body": "Request a free audit. Together we will identify your first possible gains.",
+    "primary": "Request a free audit",
+    "secondary": "Contact us"
+  }
+}
