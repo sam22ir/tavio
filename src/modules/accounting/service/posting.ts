@@ -90,6 +90,8 @@ export interface PaymentForPosting {
   amountCents: bigint;
   method: string;
   reference: string;
+  /** Timbre fiscal collected with a cash payment on an out_invoice. Part of amountCents. */
+  stampCents?: bigint;
 }
 
 /** Cash-register account for cash payments, bank for everything else. */
@@ -100,6 +102,8 @@ export function treasuryAccount(method: string): '53' | '512' {
 /**
  * Customer receipt (out_invoice): Dr 512|53 / Cr 411. Customer refund: Dr 411 / Cr 512|53.
  * Supplier payment (in_invoice): Dr 401 / Cr 512|53. Supplier refund: Cr 401 / Dr 512|53.
+ * Cash receipt with timbre (out_invoice, stampCents > 0): Dr 53 full cash / Cr 411 (cash - stamp) / Cr 445 stamp.
+ * ⚠ Needs accountant verification: stamp duty (445) on the cash receipt.
  */
 export function paymentLines(p: PaymentForPosting): DraftLine[] {
   const treasury = treasuryAccount(p.method);
@@ -107,6 +111,14 @@ export function paymentLines(p: PaymentForPosting): DraftLine[] {
   const partnerDebit = p.type === 'out_refund' || p.type === 'in_invoice';
   const partnerSide: Side = partnerDebit ? 'debit' : 'credit';
   const treasurySide: Side = partnerDebit ? 'credit' : 'debit';
+  const stamp = p.stampCents ?? ZERO;
+  if (stamp > ZERO && p.type === 'out_invoice') {
+    return [
+      ...line(treasury, 'debit', p.amountCents, null, p.reference),
+      ...line('411', 'credit', p.amountCents - stamp, p.partnerId, p.reference),
+      ...line('445', 'credit', stamp, null, p.reference),
+    ];
+  }
   return [
     ...line(treasury, treasurySide, p.amountCents, null, p.reference),
     ...line(partnerAccount, partnerSide, p.amountCents, p.partnerId, p.reference),

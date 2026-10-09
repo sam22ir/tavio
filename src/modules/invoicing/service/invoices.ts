@@ -192,6 +192,7 @@ export async function registerPayment(ctx: Ctx, invoiceId: string, input: Paymen
     amountCents: input.amountCents.toString(),
     method: input.method,
     date,
+    ...(applyStamp ? { stampCents: stamp.toString() } : {}),
   };
   await emit(ctx, { name: 'invoicing.payment.registered', payload });
   return ok({ paymentId: pay.id });

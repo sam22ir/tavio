@@ -60,6 +60,7 @@ on('invoicing.payment.registered', async (ctx, event) => {
       amountCents: bigOrZero(p.amountCents),
       method: p.method,
       reference: invoiceNumber,
+      stampCents: bigOrZero(p.stampCents ?? '0'),
     }),
   });
 });

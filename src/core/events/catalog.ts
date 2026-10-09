@@ -18,6 +18,8 @@ export interface InvoicePosted {
 export interface InvoicePaymentRegistered {
   paymentId: string; invoiceId: string; type: InvoicePosted['type'];
   partnerId: string; amountCents: string; method: string; date: string;
+  /** Timbre fiscal added to the invoice by this cash payment. Present only when > 0. ⚠ needs accountant verification */
+  stampCents?: string;
 }
 export interface PurchaseOrderReceived { orderId: string; number: string; lines: QtyLine[] }
 export interface PosOrderPaid {
