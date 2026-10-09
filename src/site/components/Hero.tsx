@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { cn } from '@/ui/lib/cn';
 import { Emphasis } from './Emphasis';
 import { CtaLink } from './CtaLink';
 import { PillLabel } from './PillLabel';
@@ -16,7 +15,6 @@ export function Hero({
   primary,
   secondary,
   visual,
-  uppercase = true,
 }: {
   eyebrow?: string;
   title: string;
@@ -25,13 +23,11 @@ export function Hero({
   primary: SiteAction;
   secondary?: SiteAction;
   visual?: ReactNode;
-  /** Big hero titles are uppercase; Arabic is never uppercase. */
-  uppercase?: boolean;
 }) {
   return (
     <div className="flex flex-col items-center gap-7 text-center">
       {eyebrow ? <PillLabel>{eyebrow}</PillLabel> : null}
-      <h1 className={cn("s-h1 max-w-[16ch] text-balance", uppercase && "s-uppercase")}>
+      <h1 className="s-h1 max-w-[16ch] text-balance">
         <Emphasis text={title} />
       </h1>
       <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{subtitle}</p>

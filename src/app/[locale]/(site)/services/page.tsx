@@ -7,7 +7,7 @@ import { routing, type Locale } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
 import {
-  BlueHero,
+  PageHero,
   CtaBand,
   CtaLink,
   CurvedTimeline,
@@ -35,7 +35,6 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('site_services');
-  const uc = locale !== 'ar';
 
   const items = t.raw('services.items') as { title: string; body: string; outcomes: string[]; duration: string }[];
   const chips = t.raw('audience.chips') as string[];
@@ -47,11 +46,10 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
       <Reveal>
         <div className="px-4 pt-6 md:px-8 md:pt-10">
           <div className="mx-auto w-full max-w-6xl">
-            <BlueHero
+            <PageHero
               eyebrow={t('hero.pill')}
               title={t('hero.title')}
               subtitle={t('hero.subtitle')}
-              uppercase={uc}
               actions={<CtaLink href={localeHref(locale, '/contact?type=audit')} label={t('hero.primary')} variant="light" />}
             />
           </div>
@@ -64,7 +62,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
           <div className="flex flex-col gap-10 md:gap-16">
             <div className="flex max-w-2xl flex-col gap-5">
               <PillLabel>{t('services.eyebrow')}</PillLabel>
-              <h2 className={uc ? 's-h2 s-uppercase' : 's-h2'}>
+              <h2 className="s-h2">
                 <Emphasis text={t('services.title')} />
               </h2>
             </div>
@@ -107,7 +105,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
         <Section tone="muted">
           <div className="flex flex-col gap-10">
             <div className="flex max-w-2xl flex-col gap-5">
-              <h2 className={uc ? 's-h2 s-uppercase' : 's-h2'}>
+              <h2 className="s-h2">
                 <Emphasis text={t('audience.title')} />
               </h2>
               <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('audience.body')}</p>
@@ -129,7 +127,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
           <div className="flex flex-col gap-16">
             <div className="flex max-w-2xl flex-col gap-5">
               <PillLabel>{t('process.eyebrow')}</PillLabel>
-              <h2 className={uc ? 's-h2 s-uppercase' : 's-h2'}>
+              <h2 className="s-h2">
                 <Emphasis text={t('process.title')} />
               </h2>
               <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('process.body')}</p>
@@ -142,7 +140,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
       <Reveal>
         <Section tone="muted">
           <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] md:gap-16">
-            <h2 className={uc ? 's-h2 s-uppercase' : 's-h2'}>
+            <h2 className="s-h2">
               <Emphasis text={t('faq.title')} />
             </h2>
             <Faq items={faq} />

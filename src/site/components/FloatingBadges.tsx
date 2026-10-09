@@ -4,11 +4,11 @@ export type BadgeKind = 'dzd' | 'ccp' | 'whatsapp' | 'invoice' | 'tva';
 
 /** Tile gradient, soft coloured glow and icon per badge kind. */
 const KINDS: Record<BadgeKind, { icon: LucideIcon; from: string; to: string; glow: string }> = {
-  dzd: { icon: Banknote, from: '#3a9a86', to: '#1f5f55', glow: 'rgba(31, 95, 85, 0.55)' },
+  dzd: { icon: Banknote, from: '#3a9a86', to: '#08409D', glow: 'rgba(8, 64, 157, 0.55)' },
   ccp: { icon: Landmark, from: '#f08a4b', to: '#c2410c', glow: 'rgba(194, 65, 12, 0.5)' },
   whatsapp: { icon: MessageCircle, from: '#4ae08a', to: '#1ea952', glow: 'rgba(37, 211, 102, 0.55)' },
   invoice: { icon: Receipt, from: '#3b4d48', to: '#0f1a17', glow: 'rgba(15, 26, 23, 0.45)' },
-  tva: { icon: Percent, from: '#8fb8a9', to: '#5f8c7f', glow: 'rgba(95, 140, 127, 0.5)' },
+  tva: { icon: Percent, from: '#8fb8a9', to: '#5f8c7f', glow: 'rgba(95, 127, 191, 0.5)' },
 };
 const POS = ['start-[-3%] top-[14%]', 'start-[4%] bottom-[10%]', 'end-[-2%] top-[10%]', 'end-[6%] bottom-[18%]', 'start-[40%] -top-[4%]'];
 

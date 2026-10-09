@@ -7,7 +7,7 @@ import { routing } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
 import {
-  BlueHero,
+  PageHero,
   CtaBand,
   CtaLink,
   CurvedTimeline,
@@ -41,8 +41,7 @@ export default async function OnPremisePage({ params }: { params: Promise<{ loca
 
   return (
     <>
-<BlueHero
-          uppercase={locale !== 'ar'}
+<PageHero
           eyebrow={t('eyebrow')}
           title={t('title')}
           subtitle={t('body')}

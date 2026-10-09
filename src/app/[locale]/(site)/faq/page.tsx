@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
-import { BlueHero, CtaBand, Reveal, Section } from '@/site/components';
+import { PageHero, CtaBand, Reveal, Section } from '@/site/components';
 import { FaqFilter } from './FaqFilter';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -25,7 +25,7 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
 
   return (
     <>
-<BlueHero uppercase={locale !== 'ar'} eyebrow={t('eyebrow')} title={t('title')} subtitle={t('body')} />
+<PageHero eyebrow={t('eyebrow')} title={t('title')} subtitle={t('body')} />
 
       <Reveal>
         <Section className="pt-8">

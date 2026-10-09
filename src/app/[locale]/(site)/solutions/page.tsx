@@ -8,7 +8,7 @@ import { routing } from '@/i18n/routing';
 import { buildMetadata, SOLUTION_SLUGS } from '@/site/seo';
 import { localeHref } from '@/site/content/nav';
 import { SOLUTION_SEEDS, type SolutionSlug } from '@/site/content/solutions';
-import { BlueHero, CtaBand, CtaLink, Reveal, RevealItem, RevealList, Section } from '@/site/components';
+import { PageHero, CtaBand, CtaLink, Reveal, RevealItem, RevealList, Section } from '@/site/components';
 
 const ICONS: Record<(typeof SOLUTION_SEEDS)[SolutionSlug]['icon'], LucideIcon> = {
   appliance: Refrigerator,
@@ -35,7 +35,7 @@ export default async function SolutionsIndexPage({ params }: { params: Promise<{
 
   return (
     <>
-<BlueHero uppercase={locale !== 'ar'} eyebrow={t('indexEyebrow')} title={t('indexTitle')} subtitle={t('indexBody')} />
+<PageHero eyebrow={t('indexEyebrow')} title={t('indexTitle')} subtitle={t('indexBody')} />
 
       {/* One card per business type: icon, the problem in one line, and a link. */}
       <Reveal>

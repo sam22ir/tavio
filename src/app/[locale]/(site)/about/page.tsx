@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
-import { BlueHero, CtaBand, CurvedTimeline, Emphasis, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
+import { PageHero, CtaBand, CurvedTimeline, Emphasis, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
 
 /** Icons for the principles bento, in message order. */
 const PRINCIPLE_ICONS: LucideIcon[] = [Languages, Zap, Banknote, ShieldCheck];
@@ -29,7 +29,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   return (
     <>
-<BlueHero uppercase={locale !== 'ar'} eyebrow={t('eyebrow')} title={t('title')} subtitle={t('body')} />
+<PageHero eyebrow={t('eyebrow')} title={t('title')} subtitle={t('body')} />
 
       {/* Principles bento: the first tile is wide, the rest share the row. */}
       <Reveal>

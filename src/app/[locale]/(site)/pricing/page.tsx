@@ -9,7 +9,7 @@ import { routing } from '@/i18n/routing';
 import { buildMetadata } from '@/site/seo';
 import { localeHref } from '@/site/content/nav';
 import {
-  BlueHero,
+  PageHero,
   CtaBand,
   Emphasis,
   Faq,
@@ -88,7 +88,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-<BlueHero uppercase={locale !== 'ar'} eyebrow={t('pricing.eyebrow')} title={t('pricing.title')} subtitle={t('pricing.body')} />
+<PageHero eyebrow={t('pricing.eyebrow')} title={t('pricing.title')} subtitle={t('pricing.body')} />
 
       {/* Plans: monthly / yearly toggle and the plan cards. */}
       <Section className="pt-10 md:pt-14">
@@ -143,7 +143,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
                         return (
                           <td key={plan.code} className="p-5">
                             {has ? (
-                              <span className="inline-flex size-7 items-center justify-center rounded-full bg-[#E3EFEA] text-[#1F5F55]">
+                              <span className="inline-flex size-7 items-center justify-center rounded-full bg-[#E8EFFC] text-[#08409D]">
                                 <Check className="size-4" strokeWidth={2} aria-label={t('pricing.yes')} />
                               </span>
                             ) : (
