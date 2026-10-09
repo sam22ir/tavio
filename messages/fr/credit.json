@@ -119,7 +119,10 @@
     "method": "Mode",
     "reference": "Référence",
     "success": "Paiement enregistré : reçu {number}",
-    "overpayment": "Le montant dépasse le solde restant."
+    "overpayment": "Le montant dépasse le solde restant.",
+    "cheque_number": "Numéro du chèque",
+    "cheque_due_date": "Date d'échéance du chèque",
+    "cheque_due_required": "Un paiement par chèque nécessite une date d'échéance."
   },
   "methods": {
     "cash": "Espèces",

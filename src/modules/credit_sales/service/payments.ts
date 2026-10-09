@@ -23,6 +23,10 @@ export interface RecordPaymentInput {
   receivedAt?: string;           // ISO; default now
   reference?: string;
   isDownPayment?: boolean;
+  /** Required when method is 'cheque'. YYYY-MM-DD. */
+  chequeDueDate?: string;
+  /** Cheque number. Stored in external_ref (no dedicated column); takes precedence over reference. */
+  chequeNumber?: string;
 }
 export interface OverdueRow {
   contractId: string; contractNumber: string;
@@ -58,6 +62,9 @@ export async function recordPayment(
   input: RecordPaymentInput,
 ): Promise<Result<{ paymentId: string; receiptId: string; receiptNumber: string }>> {
   if (input.amountCents <= BigInt(0)) return err('VALIDATION', 'INVALID_AMOUNT');
+  if (input.method === 'cheque' && !input.chequeDueDate) {
+    return err('VALIDATION', 'CHEQUE_DUE_DATE_REQUIRED');
+  }
 
   const [contract] = await ctx.tx
     .select()
@@ -107,7 +114,8 @@ export async function recordPayment(
       amountCents: input.amountCents,
       receivedAt: new Date(receivedAt),
       receivedBy: ctx.userId,
-      externalRef: input.reference ?? null,
+      externalRef: input.chequeNumber ?? input.reference ?? null,
+      chequeDueDate: input.method === 'cheque' ? (input.chequeDueDate ?? null) : null,
     })
     .returning({ id: creditPayments.id });
   if (!payment) throw new Error('payment insert returned no row');

@@ -243,3 +243,41 @@ describe('listPayments', () => {
     expect(res.rows[0]?.contractNumber).toMatch(/^CR-TEST-/);
   });
 });
+
+describe('recordPayment cheque', { timeout: 60_000 }, () => {
+  it('records a cheque payment with its due date and cheque number', async () => {
+    const f = await activeContract({ amounts: [BigInt(1000)] });
+    const r = await withTenant(
+      f.args,
+      (ctx) =>
+        recordPayment(ctx, {
+          contractId: f.contractId,
+          amountCents: BigInt(1000),
+          method: 'cheque',
+          chequeNumber: 'CHQ-123456',
+          chequeDueDate: '2030-02-15',
+        }),
+      db,
+    );
+    expect(r.ok).toBe(true);
+    const [payment] = await db
+      .select()
+      .from(creditPayments)
+      .where(eq(creditPayments.partnerId, f.partnerId));
+    expect(payment).toMatchObject({ method: 'cheque', externalRef: 'CHQ-123456', chequeDueDate: '2030-02-15' });
+  });
+
+  it('rejects a cheque payment without a due date and records nothing', async () => {
+    const f = await activeContract({ amounts: [BigInt(1000)] });
+    const r = await withTenant(
+      f.args,
+      (ctx) =>
+        recordPayment(ctx, { contractId: f.contractId, amountCents: BigInt(1000), method: 'cheque' }),
+      db,
+    );
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toMatchObject({ code: 'VALIDATION', message: 'CHEQUE_DUE_DATE_REQUIRED' });
+    const payments = await db.select().from(creditPayments).where(eq(creditPayments.partnerId, f.partnerId));
+    expect(payments).toHaveLength(0);
+  });
+});

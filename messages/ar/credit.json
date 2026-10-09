@@ -119,7 +119,10 @@
     "method": "الطريقة",
     "reference": "المرجع",
     "success": "تم تسجيل الدفعة: الوصل {number}",
-    "overpayment": "المبلغ أكبر من الرصيد المتبقي."
+    "overpayment": "المبلغ أكبر من الرصيد المتبقي.",
+    "cheque_number": "رقم الشيك",
+    "cheque_due_date": "تاريخ استحقاق الشيك",
+    "cheque_due_required": "الدفع بالشيك يتطلب تاريخ استحقاق."
   },
   "methods": {
     "cash": "نقدا",
