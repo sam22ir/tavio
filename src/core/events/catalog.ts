@@ -36,3 +36,17 @@ export interface EventCatalog {
   'credit_sales.payment.recorded': { contractId: string; partnerId: string; paymentId: string; amountCents: string };
 }
 export type EventName = keyof EventCatalog;
+
+/** Runtime list of every event name. The type check fails to compile when an event is missing here. */
+export const EVENT_NAMES = [
+  'sales.order.confirmed',
+  'invoicing.invoice.posted',
+  'invoicing.payment.registered',
+  'purchases.order.received',
+  'pos.order.paid',
+  'inventory.move.done',
+  'credit_sales.payment.recorded',
+] as const satisfies readonly EventName[];
+
+type UnlistedEvent = Exclude<EventName, (typeof EVENT_NAMES)[number]>;
+export const ALL_EVENTS_LISTED: [UnlistedEvent] extends [never] ? true : UnlistedEvent = true;

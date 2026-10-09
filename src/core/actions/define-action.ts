@@ -1,3 +1,4 @@
+import '@/modules/event-handlers';
 import { getLocale } from 'next-intl/server';
 import type { z } from 'zod';
 import type { Ctx, Locale } from '@/core/ctx';
