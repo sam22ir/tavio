@@ -107,6 +107,8 @@ export async function createCompany(
           companyId: company.id,
           name: t.key,
           defaultDays: t.defaultDays,
+          delayCount: t.defaultDays,
+          delayUnit: 'days',
           icon: t.icon,
           createdBy: userId,
         })),

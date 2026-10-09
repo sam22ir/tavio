@@ -6,6 +6,10 @@ import { routing } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd, type Cents } from '@/core/money';
 import { getContract } from '@/modules/credit_sales/service/contracts';
+import { listContractDocuments } from '@/modules/credit_sales/service/documents';
+import { listMembers } from '@/core/tenancy/members';
+import { ContractWorkflowSections } from '@/modules/credit_sales/ui/contract-workflow-sections';
+import { WorkflowBar } from '@/modules/credit_sales/ui/workflow-bar';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
 import { RecordPaymentButton } from '@/modules/credit_sales/ui/record-payment';
 import { InstallmentsTable } from '@/modules/credit_sales/ui/installments-table';
@@ -27,6 +31,13 @@ export default async function ContractDetailPage({
   const res = await withPageCtx((ctx) => getContract(ctx, id));
   if (!res.ok) notFound();
   const { contract, partner, installments, payments, receipts, totals } = res.value;
+  const workflow = await withPageCtx(async (ctx) => {
+    const docs = await listContractDocuments(ctx, id);
+    if (!docs.ok) return docs;
+    const members = await listMembers(ctx.companyId);
+    return { ok: true as const, value: { docs: docs.value, members } };
+  });
+  if (!workflow.ok) notFound();
   const fmt = (c: Cents) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
   const receiptByPayment = new Map(receipts.map((r) => [r.paymentId, r]));
   const base = `/${locale}/credit/contracts`;
@@ -52,6 +63,7 @@ export default async function ContractDetailPage({
         </div>
         <div className="flex flex-wrap gap-2">
           <ContractActions contractId={contract.id} state={contract.state} />
+          <WorkflowBar contractId={contract.id} state={contract.state} />
           {contract.state === 'active' ? (
             <RecordPaymentButton contractId={contract.id} remainingCents={totals.remainingCents.toString()} />
           ) : null}
@@ -79,6 +91,39 @@ export default async function ContractDetailPage({
           <CardContent className="text-lg font-semibold tabular-nums text-red-700 dark:text-red-300">{fmt(totals.lateCents)}</CardContent>
         </Card>
       </div>
+
+      <ContractWorkflowSections
+        data={{
+          contractId: contract.id,
+          state: contract.state,
+          documents: workflow.value.docs.map((d) => ({
+            id: d.id,
+            name: d.name,
+            required: d.required,
+            status: d.status,
+            note: d.note,
+          })),
+          boOwners: workflow.value.members.map((m) => ({ value: m.userId, label: m.name || m.email })),
+          bo: {
+            sentAt: contract.sentToBoAt?.toISOString() ?? null,
+            receivedAt: contract.receivedByBoAt?.toISOString() ?? null,
+          },
+          decision: {
+            reason: contract.decisionReason,
+            nextAction: contract.nextAction,
+            decidedAt: contract.decidedAt?.toISOString() ?? null,
+          },
+          risk: {
+            checkedAt: contract.centralRiskCheckedAt?.toISOString() ?? null,
+            result: contract.centralRiskResult,
+          },
+          bank: {
+            name: contract.bankName,
+            reference: contract.bankReference,
+            notifiedAt: contract.bankNotifiedAt?.toISOString() ?? null,
+          },
+        }}
+      />
 
       <section className="flex flex-col gap-2">
         <h2 className="font-medium">{t('contract.installments')}</h2>

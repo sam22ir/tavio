@@ -5,7 +5,8 @@
   "menu": {
     "contracts": "العقود",
     "payments": "المدفوعات",
-    "overdue": "الأقساط المتأخرة"
+    "overdue": "الأقساط المتأخرة",
+    "requirements": "المستندات المطلوبة"
   },
   "fields": {
     "reference": "المرجع",
@@ -37,7 +38,12 @@
       "cancelled": "ملغى",
       "defaulted": "متعثر",
       "posted": "مسجّل",
-      "reversed": "معكوس"
+      "reversed": "معكوس",
+      "submitted": "مقدَّم",
+      "under_review": "قيد الدراسة",
+      "approved": "موافق عليه",
+      "refused": "مرفوض",
+      "reserved": "محجوز"
     },
     "frequency": {
       "monthly": "شهري",
@@ -175,5 +181,68 @@
     "paid": "المدفوع",
     "remaining": "المتبقي",
     "late": "المتأخر"
+  },
+  "workflow": {
+    "bar": "سير العمل",
+    "actions": {
+      "submit": "تقديم",
+      "review": "بدء الدراسة",
+      "reserve": "تحديد كمحجوز",
+      "activate": "تفعيل"
+    },
+    "documents": {
+      "title": "المستندات",
+      "empty": "تُنشأ المستندات عند تقديم العقد.",
+      "required": "مطلوب",
+      "optional": "اختياري",
+      "missing": "ناقص",
+      "received": "مستلم",
+      "rejected": "مرفوض",
+      "markReceived": "تحديد كمستلم",
+      "markRejected": "تحديد كمرفوض",
+      "missingNames": "ما زال ناقصا: {names}"
+    },
+    "bo": {
+      "title": "المكتب الخلفي",
+      "owner": "مسؤول المكتب الخلفي",
+      "send": "إرسال إلى المكتب الخلفي",
+      "sentAt": "أُرسل إلى المكتب الخلفي",
+      "acknowledge": "تأكيد الاستلام",
+      "receivedAt": "استلمه المكتب الخلفي"
+    },
+    "decision": {
+      "title": "القرار",
+      "reason": "السبب",
+      "nextAction": "الإجراء التالي",
+      "decidedAt": "تاريخ القرار",
+      "approve": "موافقة",
+      "refuse": "رفض",
+      "reasonRequired": "السبب مطلوب للرفض."
+    },
+    "risk": {
+      "title": "المركزية للمخاطر",
+      "checkedAt": "تاريخ الفحص",
+      "clear": "دون مخاطر",
+      "flagged": "مُعلَّم",
+      "record": "تسجيل النتيجة"
+    },
+    "bank": {
+      "title": "البنك",
+      "name": "اسم البنك",
+      "reference": "مرجع البنك",
+      "notifiedAt": "تاريخ الإخطار",
+      "notify": "إخطار البنك",
+      "nameRequired": "اسم البنك مطلوب."
+    },
+    "done": "تم الحفظ"
+  },
+  "requirements": {
+    "title": "المستندات المطلوبة",
+    "add": "إضافة مستند",
+    "name": "الاسم",
+    "required": "مطلوب",
+    "active": "نشط",
+    "save": "حفظ",
+    "saved": "تم حفظ المستند"
   }
 }

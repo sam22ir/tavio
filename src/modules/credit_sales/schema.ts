@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import {
   type AnyPgColumn,
   bigint,
+  boolean,
   check,
   date,
   index,
@@ -64,6 +65,21 @@ export const creditContracts = pgTable(
     notes: text('notes'),
     // FK → files.id (added by integrator)
     pdfFileId: uuid('pdf_file_id'),
+    // Back office handoff. FK → users.id (added by integrator)
+    boOwnerId: uuid('bo_owner_id'),
+    sentToBoAt: timestamp('sent_to_bo_at', { withTimezone: true }),
+    receivedByBoAt: timestamp('received_by_bo_at', { withTimezone: true }),
+    // Decision. FK → users.id (added by integrator)
+    decisionReason: text('decision_reason'),
+    nextAction: text('next_action'),
+    decidedBy: uuid('decided_by'),
+    decidedAt: timestamp('decided_at', { withTimezone: true }),
+    // Central risk and bank
+    centralRiskCheckedAt: timestamp('central_risk_checked_at', { withTimezone: true }),
+    centralRiskResult: text('central_risk_result'),
+    bankName: text('bank_name'),
+    bankReference: text('bank_reference'),
+    bankNotifiedAt: timestamp('bank_notified_at', { withTimezone: true }),
   },
   (t) => [
     index('credit_sales_contracts_company_state_idx').on(t.companyId, t.state),
@@ -73,7 +89,7 @@ export const creditContracts = pgTable(
     uniqueIndex('credit_sales_contracts_company_reference_key').on(t.companyId, t.reference),
     check(
       'credit_sales_contracts_state_check',
-      sql`${t.state} in ('draft', 'active', 'completed', 'cancelled', 'defaulted')`,
+      sql`${t.state} in ('draft', 'submitted', 'under_review', 'approved', 'refused', 'reserved', 'active', 'completed', 'cancelled', 'defaulted')`,
     ),
     check(
       'credit_sales_contracts_frequency_check',
@@ -99,6 +115,14 @@ export const creditContracts = pgTable(
     check(
       'credit_sales_contracts_cancelled_at_check',
       sql`${t.state} <> 'cancelled' or ${t.cancelledAt} is not null`,
+    ),
+    check(
+      'credit_sales_contracts_refused_reason_check',
+      sql`${t.state} <> 'refused' or ${t.decisionReason} is not null`,
+    ),
+    check(
+      'credit_sales_contracts_central_risk_result_check',
+      sql`${t.centralRiskResult} is null or ${t.centralRiskResult} in ('clear', 'flagged')`,
     ),
   ],
 );
@@ -356,6 +380,58 @@ export const creditClientScores = pgTable(
     ),
   ],
 );
+
+// 4.9 credit_document_requirements. Company template of documents asked on each contract.
+export const creditDocumentRequirements = pgTable(
+  'credit_document_requirements',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    name: text('name').notNull(),
+    required: boolean('required').notNull().default(true),
+    active: boolean('active').notNull().default(true),
+  },
+  (t) => [
+    index('credit_document_requirements_company_active_idx').on(t.companyId, t.active),
+    uniqueIndex('credit_document_requirements_company_name_key').on(t.companyId, t.name),
+  ],
+);
+
+// 4.10 credit_contract_documents. One row per requirement per contract, created on submit.
+export const creditContractDocuments = pgTable(
+  'credit_contract_documents',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => creditContracts.id, { onDelete: 'cascade' }),
+    requirementId: uuid('requirement_id')
+      .notNull()
+      .references(() => creditDocumentRequirements.id),
+    // FK → files.id (added by integrator)
+    fileId: uuid('file_id'),
+    status: text('status').notNull().default('missing'),
+    note: text('note'),
+  },
+  (t) => [
+    index('credit_contract_documents_company_contract_idx').on(t.companyId, t.contractId),
+    uniqueIndex('credit_contract_documents_contract_requirement_key').on(t.contractId, t.requirementId),
+    check(
+      'credit_contract_documents_status_check',
+      sql`${t.status} in ('missing', 'received', 'rejected')`,
+    ),
+  ],
+);
+
+export type CreditDocumentRequirement = typeof creditDocumentRequirements.$inferSelect;
+export type NewCreditDocumentRequirement = typeof creditDocumentRequirements.$inferInsert;
+export type CreditContractDocument = typeof creditContractDocuments.$inferSelect;
+export type NewCreditContractDocument = typeof creditContractDocuments.$inferInsert;
 
 export type CreditContract = typeof creditContracts.$inferSelect;
 export type NewCreditContract = typeof creditContracts.$inferInsert;
