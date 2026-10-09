@@ -1,1 +1,65 @@
-{}
+{
+  "module": {
+    "name": "Point of sale"
+  },
+  "menu": {
+    "sessions": "Point of sale"
+  },
+  "sessions": {
+    "title": "Cash sessions",
+    "openingCash": "Opening cash (DA)",
+    "open": "Open a session",
+    "none": "No sessions yet.",
+    "status": {
+      "open": "Open",
+      "closed": "Closed"
+    }
+  },
+  "sale": {
+    "title": "Sale",
+    "search": "Search a product",
+    "empty": "No product found.",
+    "cart": "Cart",
+    "cartEmpty": "The cart is empty.",
+    "clear": "Clear",
+    "qtyDecrease": "Decrease quantity",
+    "qtyIncrease": "Increase quantity",
+    "total": "Total",
+    "tendered": "Amount tendered (DA)",
+    "change": "Change due",
+    "payWith": {
+      "cash": "Cash",
+      "cib": "CIB",
+      "edahabia": "Edahabia"
+    },
+    "paid": "Payment recorded.",
+    "print": "Print ticket",
+    "newSale": "New sale",
+    "ticketTitle": "Sales ticket",
+    "ticketNumber": "No."
+  },
+  "session": {
+    "close": "Close session",
+    "closeTitle": "Close session",
+    "closeHelp": "Count the cash in the drawer. The difference is computed from cash sales.",
+    "closingCash": "Counted cash (DA)",
+    "expectedCash": "Expected cash",
+    "difference": "Difference",
+    "confirmClose": "Close",
+    "cancel": "Cancel",
+    "done": "Done",
+    "back": "Back to sessions",
+    "closed": "Session closed",
+    "openingCash": "Opening cash",
+    "cashSales": "Cash sales",
+    "cardSales": "CIB / Edahabia sales",
+    "orders": "Number of tickets"
+  },
+  "errors": {
+    "failed": "Could not complete the action. Try again.",
+    "insufficient": "Amount tendered is not enough.",
+    "invalid": "Invalid amount or quantity.",
+    "closed": "This session is closed.",
+    "alreadyOpen": "A session is already open."
+  }
+}
