@@ -1,1 +1,132 @@
-{}
+{
+  "brand": { "name": "Tavio", "tagline": "Credit sales, customers and invoicing for Algerian shops" },
+  "nav": {
+    "mainLabel": "Main navigation",
+    "features": "Modules",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "onPremise": "On-premise",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Log in",
+    "startFree": "Start free",
+    "openApp": "Open app",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menuTitle": "Menu",
+    "language": "Language"
+  },
+  "footer": {
+    "tagline": "One tool for credit sales, customer follow-up and invoicing, in French and Arabic.",
+    "product": "Product",
+    "solutions": "Solutions",
+    "company": "Company",
+    "legal": "Legal",
+    "contact": "Contact",
+    "whatsapp": "Message us on WhatsApp",
+    "rights": "All rights reserved.",
+    "links": {
+      "features": "Modules",
+      "pricing": "Pricing",
+      "onPremise": "On-premise",
+      "solutionsIndex": "All solutions",
+      "electromenagerCredit": "Appliance stores on credit",
+      "carDealers": "Car dealers",
+      "clinics": "Clinics",
+      "trainingCenters": "Training centres",
+      "retailPos": "Retail",
+      "about": "About",
+      "contact": "Contact us",
+      "faq": "FAQ",
+      "privacy": "Privacy",
+      "terms": "Terms of use"
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Tavio: credit sales, CRM and invoicing for Algeria",
+      "description": "Sell on credit, follow your customers and invoice with Algerian VAT in dinars, in one app in French and Arabic."
+    },
+    "hero": {
+      "title": "Credit sales, customers and invoices in one app",
+      "subtitle": "Tavio brings credit sales, CRM, invoicing and stock together for Algerian shops, in French and Arabic.",
+      "primary": "Start free",
+      "secondary": "See the modules"
+    },
+    "pain": {
+      "title": "Are your customer credits still in notebooks?",
+      "items": [
+        { "problem": "Due dates are forgotten and unpaid balances pile up", "solution": "Every instalment is tracked, with a reminder sent to the customer." },
+        { "problem": "Invoices are written by hand and the totals never add up", "solution": "Invoices and VAT are calculated automatically, ready to print." },
+        { "problem": "Customers and stock are scattered across paper and phones", "solution": "One customer file and one stock, always up to date." }
+      ]
+    },
+    "modules": {
+      "title": "All your modules, connected",
+      "body": "Turn on what your shop needs. Modules share the same customers, products and invoices.",
+      "items": [
+        { "slug": "credit-sales", "title": "Credit sales", "body": "Instalment plans, due dates and payment reminders." },
+        { "slug": "crm", "title": "CRM", "body": "Sales pipeline, interaction history and prospect follow-up." },
+        { "slug": "sales-invoicing", "title": "Sales and invoicing", "body": "Quotes, purchase orders and invoices that follow VAT rules." },
+        { "slug": "inventory-purchases", "title": "Stock and purchases", "body": "Warehouses, supplier receipts and stock-out alerts." },
+        { "slug": "accounting", "title": "Accounting", "body": "Journals, entries and reports based on the SCF chart of accounts." },
+        { "slug": "pos", "title": "Point of sale (POS)", "body": "Fast counter checkout, cash sessions and receipts." },
+        { "slug": "hr", "title": "Human resources", "body": "Employees, leave and attendance for your team." },
+        { "slug": "website-shop", "title": "Website and shop", "body": "An online storefront connected to your stock and orders." }
+      ]
+    },
+    "algeria": {
+      "title": "Built for Algeria",
+      "body": "The realities of Algerian trade are built in from day one.",
+      "items": [
+        { "title": "Algerian dinar (DZD)", "body": "Prices, payments and reports in dinars, with no conversion." },
+        { "title": "Algerian VAT", "body": "VAT rates and mentions on your invoices and sales." },
+        { "title": "SCF chart of accounts", "body": "An accounting structure that follows the French-style SCF standard." },
+        { "title": "NIF and RC", "body": "NIF and trade register fields on invoices, to be checked with your accountant." },
+        { "title": "CCP, bank transfer and cash", "body": "Record payments by CCP, bank transfer or cash." },
+        { "title": "Works on basic phones", "body": "A lightweight interface for modest devices and weak connections." }
+      ]
+    },
+    "how": {
+      "title": "Get started in three steps",
+      "items": [
+        { "title": "Create your space", "body": "Register your shop and choose your modules." },
+        { "title": "Import your data", "body": "Add products, customers and stock, then invite your team." },
+        { "title": "Sell and get paid", "body": "Sell on credit or at the counter, invoice and track payments." }
+      ]
+    },
+    "ai": {
+      "title": "AI helpers, if you want them",
+      "body": "An assistant can write payment reminders, summarise your sales or answer questions about your products. It is optional and works with any AI provider you choose."
+    },
+    "pricing": {
+      "title": "Simple prices, in dinars",
+      "body": "One price per user per month. Prices are indicative and will be confirmed before launch.",
+      "cta": "See all prices",
+      "free": "Free",
+      "perUser": "/ user / month",
+      "users": "Up to {count} users",
+      "popular": "Most chosen",
+      "features": {
+        "free": ["Core modules", "Credit sales", "Contacts"],
+        "pro": ["Sales, invoicing and CRM", "Stock, purchases and POS", "Automation"],
+        "business": ["All modules", "Accounting and HR", "Projects, helpdesk and API"]
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": [
+        { "question": "Is my data safe?", "answer": "Your data is hosted in Europe, or on your own servers in the on-premise version. You remain the owner of your data." },
+        { "question": "Can I use Tavio in Arabic?", "answer": "Yes. The interface is available in Arabic, French and English, with a right-to-left layout for Arabic." },
+        { "question": "How many users can I add?", "answer": "It depends on your plan, from 1 to 25 users." },
+        { "question": "Are the invoices compliant in Algeria?", "answer": "Tavio applies Algerian VAT and provides NIF and RC fields. Ask your accountant to validate your invoice template." },
+        { "question": "Can I run Tavio on my own servers?", "answer": "Yes. The on-premise offer keeps your data in Algeria, with Docker installation, backups and support." }
+      ]
+    },
+    "cta": {
+      "title": "Ready to leave the notebooks behind?",
+      "body": "Create your space in a few minutes and start with the free plan.",
+      "primary": "Start free"
+    }
+  }
+}
