@@ -1,12 +1,13 @@
 {
   "brand": {
-    "name": "Tavio",
-    "tagline": "Ventes à crédit, clients et facturation pour les commerces algériens"
+    "name": "Revora",
+    "tagline": "La croissance est un système."
   },
   "nav": {
     "mainLabel": "Navigation principale",
-    "features": "Modules",
+    "features": "Plateforme",
     "solutions": "Solutions",
+    "services": "Services",
     "pricing": "Tarifs",
     "onPremise": "On-premise",
     "about": "À propos",
@@ -17,19 +18,18 @@
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu",
     "menuTitle": "Menu",
-    "language": "Langue"
+    "language": "Langue",
+    "requestAudit": "Demander un audit"
   },
   "footer": {
-    "tagline": "Un seul outil pour vendre à crédit, suivre vos clients et facturer, en français et en arabe.",
-    "product": "Produit",
-    "solutions": "Solutions",
+    "tagline": "La croissance est un système.",
     "company": "Entreprise",
     "legal": "Légal",
     "contact": "Contact",
     "whatsapp": "Écrire sur WhatsApp",
     "rights": "Tous droits réservés.",
     "links": {
-      "features": "Modules",
+      "features": "Plateforme",
       "pricing": "Tarifs",
       "onPremise": "On-premise",
       "solutionsIndex": "Toutes les solutions",
@@ -42,18 +42,23 @@
       "contact": "Nous contacter",
       "faq": "Questions fréquentes",
       "privacy": "Confidentialité",
-      "terms": "Conditions d'utilisation"
-    }
+      "terms": "Conditions d'utilisation",
+      "services": "Services"
+    },
+    "platform": "Plateforme",
+    "services": "Services",
+    "location": "Alger, Algérie",
+    "solutions": "Solutions"
   },
   "home": {
     "meta": {
-      "title": "Tavio : vente à crédit, CRM et facturation pour l'Algérie",
+      "title": "Revora : vente à crédit, CRM et facturation pour l'Algérie",
       "description": "Vendez à crédit, suivez vos clients et facturez avec TVA, en dinars, dans une seule application en français et en arabe."
     },
     "hero": {
       "eyebrow": "Nouveau · Pensé pour l'Algérie",
       "title": "Vos ventes à crédit, *enfin* sous contrôle.",
-      "subtitle": "Échéances, relances WhatsApp, factures avec TVA et stock : Tavio réunit votre commerce dans une seule application, en français et en arabe.",
+      "subtitle": "Échéances, relances WhatsApp, factures avec TVA et stock : Revora réunit votre commerce dans une seule application, en français et en arabe.",
       "primary": "Commencer gratuitement",
       "secondary": "Voir la démo"
     },
@@ -67,9 +72,9 @@
     "before": {
       "eyebrow": "Le quotidien",
       "title": "Du carnet *au tableau de bord*.",
-      "body": "Ce que vivent la plupart des commerces qui vendent à crédit, et ce que Tavio change.",
+      "body": "Ce que vivent la plupart des commerces qui vendent à crédit, et ce que Revora change.",
       "beforeLabel": "Avant",
-      "afterLabel": "Avec Tavio",
+      "afterLabel": "Avec Revora",
       "before": [
         "Échéances notées dans un carnet",
         "Factures tapées à la main, totaux approximatifs",
@@ -105,7 +110,7 @@
       {
         "eyebrow": "Relances",
         "title": "Les impayés, *relancés* à temps.",
-        "body": "Tavio repère les échéances en retard et prépare le message WhatsApp à envoyer à votre client.",
+        "body": "Revora repère les échéances en retard et prépare le message WhatsApp à envoyer à votre client.",
         "screen": "overdue",
         "items": [
           {
@@ -224,14 +229,14 @@
     "dark": {
       "eyebrow": "IA et hébergement",
       "title": "Une IA à votre service, *vos données* en Algérie.",
-      "body": "Tavio reste simple et sûr : l'IA est un choix, et le lieu d'hébergement aussi.",
+      "body": "Revora reste simple et sûr : l'IA est un choix, et le lieu d'hébergement aussi.",
       "ai": {
         "title": "Aide IA, si vous la voulez",
         "body": "Un assistant peut rédiger vos relances, résumer vos ventes ou répondre aux questions sur vos produits. Il est facultatif et fonctionne avec le fournisseur d'IA de votre choix."
       },
       "onPremise": {
         "title": "On-premise, en Algérie",
-        "body": "Installez Tavio sur vos propres serveurs : vos données restent en Algérie, avec installation Docker, sauvegardes et support."
+        "body": "Installez Revora sur vos propres serveurs : vos données restent en Algérie, avec installation Docker, sauvegardes et support."
       }
     },
     "how": {
@@ -293,7 +298,7 @@
           "answer": "Vos données sont hébergées en Europe, ou sur vos propres serveurs en version on-premise. Vous restez propriétaire de vos données."
         },
         {
-          "question": "Puis-je utiliser Tavio en arabe ?",
+          "question": "Puis-je utiliser Revora en arabe ?",
           "answer": "Oui. L'interface est disponible en arabe, en français et en anglais, avec une mise en page de droite à gauche pour l'arabe."
         },
         {
@@ -302,10 +307,10 @@
         },
         {
           "question": "Les factures sont-elles conformes en Algérie ?",
-          "answer": "Tavio applique la TVA algérienne et propose les champs NIF et RC. Faites valider le modèle de facture par votre expert-comptable."
+          "answer": "Revora applique la TVA algérienne et propose les champs NIF et RC. Faites valider le modèle de facture par votre expert-comptable."
         },
         {
-          "question": "Puis-je installer Tavio sur mes propres serveurs ?",
+          "question": "Puis-je installer Revora sur mes propres serveurs ?",
           "answer": "Oui. L'offre on-premise garde vos données en Algérie, avec installation Docker, sauvegardes et support."
         }
       ]

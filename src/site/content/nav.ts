@@ -8,21 +8,25 @@ export interface SiteLink {
 
 export const NAV_LINKS: readonly SiteLink[] = [
   { key: 'features', href: '/features' },
+  { key: 'services', href: '/services' },
   { key: 'solutions', href: '/solutions' },
   { key: 'pricing', href: '/pricing' },
-  { key: 'onPremise', href: '/on-premise' },
   { key: 'about', href: '/about' },
   { key: 'contact', href: '/contact' },
 ];
 
-export const FOOTER_COLUMNS: readonly { titleKey: 'product' | 'solutions' | 'company' | 'legal'; links: readonly SiteLink[] }[] = [
+export const FOOTER_COLUMNS: readonly { titleKey: 'platform' | 'services' | 'solutions' | 'company' | 'legal'; links: readonly SiteLink[] }[] = [
   {
-    titleKey: 'product',
+    titleKey: 'platform',
     links: [
       { key: 'features', href: '/features' },
       { key: 'pricing', href: '/pricing' },
       { key: 'onPremise', href: '/on-premise' },
     ],
+  },
+  {
+    titleKey: 'services',
+    links: [{ key: 'services', href: '/services' }],
   },
   {
     titleKey: 'solutions',
