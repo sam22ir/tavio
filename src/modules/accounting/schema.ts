@@ -26,7 +26,7 @@ const commonColumns = () => ({
 
 // Chart of accounts (SCF). Tenant table.
 export const accounts = pgTable(
-  'accounts',
+  'gl_accounts',
   {
     ...commonColumns(),
     companyId: uuid('company_id')
@@ -120,8 +120,8 @@ export const journalLines = pgTable(
       .references(() => accounts.id),
     partnerId: uuid('partner_id').references(() => partners.id),
     label: text('label'),
-    debitCents: bigint('debit_cents', { mode: 'bigint' }).notNull().default(BigInt(0)),
-    creditCents: bigint('credit_cents', { mode: 'bigint' }).notNull().default(BigInt(0)),
+    debitCents: bigint('debit_cents', { mode: 'bigint' }).notNull().default(sql`0`),
+    creditCents: bigint('credit_cents', { mode: 'bigint' }).notNull().default(sql`0`),
   },
   (t) => [
     index('journal_lines_company_id_entry_id_idx').on(t.companyId, t.entryId),

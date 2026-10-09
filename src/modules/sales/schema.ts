@@ -33,9 +33,9 @@ export const saleOrders = pgTable(
     // FK → users.id (added by integrator)
     salespersonId: uuid('salesperson_id'),
     note: text('note'),
-    untaxedCents: bigint('untaxed_cents', { mode: 'bigint' }).notNull().default(BigInt(0)),
-    taxCents: bigint('tax_cents', { mode: 'bigint' }).notNull().default(BigInt(0)),
-    totalCents: bigint('total_cents', { mode: 'bigint' }).notNull().default(BigInt(0)),
+    untaxedCents: bigint('untaxed_cents', { mode: 'bigint' }).notNull().default(sql`0`),
+    taxCents: bigint('tax_cents', { mode: 'bigint' }).notNull().default(sql`0`),
+    totalCents: bigint('total_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     // True once an invoice has been created from this order (W5-B createInvoice)
     invoiced: boolean('invoiced').notNull().default(false),
   },

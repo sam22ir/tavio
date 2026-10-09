@@ -35,7 +35,7 @@ export const posSessions = pgTable(
     openedBy: uuid('opened_by').notNull(),
     openedAt: timestamp('opened_at', { withTimezone: true }).notNull().defaultNow(),
     closedAt: timestamp('closed_at', { withTimezone: true }),
-    openingCashCents: bigint('opening_cash_cents', { mode: 'bigint' }).notNull().default(BigInt(0)),
+    openingCashCents: bigint('opening_cash_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     closingCashCents: bigint('closing_cash_cents', { mode: 'bigint' }),
     state: text('state').notNull().default('open'),
   },
