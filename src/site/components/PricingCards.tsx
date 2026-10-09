@@ -1,5 +1,8 @@
-import Link from 'next/link';
+'use client';
+
+import { motion, useReducedMotion } from 'motion/react';
 import { Badge } from './Badge';
+import { CtaLink } from './CtaLink';
 
 export interface PricingPlan {
   name: string;
@@ -22,11 +25,14 @@ export interface PricingPlan {
  * Mobile: 1 column. Desktop: one column per plan. The highlighted plan is an ink card.
  */
 export function PricingCards({ plans }: { plans: PricingPlan[] }) {
+  const reduce = useReducedMotion();
   return (
     <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {plans.map((plan) => (
-        <li
+        <motion.li
           key={plan.name}
+          whileHover={reduce ? undefined : { y: -6 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 24 }}
           className={`flex flex-col gap-5 rounded-[28px] p-7 ${
             plan.highlighted
               ? 'bg-[var(--s-ink)] text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.14),0_24px_48px_-24px_rgba(15,26,23,0.6)]'
@@ -47,18 +53,13 @@ export function PricingCards({ plans }: { plans: PricingPlan[] }) {
               <li key={f}>{f}</li>
             ))}
           </ul>
-          <Link
+          <CtaLink
             href={plan.href}
-            className={`s-btn s-btn-arrow w-full justify-between ${plan.highlighted ? 's-btn-light' : 's-btn-dark'}`}
-          >
-            <span>{plan.cta}</span>
-            <span className="s-btn-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" className="s-flip-rtl" aria-hidden>
-                <path d="M7 17 17 7M9 7h8v8" />
-              </svg>
-            </span>
-          </Link>
-        </li>
+            label={plan.cta}
+            variant={plan.highlighted ? 'light' : 'dark'}
+            className="w-full justify-between"
+          />
+        </motion.li>
       ))}
     </ul>
   );

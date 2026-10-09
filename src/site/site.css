@@ -1,5 +1,32 @@
-/* Marketing site only. Scoped to .site so the logged-in app keeps its own tokens. */
+/* Marketing site only. Imported solely by the (site) layout; the app never loads this file. */
+@import "@heroui/styles";
+@source "../../node_modules/@heroui/react/dist";
+
+/* Scoped to .site so the logged-in app keeps its own tokens. HeroUI light theme, custom values for the brief. */
 .site {
+  color-scheme: light;
+  /* HeroUI v3 tokens (light only on the site) */
+  --accent: #1f5f55;
+  --accent-foreground: #ffffff;
+  --surface: #ffffff;
+  --surface-foreground: #0f1a17;
+  --surface-secondary: #f7f4ee;
+  --surface-secondary-foreground: #0f1a17;
+  --overlay: #ffffff;
+  --overlay-foreground: #0f1a17;
+  --default: #ebe7dd;
+  --default-foreground: #0f1a17;
+  --field-background: #ffffff;
+  --field-foreground: #0f1a17;
+  --field-placeholder: #5b6b66;
+  --field-border-width: 1px;
+  --field-border: rgba(15, 26, 23, 0.12);
+  --focus: #1f5f55;
+  --separator: rgba(15, 26, 23, 0.08);
+  --danger: #c2410c;
+  --danger-foreground: #ffffff;
+  --radius: 1rem;
+  --field-radius: 1rem;
   --background: #f4f1ea;
   --foreground: #0f1a17;
   --card: #ffffff;
@@ -10,7 +37,7 @@
   --secondary-foreground: #0f1a17;
   --muted: #ebe7dd;
   --muted-foreground: #5b6b66;
-  --accent: #e3efea;
+  --accent-soft-token: #e3efea;
   --accent-foreground: #0f1a17;
   --border: rgba(15, 26, 23, 0.08);
   --input: rgba(15, 26, 23, 0.12);
