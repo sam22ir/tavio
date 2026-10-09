@@ -5,7 +5,8 @@
   "menu": {
     "contracts": "Contracts",
     "payments": "Payments",
-    "overdue": "Overdue"
+    "overdue": "Overdue",
+    "requirements": "Document requirements"
   },
   "fields": {
     "reference": "Reference",
@@ -37,7 +38,12 @@
       "cancelled": "Cancelled",
       "defaulted": "Defaulted",
       "posted": "Posted",
-      "reversed": "Reversed"
+      "reversed": "Reversed",
+      "submitted": "Submitted",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "refused": "Refused",
+      "reserved": "Reserved"
     },
     "frequency": {
       "monthly": "Monthly",
@@ -175,5 +181,68 @@
     "paid": "Paid",
     "remaining": "Remaining",
     "late": "Late"
+  },
+  "workflow": {
+    "bar": "Workflow",
+    "actions": {
+      "submit": "Submit",
+      "review": "Start review",
+      "reserve": "Mark reserved",
+      "activate": "Activate"
+    },
+    "documents": {
+      "title": "Documents",
+      "empty": "Documents are created when the contract is submitted.",
+      "required": "Required",
+      "optional": "Optional",
+      "missing": "Missing",
+      "received": "Received",
+      "rejected": "Rejected",
+      "markReceived": "Mark received",
+      "markRejected": "Mark rejected",
+      "missingNames": "Still missing: {names}"
+    },
+    "bo": {
+      "title": "Back office",
+      "owner": "BO owner",
+      "send": "Send to BO",
+      "sentAt": "Sent to BO",
+      "acknowledge": "Acknowledge receipt",
+      "receivedAt": "Received by BO"
+    },
+    "decision": {
+      "title": "Decision",
+      "reason": "Reason",
+      "nextAction": "Next action",
+      "decidedAt": "Decided on",
+      "approve": "Approve",
+      "refuse": "Refuse",
+      "reasonRequired": "A reason is required to refuse."
+    },
+    "risk": {
+      "title": "Central risk",
+      "checkedAt": "Checked on",
+      "clear": "Clear",
+      "flagged": "Flagged",
+      "record": "Record result"
+    },
+    "bank": {
+      "title": "Bank",
+      "name": "Bank name",
+      "reference": "Bank reference",
+      "notifiedAt": "Notified on",
+      "notify": "Notify bank",
+      "nameRequired": "Bank name is required."
+    },
+    "done": "Saved"
+  },
+  "requirements": {
+    "title": "Document requirements",
+    "add": "Add requirement",
+    "name": "Name",
+    "required": "Required",
+    "active": "Active",
+    "save": "Save",
+    "saved": "Requirement saved"
   }
 }
