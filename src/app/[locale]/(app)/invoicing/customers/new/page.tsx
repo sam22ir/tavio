@@ -3,22 +3,21 @@ import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { routing } from '@/i18n/routing';
-import { partnerOptionsFor, taxOptionsFor } from '@/modules/invoicing/queries';
-import { InvoiceNewForm } from '@/modules/invoicing/ui/views';
+import { today } from '@/modules/invoicing/service/create';
+import { draftLookupsFor } from '@/modules/invoicing/queries';
+import { DraftForm } from '@/modules/invoicing/ui/draft-form';
+import { emptyDraftForm } from '@/modules/invoicing/ui/draft-form-defaults';
 
-export default async function NewCustomerInvoice({
-  params, searchParams,
-}: { params: Promise<{ locale: string }>; searchParams: Promise<{ error?: string }> }) {
+export default async function NewCustomerInvoice({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const { error } = await searchParams;
-  const [partners, taxes] = await withPageCtx((ctx) => Promise.all([partnerOptionsFor(ctx, 'customers'), taxOptionsFor(ctx, 'customers')]));
+  const lookups = await withPageCtx((ctx) => draftLookupsFor(ctx, 'customers'));
   const t = await getTranslations('invoicing');
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('list.new')}</h1>
-      <InvoiceNewForm kind="customers" locale={locale} t={(k) => t(k as never)} partners={partners} taxes={taxes} error={error} />
+      <DraftForm kind="customers" locale={locale} lookups={lookups} initial={emptyDraftForm(today())} />
     </main>
   );
 }

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { formatDzd, type Cents } from '@/core/money';
 import type { Invoice, InvoiceLine, InvoicePayment } from '../schema';
-import { createInvoiceForm, cancelInvoiceForm, postInvoiceForm, refundInvoiceForm, registerPaymentForm } from '../actions';
+import { cancelInvoiceForm, postInvoiceForm, refundInvoiceForm, registerPaymentForm } from '../actions';
 import { PAYMENT_METHODS } from '../service/invoices';
 
 type T = (key: string) => string;
@@ -55,43 +55,6 @@ export function InvoiceList({ rows, kind, locale, t, newHref }: { rows: ListRow[
   );
 }
 
-export function InvoiceNewForm({
-  kind, locale, t, partners, taxes, error,
-}: {
-  kind: Kind; locale: string; t: T; error?: string;
-  partners: { id: string; name: string }[];
-  taxes: { id: string; name: string }[];
-}) {
-  return (
-    <form action={createInvoiceForm} className="flex max-w-xl flex-col gap-4">
-      <input type="hidden" name="type" value={kind === 'customers' ? 'out_invoice' : 'in_invoice'} />
-      {error ? <p role="alert" className="text-sm text-destructive">{t(`error.${error}`)}</p> : null}
-      <label className="flex flex-col gap-1 text-sm">{t('form.partner')}
-        <select name="partnerId" required className={inputCls}>
-          {partners.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
-      </label>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1 text-sm">{t('form.date')}<input type="date" name="date" className={inputCls} /></label>
-        <label className="flex flex-col gap-1 text-sm">{t('form.dueDate')}<input type="date" name="dueDate" className={inputCls} /></label>
-      </div>
-      <label className="flex flex-col gap-1 text-sm">{t('form.description')}<input name="description" required maxLength={300} className={inputCls} /></label>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1 text-sm">{t('form.quantity')}<input name="quantity" defaultValue="1" inputMode="decimal" required className={inputCls} /></label>
-        <label className="flex flex-col gap-1 text-sm">{t('form.unitPrice')}<input name="unitPrice" inputMode="decimal" required className={inputCls} /></label>
-      </div>
-      <label className="flex flex-col gap-1 text-sm">{t('form.tax')}
-        <select name="taxId" className={inputCls} defaultValue="">
-          <option value="">{t('form.noTax')}</option>
-          {taxes.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
-        </select>
-      </label>
-      <input type="hidden" name="locale" value={locale} />
-      <button className={btnCls} type="submit">{t('form.submit')}</button>
-    </form>
-  );
-}
-
 export function InvoiceDetail({
   invoice, lines, payments, kind, locale, t, error, partnerName, sellerLabel,
 }: {
@@ -114,6 +77,7 @@ export function InvoiceDetail({
           <p className="text-sm">{t(`state.${invoice.state}`)} · {t(`payment.${invoice.paymentState}`)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {isDraft && isInvoice ? <Link href={`/${locale}/invoicing/${kind}/${invoice.id}/edit`} className={ghostCls}>{t('detail.edit')}</Link> : null}
           {isDraft ? (
             <>
               <form action={postInvoiceForm}><input type="hidden" name="id" value={invoice.id} /><input type="hidden" name="kind" value={kind} /><button className={btnCls}>{t('detail.post')}</button></form>

@@ -1,13 +1,25 @@
 {
-  "module": { "name": "Invoicing" },
-  "menu": { "customers": "Customer invoices", "vendors": "Vendor bills" },
+  "module": {
+    "name": "Invoicing"
+  },
+  "menu": {
+    "customers": "Customer invoices",
+    "vendors": "Vendor bills"
+  },
   "list": {
     "customers": "Customer invoices",
     "vendors": "Vendor bills",
     "new": "New invoice",
     "newVendor": "New vendor bill",
     "empty": "No invoices yet.",
-    "col": { "number": "Number", "date": "Date", "partner": "Partner", "total": "Total", "state": "Status", "payment": "Payment" }
+    "col": {
+      "number": "Number",
+      "date": "Date",
+      "partner": "Partner",
+      "total": "Total",
+      "state": "Status",
+      "payment": "Payment"
+    }
   },
   "form": {
     "type": "Type",
@@ -27,9 +39,24 @@
     "in_invoice": "Vendor bill",
     "in_refund": "Vendor credit note"
   },
-  "state": { "draft": "Draft", "posted": "Posted", "cancelled": "Cancelled" },
-  "payment": { "not_paid": "Not paid", "partial": "Partially paid", "paid": "Paid" },
-  "method": { "cash": "Cash", "ccp": "CCP", "transfer": "Transfer", "cib": "CIB", "edahabia": "Edahabia", "cheque": "Cheque" },
+  "state": {
+    "draft": "Draft",
+    "posted": "Posted",
+    "cancelled": "Cancelled"
+  },
+  "payment": {
+    "not_paid": "Not paid",
+    "partial": "Partially paid",
+    "paid": "Paid"
+  },
+  "method": {
+    "cash": "Cash",
+    "ccp": "CCP",
+    "transfer": "Transfer",
+    "cib": "CIB",
+    "edahabia": "Edahabia",
+    "cheque": "Cheque"
+  },
   "detail": {
     "title": "Document",
     "post": "Post",
@@ -52,7 +79,8 @@
       "submit": "Register"
     },
     "payments": "Payments",
-    "noPayments": "No payments."
+    "noPayments": "No payments.",
+    "edit": "Edit"
   },
   "error": {
     "VALIDATION": "Invalid data.",
@@ -82,5 +110,17 @@
     "stampDuty": "Stamp duty",
     "totalInWords": "Total in figures",
     "print": "Print"
+  },
+  "editor": {
+    "line": "Line {n}",
+    "product": "Product",
+    "noProduct": "Custom line",
+    "addLine": "Add line",
+    "removeLine": "Remove",
+    "untaxed": "Untaxed",
+    "tax": "VAT",
+    "total": "Total",
+    "save": "Save draft",
+    "editTitle": "Edit draft"
   }
 }
