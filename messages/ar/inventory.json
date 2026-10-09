@@ -7,7 +7,8 @@
     "moves": "حركات المخزون",
     "adjustments": "الجرد",
     "low_stock": "مخزون منخفض",
-    "warehouses": "المستودعات"
+    "warehouses": "المستودعات",
+    "deliveries": "التسليمات"
   },
   "fields": {
     "reference": "المرجع",
@@ -27,13 +28,25 @@
     "location": "الموقع",
     "counted": "الكمية المحصاة",
     "on_hand": "المتوفر",
-    "to_order": "المطلوب طلبه"
+    "to_order": "المطلوب طلبه",
+    "number": "الرقم",
+    "lines": "الأسطر",
+    "scheduled_date": "موعد التسليم",
+    "delivered_at": "سُلّمت في",
+    "reserved": "محجوز",
+    "available": "متاح"
   },
   "options": {
     "state": {
       "draft": "مسودة",
       "done": "مؤكد",
       "cancelled": "ملغى"
+    },
+    "delivery_state": {
+      "draft": "مسودة",
+      "ready": "جاهزة",
+      "done": "مسلَّمة",
+      "cancelled": "ملغاة"
     }
   },
   "common": {
@@ -81,5 +94,10 @@
     "invalid_quantity": "كمية غير صالحة (موجبة، بثلاث خانات عشرية كحد أقصى).",
     "move_not_draft": "يمكن تأكيد الحركات المسودة فقط.",
     "move_done": "لا يمكن إلغاء حركة مؤكدة."
+  },
+  "deliveries": {
+    "title": "التسليمات",
+    "validate": "تأكيد التسليم",
+    "cancel": "إلغاء"
   }
 }

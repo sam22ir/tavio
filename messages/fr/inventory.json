@@ -7,7 +7,8 @@
     "moves": "Mouvements de stock",
     "adjustments": "Inventaire",
     "low_stock": "Stock bas",
-    "warehouses": "Entrepôts"
+    "warehouses": "Entrepôts",
+    "deliveries": "Livraisons"
   },
   "fields": {
     "reference": "Référence",
@@ -27,13 +28,25 @@
     "location": "Emplacement",
     "counted": "Quantité comptée",
     "on_hand": "En stock",
-    "to_order": "À commander"
+    "to_order": "À commander",
+    "number": "Numéro",
+    "lines": "Lignes",
+    "scheduled_date": "Prévue le",
+    "delivered_at": "Livrée le",
+    "reserved": "Réservé",
+    "available": "Disponible"
   },
   "options": {
     "state": {
       "draft": "Brouillon",
       "done": "Validé",
       "cancelled": "Annulé"
+    },
+    "delivery_state": {
+      "draft": "Brouillon",
+      "ready": "Prête",
+      "done": "Livrée",
+      "cancelled": "Annulée"
     }
   },
   "common": {
@@ -81,5 +94,10 @@
     "invalid_quantity": "Quantité invalide (positive, 3 décimales maximum).",
     "move_not_draft": "Seuls les mouvements en brouillon peuvent être validés.",
     "move_done": "Un mouvement validé ne peut pas être annulé."
+  },
+  "deliveries": {
+    "title": "Livraisons",
+    "validate": "Valider la livraison",
+    "cancel": "Annuler"
   }
 }

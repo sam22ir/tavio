@@ -7,7 +7,8 @@
     "moves": "Stock moves",
     "adjustments": "Adjustments",
     "low_stock": "Low stock",
-    "warehouses": "Warehouses"
+    "warehouses": "Warehouses",
+    "deliveries": "Deliveries"
   },
   "fields": {
     "reference": "Reference",
@@ -27,12 +28,24 @@
     "location": "Location",
     "counted": "Counted quantity",
     "on_hand": "On hand",
-    "to_order": "To order"
+    "to_order": "To order",
+    "number": "Number",
+    "lines": "Lines",
+    "scheduled_date": "Scheduled on",
+    "delivered_at": "Delivered on",
+    "reserved": "Reserved",
+    "available": "Available"
   },
   "options": {
     "state": {
       "draft": "Draft",
       "done": "Done",
+      "cancelled": "Cancelled"
+    },
+    "delivery_state": {
+      "draft": "Draft",
+      "ready": "Ready",
+      "done": "Delivered",
       "cancelled": "Cancelled"
     }
   },
@@ -81,5 +94,10 @@
     "invalid_quantity": "Invalid quantity (positive, up to 3 decimals).",
     "move_not_draft": "Only draft moves can be validated.",
     "move_done": "A validated move cannot be cancelled."
+  },
+  "deliveries": {
+    "title": "Deliveries",
+    "validate": "Validate delivery",
+    "cancel": "Cancel"
   }
 }

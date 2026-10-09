@@ -10,6 +10,7 @@ import { cancelMove, createMove, validateMove } from './service/moves';
 import { createAdjustment } from './service/adjustments';
 import { createReorderRule } from './service/stock';
 import { createWarehouse } from './service/warehouses';
+import { cancelDelivery, validateDelivery } from './service/deliveries';
 
 const MODULE = 'inventory';
 
@@ -61,6 +62,14 @@ const cancelMoveAction = defineAction(
 const adjustmentAction = defineAction(
   { perm: 'inventory.adjustment.write', schema: adjustmentInput, module: MODULE },
   createAdjustment,
+);
+const deliveryValidateAction = defineAction(
+  { perm: 'inventory.delivery.post', schema: idInput, module: MODULE },
+  (ctx, { id }) => validateDelivery(ctx, id),
+);
+const deliveryCancelAction = defineAction(
+  { perm: 'inventory.delivery.cancel', schema: idInput, module: MODULE },
+  (ctx, { id }) => cancelDelivery(ctx, id),
 );
 const reorderAction = defineAction(
   { perm: 'inventory.reorder.write', schema: reorderInput, module: MODULE },
@@ -117,4 +126,20 @@ export async function cancelMoveForm(formData: FormData): Promise<void> {
   const id = String(formData.get('id') ?? '');
   const r = await cancelMoveAction({ id });
   redirect(`/${locale}/inventory/moves/${encodeURIComponent(id)}${failureQuery(r)}`);
+}
+
+/** Validate button on the deliveries list. */
+export async function validateDeliveryForm(formData: FormData): Promise<void> {
+  const locale = await getLocale();
+  const id = String(formData.get('id') ?? '');
+  const r = await deliveryValidateAction({ id });
+  redirect(`/${locale}/inventory/deliveries${failureQuery(r)}`);
+}
+
+/** Cancel button on the deliveries list. */
+export async function cancelDeliveryForm(formData: FormData): Promise<void> {
+  const locale = await getLocale();
+  const id = String(formData.get('id') ?? '');
+  const r = await deliveryCancelAction({ id });
+  redirect(`/${locale}/inventory/deliveries${failureQuery(r)}`);
 }

@@ -1,11 +1,11 @@
 import { defineModule } from '@/core/modules/define';
-import { reorderRuleEntity, stockMoveEntity, warehouseEntity } from './entities';
+import { deliveryEntity, reorderRuleEntity, stockMoveEntity, warehouseEntity } from './entities';
 
 export const manifest = defineModule({
   id: 'inventory',
   name: 'inventory.module.name',
   version: '1.0.0',
-  depends: ['products'],
+  depends: ['products', 'credit_sales'],
   permissions: [
     'inventory.warehouse.read',
     'inventory.warehouse.write',
@@ -16,8 +16,11 @@ export const manifest = defineModule({
     'inventory.adjustment.write',
     'inventory.reorder.read',
     'inventory.reorder.write',
+    'inventory.delivery.read',
+    'inventory.delivery.post',
+    'inventory.delivery.cancel',
   ],
-  entities: [stockMoveEntity, warehouseEntity, reorderRuleEntity],
+  entities: [stockMoveEntity, warehouseEntity, reorderRuleEntity, deliveryEntity],
   app: { pillar: 'operations', icon: 'Warehouse', label: 'shell.apps.inventory', order: 4 },
   menus: [
     { label: 'inventory.menu.stock', href: '/inventory', perm: 'inventory.move.read', order: 52 },
