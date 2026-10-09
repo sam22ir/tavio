@@ -52,220 +52,279 @@
   },
   "home": {
     "meta": {
-      "title": "Revora: credit sales, CRM and invoicing for Algeria",
-      "description": "Sell on credit, track your customers and invoice with VAT in dinars, in one app in French and Arabic."
+      "title": "Revora: Growth Is a System",
+      "description": "Revora connects customer acquisition, sales, operations, data and technology to find where your growth is being lost, and fix it."
     },
     "hero": {
-      "eyebrow": "New · Built for Algeria",
-      "title": "Your credit sales, *finally* under control.",
-      "subtitle": "Instalments, WhatsApp reminders, VAT invoices and stock: Revora brings your whole shop into one app, in French and Arabic.",
-      "primary": "Start for free",
-      "secondary": "See the demo"
-    },
-    "pilot": {
-      "text": "Pilot programme: we are supporting our first shops in Sétif, Algiers and Oran.",
-      "cta": "Join the pilot"
-    },
-    "badges": {
-      "invoice": "Invoice"
-    },
-    "before": {
-      "eyebrow": "The daily grind",
-      "title": "From the notebook *to one dashboard*.",
-      "body": "What most shops selling on credit deal with today, and what Revora changes.",
-      "beforeLabel": "Before",
-      "afterLabel": "With Revora",
-      "before": [
-        "Instalments tracked in a notebook",
-        "Invoices typed by hand, totals often off",
-        "Customers and stock scattered across paper and phones"
-      ],
-      "after": [
-        "Every instalment tracked and chased",
-        "Invoices and VAT calculated automatically",
-        "One customer file, one stock"
+      "pill": "Business growth solutions",
+      "titleLine1": "GROWTH",
+      "titleLine2": "IS A SYSTEM.",
+      "subtitle": "Revora connects acquisition, sales, operations, data and technology to find where your growth is being lost, and fix it.",
+      "primary": "Request a free audit",
+      "secondary": "See the platform",
+      "chips": [
+        "📍 Algiers",
+        "Marketing · Sales · Back-office",
+        "Platform + support"
       ]
     },
-    "features": [
-      {
-        "eyebrow": "Credit sales",
-        "title": "Instalment plans, *without* the missed payments.",
-        "body": "Set up a plan in a few clicks, follow every instalment and see at a glance what is still due.",
-        "screen": "contract-detail",
-        "items": [
-          {
-            "title": "Instalment plans",
-            "body": "Deposit, number of instalments and start date: the schedule builds itself."
-          },
-          {
-            "title": "Schedule per customer",
-            "body": "Every payment is linked to the contract and the customer."
-          },
-          {
-            "title": "Balance due",
-            "body": "The amount owed is recalculated with each payment."
-          }
-        ]
-      },
-      {
-        "eyebrow": "Collections",
-        "title": "Overdue payments, *chased* on time.",
-        "body": "Revora spots late instalments and prepares the WhatsApp reminder to send to your customer.",
-        "screen": "overdue",
-        "items": [
-          {
-            "title": "Overdue list",
-            "body": "Late files sorted by amount and age."
-          },
-          {
-            "title": "WhatsApp reminder",
-            "body": "A ready-to-send message for each customer."
-          },
-          {
-            "title": "Reminder history",
-            "body": "Every contact stays attached to the customer file."
-          }
-        ]
-      },
-      {
-        "eyebrow": "Invoicing",
-        "title": "Compliant invoices, *ready* to print.",
-        "body": "VAT, NIF and RC built in, so invoices are calculated correctly from sale to accounting.",
-        "screen": "invoice",
-        "items": [
-          {
-            "title": "Algerian VAT",
-            "body": "Rates and mentions calculated on every line."
-          },
-          {
-            "title": "Continuous numbering",
-            "body": "A sequence without gaps, as your obligations require."
-          },
-          {
-            "title": "Accounting entries",
-            "body": "Each invoice feeds the journal under the SCF chart."
-          }
-        ]
-      }
-    ],
-    "modules": {
-      "eyebrow": "Modules",
-      "title": "One app, *20 modules*.",
-      "body": "Turn on what your shop needs. Modules share the same customers, products and invoices.",
+    "contrast": {
+      "eyebrow": "Before and after",
+      "title": "Without a system, *growth* leaks away.",
+      "withoutLabel": "WITHOUT REVORA",
+      "withLabel": "WITH REVORA",
+      "withoutTitle": "Slow, overloaded, behind",
+      "withoutItems": [
+        "Leads lost for lack of follow-up",
+        "Sales never chased",
+        "Invoices and stock scattered",
+        "No reliable numbers to decide with"
+      ],
+      "withTitle": "Fast, visible, ahead",
+      "withItems": [
+        "Every lead followed through to the sale",
+        "A clear sales pipeline",
+        "Sales, stock and accounting connected",
+        "Live dashboards"
+      ]
+    },
+    "pillars": {
+      "eyebrow": "Our 5 pillars",
+      "title": "Five pillars, *one system*.",
+      "body": "Each pillar covers a stage of your growth, served by modules of the platform.",
       "items": [
         {
-          "slug": "credit-sales",
-          "title": "Credit sales",
-          "body": "Instalment plans, due dates and payment reminders."
-        },
-        {
           "slug": "crm",
-          "title": "CRM",
-          "body": "Sales pipeline, contact history and prospect follow-up."
+          "title": "Acquisition",
+          "body": "Attract customers and capture every lead.",
+          "modules": [
+            "CRM",
+            "Website and shop",
+            "WhatsApp campaigns",
+            "Lead capture"
+          ]
         },
         {
           "slug": "sales-invoicing",
-          "title": "Sales and invoicing",
-          "body": "Quotes, orders and VAT-compliant invoices."
+          "title": "Sales",
+          "body": "Turn leads into sales, and follow them through.",
+          "modules": [
+            "Quotes and orders",
+            "Credit sales",
+            "Point of sale (POS)",
+            "Follow-ups"
+          ]
         },
         {
           "slug": "inventory-purchases",
-          "title": "Stock and purchases",
-          "body": "Warehouses, supplier receipts and stock-out alerts."
+          "title": "Operations",
+          "body": "Run invoicing, stock and the team without friction.",
+          "modules": [
+            "Invoicing",
+            "Stock and purchases",
+            "SCF accounting",
+            "Human resources",
+            "Projects and support"
+          ]
+        },
+        {
+          "slug": "ai",
+          "title": "Data",
+          "body": "Read your numbers and decide on facts.",
+          "modules": [
+            "Dashboards",
+            "KPIs",
+            "AI assistant",
+            "Reports"
+          ]
+        },
+        {
+          "slug": "platform",
+          "title": "Technology",
+          "body": "Connect your tools and adapt the platform to your business.",
+          "modules": [
+            "API",
+            "Webhooks",
+            "Automation",
+            "Custom fields",
+            "On-premise"
+          ]
+        }
+      ]
+    },
+    "method": {
+      "eyebrow": "Our method",
+      "title": "Four steps, *from diagnosis to growth*.",
+      "steps": [
+        {
+          "title": "Understand",
+          "body": "We study how your business works, from the first contact to the cash collected."
+        },
+        {
+          "title": "Diagnose",
+          "body": "We find where growth is lost: leads not followed, sales stuck, stock poorly managed."
+        },
+        {
+          "title": "Build",
+          "body": "We set up the system: the platform, its configuration and your team’s processes."
+        },
+        {
+          "title": "Grow",
+          "body": "We measure results, correct and improve, month after month."
+        }
+      ]
+    },
+    "platform": {
+      "eyebrow": "The platform",
+      "title": "One platform, *your whole business*.",
+      "body": "Revora brings your customers, sales, stock and numbers together in one app, in French and Arabic.",
+      "rows": [
+        {
+          "eyebrow": "Steering",
+          "title": "A dashboard, *all your numbers*.",
+          "body": "Sales, payments, stock and due dates, at a glance.",
+          "screen": "dashboard",
+          "items": [
+            {
+              "title": "Live indicators",
+              "body": "Revenue, payments and receivables, updated continuously."
+            },
+            {
+              "title": "Useful alerts",
+              "body": "Stock-outs and overdue items flagged before they cost you."
+            },
+            {
+              "title": "Exportable reports",
+              "body": "Statements ready to share with your accountant."
+            }
+          ]
+        },
+        {
+          "eyebrow": "Sales",
+          "title": "A pipeline *you can follow*.",
+          "body": "Every lead has a stage, an owner and a next action.",
+          "screen": "crm-kanban",
+          "items": [
+            {
+              "title": "Visual pipeline",
+              "body": "Drag each lead from one stage to the next."
+            },
+            {
+              "title": "Scheduled follow-ups",
+              "body": "No lead forgotten, no sale left sleeping."
+            },
+            {
+              "title": "Shared history",
+              "body": "Conversations stay attached to the customer’s record."
+            }
+          ]
+        }
+      ]
+    },
+    "orbit": {
+      "eyebrow": "Modules",
+      "title": "20 modules, *one system*.",
+      "body": "Turn on what your business needs. Modules share the same customers, products and invoices.",
+      "items": [
+        {
+          "slug": "credit-sales",
+          "title": "Credit sales"
+        },
+        {
+          "slug": "crm",
+          "title": "CRM"
+        },
+        {
+          "slug": "sales-invoicing",
+          "title": "Sales and invoicing"
+        },
+        {
+          "slug": "inventory-purchases",
+          "title": "Stock and purchases"
         },
         {
           "slug": "accounting",
-          "title": "Accounting",
-          "body": "Journals, entries and reports based on the SCF chart."
+          "title": "Accounting"
         },
         {
           "slug": "pos",
-          "title": "Point of sale (POS)",
-          "body": "Fast counter checkout, cash sessions and receipts."
+          "title": "Point of sale (POS)"
         },
         {
           "slug": "hr",
-          "title": "Human resources",
-          "body": "Staff, leave and attendance for your team."
+          "title": "Human resources"
+        },
+        {
+          "slug": "projects-helpdesk",
+          "title": "Projects and support"
         },
         {
           "slug": "website-shop",
-          "title": "Website and shop",
-          "body": "An online storefront linked to your stock and orders."
+          "title": "Website and shop"
+        },
+        {
+          "slug": "ai",
+          "title": "AI assistant"
+        },
+        {
+          "slug": "platform",
+          "title": "Platform"
         }
       ]
     },
-    "algeria": {
-      "eyebrow": "For Algeria",
-      "title": "Built for *Algeria*.",
-      "body": "The realities of trade in Algeria are built in from day one.",
+    "builders": {
+      "eyebrow": "Who we are",
+      "title": "Built by *practitioners*.",
+      "body": "Revora was born from real market experience, not theory. Our team has worked in marketing, sales and back office, and partners with businesses that want to grow over the long term, across industries.",
+      "points": [
+        {
+          "title": "Marketing",
+          "body": "Acquisition and campaigns, from the first contact to a qualified lead."
+        },
+        {
+          "title": "Sales",
+          "body": "Pipeline, negotiation and customer follow-up, every day."
+        },
+        {
+          "title": "Back office",
+          "body": "Invoicing, stock, accounting and processes that hold up over time."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Our services",
+      "title": "Beyond the software, *we support you*.",
+      "body": "An audit to find the growth being lost, then setup, training and follow-up.",
       "items": [
         {
-          "title": "Algerian dinar (DZD)",
-          "body": "Prices, payments and reports in dinars, no conversion."
+          "title": "Audit",
+          "body": "We analyse how your business works and identify where growth is being lost."
         },
         {
-          "title": "Algerian VAT",
-          "body": "VAT rates and mentions on your invoices and sales."
+          "title": "Setup",
+          "body": "Platform configuration, data import and set-up of your modules."
         },
         {
-          "title": "SCF chart of accounts",
-          "body": "An accounting structure that follows the Financial Accounting System (SCF)."
+          "title": "Training",
+          "body": "Your team learns to use the system every day, in French or Arabic."
         },
         {
-          "title": "NIF and RC",
-          "body": "NIF and trade register fields on invoices, to be checked with your accountant."
-        },
-        {
-          "title": "CCP, transfer and cash",
-          "body": "Record payments by CCP, bank transfer or cash."
-        },
-        {
-          "title": "Works on simple phones",
-          "body": "A light interface for modest devices and weak connections."
+          "title": "Ongoing support",
+          "body": "Continuous support to improve results and evolve the system with your growth."
         }
-      ]
-    },
-    "dark": {
-      "eyebrow": "AI and hosting",
-      "title": "AI on your side, *your data* in Algeria.",
-      "body": "Revora stays simple and safe: AI is optional, and so is where your data lives.",
-      "ai": {
-        "title": "Optional AI assistant",
-        "body": "It can draft your reminders, summarise your sales and answer questions about your products. It is optional and works with the AI provider you choose."
-      },
-      "onPremise": {
-        "title": "On-premise, in Algeria",
-        "body": "Run Revora on your own servers: your data stays in Algeria, with Docker installation, backups and support."
-      }
-    },
-    "how": {
-      "eyebrow": "Getting started",
-      "title": "Get started in *three steps*.",
-      "items": [
-        {
-          "title": "Create your workspace",
-          "body": "Register your shop and choose your modules."
-        },
-        {
-          "title": "Import your data",
-          "body": "Add products, customers and stock, then invite your team."
-        },
-        {
-          "title": "Sell and collect",
-          "body": "Sell on credit or at the counter, invoice and track payments."
-        }
-      ]
+      ],
+      "cta": "Discover our services"
     },
     "pricing": {
-      "eyebrow": "Pricing",
-      "title": "Simple prices, *in dinars*.",
+      "eyebrow": "Indicative prices",
+      "title": "Simple pricing, *in dinars*.",
       "body": "One price per user per month. Prices are indicative and will be confirmed before launch.",
-      "cta": "See all prices",
+      "cta": "See all pricing",
+      "planCta": "Try for free",
       "free": "Free",
       "perUser": "/ user / month",
       "users": "Up to {count} users",
-      "popular": "Most popular",
+      "popular": "Most chosen",
       "features": {
         "free": [
           "Core modules",
@@ -274,12 +333,12 @@
         ],
         "pro": [
           "Sales, invoicing and CRM",
-          "Stock, purchases and point of sale",
+          "Stock, purchases and POS",
           "Automation"
         ],
         "business": [
           "All modules",
-          "Accounting and HR",
+          "Accounting and human resources",
           "Projects, support and API"
         ]
       },
@@ -291,34 +350,34 @@
     },
     "faq": {
       "eyebrow": "FAQ",
-      "title": "Frequently asked *questions*.",
+      "title": "Frequently *asked*.",
       "items": [
         {
-          "question": "Is my data safe?",
-          "answer": "Your data is hosted in Europe, or on your own servers with the on-premise option. You remain the owner of your data."
+          "question": "What exactly does Revora do?",
+          "answer": "Revora helps businesses build a growth system. It connects acquisition, sales, operations, data and technology, through a platform and hands-on support."
         },
         {
-          "question": "Can I use Revora in Arabic?",
-          "answer": "Yes. The interface is available in Arabic, French and English, with a right-to-left layout for Arabic."
+          "question": "What is the difference between the platform and the services?",
+          "answer": "The platform is the software, with its modules, that you use every day. The services are the support: audit, setup, training and follow-up. You can choose one without the other."
         },
         {
-          "question": "How many users can I add?",
-          "answer": "It depends on your plan, from 1 to 25 users."
+          "question": "Which businesses do you work with?",
+          "answer": "Algerian businesses of all sizes and industries, whether trade, services or manufacturing."
         },
         {
-          "question": "Are the invoices compliant in Algeria?",
-          "answer": "Revora applies Algerian VAT and provides NIF and RC fields. Have your accountant validate the invoice template."
+          "question": "Is the platform available in Arabic and French?",
+          "answer": "Yes. Revora is available in French, Arabic and English, with a right-to-left layout for Arabic."
         },
         {
-          "question": "Can I install Revora on my own servers?",
-          "answer": "Yes. The on-premise offer keeps your data in Algeria, with Docker installation, backups and support."
+          "question": "Where is my data hosted?",
+          "answer": "Your data can be hosted in Algeria, or on your own servers with the on-premise offer. You remain the owner of your data."
         }
       ]
     },
     "cta": {
-      "title": "Ready to leave *the notebooks* behind?",
-      "body": "Create your workspace in minutes and start on the free plan.",
-      "primary": "Start for free"
+      "title": "Where are you losing growth? *Let’s do the audit.*",
+      "body": "A free diagnosis to identify what holds your growth back, and the first actions to take.",
+      "primary": "Request a free audit"
     }
   }
 }
