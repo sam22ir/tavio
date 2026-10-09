@@ -1,1 +1,29 @@
-{}
+{
+  "palette": {
+    "button": "Search",
+    "title": "Smart search",
+    "hint": "Describe what you are looking for, for example \"late contracts\".",
+    "placeholder": "e.g. customers who owe money",
+    "searching": "Searching…",
+    "go": "Open the matching page",
+    "empty": "No results.",
+    "kind": {
+      "contact": "Contact",
+      "product": "Product",
+      "contract": "Contract"
+    }
+  },
+  "draft": {
+    "button": "AI draft",
+    "title": "Payment reminder",
+    "description": "Edit the message before sending it.",
+    "tone": { "label": "Tone", "polite": "Polite", "firm": "Firm" },
+    "language": { "label": "Language", "fr": "French", "ar": "Arabic", "darija": "Darija" },
+    "generate": "Generate",
+    "generating": "Generating…",
+    "text_label": "Message",
+    "source": { "ai": "Written by AI", "template": "Standard template" },
+    "open_whatsapp": "Open WhatsApp",
+    "no_phone": "No valid phone number for WhatsApp."
+  }
+}

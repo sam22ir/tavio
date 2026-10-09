@@ -1,1 +1,29 @@
-{}
+{
+  "palette": {
+    "button": "Rechercher",
+    "title": "Recherche intelligente",
+    "hint": "Décrivez ce que vous cherchez, par exemple « contrats en retard ».",
+    "placeholder": "Ex. clients qui doivent de l'argent",
+    "searching": "Recherche…",
+    "go": "Ouvrir la page correspondante",
+    "empty": "Aucun résultat.",
+    "kind": {
+      "contact": "Contact",
+      "product": "Produit",
+      "contract": "Contrat"
+    }
+  },
+  "draft": {
+    "button": "Brouillon IA",
+    "title": "Rappel de paiement",
+    "description": "Modifiez le message avant de l'envoyer.",
+    "tone": { "label": "Ton", "polite": "Poli", "firm": "Ferme" },
+    "language": { "label": "Langue", "fr": "Français", "ar": "العربية", "darija": "Darija" },
+    "generate": "Générer",
+    "generating": "Génération…",
+    "text_label": "Message",
+    "source": { "ai": "Rédigé par l'IA", "template": "Modèle standard" },
+    "open_whatsapp": "Ouvrir WhatsApp",
+    "no_phone": "Aucun numéro de téléphone valide pour WhatsApp."
+  }
+}
