@@ -1,1 +1,75 @@
-{}
+{
+  "settings_link": "Team and invitations",
+  "title": "Team",
+  "subtitle": "Manage company members and invite new people.",
+  "members": {
+    "title": "Members",
+    "empty": "No active members.",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "actions": "Actions",
+    "remove": "Remove",
+    "confirm_remove": "Remove this member from the company?",
+    "you": "you"
+  },
+  "invitations": {
+    "title": "Pending invitations",
+    "empty": "No pending invitations.",
+    "expires": "expires {date}",
+    "revoke": "Revoke"
+  },
+  "invite": {
+    "title": "Invite a member",
+    "email": "Email",
+    "role": "Role",
+    "submit": "Create invitation",
+    "submitting": "Creating…",
+    "created": "Invitation created. The link is shown only once.",
+    "email_sent": "An invitation email was sent.",
+    "email_disabled": "Email sending is not configured: share the link yourself.",
+    "link": "Invitation link",
+    "copy": "Copy",
+    "copied": "Copied",
+    "whatsapp": "Share on WhatsApp",
+    "whatsapp_message": "Join our team on Tavio:"
+  },
+  "roles": {
+    "owner": "Owner",
+    "admin": "Admin",
+    "manager": "Manager",
+    "staff": "Staff"
+  },
+  "accept": {
+    "submit": "Accept invitation",
+    "submitting": "Accepting…"
+  },
+  "invite_page": {
+    "not_found": "This invitation could not be found.",
+    "state_expired": "This invitation has expired.",
+    "state_revoked": "This invitation was revoked.",
+    "state_accepted": "This invitation has already been accepted.",
+    "details": "You are invited to join {company} as {role}.",
+    "signed_out": "Log in or create an account with the invited email address to accept.",
+    "signup": "Sign up",
+    "login": "Log in",
+    "signed_in_as": "Signed in as {email}."
+  },
+  "errors": {
+    "generic": "Something went wrong. Try again.",
+    "validation": "The information entered is not valid.",
+    "unauthenticated": "Log in to continue.",
+    "forbidden": "You do not have permission to do this.",
+    "not_found": "Item not found.",
+    "conflict": "This action conflicts with the current state.",
+    "state": "This action is no longer possible.",
+    "internal": "An internal error occurred.",
+    "already_member": "This person is already a member of the company.",
+    "already_invited": "An invitation is already pending for this address.",
+    "last_owner": "At least one owner must remain.",
+    "wrong_email": "This invitation was sent to another email address.",
+    "accepted": "This invitation has already been accepted.",
+    "expired": "This invitation has expired.",
+    "revoked": "This invitation was revoked."
+  }
+}

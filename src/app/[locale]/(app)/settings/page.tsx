@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import Link from 'next/link';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -52,6 +53,7 @@ export default async function SettingsPage({
   const shell = await loadShell(locale as Locale);
   const t = await getTranslations('settings');
   const tc = await getTranslations('settings.company');
+  const tt = await getTranslations('team');
 
   const rows = await withTenant(shell.tenant, async (ctx) =>
     ctx.tx.select().from(companies).where(eq(companies.id, ctx.companyId)).limit(1),
@@ -61,6 +63,9 @@ export default async function SettingsPage({
   return (
     <section className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">{t('title')}</h1>
+      <Link href={`/${locale}/settings/team`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+        {tt('settings_link')}
+      </Link>
       <div className="rounded-lg border p-4">
         <h2 className="mb-4 font-medium">{tc('title')}</h2>
         {company ? (
