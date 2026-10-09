@@ -1,17 +1,16 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { NAV_LINKS, localeHref } from '../content/nav';
-import { CtaLink } from './CtaLink';
 import { RevoraLogo } from './brand/RevoraLogo';
 import { LocaleSwitcher } from './LocaleSwitcher';
-import { MobileMenu } from './MobileMenu';
+import { SessionCtas, SessionMobileMenu } from './SessionCtas';
 
 /**
  * Floating header: a white rounded bar that sits on the cream background, detached from the top edge.
  * One line of links from the xl breakpoint; below it, the links move into the Sheet menu.
- * Signed-in visitors see "Open app" instead of log-in and sign-up.
+ * Prerendered: the session check ("Open app" vs log-in and sign-up) runs client-side in SessionCtas.
  */
-export async function SiteHeader({ locale, signedIn }: { locale: string; signedIn: boolean }) {
+export async function SiteHeader({ locale }: { locale: string }) {
   const t = await getTranslations('site');
   const links = NAV_LINKS.map((l) => ({ label: t(`nav.${l.key}`), href: localeHref(locale, l.href) }));
   const loginHref = localeHref(locale, '/login');
@@ -35,24 +34,24 @@ export async function SiteHeader({ locale, signedIn }: { locale: string; signedI
 
         <div className="ms-auto hidden items-center gap-2 whitespace-nowrap xl:flex">
           <LocaleSwitcher />
-          {signedIn ? (
-            <CtaLink href={appHref} label={t('nav.openApp')} />
-          ) : (
-            <>
-              <CtaLink href={loginHref} label={t('nav.login')} variant="light" arrow={false} />
-              <CtaLink href={auditHref} label={t('nav.requestAudit')} />
-            </>
-          )}
+          <SessionCtas
+            loginHref={loginHref}
+            loginLabel={t('nav.login')}
+            auditHref={auditHref}
+            auditLabel={t('nav.requestAudit')}
+            appHref={appHref}
+            appLabel={t('nav.openApp')}
+          />
         </div>
 
         <div className="ms-auto xl:hidden">
-          <MobileMenu
+          <SessionMobileMenu
             links={links}
             loginHref={loginHref}
             loginLabel={t('nav.login')}
             startHref={auditHref}
             startLabel={t('nav.requestAudit')}
-            appHref={signedIn ? appHref : undefined}
+            appHref={appHref}
             appLabel={t('nav.openApp')}
             labels={{ open: t('nav.openMenu'), title: t('nav.menuTitle'), description: t('brand.tagline') }}
           />

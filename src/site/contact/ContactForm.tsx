@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
 import { FieldError, Input, Label, TextArea, TextField } from '@heroui/react';
 import { submitContact, type ContactState } from './actions';
@@ -8,10 +8,26 @@ import { CONTACT_TYPES, HONEYPOT_FIELD, type ContactType } from './schema';
 
 const initial: ContactState = { status: 'idle' };
 
-/** Contact form: server action, zod validation on the server, honeypot, success and error states. */
-export function ContactForm({ defaultType = 'other' }: { defaultType?: ContactType }) {
+function readTypeParam(search: string): ContactType {
+  const requested = new URLSearchParams(search).get('type') ?? '';
+  return (CONTACT_TYPES as readonly string[]).includes(requested) ? (requested as ContactType) : 'other';
+}
+
+/**
+ * Contact form: server action, zod validation on the server, honeypot, success and error states.
+ * `?type=audit|demo|services|other` preselects the request type; it is read after mount so the page can prerender.
+ */
+export function ContactForm() {
   const t = useTranslations('site_company.contact');
   const [state, formAction, pending] = useActionState(submitContact, initial);
+  // Preselect from the URL on the client; the prerendered HTML uses "other".
+  const fromUrl = useSyncExternalStore(
+    () => () => {},
+    () => readTypeParam(window.location.search),
+    () => 'other' as ContactType,
+  );
+  const [chosen, setChosen] = useState<ContactType | null>(null);
+  const type = chosen ?? fromUrl;
 
   if (state.status === 'sent') {
     return (
@@ -32,7 +48,8 @@ export function ContactForm({ defaultType = 'other' }: { defaultType?: ContactTy
           <span className="text-sm font-medium">{t('type.label')}</span>
           <select
             name="type"
-            defaultValue={defaultType}
+            value={type}
+            onChange={(e) => setChosen(e.target.value as ContactType)}
             className="h-12 w-full rounded-[var(--field-radius)] border border-[color:var(--field-border)] bg-[var(--field-background)] px-4 text-[color:var(--field-foreground)]"
           >
             {CONTACT_TYPES.map((value) => (
