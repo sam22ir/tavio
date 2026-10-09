@@ -5,7 +5,7 @@ import type { Ctx } from '@/core/ctx';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { webhooks, type Webhook } from '../schema';
-import { SIGNATURE_HEADER, signPayload } from './signature';
+import { SIGNATURE_HEADER, SIGNATURE_HEADER_REVORA, signPayload } from './signature';
 import { WEBHOOK_EVENTS } from '../constants';
 
 const READ = 'platform.webhook.read';
@@ -118,6 +118,7 @@ export async function deliverEvent(
     event: req.eventName,
     data: req.payload,
   });
+  const signature = signPayload(req.webhook.secret, body);
   try {
     const res = await fetchImpl(req.webhook.url, {
       method: 'POST',
@@ -125,7 +126,8 @@ export async function deliverEvent(
         'Content-Type': 'application/json',
         'X-Tavio-Event': req.eventName,
         'X-Tavio-Delivery': req.deliveryId,
-        [SIGNATURE_HEADER]: signPayload(req.webhook.secret, body),
+        [SIGNATURE_HEADER_REVORA]: signature,
+        [SIGNATURE_HEADER]: signature,
       },
       body,
       redirect: 'manual',

@@ -58,7 +58,7 @@
   },
   "hooks": {
     "title": "Webhooks",
-    "intro": "Envoie les événements signés (HMAC-SHA256, en-tête X-Tavio-Signature) vers votre serveur.",
+    "intro": "Envoie les événements signés (HMAC-SHA256, en-têtes X-Revora-Signature et X-Tavio-Signature) vers votre serveur.",
     "secret_once": "Copiez ce secret maintenant. Il sert à vérifier la signature et ne sera plus affiché.",
     "empty": "Aucun webhook.",
     "url": "URL (https)",

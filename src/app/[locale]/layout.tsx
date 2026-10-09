@@ -11,7 +11,7 @@ const inter = Inter({ variable: '--font-inter', subsets: ['latin'] });
 const notoArabic = Noto_Sans_Arabic({ variable: '--font-noto-arabic', subsets: ['arabic'] });
 
 export const metadata: Metadata = {
-  title: 'Tavio',
+  title: 'Revora',
 };
 
 export function generateStaticParams(): { locale: Locale }[] {

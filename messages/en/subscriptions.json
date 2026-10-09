@@ -12,7 +12,7 @@
   "states": { "trial": "Trial", "active": "Active", "past_due": "Payment overdue", "cancelled": "Cancelled" },
   "payment": {
     "title": "How to pay",
-    "ccp": "Pay by CCP or bank transfer to the account Tavio support gives you.",
+    "ccp": "Pay by CCP or bank transfer to the account Revora support gives you.",
     "transfer": "Payment methods: CCP, bank transfer or cash at our office.",
     "reference": "Quote your company NIF as the payment reference, then send the receipt to support."
   }

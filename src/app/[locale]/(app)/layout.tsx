@@ -41,6 +41,11 @@ export default async function AppLayout({
   return (
     <div className="flex min-h-dvh">
       <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 border-e bg-background md:block">
+        <div className="flex items-center gap-2 p-4 font-semibold">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/revora-mark-blue.svg" alt="" width={28} height={28} className="size-7" />
+          {t('appName')}
+        </div>
         <ShellNav {...navProps} />
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">

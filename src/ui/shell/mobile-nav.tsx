@@ -21,7 +21,11 @@ export function MobileNav(props: Omit<ShellNavProps, 'onNavigate'> & { appName: 
             <Menu aria-hidden="true" />
           </Button>
         </SheetTrigger>
-        <span className="font-semibold">{appName}</span>
+        <span className="flex items-center gap-2 font-semibold">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/revora-mark-blue.svg" alt="" width={28} height={28} className="size-7" />
+          {appName}
+        </span>
       </div>
       <SheetContent side="start" className="w-72 p-0">
         <SheetHeader className="sr-only">

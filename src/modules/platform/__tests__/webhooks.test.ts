@@ -50,6 +50,7 @@ describe('deliverEvent', () => {
     const body = c.init.body as string;
     expect(JSON.parse(body)).toEqual({ id: 'o1', event: 'pos.order.paid', data: req.payload });
     expect(verifySignature('s3cret', body, headers['X-Tavio-Signature'] ?? '')).toBe(true);
+    expect(verifySignature('s3cret', body, headers['X-Revora-Signature'] ?? '')).toBe(true);
   });
 
   it('reports failure on a non-2xx status', async () => {
