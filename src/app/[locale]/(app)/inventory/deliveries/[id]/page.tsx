@@ -10,7 +10,13 @@ import {
   uploadDeliveryFileForm,
   validateDeliveryForm,
 } from '@/modules/inventory/actions';
-import { CONTRACT_SOURCE_ENTITY, deliveryFileUrl, getDelivery } from '@/modules/inventory/service/deliveries';
+import {
+  CONTRACT_SOURCE_ENTITY,
+  deliveryFileUrl,
+  getDelivery,
+  partnerDisplayNames,
+  SIGNED_BY_REQUIRED,
+} from '@/modules/inventory/service/deliveries';
 import { Button } from '@/ui/primitives/button';
 
 export default async function DeliveryDetailPage({
@@ -38,6 +44,10 @@ export default async function DeliveryDetailPage({
   }
   const delivery = result.value;
   const open = delivery.state === 'draft' || delivery.state === 'ready';
+  const partnerNames = await withPageCtx((ctx) => partnerDisplayNames(ctx, [delivery.partnerId]));
+  const partnerName = partnerNames.ok ? partnerNames.value.get(delivery.partnerId) ?? '–' : '–';
+  const failureMessage =
+    failure === SIGNED_BY_REQUIRED ? t(`errors.${SIGNED_BY_REQUIRED}`) : failure ? tViews('error') : null;
   const signatureUrl = delivery.signatureFileId
     ? await withPageCtx((ctx) => deliveryFileUrl(ctx, delivery.signatureFileId as string))
     : null;
@@ -51,7 +61,7 @@ export default async function DeliveryDetailPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
-      {failure ? <ErrorToast message={tViews('error')} /> : null}
+      {failureMessage ? <ErrorToast message={failureMessage} /> : null}
       <Link href={`/${currentLocale}/inventory/deliveries`} className="text-sm text-muted-foreground hover:underline">
         ← {t('deliveries.title')}
       </Link>
@@ -69,7 +79,7 @@ export default async function DeliveryDetailPage({
       </header>
 
       <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-md border p-4 sm:grid-cols-2">
-        <Item label={t('fields.partner')} value={delivery.partnerId} />
+        <Item label={t('fields.partner')} value={partnerName} />
         <Item label={t('fields.scheduled_date')} value={delivery.scheduledDate ?? '–'} />
         <Item label={t('fields.delivered_at')} value={delivery.deliveredAt ? delivery.deliveredAt.slice(0, 10) : '–'} />
         <div className="flex flex-col gap-0.5">

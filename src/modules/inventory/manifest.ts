@@ -5,7 +5,7 @@ export const manifest = defineModule({
   id: 'inventory',
   name: 'inventory.module.name',
   version: '1.0.0',
-  depends: ['products', 'credit_sales'],
+  depends: ['products', 'credit_sales', 'contacts'],
   permissions: [
     'inventory.warehouse.read',
     'inventory.warehouse.write',

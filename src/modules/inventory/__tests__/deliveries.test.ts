@@ -8,6 +8,7 @@ describe('requireSignedByName', () => {
     if (!r.ok) {
       expect(r.error.code).toBe('VALIDATION');
       expect(r.error.message).toContain('signed_by_name is required');
+      expect(r.error.details?.reason).toBe('signed_by_required');
     }
   });
 

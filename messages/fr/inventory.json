@@ -114,6 +114,7 @@
     "source_contract": "Contrat source",
     "view_contract": "Ouvrir le contrat",
     "lines_title": "Lignes",
-    "receipt_title": "Réception"
+    "receipt_title": "Réception",
+    "open": "Ouvrir"
   }
 }

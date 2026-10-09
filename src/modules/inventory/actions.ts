@@ -16,6 +16,7 @@ import {
   setDeliverySignedBy,
   validateDelivery,
   SIGNED_BY_NAME_MAX,
+  SIGNED_BY_REQUIRED,
 } from './service/deliveries';
 import { MAX_FILE_BYTES } from '@/core/files/service';
 
@@ -169,7 +170,9 @@ export async function validateDeliveryForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const id = String(formData.get('id') ?? '');
   const r = await deliveryValidateAction({ id });
-  redirect(`/${locale}/inventory/deliveries${failureQuery(r)}`);
+  const reason = !r.ok ? r.error.details?.reason : undefined;
+  const query = reason === SIGNED_BY_REQUIRED ? `?error=${SIGNED_BY_REQUIRED}` : failureQuery(r);
+  redirect(`/${locale}/inventory/deliveries${query}`);
 }
 
 /** Cancel button on the deliveries list. */

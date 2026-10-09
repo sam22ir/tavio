@@ -114,6 +114,7 @@
     "source_contract": "العقد المصدر",
     "view_contract": "فتح العقد",
     "lines_title": "البنود",
-    "receipt_title": "الاستلام"
+    "receipt_title": "الاستلام",
+    "open": "فتح"
   }
 }

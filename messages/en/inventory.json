@@ -114,6 +114,7 @@
     "source_contract": "Source contract",
     "view_contract": "Open contract",
     "lines_title": "Lines",
-    "receipt_title": "Receipt"
+    "receipt_title": "Receipt",
+    "open": "Open"
   }
 }

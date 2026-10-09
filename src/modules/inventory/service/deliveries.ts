@@ -5,6 +5,7 @@ import { fileUrl, uploadFile } from '@/core/files/service';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { nextNumber } from '@/core/sequences';
+import { getPartner } from '@/modules/contacts/service/partners';
 import { products } from '@/modules/products/schema';
 import { deliveries, deliveryLines, type Delivery } from '../schema';
 import { closeReservations, aggregateLines, type ReservableLine } from './reservations';
@@ -16,19 +17,50 @@ export const DELIVERY_SOURCE_ENTITY = 'inventory.delivery';
 export const CONTRACT_SOURCE_ENTITY = 'credit_sales.contract';
 export const SIGNED_BY_NAME_MAX = 200;
 
+/** Reason codes carried in `error.details.reason`. The UI maps them to `inventory.errors.<reason>`. */
+export const SIGNED_BY_REQUIRED = 'signed_by_required';
+export const SIGNED_BY_TOO_LONG = 'signed_by_too_long';
+
 /**
  * Pure rule: a delivery can only be validated once the person who received it is named.
- * Returns the trimmed name, or a VALIDATION error with an i18n key for the UI.
+ * Returns the trimmed name, or a VALIDATION error whose `details.reason` names the cause.
  */
 export function requireSignedByName(name: string | null | undefined): Result<string> {
   const trimmed = (name ?? '').trim();
   if (trimmed.length === 0) {
-    return err('VALIDATION', 'signed_by_name is required to validate a delivery');
+    return {
+      ok: false,
+      error: {
+        code: 'VALIDATION',
+        message: 'signed_by_name is required to validate a delivery',
+        details: { reason: SIGNED_BY_REQUIRED },
+      },
+    };
   }
   if (trimmed.length > SIGNED_BY_NAME_MAX) {
-    return err('VALIDATION', 'signed_by_name is too long');
+    return {
+      ok: false,
+      error: { code: 'VALIDATION', message: 'signed_by_name is too long', details: { reason: SIGNED_BY_TOO_LONG } },
+    };
   }
   return ok(trimmed);
+}
+
+/**
+ * Display names of the partners behind the given ids, read through the contacts service.
+ * Unknown ids are left out. Returns the first failure (e.g. missing contacts permission).
+ */
+export async function partnerDisplayNames(ctx: Ctx, partnerIds: readonly string[]): Promise<Result<Map<string, string>>> {
+  const names = new Map<string, string>();
+  for (const id of new Set(partnerIds)) {
+    const r = await getPartner(ctx, id);
+    if (!r.ok) {
+      if (r.error.code === 'NOT_FOUND') continue;
+      return r;
+    }
+    names.set(id, r.value.displayName);
+  }
+  return ok(names);
 }
 
 export interface DeliveryRow {
