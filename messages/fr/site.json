@@ -52,219 +52,278 @@
   },
   "home": {
     "meta": {
-      "title": "Revora : vente à crédit, CRM et facturation pour l'Algérie",
-      "description": "Vendez à crédit, suivez vos clients et facturez avec TVA, en dinars, dans une seule application en français et en arabe."
+      "title": "Revora : la croissance est un système",
+      "description": "Revora relie acquisition, ventes, opérations, données et technologie pour trouver où votre croissance se perd, et la corriger."
     },
     "hero": {
-      "eyebrow": "Nouveau · Pensé pour l'Algérie",
-      "title": "Vos ventes à crédit, *enfin* sous contrôle.",
-      "subtitle": "Échéances, relances WhatsApp, factures avec TVA et stock : Revora réunit votre commerce dans une seule application, en français et en arabe.",
-      "primary": "Commencer gratuitement",
-      "secondary": "Voir la démo"
-    },
-    "pilot": {
-      "text": "Programme pilote : nous accompagnons nos premiers commerces à Sétif, Alger et Oran.",
-      "cta": "Rejoindre le pilote"
-    },
-    "badges": {
-      "invoice": "Facture"
-    },
-    "before": {
-      "eyebrow": "Le quotidien",
-      "title": "Du carnet *au tableau de bord*.",
-      "body": "Ce que vivent la plupart des commerces qui vendent à crédit, et ce que Revora change.",
-      "beforeLabel": "Avant",
-      "afterLabel": "Avec Revora",
-      "before": [
-        "Échéances notées dans un carnet",
-        "Factures tapées à la main, totaux approximatifs",
-        "Clients et stock dispersés entre papier et téléphone"
-      ],
-      "after": [
-        "Chaque échéance suivie et relancée",
-        "Factures et TVA calculées automatiquement",
-        "Un seul dossier client, un stock unique"
+      "pill": "Business growth solutions",
+      "titleLine1": "LA CROISSANCE",
+      "titleLine2": "EST UN SYSTÈME.",
+      "subtitle": "Revora relie acquisition, ventes, opérations, données et technologie pour trouver où votre croissance se perd, et la corriger.",
+      "primary": "Demander un audit gratuit",
+      "secondary": "Voir la plateforme",
+      "chips": [
+        "📍 Alger",
+        "Marketing · Ventes · Back-office",
+        "Plateforme + accompagnement"
       ]
     },
-    "features": [
-      {
-        "eyebrow": "Vente à crédit",
-        "title": "Plans d'échelonnement, *sans* oublis.",
-        "body": "Créez un plan en quelques clics, suivez chaque échéance et voyez d'un coup d'œil ce qui reste à encaisser.",
-        "screen": "contract-detail",
-        "items": [
-          {
-            "title": "Plan d'échelonnement",
-            "body": "Acompte, nombre de mensualités, date de début : le calendrier se génère seul."
-          },
-          {
-            "title": "Échéancier par client",
-            "body": "Chaque paiement est rattaché au contrat et au client."
-          },
-          {
-            "title": "Solde restant",
-            "body": "Le montant dû est recalculé à chaque encaissement."
-          }
-        ]
-      },
-      {
-        "eyebrow": "Relances",
-        "title": "Les impayés, *relancés* à temps.",
-        "body": "Revora repère les échéances en retard et prépare le message WhatsApp à envoyer à votre client.",
-        "screen": "overdue",
-        "items": [
-          {
-            "title": "Liste des retards",
-            "body": "Les dossiers en retard sont triés par montant et par ancienneté."
-          },
-          {
-            "title": "Relance WhatsApp",
-            "body": "Un message prêt à envoyer, pour chaque client."
-          },
-          {
-            "title": "Historique des relances",
-            "body": "Chaque échange reste attaché au dossier du client."
-          }
-        ]
-      },
-      {
-        "eyebrow": "Facturation",
-        "title": "Factures conformes, *prêtes* à imprimer.",
-        "body": "TVA, NIF et RC intégrés : vos factures sont calculées sans erreur, de la vente jusqu'à la comptabilité.",
-        "screen": "invoice",
-        "items": [
-          {
-            "title": "TVA algérienne",
-            "body": "Taux et mentions calculés automatiquement sur chaque ligne."
-          },
-          {
-            "title": "Numérotation continue",
-            "body": "Une séquence sans trou, conforme à vos obligations."
-          },
-          {
-            "title": "Écritures comptables",
-            "body": "Chaque facture alimente le journal selon le plan SCF."
-          }
-        ]
-      }
-    ],
-    "modules": {
-      "eyebrow": "Modules",
-      "title": "Une seule application, *20 modules*.",
-      "body": "Activez ce dont votre commerce a besoin. Les modules partagent les mêmes clients, produits et factures.",
+    "contrast": {
+      "eyebrow": "Avant et après",
+      "title": "Sans système, *la croissance* s’échappe.",
+      "withoutLabel": "SANS REVORA",
+      "withLabel": "AVEC REVORA",
+      "withoutTitle": "Lent, débordé, en retard",
+      "withoutItems": [
+        "Des prospects perdus, faute de suivi",
+        "Des ventes jamais relancées",
+        "Factures et stock éparpillés",
+        "Aucun chiffre fiable pour décider"
+      ],
+      "withTitle": "Rapide, visible, en avance",
+      "withItems": [
+        "Chaque prospect suivi jusqu’à la vente",
+        "Un pipeline commercial clair",
+        "Ventes, stock et comptabilité connectés",
+        "Tableaux de bord en direct"
+      ]
+    },
+    "pillars": {
+      "eyebrow": "Nos 5 piliers",
+      "title": "Cinq piliers, *un seul système*.",
+      "body": "Chaque pilier couvre une étape de votre croissance, servie par des modules de la plateforme.",
       "items": [
         {
-          "slug": "credit-sales",
-          "title": "Vente à crédit",
-          "body": "Plans d'échelonnement, échéances et relances de paiement."
-        },
-        {
           "slug": "crm",
-          "title": "CRM",
-          "body": "Pipeline commercial, historique des échanges et suivi des prospects."
+          "title": "Acquisition",
+          "body": "Attirer des clients et capter chaque prospect.",
+          "modules": [
+            "CRM",
+            "Site et boutique",
+            "Campagnes WhatsApp",
+            "Capture de prospects"
+          ]
         },
         {
           "slug": "sales-invoicing",
-          "title": "Ventes et facturation",
-          "body": "Devis, bons de commande et factures conformes à la TVA."
+          "title": "Ventes",
+          "body": "Transformer les prospects en ventes, et les suivre.",
+          "modules": [
+            "Devis et commandes",
+            "Ventes à crédit",
+            "Caisse (POS)",
+            "Relances"
+          ]
         },
         {
           "slug": "inventory-purchases",
-          "title": "Stock et achats",
-          "body": "Entrepôts, réceptions fournisseurs et alertes de rupture."
+          "title": "Opérations",
+          "body": "Faire tourner facturation, stock et équipe sans friction.",
+          "modules": [
+            "Facturation",
+            "Stock et achats",
+            "Comptabilité SCF",
+            "Ressources humaines",
+            "Projets et support"
+          ]
+        },
+        {
+          "slug": "ai",
+          "title": "Data",
+          "body": "Lire vos chiffres et décider sur des faits.",
+          "modules": [
+            "Tableaux de bord",
+            "Indicateurs clés",
+            "Assistant IA",
+            "Rapports"
+          ]
+        },
+        {
+          "slug": "platform",
+          "title": "Technologie",
+          "body": "Relier vos outils et adapter la plateforme à votre activité.",
+          "modules": [
+            "API",
+            "Webhooks",
+            "Automatisation",
+            "Champs personnalisés",
+            "On-premise"
+          ]
+        }
+      ]
+    },
+    "method": {
+      "eyebrow": "Notre méthode",
+      "title": "Quatre étapes, *du diagnostic à la croissance*.",
+      "steps": [
+        {
+          "title": "Comprendre",
+          "body": "Nous étudions comment votre entreprise fonctionne, du premier contact jusqu’à l’encaissement."
+        },
+        {
+          "title": "Diagnostiquer",
+          "body": "Nous repérons où votre croissance se perd : prospects non suivis, ventes bloquées, stock mal géré."
+        },
+        {
+          "title": "Construire",
+          "body": "Nous mettons en place le système : la plateforme, sa configuration et les processus de votre équipe."
+        },
+        {
+          "title": "Faire croître",
+          "body": "Nous mesurons les résultats, corrigeons et améliorons, mois après mois."
+        }
+      ]
+    },
+    "platform": {
+      "eyebrow": "La plateforme",
+      "title": "Une seule plateforme, *toute votre activité*.",
+      "body": "Revora rassemble vos clients, vos ventes, votre stock et vos chiffres dans une application, en français et en arabe.",
+      "rows": [
+        {
+          "eyebrow": "Pilotage",
+          "title": "Un tableau de bord, *tous vos chiffres*.",
+          "body": "Ventes, encaissements, stock et échéances, en un coup d’œil.",
+          "screen": "dashboard",
+          "items": [
+            {
+              "title": "Indicateurs en direct",
+              "body": "Chiffre d’affaires, encaissements et créances mis à jour en continu."
+            },
+            {
+              "title": "Alertes utiles",
+              "body": "Ruptures de stock et retards signalés avant qu’ils ne coûtent."
+            },
+            {
+              "title": "Rapports exportables",
+              "body": "Des états prêts à partager avec votre expert-comptable."
+            }
+          ]
+        },
+        {
+          "eyebrow": "Commercial",
+          "title": "Un pipeline *que vous suivez*.",
+          "body": "Chaque prospect a une étape, un responsable et une prochaine action.",
+          "screen": "crm-kanban",
+          "items": [
+            {
+              "title": "Pipeline visuel",
+              "body": "Faites glisser chaque prospect d’une étape à l’autre."
+            },
+            {
+              "title": "Relances planifiées",
+              "body": "Aucun prospect oublié, aucune vente qui dort."
+            },
+            {
+              "title": "Historique partagé",
+              "body": "Les échanges restent attachés au dossier du client."
+            }
+          ]
+        }
+      ]
+    },
+    "orbit": {
+      "eyebrow": "Modules",
+      "title": "20 modules, *un seul système*.",
+      "body": "Activez ce dont votre activité a besoin. Les modules partagent les mêmes clients, produits et factures.",
+      "items": [
+        {
+          "slug": "credit-sales",
+          "title": "Ventes à crédit"
+        },
+        {
+          "slug": "crm",
+          "title": "CRM"
+        },
+        {
+          "slug": "sales-invoicing",
+          "title": "Ventes et facturation"
+        },
+        {
+          "slug": "inventory-purchases",
+          "title": "Stock et achats"
         },
         {
           "slug": "accounting",
-          "title": "Comptabilité",
-          "body": "Journaux, écritures et états basés sur le plan comptable SCF."
+          "title": "Comptabilité"
         },
         {
           "slug": "pos",
-          "title": "Caisse (POS)",
-          "body": "Encaissement rapide au comptoir, sessions de caisse et tickets."
+          "title": "Caisse (POS)"
         },
         {
           "slug": "hr",
-          "title": "Ressources humaines",
-          "body": "Employés, congés et présences de votre équipe."
+          "title": "Ressources humaines"
+        },
+        {
+          "slug": "projects-helpdesk",
+          "title": "Projets et support"
         },
         {
           "slug": "website-shop",
-          "title": "Site et boutique",
-          "body": "Une vitrine en ligne reliée à votre stock et à vos commandes."
+          "title": "Site et boutique"
+        },
+        {
+          "slug": "ai",
+          "title": "Assistant IA"
+        },
+        {
+          "slug": "platform",
+          "title": "Plateforme"
         }
       ]
     },
-    "algeria": {
-      "eyebrow": "Pour l'Algérie",
-      "title": "Conçu pour *l'Algérie*.",
-      "body": "Les réalités du commerce algérien sont intégrées dès le premier jour.",
+    "builders": {
+      "eyebrow": "Qui sommes-nous",
+      "title": "Construit par des *praticiens*.",
+      "body": "Revora est née de l’expérience réelle du marché, pas de la théorie. Notre équipe a travaillé dans le marketing, la vente et le back-office, et accompagne les entreprises qui veulent grandir durablement, dans tous les secteurs.",
+      "points": [
+        {
+          "title": "Marketing",
+          "body": "Acquisition et campagnes, du premier contact jusqu’au prospect qualifié."
+        },
+        {
+          "title": "Ventes",
+          "body": "Pipeline, négociation et suivi clients au quotidien."
+        },
+        {
+          "title": "Back-office",
+          "body": "Facturation, stock, comptabilité et procédures qui tiennent dans la durée."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Nos services",
+      "title": "Au-delà du logiciel, *nous vous accompagnons*.",
+      "body": "Un audit pour trouver la croissance perdue, puis la mise en place, la formation et le suivi.",
       "items": [
         {
-          "title": "Dinar algérien (DZD)",
-          "body": "Prix, paiements et états en dinars, sans conversion."
+          "title": "Audit",
+          "body": "Nous analysons votre fonctionnement et identifions où votre croissance se perd."
         },
         {
-          "title": "TVA algérienne",
-          "body": "Taux et mentions de TVA sur vos factures et vos ventes."
+          "title": "Mise en place",
+          "body": "Configuration de la plateforme, import de vos données et paramétrage de vos modules."
         },
         {
-          "title": "Plan comptable SCF",
-          "body": "Une structure comptable conforme au Système comptable financier."
+          "title": "Formation",
+          "body": "Vos équipes apprennent à utiliser le système au quotidien, en français ou en arabe."
         },
         {
-          "title": "NIF et RC",
-          "body": "Champs NIF et registre de commerce sur les factures, à valider avec votre expert-comptable."
-        },
-        {
-          "title": "CCP, virement et espèces",
-          "body": "Enregistrez les paiements par CCP, virement ou en espèces."
-        },
-        {
-          "title": "Fonctionne sur les téléphones simples",
-          "body": "Interface légère, pensée pour les appareils modestes et les connexions faibles."
+          "title": "Accompagnement",
+          "body": "Un appui continu pour améliorer vos résultats et faire évoluer le système avec vous."
         }
-      ]
-    },
-    "dark": {
-      "eyebrow": "IA et hébergement",
-      "title": "Une IA à votre service, *vos données* en Algérie.",
-      "body": "Revora reste simple et sûr : l'IA est un choix, et le lieu d'hébergement aussi.",
-      "ai": {
-        "title": "Aide IA, si vous la voulez",
-        "body": "Un assistant peut rédiger vos relances, résumer vos ventes ou répondre aux questions sur vos produits. Il est facultatif et fonctionne avec le fournisseur d'IA de votre choix."
-      },
-      "onPremise": {
-        "title": "On-premise, en Algérie",
-        "body": "Installez Revora sur vos propres serveurs : vos données restent en Algérie, avec installation Docker, sauvegardes et support."
-      }
-    },
-    "how": {
-      "eyebrow": "Démarrage",
-      "title": "Démarrer en *trois étapes*.",
-      "items": [
-        {
-          "title": "Créez votre espace",
-          "body": "Inscrivez votre commerce et choisissez vos modules."
-        },
-        {
-          "title": "Importez vos données",
-          "body": "Ajoutez produits, clients et stock, puis invitez votre équipe."
-        },
-        {
-          "title": "Vendez et encaissez",
-          "body": "Vendez à crédit ou au comptoir, facturez et suivez les paiements."
-        }
-      ]
+      ],
+      "cta": "Découvrir nos services"
     },
     "pricing": {
-      "eyebrow": "Tarifs",
+      "eyebrow": "Prix indicatifs",
       "title": "Des tarifs simples, *en dinars*.",
       "body": "Un prix par utilisateur et par mois. Les tarifs sont indicatifs et seront confirmés avant le lancement.",
       "cta": "Voir tous les tarifs",
+      "planCta": "Essayer gratuitement",
       "free": "Gratuit",
       "perUser": "/ utilisateur / mois",
-      "users": "Jusqu'à {count} utilisateurs",
+      "users": "Jusqu’à {count} utilisateurs",
       "popular": "Le plus choisi",
       "features": {
         "free": [
@@ -294,31 +353,31 @@
       "title": "Questions *fréquentes*.",
       "items": [
         {
-          "question": "Mes données sont-elles en sécurité ?",
-          "answer": "Vos données sont hébergées en Europe, ou sur vos propres serveurs en version on-premise. Vous restez propriétaire de vos données."
+          "question": "Que fait Revora, exactement ?",
+          "answer": "Revora aide les entreprises à bâtir un système de croissance. Elle relie acquisition, ventes, opérations, données et technologie, grâce à une plateforme et à un accompagnement."
         },
         {
-          "question": "Puis-je utiliser Revora en arabe ?",
-          "answer": "Oui. L'interface est disponible en arabe, en français et en anglais, avec une mise en page de droite à gauche pour l'arabe."
+          "question": "Quelle différence entre la plateforme et les services ?",
+          "answer": "La plateforme est le logiciel, avec ses modules, que vous utilisez au quotidien. Les services sont l’accompagnement : audit, mise en place, formation et suivi. Vous pouvez choisir l’un sans l’autre."
         },
         {
-          "question": "Combien d'utilisateurs puis-je ajouter ?",
-          "answer": "Cela dépend de votre formule, de 1 à 25 utilisateurs selon le plan choisi."
+          "question": "Quelles entreprises accompagnez-vous ?",
+          "answer": "Des entreprises algériennes de toutes tailles et de tous secteurs, qu’il s’agisse de commerce, de services ou d’industrie."
         },
         {
-          "question": "Les factures sont-elles conformes en Algérie ?",
-          "answer": "Revora applique la TVA algérienne et propose les champs NIF et RC. Faites valider le modèle de facture par votre expert-comptable."
+          "question": "La plateforme est-elle disponible en arabe et en français ?",
+          "answer": "Oui. Revora est disponible en français, en arabe et en anglais, avec une mise en page de droite à gauche pour l’arabe."
         },
         {
-          "question": "Puis-je installer Revora sur mes propres serveurs ?",
-          "answer": "Oui. L'offre on-premise garde vos données en Algérie, avec installation Docker, sauvegardes et support."
+          "question": "Où sont hébergées mes données ?",
+          "answer": "Vos données peuvent être hébergées en Algérie, ou sur vos propres serveurs avec l’offre on-premise. Vous restez propriétaire de vos données."
         }
       ]
     },
     "cta": {
-      "title": "Prêt à quitter *les carnets* ?",
-      "body": "Créez votre espace en quelques minutes et commencez avec la formule gratuite.",
-      "primary": "Commencer gratuitement"
+      "title": "Où perdez-vous de la croissance ? *Faisons l’audit.*",
+      "body": "Un diagnostic gratuit pour identifier ce qui freine votre croissance, et les premières actions à mener.",
+      "primary": "Demander un audit gratuit"
     }
   }
 }
