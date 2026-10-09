@@ -27,11 +27,12 @@ import site from './site.json';
 import site_company from './site_company.json';
 import site_features from './site_features.json';
 import site_pricing from './site_pricing.json';
+import site_services from './site_services.json';
 import subscriptions from './subscriptions.json';
 import team from './team.json';
 import views from './views.json';
 import website from './website.json';
 
 // Each namespace file is owned by one module or feature. Add keys there, never here.
-const messages = { accounting, ai, ai_search, ai_tools, auth, automation, chatter, contacts, core, credit, crm, helpdesk, hr, inventory, invoicing, l10n, marketing, platform, pos, products, projects, purchases, sales, settings, shell, site, site_company, site_features, site_pricing, subscriptions, team, views, website };
+const messages = { accounting, ai, ai_search, ai_tools, auth, automation, chatter, contacts, core, credit, crm, helpdesk, hr, inventory, invoicing, l10n, marketing, platform, pos, products, projects, purchases, sales, settings, shell, site, site_company, site_features, site_pricing, site_services, subscriptions, team, views, website };
 export default messages;

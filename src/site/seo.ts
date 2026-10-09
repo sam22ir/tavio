@@ -33,6 +33,7 @@ export const MARKETING_PATHS: readonly string[] = [
   '',
   '/features',
   ...FEATURE_SLUGS.map((s) => `/features/${s}`),
+  '/services',
   '/solutions',
   ...SOLUTION_SLUGS.map((s) => `/solutions/${s}`),
   '/pricing',
