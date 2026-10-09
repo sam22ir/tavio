@@ -1,6 +1,6 @@
 name: On-prem stack
 
-# Builds the Docker image, boots the full on-prem stack (postgres, migrate, app, gotenberg, minio),
+# Builds the Docker image, boots the full on-prem stack (postgres, migrate, app, gotenberg, s3),
 # smoke-tests it, then runs a backup + restore drill. Proves the on-prem packaging actually works.
 on:
   workflow_dispatch:
@@ -21,8 +21,8 @@ jobs:
             echo "BETTER_AUTH_SECRET=$(openssl rand -hex 32)"
             echo "BETTER_AUTH_URL=http://localhost:3000"
             echo "CRON_SECRET=$(openssl rand -hex 16)"
-            echo "MINIO_ROOT_USER=tavio"
-            echo "MINIO_ROOT_PASSWORD=$(openssl rand -hex 16)"
+            echo "S3_ACCESS_KEY=tavio$(openssl rand -hex 4)"
+            echo "S3_SECRET_KEY=$(openssl rand -hex 16)"
           } > .env
 
       - name: Build and start the stack

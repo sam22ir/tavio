@@ -1,6 +1,6 @@
 # On-prem deployment
 
-Tavio runs as one container plus PostgreSQL, Gotenberg (PDF rendering) and MinIO (S3-compatible file storage). The `docker-compose.yml` at the repo root wires them together.
+Tavio runs as one container plus PostgreSQL, Gotenberg (PDF rendering) and SeaweedFS (S3) (S3-compatible file storage). The `docker-compose.yml` at the repo root wires them together.
 
 ## Requirements
 
@@ -18,11 +18,11 @@ BETTER_AUTH_URL=https://tavio.example.dz
 BETTER_AUTH_SECRET=<32+ random bytes>
 BETTER_AUTH_TRUSTED_ORIGINS=https://tavio.example.dz
 CRON_SECRET=<random>
-MINIO_ROOT_USER=<user>
-MINIO_ROOT_PASSWORD=<12+ chars>
+S3_ACCESS_KEY=<user>
+S3_SECRET_KEY=<12+ chars>
 # optional
 APP_PORT=3000
-MINIO_BUCKET=tavio
+S3_BUCKET=tavio
 ```
 
 Then:
@@ -42,9 +42,9 @@ The `migrate` service runs `drizzle-kit migrate` and exits. The `app` service st
 
 ## Backups
 
-`scripts/backup.sh` runs `pg_dump`, gzips the result into `./backups` and keeps the last 14 files. To copy off-site, set `BACKUP_S3_URI` (and `BACKUP_S3_ENDPOINT` for R2 or MinIO) and have aws-cli credentials in the environment. The script needs `pg_dump` and a `DATABASE_URL` it can reach. On the host, publish PostgreSQL to localhost only (add `ports: ["127.0.0.1:5432:5432"]` to the `postgres` service) and set `DATABASE_URL=postgres://tavio:<password>@localhost:5432/tavio`.
+`scripts/backup.sh` runs `pg_dump`, gzips the result into `./backups` and keeps the last 14 files. To copy off-site, set `BACKUP_S3_URI` (and `BACKUP_S3_ENDPOINT` for R2 or SeaweedFS (S3)) and have aws-cli credentials in the environment. The script needs `pg_dump` and a `DATABASE_URL` it can reach. On the host, publish PostgreSQL to localhost only (add `ports: ["127.0.0.1:5432:5432"]` to the `postgres` service) and set `DATABASE_URL=postgres://tavio:<password>@localhost:5432/tavio`.
 
-Also back up the MinIO volume (`miniodata`) with the same schedule, because the database only holds references to files.
+Also back up the SeaweedFS (S3) volume (`s3data`) with the same schedule, because the database only holds references to files.
 
 Restore a dump with `gunzip -c tavio-<stamp>.sql.gz | docker compose exec -T postgres psql -U tavio -d tavio`, on an empty database.
 
