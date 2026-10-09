@@ -1,1 +1,65 @@
-{}
+{
+  "module": {
+    "name": "Purchases"
+  },
+  "menu": {
+    "orders": "Purchase orders"
+  },
+  "order": {
+    "title": "Purchase orders",
+    "new": "New purchase order",
+    "draft": "Draft",
+    "billed": "Billed",
+    "actions": {
+      "confirm": "Confirm",
+      "bill": "Create vendor bill",
+      "cancel": "Cancel"
+    },
+    "receive": {
+      "title": "Receipt",
+      "remaining": "remaining",
+      "partial": "Receive selected",
+      "all": "Receive all"
+    }
+  },
+  "fields": {
+    "number": "Number",
+    "partner": "Supplier",
+    "state": "Status",
+    "orderDate": "Order date",
+    "expectedDate": "Expected date",
+    "note": "Note",
+    "product": "Product",
+    "description": "Description",
+    "quantity": "Quantity",
+    "received": "Received",
+    "unitPrice": "Unit price (DZD)",
+    "tax": "Tax",
+    "untaxed": "Untaxed",
+    "total": "Total"
+  },
+  "form": {
+    "choose": "Choose a supplier",
+    "lines": "Lines",
+    "noProduct": "No product",
+    "noTax": "No tax",
+    "addLine": "Add a line"
+  },
+  "state": {
+    "draft": "Draft",
+    "sent": "Sent",
+    "confirmed": "Confirmed",
+    "received": "Received",
+    "cancelled": "Cancelled"
+  },
+  "errors": {
+    "validation": "Invalid input. Check the form.",
+    "not_found": "Not found.",
+    "conflict": "This action is not allowed in the current state.",
+    "forbidden": "Access denied.",
+    "internal": "Something went wrong. Try again.",
+    "posted_immutable": "This order is confirmed and can no longer be edited.",
+    "unauthenticated": "Please sign in again.",
+    "module_disabled": "The Purchases module is disabled."
+  }
+}
