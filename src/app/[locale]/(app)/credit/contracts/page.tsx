@@ -10,8 +10,6 @@ import { Button } from '@/ui/primitives/button';
 import { listContracts } from '@/modules/credit_sales/service/contracts';
 import { contractEntity } from '@/modules/credit_sales/entities';
 
-const STATES = ['draft', 'active', 'completed', 'cancelled', 'defaulted'] as const;
-
 export default async function ContractsPage({
   params,
   searchParams,
@@ -40,19 +38,6 @@ export default async function ContractsPage({
           <Link href={`${basePath}/new`}>{t('contract.new')}</Link>
         </Button>
       </div>
-
-      <form method="get" className="flex flex-wrap items-end gap-2">
-        <label className="flex flex-col gap-1 text-sm">
-          {t('fields.state')}
-          <select name="f_state" defaultValue={query.filters.state ?? ''} className="h-9 rounded-md border bg-background px-3">
-            <option value="">{t('contract.allStates')}</option>
-            {STATES.map((s) => (
-              <option key={s} value={s}>{t(`options.state.${s}`)}</option>
-            ))}
-          </select>
-        </label>
-        <Button type="submit" variant="outline">{t('contract.filter')}</Button>
-      </form>
 
       <DataList
         entity={contractEntity}

@@ -503,6 +503,9 @@ export async function listContracts(ctx: Ctx, q: ListQuery): Promise<ListResult<
       reference: creditContracts.reference,
       state: creditContracts.state,
       partnerName: partners.displayName,
+      frequency: creditContracts.frequency,
+      installmentsCount: creditContracts.installmentsCount,
+      cashPriceCents: creditContracts.cashPriceCents,
       totalCents: creditContracts.totalCents,
       financedCents: creditContracts.financedCents,
       startDate: creditContracts.startDate,
@@ -533,9 +536,12 @@ export async function listContracts(ctx: Ctx, q: ListQuery): Promise<ListResult<
     const open = own.filter((i) => i.paidCents < i.amountCents).map((i) => i.dueDate).sort();
     return {
       id: r.id,
-      number: r.reference,
+      reference: r.reference,
       state: r.state,
       partnerName: r.partnerName,
+      frequency: r.frequency,
+      installmentsCount: r.installmentsCount,
+      cashPriceCents: r.cashPriceCents,
       totalCents: r.totalCents,
       remainingCents: r.financedCents - paid,
       nextDueDate: open[0] ?? null,

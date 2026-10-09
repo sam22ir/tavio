@@ -331,6 +331,7 @@ export async function listPayments(ctx: Ctx, q: ListQuery): Promise<ListResult<R
   const rows = await ctx.tx
     .select({
       id: creditPayments.id,
+      reference: creditPayments.reference,
       receivedAt: creditPayments.receivedAt,
       partnerName: partners.displayName,
       contractNumber: contractRef,
@@ -350,8 +351,10 @@ export async function listPayments(ctx: Ctx, q: ListQuery): Promise<ListResult<R
   return {
     rows: rows.map((r) => ({
       id: r.id,
+      reference: r.reference,
       receivedAt: r.receivedAt.toISOString(),
       partnerName: r.partnerName,
+      partnerIdLabel: r.partnerName,
       contractNumber: r.contractNumber,
       amountCents: r.amountCents.toString(),
       method: r.method,

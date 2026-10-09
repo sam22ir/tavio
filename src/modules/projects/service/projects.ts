@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ilike, type SQL } from 'drizzle-orm';
+import { and, asc, count, desc, eq, getTableColumns, ilike, type SQL } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import type { ListQuery, ListResult } from '@/core/entities/types';
@@ -7,6 +7,7 @@ import { err, ok, type Result } from '@/core/result';
 import { projects, projectStages, type Project } from '../schema';
 import { DEFAULT_STAGES, PROJECT_STATES, canChangeProjectState, type ProjectState } from './rules';
 import { z } from 'zod';
+import { partners } from '@/modules/contacts/schema';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const MAX_PAGE_SIZE = 100;
@@ -76,7 +77,10 @@ function listWhere(ctx: Ctx, query: ListQuery): SQL | undefined {
   return and(...conditions);
 }
 
-export async function listProjects(ctx: Ctx, query: ListQuery): Promise<Result<ListResult<Project>>> {
+export async function listProjects(
+  ctx: Ctx,
+  query: ListQuery,
+): Promise<Result<ListResult<Project & { partnerIdLabel: string | null }>>> {
   const perm = requirePerm(ctx, 'projects.project.read');
   if (!perm.ok) return perm;
 
@@ -87,8 +91,9 @@ export async function listProjects(ctx: Ctx, query: ListQuery): Promise<Result<L
 
   const [totalRow] = await ctx.tx.select({ n: count() }).from(projects).where(where);
   const rows = await ctx.tx
-    .select()
+    .select({ ...getTableColumns(projects), partnerIdLabel: partners.displayName })
     .from(projects)
+    .leftJoin(partners, eq(partners.id, projects.partnerId))
     .where(where)
     .orderBy(order, asc(projects.id))
     .limit(pageSize)
