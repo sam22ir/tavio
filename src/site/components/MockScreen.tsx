@@ -12,6 +12,8 @@ export function MockScreen({ variant, className }: { variant: MockVariant; class
   return (
     <div
       aria-hidden
+      // Mock screens use French number formatting; keep LTR so amounts never reorder on Arabic pages.
+      dir="ltr"
       className={cn('w-full overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm', className)}
     >
       <div className="flex items-center justify-between border-b border-border px-4 py-3 text-xs">

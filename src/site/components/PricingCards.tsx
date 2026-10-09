@@ -37,7 +37,7 @@ export function PricingCards({ plans }: { plans: PricingPlan[] }) {
             {plan.badge ? <Badge tone="accent">{plan.badge}</Badge> : null}
           </div>
           <div className="flex flex-col gap-1">
-            <p className="text-3xl font-semibold tracking-tight">{plan.price}</p>
+            <p className="text-3xl font-semibold tracking-tight"><bdi>{plan.price}</bdi></p>
             <p className="text-sm text-muted-foreground">{plan.period}</p>
           </div>
           <p className="text-sm font-medium">{plan.users}</p>
