@@ -2,8 +2,9 @@
   "overview": {
     "metaTitle": "Modules Tavio : gestion commerciale pour PME algériennes",
     "metaDescription": "Crédit, CRM, facturation, stock, comptabilité, caisse, RH, projets et boutique en ligne, dans une seule application.",
-    "title": "Tous les modules Tavio",
-    "body": "Une seule application pour vendre, facturer, gérer le stock et suivre votre équipe. Choisissez un module pour voir ce qu'il fait."
+    "title": "Tout votre commerce, *dans une seule* application.",
+    "body": "Une seule application pour vendre, facturer, gérer le stock et suivre votre équipe. Choisissez un module pour voir ce qu'il fait.",
+    "eyebrow": "Modules"
   },
   "detail": {
     "cta": "Commencer gratuitement",
@@ -25,7 +26,8 @@
         "Relances de paiement pour les échéances en retard",
         "Annulation d'un contrat avec historique conservé",
         "Impression des contrats et des reçus"
-      ]
+      ],
+      "headline": "Vendez à crédit, *sans* cahier papier."
     },
     "crm": {
       "title": "CRM",
@@ -37,7 +39,8 @@
         "Marquer une affaire gagnée ou perdue, et la rouvrir si besoin",
         "Formulaires de création et de modification des prospects",
         "Fiche client avec l'historique des interactions"
-      ]
+      ],
+      "headline": "Suivez chaque *prospect* jusqu'à la vente."
     },
     "sales-invoicing": {
       "title": "Ventes et facturation",
@@ -49,7 +52,8 @@
         "Paiements partiels ou complets enregistrés sur la facture",
         "Avoirs et remboursements tracés",
         "Calcul de la TVA ligne par ligne"
-      ]
+      ],
+      "headline": "Devis, factures et encaissements, *conformes* à la TVA."
     },
     "inventory-purchases": {
       "title": "Stock et achats",
@@ -61,7 +65,8 @@
         "Ajustements d'inventaire",
         "Règles de réapprovisionnement par seuil",
         "Bons de commande fournisseurs, réception et factures d'achat"
-      ]
+      ],
+      "headline": "Gardez votre *stock* sous contrôle."
     },
     "accounting": {
       "title": "Comptabilité",
@@ -73,7 +78,8 @@
         "Contre-passation d'une écriture en un clic",
         "Écritures liées aux ventes, aux achats et aux paiements",
         "Montants en dinars algériens, sans conversion"
-      ]
+      ],
+      "headline": "Une comptabilité *claire*, en dinars."
     },
     "pos": {
       "title": "Caisse (POS)",
@@ -85,7 +91,8 @@
         "Ventes reliées au stock et à la facturation",
         "Utilisable sur téléphone et tablette",
         "Suivi des encaissements par session"
-      ]
+      ],
+      "headline": "Votre caisse, *reliée* à votre stock."
     },
     "hr": {
       "title": "Ressources humaines",
@@ -97,7 +104,8 @@
         "Validation des congés par un responsable",
         "Pointage d'arrivée et de départ par l'employé",
         "Désactiver un employé sans le supprimer"
-      ]
+      ],
+      "headline": "Votre équipe, *sans* tableur."
     },
     "projects-helpdesk": {
       "title": "Projets et support",
@@ -109,7 +117,8 @@
         "Saisie du temps passé par tâche",
         "Tickets d'assistance répartis par équipe",
         "Suivi des tickets par étape jusqu'à leur clôture"
-      ]
+      ],
+      "headline": "Projets et *support*, au même endroit."
     },
     "website-shop": {
       "title": "Site et boutique",
@@ -121,7 +130,8 @@
         "Conversion d'une commande web en vente",
         "Annulation d'une commande web",
         "Même stock et mêmes clients que votre caisse"
-      ]
+      ],
+      "headline": "Votre boutique en ligne, *dans* votre gestion."
     },
     "ai": {
       "title": "Assistant IA",
@@ -133,7 +143,8 @@
         "Lecture de documents (OCR) pour alléger la saisie",
         "Rappels pour les tâches et les échéances",
         "Compatible avec plusieurs fournisseurs d'IA"
-      ]
+      ],
+      "headline": "Un assistant qui *connaît* vos données."
     },
     "platform": {
       "title": "Plateforme",
@@ -145,7 +156,8 @@
         "Champs personnalisés sur vos fiches",
         "Règles d'automatisation sans code",
         "Révocation d'une clé API à tout moment"
-      ]
+      ],
+      "headline": "Adaptez Tavio à *votre* activité."
     }
   }
 }

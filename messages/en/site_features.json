@@ -2,8 +2,9 @@
   "overview": {
     "metaTitle": "Tavio modules: business management for Algerian SMEs",
     "metaDescription": "Credit sales, CRM, invoicing, stock, accounting, point of sale, HR, projects and online shop, in one app.",
-    "title": "All Tavio modules",
-    "body": "One app to sell, invoice, manage stock and keep your team on track. Pick a module to see what it does."
+    "title": "Everything your business needs, *in one app*.",
+    "body": "One app to sell, invoice, manage stock and keep your team on track. Pick a module to see what it does.",
+    "eyebrow": "Modules"
   },
   "detail": {
     "cta": "Start free",
@@ -25,7 +26,8 @@
         "Payment reminders for overdue instalments",
         "Contract cancellation with history kept",
         "Printable contracts and receipts"
-      ]
+      ],
+      "headline": "Sell on credit, *without* paper ledgers."
     },
     "crm": {
       "title": "CRM",
@@ -37,7 +39,8 @@
         "Mark a deal won or lost, and reopen it if needed",
         "Forms to create and edit prospects",
         "Customer record with the history of interactions"
-      ]
+      ],
+      "headline": "Follow every *lead* to the sale."
     },
     "sales-invoicing": {
       "title": "Sales and invoicing",
@@ -49,7 +52,8 @@
         "Partial or full payments recorded on the invoice",
         "Credit notes and refunds, fully traced",
         "VAT calculated line by line"
-      ]
+      ],
+      "headline": "Quotes, invoices and payments, *VAT-ready*."
     },
     "inventory-purchases": {
       "title": "Stock and purchases",
@@ -61,7 +65,8 @@
         "Stock count adjustments",
         "Reorder rules based on thresholds",
         "Supplier orders, goods receipt and purchase bills"
-      ]
+      ],
+      "headline": "Keep your *stock* under control."
     },
     "accounting": {
       "title": "Accounting",
@@ -73,7 +78,8 @@
         "Reverse an entry in one click",
         "Entries generated from sales, purchases and payments",
         "Amounts in Algerian dinars, no conversion"
-      ]
+      ],
+      "headline": "Clear accounts, *in dinars*."
     },
     "pos": {
       "title": "Point of sale",
@@ -85,7 +91,8 @@
         "Sales linked to stock and invoicing",
         "Works on phones and tablets",
         "Payments tracked per cash session"
-      ]
+      ],
+      "headline": "Your till, *connected* to your stock."
     },
     "hr": {
       "title": "HR",
@@ -97,7 +104,8 @@
         "Leave approval by a manager",
         "Check-in and check-out by the employee",
         "Deactivate an employee without deleting them"
-      ]
+      ],
+      "headline": "Your team, *without* spreadsheets."
     },
     "projects-helpdesk": {
       "title": "Projects and helpdesk",
@@ -109,7 +117,8 @@
         "Time logged per task",
         "Support tickets assigned by team",
         "Ticket tracking by stage until it is closed"
-      ]
+      ],
+      "headline": "Projects and *support*, in one place."
     },
     "website-shop": {
       "title": "Website and shop",
@@ -121,7 +130,8 @@
         "Convert a web order into a sale",
         "Cancel a web order",
         "Same stock and customers as your till"
-      ]
+      ],
+      "headline": "Your online shop, *inside* your management."
     },
     "ai": {
       "title": "AI assistant",
@@ -133,7 +143,8 @@
         "Document reading (OCR) to reduce manual entry",
         "Reminders for tasks and due dates",
         "Works with several AI providers"
-      ]
+      ],
+      "headline": "An assistant that *knows* your data."
     },
     "platform": {
       "title": "Platform",
@@ -145,7 +156,8 @@
         "Custom fields on your records",
         "No-code automation rules",
         "Revoke an API key at any time"
-      ]
+      ],
+      "headline": "Make Tavio *fit* your business."
     }
   }
 }
