@@ -15,6 +15,7 @@ export const manifest = defineModule({
     'accounting.entry.write',
     'accounting.report.read',
   ],
+  app: { pillar: 'operations', icon: 'Calculator', label: 'shell.apps.accounting', order: 6 },
   menus: [
     { label: 'accounting.menu.entries', href: '/accounting/entries', perm: 'accounting.entry.read', order: 54 },
     { label: 'accounting.menu.accounts', href: '/accounting/accounts', perm: 'accounting.account.read', order: 54 },

@@ -6,5 +6,6 @@ export const manifest = defineModule({
   version: '1.0.0',
   depends: [],
   permissions: ['l10n_dz.tax.read', 'l10n_dz.tax.write', 'l10n_dz.tax.delete'],
+  app: { pillar: 'technology', icon: 'Landmark', label: 'shell.apps.l10n_dz', order: 4 },
   menus: [{ label: 'l10n.menu.taxes', href: '/settings/taxes', perm: 'l10n_dz.tax.read', order: 90 }],
 });

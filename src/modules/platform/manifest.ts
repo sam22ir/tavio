@@ -13,5 +13,6 @@ export const manifest = defineModule({
     'platform.webhook.read',
     'platform.webhook.write',
   ],
+  app: { pillar: 'technology', icon: 'Plug', label: 'shell.apps.platform', order: 1 },
   menus: [{ label: 'platform.menu.title', href: '/settings/platform', perm: 'platform.api_key.read', order: 95 }],
 });

@@ -15,5 +15,6 @@ export const manifest = defineModule({
     'products.category.write',
     'products.category.delete',
   ],
+  app: { pillar: 'operations', icon: 'Package', label: 'shell.apps.products', order: 2 },
   menus: [{ label: 'products.menu.products', href: '/products', perm: 'products.product.read', order: 20 }],
 });

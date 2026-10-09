@@ -117,3 +117,34 @@ body {
     border-color: var(--color-border);
   }
 }
+
+/* Odoo-style app shell: cream canvas, white panels, Revora blue accents. Scoped to the (app) layout. */
+.app-shell {
+  --background: #f4f1ea;
+  --foreground: #0f1a17;
+  --card: #ffffff;
+  --card-foreground: #0f1a17;
+  --popover: #ffffff;
+  --popover-foreground: #0f1a17;
+  --primary: #08409d;
+  --primary-foreground: #ffffff;
+  --secondary: #ebe6da;
+  --secondary-foreground: #0f1a17;
+  --accent: #ebe6da;
+  --accent-foreground: #0f1a17;
+  --muted: #ebe6da;
+  --muted-foreground: #5c6661;
+  --border: #e2dccd;
+  --input: #e2dccd;
+  --ring: #08409d;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.app-panel {
+  background: var(--card);
+  border-radius: 24px;
+  box-shadow:
+    0 1px 2px rgb(15 26 23 / 0.04),
+    0 8px 24px -12px rgb(15 26 23 / 0.12);
+}

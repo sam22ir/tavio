@@ -17,6 +17,7 @@ export const manifest = defineModule({
     'credit_sales.payment.delete',
   ],
   entities: [contractEntity, paymentEntity],
+  app: { pillar: 'sales', icon: 'CreditCard', label: 'shell.apps.credit_sales', order: 2 },
   menus: [
     { label: 'credit.menu.contracts', href: '/credit/contracts', perm: 'credit_sales.contract.read', order: 30 },
     { label: 'credit.menu.payments', href: '/credit/payments', perm: 'credit_sales.payment.read', order: 31 },

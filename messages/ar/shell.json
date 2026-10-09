@@ -5,7 +5,11 @@
     "settings": "الإعدادات",
     "open": "فتح القائمة",
     "close": "إغلاق القائمة",
-    "title": "التنقل"
+    "title": "التنقل",
+    "launcher": "التطبيقات",
+    "notifications": "الإشعارات",
+    "tabs": "قوائم التطبيق",
+    "account": "فتح قائمة الحساب"
   },
   "company": {
     "label": "الشركة النشطة",
@@ -42,6 +46,50 @@
       "newContract": "عقد جديد",
       "newContact": "جهة اتصال جديدة",
       "newLead": "فرصة جديدة"
-    }
+    },
+    "hello": "مرحباً {name}",
+    "today": "اليوم",
+    "todayEmpty": "لا شيء للقيام به اليوم.",
+    "applications": "التطبيقات",
+    "applicationsEmpty": "لا يوجد تطبيق متاح بصلاحياتك.",
+    "chips": {
+      "dueToday": "استحقاقات اليوم",
+      "overdue": "متأخرة",
+      "activities": "الأنشطة"
+    },
+    "lists": {
+      "due": "الاستحقاقات",
+      "activities": "الأنشطة"
+    },
+    "viewAll": "عرض الكل ←"
+  },
+  "pillars": {
+    "acquisition": "الاستقطاب",
+    "sales": "المبيعات",
+    "operations": "العمليات",
+    "data": "البيانات",
+    "technology": "التقنية"
+  },
+  "apps": {
+    "crm": "إدارة العملاء",
+    "website": "الموقع",
+    "marketing": "التسويق",
+    "sales": "المبيعات",
+    "credit_sales": "المبيعات بالتقسيط",
+    "pos": "نقطة البيع",
+    "contacts": "جهات الاتصال",
+    "products": "المنتجات",
+    "invoicing": "الفوترة",
+    "inventory": "المخزون",
+    "purchases": "المشتريات",
+    "accounting": "المحاسبة",
+    "hr": "الموارد البشرية",
+    "projects": "المشاريع",
+    "helpdesk": "الدعم",
+    "ai_features": "مساعد الذكاء الاصطناعي",
+    "platform": "المنصة",
+    "automation": "الأتمتة",
+    "subscriptions": "الاشتراكات",
+    "l10n_dz": "الضرائب"
   }
 }

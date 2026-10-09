@@ -7,6 +7,7 @@ export const manifest = defineModule({
   version: '1.0.0',
   depends: ['contacts', 'credit_sales', 'chatter'],
   permissions: ['marketing.campaign.read', 'marketing.campaign.write'],
+  app: { pillar: 'acquisition', icon: 'Megaphone', label: 'shell.apps.marketing', order: 3 },
   menus: [{ label: 'marketing.menu.campaigns', href: '/marketing', perm: 'marketing.campaign.read', order: 70 }],
   entities: [campaignEntity],
 });
