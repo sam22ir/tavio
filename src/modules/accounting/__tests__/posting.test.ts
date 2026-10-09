@@ -145,10 +145,20 @@ describe('paymentLines', () => {
 });
 
 describe('posLines', () => {
-  it('posts Dr 53 / Cr 700 / Cr 4457 and balances', () => {
-    const lines = posLines({ orderId: 'o1', number: 'POS-1', totalCents: C(1190), untaxedCents: C(1000), taxCents: C(190) });
+  it('posts cash to Dr 53 / Cr 700 / Cr 4457 and balances', () => {
+    const lines = posLines({ orderId: 'o1', number: 'POS-1', method: 'cash', totalCents: C(1190), untaxedCents: C(1000), taxCents: C(190) });
     expect(lines.map((l) => [l.accountCode, l.debitCents > C(0) ? 'D' : 'C'])).toEqual([
       ['53', 'D'],
+      ['700', 'C'],
+      ['4457', 'C'],
+    ]);
+    expect(checkBalanced(lines).ok).toBe(true);
+  });
+
+  it.each(['cib', 'edahabia'])('posts %s card sales to the bank account 512', (method) => {
+    const lines = posLines({ orderId: 'o1', number: 'POS-1', method, totalCents: C(1190), untaxedCents: C(1000), taxCents: C(190) });
+    expect(lines.map((l) => [l.accountCode, l.debitCents > C(0) ? 'D' : 'C'])).toEqual([
+      ['512', 'D'],
       ['700', 'C'],
       ['4457', 'C'],
     ]);

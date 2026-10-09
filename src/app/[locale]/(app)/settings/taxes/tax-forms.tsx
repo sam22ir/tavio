@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -27,7 +28,7 @@ export function LoadDefaultsButton() {
     start(async () => {
       const r = await loadAlgerianDefaultsAction({});
       if (!r.ok) {
-        setStatus({ kind: 'error', text: t('taxes.error') });
+        setStatus({ kind: 'error', text: t('taxes.error') }); toast.error(t('taxes.error'));
         return;
       }
       setStatus({
@@ -75,7 +76,7 @@ export function TaxForm() {
     start(async () => {
       const r = await createTaxAction(input);
       if (!r.ok) {
-        setStatus({ kind: 'error', text: r.error.code === 'CONFLICT' ? r.error.message : t('taxes.error') });
+        setStatus({ kind: 'error', text: r.error.code === 'CONFLICT' ? r.error.message : t('taxes.error') }); toast.error(r.error.code === 'CONFLICT' ? r.error.message : t('taxes.error'));
         return;
       }
       setStatus({ kind: 'ok', text: t('taxes.saved') });
@@ -156,7 +157,7 @@ export function ArchiveTaxButton({ id }: { id: string }) {
     start(async () => {
       const r = await archiveTaxAction({ id });
       if (!r.ok) {
-        setStatus({ kind: 'error', text: t('taxes.error') });
+        setStatus({ kind: 'error', text: t('taxes.error') }); toast.error(t('taxes.error'));
         return;
       }
       setStatus({ kind: 'ok', text: t('taxes.archived') });

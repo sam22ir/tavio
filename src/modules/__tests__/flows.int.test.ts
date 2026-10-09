@@ -31,7 +31,7 @@ const db = getDb();
 const userId = randomUUID();
 const companyId = randomUUID();
 const args: TenantArgs = { userId, companyId, perms: new Set(['*']), locale: 'en' };
-const uomId = randomUUID();
+let uomId = '';
 const productId = randomUUID();
 
 // State shared between the steps of one flow, in order.
@@ -48,14 +48,9 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('cross-module flows (integration)', ()
   it('sets up a fresh company, a product and a partner', async () => {
     await db.insert(companies).values({ id: companyId, legalName: 'Flows SARL', displayName: 'Flows' });
     await db.insert(users).values({ id: userId, name: 'flows test', email: `flows-${userId}@test.invalid` });
-    await db.insert(uoms).values({
-      id: uomId,
-      code: `pc-${uomId.slice(0, 8)}`,
-      nameFr: 'Pièce',
-      category: 'unit',
-      factorToRef: '1',
-      isReference: false,
-    });
+    const [unitRow] = await db.select({ id: uoms.id }).from(uoms).where(eq(uoms.code, 'unit')).limit(1);
+    if (!unitRow) throw new Error('seeded uom "unit" missing: run scripts/seed-global.ts');
+    uomId = unitRow.id;
     await db.insert(products).values({
       id: productId,
       companyId,

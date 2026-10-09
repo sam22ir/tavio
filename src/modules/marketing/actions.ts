@@ -1,5 +1,6 @@
 'use server';
 
+import { failureQuery } from '@/ui/feedback/failure-query';
 import { redirect } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
@@ -74,17 +75,17 @@ export async function updateCampaignForm(prev: FormState, formData: FormData): P
 export async function buildRecipientsForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const id = String(formData.get('id') ?? '');
-  await buildRecipientsAction({ id });
-  redirect(`/${locale}/marketing/${encodeURIComponent(id)}/recipients`);
+  const r = await buildRecipientsAction({ id });
+  redirect(`/${locale}/marketing/${encodeURIComponent(id)}/recipients${failureQuery(r)}`);
 }
 
 /** Form action for the per-recipient status buttons. */
 export async function setRecipientStatusForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const campaignId = String(formData.get('campaignId') ?? '');
-  await setStatusAction({
+  const r = await setStatusAction({
     recipientId: String(formData.get('recipientId') ?? ''),
     status: String(formData.get('status') ?? '') as 'pending' | 'sent' | 'failed',
   });
-  redirect(`/${locale}/marketing/${encodeURIComponent(campaignId)}/recipients`);
+  redirect(`/${locale}/marketing/${encodeURIComponent(campaignId)}/recipients${failureQuery(r)}`);
 }

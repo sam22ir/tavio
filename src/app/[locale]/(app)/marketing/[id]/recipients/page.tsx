@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ErrorToast } from '@/ui/feedback/error-toast';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -9,14 +10,18 @@ import { RecipientsTable } from '@/modules/marketing/ui/recipients-table';
 
 export default async function CampaignRecipientsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { locale, id } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
   const t = await getTranslations('marketing');
+  const tViews = await getTranslations('views');
+  const { error: failure } = await searchParams;
   const currentLocale = await getLocale();
   const result = await withPageCtx((ctx) => listRecipients(ctx, id));
   if (!result.ok) {
@@ -34,6 +39,7 @@ export default async function CampaignRecipientsPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
+      {failure ? <ErrorToast message={tViews('error')} /> : null}
       <Link href={`/${currentLocale}/marketing/${id}`} className="text-sm text-muted-foreground hover:underline">
         ← {campaign.name}
       </Link>

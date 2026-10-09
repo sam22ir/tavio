@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
@@ -64,6 +65,7 @@ export function DraftForm({
       if (!result.ok) {
         const code = (KNOWN_ERRORS as readonly string[]).includes(result.error.code) ? result.error.code : 'INTERNAL';
         setError(t(`error.${code}` as never));
+        toast.error(t(`error.${code}` as never));
         return;
       }
       router.push(`/${locale}/invoicing/${kind}/${result.value.id}`);

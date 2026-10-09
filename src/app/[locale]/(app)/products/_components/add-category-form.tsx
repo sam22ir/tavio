@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -26,6 +27,7 @@ export function AddCategoryForm() {
     setPending(false);
     if (!result.ok) {
       setError(result.error.message);
+      toast.error(result.error.message);
       return;
     }
     setOpen(false);

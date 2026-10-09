@@ -3,10 +3,9 @@ import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { routing } from '@/i18n/routing';
-import { productOptions } from '@/modules/products/service/products';
 import { partnerOptions } from '@/modules/contacts/service/partners';
 import { createOrderForm } from '@/modules/purchases/actions';
-import { purchaseTaxOptions } from '@/modules/purchases/service/lookups';
+import { purchaseProductOptions, purchaseTaxOptions } from '@/modules/purchases/service/lookups';
 import { OrderForm } from '@/modules/purchases/ui/order-form';
 
 export default async function NewPurchaseOrderPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,7 +16,7 @@ export default async function NewPurchaseOrderPage({ params }: { params: Promise
   const t = await getTranslations('purchases');
   const options = await withPageCtx(async (ctx) => ({
     partners: await partnerOptions(ctx),
-    products: await productOptions(ctx),
+    products: await purchaseProductOptions(ctx),
     taxes: await purchaseTaxOptions(ctx),
   }));
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ErrorToast } from '@/ui/feedback/error-toast';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -11,13 +12,17 @@ import { Button } from '@/ui/primitives/button';
 
 export default async function MoveDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { locale, id } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('inventory');
+  const tViews = await getTranslations('views');
+  const { error: failure } = await searchParams;
   const currentLocale = await getLocale();
   const result = await withPageCtx((ctx) => getMove(ctx, id));
   if (!result.ok) {
@@ -33,6 +38,7 @@ export default async function MoveDetailPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
+      {failure ? <ErrorToast message={tViews('error')} /> : null}
       <Link href={`/${currentLocale}/inventory/moves`} className="text-sm text-muted-foreground hover:underline">
         ← {t('moves.title')}
       </Link>

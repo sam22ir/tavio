@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useFormErrorToast } from '@/ui/feedback/use-form-error-toast';
 import type { FormState } from '@/core/entities/types';
 import { ACTION_NAMES } from '../config';
 import { OPS } from '../conditions';
@@ -39,6 +40,7 @@ export function RuleForm({
   const t = useTranslations('automation');
   const router = useRouter();
   const [state, formAction, pending] = useActionState<FormState, FormData>(action, {});
+  useFormErrorToast(state, state.ok === false && state.message ? t('errors.invalid') : '');
 
   useEffect(() => {
     if (state.redirectTo) router.push(state.redirectTo);

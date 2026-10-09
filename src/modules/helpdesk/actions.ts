@@ -38,7 +38,11 @@ export async function createTicketForm(prev: FormState, formData: FormData): Pro
 
 /** Form action for /helpdesk/teams. */
 export async function createTeamForm(prev: FormState, formData: FormData): Promise<FormState> {
-  return toFormAction(createTeamAction, { schema: teamInput })(prev, formData);
+  const locale = await getLocale();
+  return toFormAction(createTeamAction, {
+    schema: teamInput,
+    redirectTo: () => `/${locale}/helpdesk/teams`,
+  })(prev, formData);
 }
 
 /** Kanban drop handler: moves a ticket to a stage when the transition is allowed. */

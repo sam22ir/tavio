@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useState, useTransition } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { saveCustomValuesAction } from '../actions';
@@ -46,7 +47,11 @@ export function CustomFieldsEditor({
     start(async () => {
       const r = await saveCustomValuesAction({ entity, recordId, values: draft });
       if (r.ok) setMessage({ kind: 'ok', text: t('custom.saved') });
-      else setMessage({ kind: 'error', text: r.error.code === 'VALIDATION' ? t('custom.invalid') : t('errors.generic') });
+      else {
+        const text = r.error.code === 'VALIDATION' ? t('custom.invalid') : t('errors.generic');
+        setMessage({ kind: 'error', text });
+        toast.error(text);
+      }
     });
   }
 

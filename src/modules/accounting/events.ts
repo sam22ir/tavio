@@ -1,6 +1,8 @@
 import { on } from '@/core/events';
 import type { Ctx } from '@/core/ctx';
 import type { InvoicePaymentRegistered, InvoicePosted, PosOrderPaid } from '@/core/events/catalog';
+import { and, eq } from 'drizzle-orm';
+import { invoices } from '@/modules/invoicing/schema';
 import { postEntry } from './service/entries';
 import { invoiceLines, paymentLines, posLines } from './service/posting';
 
@@ -40,10 +42,16 @@ on('invoicing.invoice.posted', async (ctx, event) => {
 
 on('invoicing.payment.registered', async (ctx, event) => {
   const p = event.payload as InvoicePaymentRegistered;
+  const [invoice] = await ctx.tx
+    .select({ number: invoices.number })
+    .from(invoices)
+    .where(and(eq(invoices.id, p.invoiceId), eq(invoices.companyId, ctx.companyId)))
+    .limit(1);
+  const invoiceNumber = invoice?.number ?? p.invoiceId;
   await mustPost(ctx, {
     journalCode: p.method === 'cash' ? 'CA' : 'BQ',
     date: p.date,
-    ref: p.invoiceId,
+    ref: invoiceNumber,
     sourceEntity: 'invoicing.payment',
     sourceId: p.paymentId,
     lines: paymentLines({
@@ -51,7 +59,7 @@ on('invoicing.payment.registered', async (ctx, event) => {
       partnerId: p.partnerId,
       amountCents: bigOrZero(p.amountCents),
       method: p.method,
-      reference: p.invoiceId,
+      reference: invoiceNumber,
     }),
   });
 });
@@ -59,7 +67,7 @@ on('invoicing.payment.registered', async (ctx, event) => {
 on('pos.order.paid', async (ctx, event) => {
   const p = event.payload as PosOrderPaid;
   await mustPost(ctx, {
-    journalCode: 'CA',
+    journalCode: p.method === 'cash' ? 'CA' : 'BQ',
     date: new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Algiers' }).format(new Date()),
     ref: p.number,
     sourceEntity: 'pos.order',
@@ -67,6 +75,7 @@ on('pos.order.paid', async (ctx, event) => {
     lines: posLines({
       orderId: p.orderId,
       number: p.number,
+      method: p.method,
       totalCents: bigOrZero(p.totalCents),
       untaxedCents: bigOrZero(p.untaxedCents),
       taxCents: bigOrZero(p.taxCents),

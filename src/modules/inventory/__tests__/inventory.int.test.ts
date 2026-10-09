@@ -23,12 +23,13 @@ const createdCompanies: string[] = [];
 async function fixture(): Promise<{ args: TenantArgs; productId: string; uomId: string }> {
   const companyId = randomUUID();
   const userId = randomUUID();
-  const uomId = randomUUID();
   const productId = randomUUID();
   createdCompanies.push(companyId);
   await db.insert(companies).values({ id: companyId, legalName: 'Inv Test SARL', displayName: 'Inv' });
   await db.insert(users).values({ id: userId, name: 'inventory test', email: `inv-${userId}@test.invalid` });
-  await db.insert(uoms).values({ id: uomId, code: `pc-${uomId.slice(0, 8)}`, nameFr: 'Pièce', category: 'unit', factorToRef: '1', isReference: false });
+  const [unitRow] = await db.select({ id: uoms.id }).from(uoms).where(eq(uoms.code, 'unit')).limit(1);
+  if (!unitRow) throw new Error('seeded uom "unit" missing: run scripts/seed-global.ts');
+  const uomId = unitRow.id;
   await db.insert(products).values({
     id: productId,
     companyId,

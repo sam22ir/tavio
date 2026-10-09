@@ -116,15 +116,16 @@ export function paymentLines(p: PaymentForPosting): DraftLine[] {
 export interface PosPaidForPosting {
   orderId: string;
   number: string;
+  method: string;
   totalCents: bigint;
   untaxedCents: bigint;
   taxCents: bigint;
 }
 
-/** POS sale: Dr 53 total / Cr 700 untaxed / Cr 4457 VAT. */
+/** POS sale: Dr 53 (cash) or 512 (card) total / Cr 700 untaxed / Cr 4457 VAT. */
 export function posLines(p: PosPaidForPosting): DraftLine[] {
   return [
-    ...line('53', 'debit', p.totalCents, null, p.number),
+    ...line(treasuryAccount(p.method), 'debit', p.totalCents, null, p.number),
     ...line('700', 'credit', p.untaxedCents, null, p.number),
     ...line('4457', 'credit', p.taxCents, null, p.number),
   ];

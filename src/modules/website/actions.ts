@@ -1,5 +1,6 @@
 'use server';
 
+import { failureQuery } from '@/ui/feedback/failure-query';
 import { redirect } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
@@ -46,8 +47,8 @@ export async function saveSettingsForm(prev: FormState, formData: FormData): Pro
 export async function convertWebOrderForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const id = String(formData.get('id') ?? '');
-  await convertAction({ id });
-  redirect(`/${locale}/website/orders/${encodeURIComponent(id)}`);
+  const r = await convertAction({ id });
+  redirect(`/${locale}/website/orders/${encodeURIComponent(id)}${failureQuery(r)}`);
 }
 
 /** Admin cancel button for a new web order. */
@@ -58,6 +59,6 @@ export async function cancelWebOrderForm(formData: FormData): Promise<void> {
 async function runTransition(formData: FormData, action: 'confirm' | 'cancel'): Promise<void> {
   const locale = await getLocale();
   const id = String(formData.get('id') ?? '');
-  await transitionAction({ id, action });
-  redirect(`/${locale}/website/orders/${encodeURIComponent(id)}`);
+  const r = await transitionAction({ id, action });
+  redirect(`/${locale}/website/orders/${encodeURIComponent(id)}${failureQuery(r)}`);
 }
