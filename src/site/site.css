@@ -291,3 +291,6 @@
 }
 .s-chip-static { position: static; transform: none; }
 .s-chip-static:hover { transform: none; }
+
+/* Decorative layers (watermarks, glows) must never cause horizontal scroll on phones. */
+.site { overflow-x: clip; }
