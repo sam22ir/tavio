@@ -2,12 +2,28 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { getDb, requestScopeKey } from '@/core/db/client';
 import { accounts, sessions, users, verifications } from '@/core/db/schema/auth';
+import { emailConfigured, sendEmail } from '@/core/adapters/email';
+import { resetPasswordEmail, verifyEmailEmail, type EmailLocale } from './emails';
 
 /** Origins allowed to call auth endpoints: BETTER_AUTH_URL plus comma-separated BETTER_AUTH_TRUSTED_ORIGINS. */
 function readTrustedOrigins(): string[] {
   const extra = (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '').split(',').map((o) => o.trim()).filter(Boolean);
   const self = process.env.BETTER_AUTH_URL?.trim();
   return self ? [self, ...extra] : extra;
+}
+
+const LOCALES: readonly EmailLocale[] = ['fr', 'ar', 'en'];
+
+/** Locale from the callbackURL (e.g. /ar/reset-password) that the client passed; falls back to fr. */
+function localeFromUrl(url: string): EmailLocale {
+  try {
+    const callback = new URL(url).searchParams.get('callbackURL');
+    const segment = callback ? callback.split('/')[1] : undefined;
+    if (segment && LOCALES.includes(segment as EmailLocale)) return segment as EmailLocale;
+  } catch {
+    // Malformed URL: use the default.
+  }
+  return 'fr';
 }
 
 function createAuth() {
@@ -26,6 +42,17 @@ function createAuth() {
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
+    sendResetPassword: async ({ user, url, token }) => {
+      const locale = localeFromUrl(url);
+      const link = `${new URL(url).origin}/${locale}/reset-password?token=${encodeURIComponent(token)}`;
+      await sendEmail({ to: user.email, ...resetPasswordEmail({ locale, url: link }) });
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: emailConfigured(),
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendEmail({ to: user.email, ...verifyEmailEmail({ locale: localeFromUrl(url), url }) });
+    },
   },
   advanced: {
     database: {
