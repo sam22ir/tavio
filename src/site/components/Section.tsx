@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/ui/lib/cn';
+import { Emphasis } from './Emphasis';
+import { PillLabel } from './PillLabel';
 
 /**
- * Page section wrapper: consistent vertical rhythm and a page-width container.
- * Mobile: single column, 16px gutter (px-4).
+ * Page section wrapper: generous vertical rhythm, page-width container.
+ * Mobile: single column with a 16px gutter (px-4). Sections fade up on scroll (see site.css).
  */
 export function Section({
   id,
@@ -13,27 +15,40 @@ export function Section({
 }: {
   /** Anchor id, for in-page links. */
   id?: string;
-  /** `muted` adds a subtle tinted band. */
+  /** `muted` adds a slightly darker cream band. */
   tone?: 'default' | 'muted';
   className?: string;
   children: ReactNode;
 }) {
   return (
-    <section id={id} className={cn('px-4 py-16 md:py-24', tone === 'muted' && 'bg-muted/50', className)}>
+    <section id={id} className={cn('px-4 py-20 md:py-32', tone === 'muted' && 'bg-muted/60', className)}>
       <div className="mx-auto w-full max-w-6xl">{children}</div>
     </section>
   );
 }
 
 /**
- * Section headline with an optional body. Stacked vertically (no split header).
- * Mobile: single column.
+ * Section headline with optional pill label and body. Left aligned.
+ * `*word*` in title renders in the accent style.
  */
-export function SectionHeading({ title, body, as: Tag = 'h2' }: { title: string; body?: string; as?: 'h1' | 'h2' }) {
+export function SectionHeading({
+  title,
+  body,
+  eyebrow,
+  as: Tag = 'h2',
+}: {
+  title: string;
+  body?: string;
+  eyebrow?: string;
+  as?: 'h1' | 'h2';
+}) {
   return (
-    <div className="flex max-w-2xl flex-col gap-4">
-      <Tag className="text-3xl font-semibold tracking-tight md:text-4xl">{title}</Tag>
-      {body ? <p className="text-base leading-relaxed text-muted-foreground md:text-lg">{body}</p> : null}
+    <div className="flex max-w-2xl flex-col gap-5">
+      {eyebrow ? <PillLabel>{eyebrow}</PillLabel> : null}
+      <Tag className="s-h2">
+        <Emphasis text={title} />
+      </Tag>
+      {body ? <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{body}</p> : null}
     </div>
   );
 }

@@ -4,9 +4,9 @@ import { FOOTER_COLUMNS, localeHref } from '../content/nav';
 import { LocaleSwitcher } from './LocaleSwitcher';
 
 /**
- * Marketing footer: link columns, WhatsApp contact (hidden when
+ * Marketing footer: a white panel on cream with link columns, WhatsApp contact (hidden when
  * NEXT_PUBLIC_CONTACT_WHATSAPP is unset), language switcher and rights line.
- * Mobile: 2 columns. Desktop: 4 columns plus the brand block.
+ * Mobile: 2 columns. Desktop: 6-column grid with the brand block.
  */
 export async function SiteFooter({ locale }: { locale: string }) {
   const t = await getTranslations('site');
@@ -14,37 +14,42 @@ export async function SiteFooter({ locale }: { locale: string }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-muted/30 px-4 py-14">
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-10 md:grid-cols-6">
-        <div className="col-span-2 flex flex-col gap-4">
-          <p className="text-lg font-semibold tracking-tight">{t('brand.name')}</p>
-          <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">{t('footer.tagline')}</p>
-          <LocaleSwitcher />
-          {whatsapp ? (
-            <a
-              href={`https://wa.me/${whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-primary underline-offset-4 hover:underline"
-            >
-              {t('footer.whatsapp')}
-            </a>
-          ) : null}
+    <footer className="px-4 pb-6 pt-16 md:pt-24">
+      <div className="s-panel mx-auto w-full max-w-6xl px-6 py-12 md:px-12">
+        <div className="grid w-full grid-cols-2 gap-10 md:grid-cols-6">
+          <div className="col-span-2 flex flex-col gap-4">
+            <p className="flex items-center gap-2.5 text-lg font-bold tracking-tight">
+              <span className="s-mark" aria-hidden>T</span>
+              {t('brand.name')}
+            </p>
+            <p className="max-w-xs text-[15px] leading-relaxed text-[color:var(--s-muted)]">{t('footer.tagline')}</p>
+            <LocaleSwitcher />
+            {whatsapp ? (
+              <a
+                href={`https://wa.me/${whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[15px] font-medium text-[color:var(--s-accent)] underline-offset-4 hover:underline"
+              >
+                {t('footer.whatsapp')}
+              </a>
+            ) : null}
+          </div>
+          {FOOTER_COLUMNS.map((col) => (
+            <nav key={col.titleKey} aria-label={t(`footer.${col.titleKey}`)} className="flex flex-col gap-3 text-[15px]">
+              <p className="font-semibold">{t(`footer.${col.titleKey}`)}</p>
+              {col.links.map((link) => (
+                <Link key={link.href} href={localeHref(locale, link.href)} className="text-[color:var(--s-muted)] transition-colors hover:text-[color:var(--s-ink)]">
+                  {t(`footer.links.${link.key}`)}
+                </Link>
+              ))}
+            </nav>
+          ))}
         </div>
-        {FOOTER_COLUMNS.map((col) => (
-          <nav key={col.titleKey} aria-label={t(`footer.${col.titleKey}`)} className="flex flex-col gap-3 text-sm">
-            <p className="font-semibold">{t(`footer.${col.titleKey}`)}</p>
-            {col.links.map((link) => (
-              <Link key={link.href} href={localeHref(locale, link.href)} className="text-muted-foreground hover:text-foreground">
-                {t(`footer.links.${link.key}`)}
-              </Link>
-            ))}
-          </nav>
-        ))}
+        <p className="mt-12 w-full border-t border-[rgba(15,26,23,0.08)] pt-6 text-xs text-[color:var(--s-muted)]">
+          © {year} {t('brand.name')}. {t('footer.rights')}
+        </p>
       </div>
-      <p className="mx-auto mt-12 w-full max-w-6xl text-xs text-muted-foreground">
-        © {year} {t('brand.name')}. {t('footer.rights')}
-      </p>
     </footer>
   );
 }
