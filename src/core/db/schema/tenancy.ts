@@ -48,6 +48,8 @@ export const companies = pgTable(
     fiscalYearStartMonth: smallint('fiscal_year_start_month').notNull().default(1),
     plan: text('plan').notNull().default('saas_starter'),
     status: text('status').notNull().default('active'),
+    // Onboarding choice: 'commerce' | 'wholesale' | 'services' | 'other'. Null until chosen.
+    businessType: text('business_type'),
   },
   (t) => [
     index('companies_status_idx').on(t.status),

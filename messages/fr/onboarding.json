@@ -1,0 +1,88 @@
+{
+  "wizard": {
+    "brandAlt": "Revora",
+    "stepOf": "Étape {current} sur {total}",
+    "back": "Retour",
+    "next": "Suivant",
+    "skip": "Passer",
+    "continue": "Continuer",
+    "sendInvites": "Envoyer les invitations",
+    "pending": "Veuillez patienter…"
+  },
+  "basics": {
+    "title": "Configurer votre entreprise",
+    "subtitle": "Parlez-nous de votre activité. Vous pourrez tout modifier plus tard.",
+    "legalName": "Raison sociale",
+    "legalNameHint": "Au moins 2 caractères.",
+    "phone": "Téléphone",
+    "wilaya": "Wilaya",
+    "wilayaPlaceholder": "Choisir une wilaya",
+    "logo": "Logo (optionnel)",
+    "logoHint": "JPG, PNG ou WebP, 10 Mo maximum."
+  },
+  "type": {
+    "title": "Quelle est votre activité ?",
+    "subtitle": "Nous activons les modules utiles à votre métier. Vous pourrez en ajouter ou en retirer.",
+    "commerce": "Commerce / magasin",
+    "commerceHint": "Vente au comptoir et à crédit, stock, factures, clients.",
+    "wholesale": "Grossiste / distribution",
+    "wholesaleHint": "Achats, ventes en gros, stock, comptabilité, fournisseurs.",
+    "services": "Services",
+    "servicesHint": "Suivi commercial, projets, support client, facturation.",
+    "other": "Autre",
+    "otherHint": "Tous les modules par défaut."
+  },
+  "team": {
+    "title": "Invitez votre équipe",
+    "subtitle": "Ajoutez les personnes qui travailleront avec vous. Vous pouvez aussi le faire plus tard.",
+    "email": "Adresse e-mail",
+    "role": "Rôle",
+    "addRow": "Ajouter une personne",
+    "removeRow": "Retirer",
+    "roles": {
+      "admin": "Administrateur",
+      "manager": "Responsable",
+      "staff": "Employé"
+    },
+    "sentEmail": "Invitation envoyée à {email}.",
+    "createdLink": "Lien d'invitation pour {email} :",
+    "failed": "Échec pour {email}."
+  },
+  "done": {
+    "title": "Votre espace est prêt",
+    "subtitle": "Comment voulez-vous commencer ?",
+    "invitesSummary": "{count} invitation(s) traitée(s).",
+    "sampleTitle": "Explorer avec des données d'exemple",
+    "sampleHint": "Produits, clients, ventes, factures et contrats fictifs. Vous pourrez les effacer à tout moment.",
+    "sampleCta": "Explorer",
+    "emptyTitle": "Commencer à vide",
+    "emptyHint": "Votre espace reste vierge. Vous ajouterez vos propres données.",
+    "emptyCta": "Commencer à vide",
+    "helpTitle": "Besoin d'aide pour démarrer ?",
+    "helpCta": "Demander un audit gratuit"
+  },
+  "errors": {
+    "validation": "Vérifiez les informations saisies.",
+    "session": "Votre session a expiré. Reconnectez-vous.",
+    "forbidden": "Vous n'avez pas le droit de modifier cette entreprise.",
+    "generic": "Une erreur est survenue. Réessayez.",
+    "logo": "Logo refusé : format ou taille non supportés.",
+    "sampleFailed": "Impossible de charger les données d'exemple. Réessayez."
+  },
+  "banner": {
+    "active": "Données d'exemple actives",
+    "clear": "Effacer",
+    "confirm": "Supprimer toutes les données d'exemple ?",
+    "confirmAction": "Confirmer",
+    "cancel": "Annuler",
+    "failed": "Impossible d'effacer les données d'exemple."
+  },
+  "checklist": {
+    "title": "Premiers pas",
+    "progress": "{done} sur {total} étapes faites",
+    "product": "Ajouter un produit",
+    "customer": "Ajouter un client",
+    "sale": "Faire une première vente ou un contrat",
+    "team": "Inviter un collaborateur"
+  }
+}
