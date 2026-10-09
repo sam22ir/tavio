@@ -1,6 +1,11 @@
 # Tavio
 
-A modular business suite for Algerian SMEs. It covers credit (installment) sales, CRM, contacts, products and Algerian tax settings, in French, Arabic (RTL) and English.
+A modular business suite for Algerian SMEs, in French, Arabic (RTL) and English. It has 20 modules:
+- **Core:** contacts, products, Algerian taxes (l10n_dz), chatter and activities
+- **Sales side:** credit (installment) sales, CRM, sales, invoicing
+- **Operations:** inventory, purchases, accounting (SCF), POS, HR, projects, helpdesk
+- **Online:** website and shop, marketing (WhatsApp campaigns)
+- **Platform:** custom fields, REST API (`/api/v1`), webhooks, automation, SaaS subscriptions, on-prem Docker packaging
 
 - **Live:** https://tavio.nafaa-store.workers.dev
 - **Plan and architecture:** [docs/plan/](docs/plan/) (ARCHITECTURE, DATA_MODEL, ROADMAP, CONVENTIONS, task waves)
