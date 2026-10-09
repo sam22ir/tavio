@@ -96,6 +96,7 @@
     "addStep": "Add step",
     "savePlan": "Save plan",
     "addPlan": "Add plan",
-    "pageTitle": "Activities"
+    "pageTitle": "Activities",
+    "forbidden": "You do not have permission to manage activities."
   }
 }

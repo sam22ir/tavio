@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { emit } from '@/core/events';
@@ -16,6 +16,7 @@ import {
   type Activity,
   type Message,
 } from '../schema';
+import { isCheckViolation, isUniqueViolation } from './db-errors';
 import { dueAfter, type DelayUnit } from './timing';
 
 export interface NewActivity {
@@ -101,6 +102,18 @@ export function todayIso(now: Date = new Date()): string {
     month: '2-digit',
     day: '2-digit',
   }).format(now);
+}
+
+/** Every id must be an active member of the company (member_directory, see listAssignees). */
+export async function assertMembers(ctx: Ctx, userIds: string[]): Promise<Result<void>> {
+  const unique = [...new Set(userIds)];
+  if (unique.length === 0) return ok(undefined);
+  const members = new Set((await listAssignees(ctx)).map((m) => m.id));
+  const missing = unique.filter((id) => !members.has(id));
+  if (missing.length > 0) {
+    return err('VALIDATION', 'User is not an active member of this company', { userIds: missing });
+  }
+  return ok(undefined);
 }
 
 /** Resolves a seed key (for example 'call') or an activity type id to an active activity_types row. */
@@ -401,6 +414,39 @@ export async function saveActivityType(ctx: Ctx, i: ActivityTypeInput): Promise<
     return err('VALIDATION', 'Delay must be a whole number from 0 to 3650');
   }
   if (i.id && i.nextTypeId === i.id) return err('VALIDATION', 'An activity type cannot chain to itself');
+  const entity = i.entity?.trim() || null;
+  const isSeedKey = (n: string): boolean => ACTIVITY_TYPE_SEED.some((s) => s.key === n);
+
+  let previous: ActivityType | undefined;
+  if (i.id) {
+    const [row] = await ctx.tx.select().from(activityTypes).where(eq(activityTypes.id, i.id)).limit(1);
+    if (!row) return err('NOT_FOUND', 'Activity type not found');
+    previous = row;
+    // Seeded types are resolved by key (typeKey callers), so their name is fixed.
+    if (isSeedKey(row.name) && name !== row.name) {
+      return err('VALIDATION', 'Seeded activity types cannot be renamed', { name: row.name });
+    }
+  } else if (isSeedKey(name)) {
+    return err('VALIDATION', 'This name is reserved for a seeded activity type', { name });
+  }
+
+  const sameName = await ctx.tx
+    .select({ id: activityTypes.id })
+    .from(activityTypes)
+    .where(
+      and(
+        eq(activityTypes.name, name),
+        entity === null ? isNull(activityTypes.entity) : eq(activityTypes.entity, entity),
+        i.id ? ne(activityTypes.id, i.id) : undefined,
+      ),
+    )
+    .limit(1);
+  if (sameName.length > 0) return err('CONFLICT', 'An activity type with this name already exists for this entity');
+
+  if (i.defaultUserId) {
+    const members = await assertMembers(ctx, [i.defaultUserId]);
+    if (!members.ok) return members;
+  }
   if (i.nextTypeId) {
     const [next] = await ctx.tx
       .select({ id: activityTypes.id })
@@ -411,7 +457,7 @@ export async function saveActivityType(ctx: Ctx, i: ActivityTypeInput): Promise<
   }
   const values = {
     name,
-    entity: i.entity?.trim() || null,
+    entity,
     icon: i.icon,
     delayCount: i.delayCount,
     delayUnit: i.delayUnit,
@@ -424,23 +470,35 @@ export async function saveActivityType(ctx: Ctx, i: ActivityTypeInput): Promise<
     active: i.active,
     updatedAt: new Date(),
   };
-  if (i.id) {
+  try {
+    if (i.id) {
+      const [row] = await ctx.tx
+        .update(activityTypes)
+        .set(values)
+        .where(eq(activityTypes.id, i.id))
+        .returning({ id: activityTypes.id });
+      if (!row) return err('NOT_FOUND', 'Activity type not found');
+      await audit(ctx, {
+        entity: 'chatter.activity_type',
+        recordId: row.id,
+        action: 'update',
+        before: previous ? { name: previous.name, entity: previous.entity, active: previous.active } : undefined,
+        after: values,
+      });
+      return ok({ id: row.id });
+    }
     const [row] = await ctx.tx
-      .update(activityTypes)
-      .set(values)
-      .where(eq(activityTypes.id, i.id))
+      .insert(activityTypes)
+      .values({ ...values, companyId: ctx.companyId, createdBy: ctx.userId })
       .returning({ id: activityTypes.id });
-    if (!row) return err('NOT_FOUND', 'Activity type not found');
-    await audit(ctx, { entity: 'chatter.activity_type', recordId: row.id, action: 'update', after: values });
+    if (!row) return err('INTERNAL', 'insert failed');
+    await audit(ctx, { entity: 'chatter.activity_type', recordId: row.id, action: 'create', after: values });
     return ok({ id: row.id });
+  } catch (e) {
+    if (isUniqueViolation(e)) return err('CONFLICT', 'An activity type with this name already exists for this entity');
+    if (isCheckViolation(e)) return err('VALIDATION', 'Activity type values are invalid');
+    throw e;
   }
-  const [row] = await ctx.tx
-    .insert(activityTypes)
-    .values({ ...values, companyId: ctx.companyId, createdBy: ctx.userId })
-    .returning({ id: activityTypes.id });
-  if (!row) return err('INTERNAL', 'insert failed');
-  await audit(ctx, { entity: 'chatter.activity_type', recordId: row.id, action: 'create', after: values });
-  return ok({ id: row.id });
 }
 
 /** All activity plans with their steps, by name. */
@@ -479,6 +537,11 @@ export async function savePlan(ctx: Ctx, i: PlanInput): Promise<Result<{ id: str
     if (s.responsible === 'fixed' && !s.userId) return err('VALIDATION', 'A fixed step needs a user');
     if (s.responsible === 'record_owner' && s.userId) return err('VALIDATION', 'A record owner step cannot have a user');
   }
+  const members = await assertMembers(
+    ctx,
+    i.steps.flatMap((s) => (s.responsible === 'fixed' && s.userId ? [s.userId] : [])),
+  );
+  if (!members.ok) return members;
   const typeIds = [...new Set(i.steps.map((s) => s.activityTypeId))];
   const types = await ctx.tx
     .select({ id: activityTypes.id })
@@ -488,36 +551,42 @@ export async function savePlan(ctx: Ctx, i: PlanInput): Promise<Result<{ id: str
 
   const values = { name, entity, active: i.active, updatedAt: new Date() };
   let planId: string;
-  if (i.id) {
-    const [row] = await ctx.tx
-      .update(activityPlans)
-      .set(values)
-      .where(eq(activityPlans.id, i.id))
-      .returning({ id: activityPlans.id });
-    if (!row) return err('NOT_FOUND', 'Plan not found');
-    planId = row.id;
-    await ctx.tx.delete(activityPlanSteps).where(eq(activityPlanSteps.planId, planId));
-  } else {
-    const [row] = await ctx.tx
-      .insert(activityPlans)
-      .values({ ...values, companyId: ctx.companyId, createdBy: ctx.userId })
-      .returning({ id: activityPlans.id });
-    if (!row) return err('INTERNAL', 'insert failed');
-    planId = row.id;
+  try {
+    if (i.id) {
+      const [row] = await ctx.tx
+        .update(activityPlans)
+        .set(values)
+        .where(eq(activityPlans.id, i.id))
+        .returning({ id: activityPlans.id });
+      if (!row) return err('NOT_FOUND', 'Plan not found');
+      planId = row.id;
+      await ctx.tx.delete(activityPlanSteps).where(eq(activityPlanSteps.planId, planId));
+    } else {
+      const [row] = await ctx.tx
+        .insert(activityPlans)
+        .values({ ...values, companyId: ctx.companyId, createdBy: ctx.userId })
+        .returning({ id: activityPlans.id });
+      if (!row) return err('INTERNAL', 'insert failed');
+      planId = row.id;
+    }
+    await ctx.tx.insert(activityPlanSteps).values(
+      i.steps.map((s, index) => ({
+        companyId: ctx.companyId,
+        createdBy: ctx.userId,
+        planId,
+        sequence: index + 1,
+        activityTypeId: s.activityTypeId,
+        summary: s.summary.trim(),
+        offsetDays: s.offsetDays,
+        responsible: s.responsible,
+        userId: s.responsible === 'fixed' ? s.userId : null,
+      })),
+    );
+  } catch (e) {
+    if (isUniqueViolation(e)) return err('CONFLICT', 'A plan with these values already exists');
+    if (isCheckViolation(e)) return err('VALIDATION', 'Plan values are invalid');
+    throw e;
   }
-  await ctx.tx.insert(activityPlanSteps).values(
-    i.steps.map((s, index) => ({
-      companyId: ctx.companyId,
-      createdBy: ctx.userId,
-      planId,
-      sequence: index + 1,
-      activityTypeId: s.activityTypeId,
-      summary: s.summary.trim(),
-      offsetDays: s.offsetDays,
-      responsible: s.responsible,
-      userId: s.responsible === 'fixed' ? s.userId : null,
-    })),
-  );
   await audit(ctx, {
     entity: 'chatter.activity_plan',
     recordId: planId,

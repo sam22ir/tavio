@@ -96,6 +96,7 @@
     "addStep": "Ajouter une étape",
     "savePlan": "Enregistrer le plan",
     "addPlan": "Ajouter le plan",
-    "pageTitle": "Activités"
+    "pageTitle": "Activités",
+    "forbidden": "Vous n’avez pas l’autorisation de gérer les activités."
   }
 }

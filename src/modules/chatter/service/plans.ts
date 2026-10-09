@@ -3,7 +3,7 @@ import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { err, ok, type Result } from '@/core/result';
 import { activities, activityPlanRuns, activityPlanSteps, activityPlans } from '../schema';
-import { createActivity } from './index';
+import { assertMembers, createActivity } from './index';
 import { addDays } from './timing';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -38,6 +38,12 @@ export async function launchPlan(
   if (steps.some((s) => s.responsible === 'record_owner') && !ownerId) {
     return err('VALIDATION', 'The plan needs a record owner');
   }
+  // Owner and fixed users must be active members of this company.
+  const members = await assertMembers(ctx, [
+    ...(ownerId ? [ownerId] : []),
+    ...steps.flatMap((s) => (s.responsible === 'fixed' && s.userId ? [s.userId] : [])),
+  ]);
+  if (!members.ok) return members;
 
   const [run] = await ctx.tx
     .insert(activityPlanRuns)
@@ -103,14 +109,22 @@ export async function cancelPlanRuns(
   const deleted = await ctx.tx
     .delete(activities)
     .where(and(inArray(activities.planRunId, runIds), isNull(activities.doneAt)))
-    .returning({ id: activities.id });
+    .returning({ id: activities.id, planRunId: activities.planRunId });
   const now = new Date();
   await ctx.tx
     .update(activityPlanRuns)
     .set({ cancelledAt: now, updatedAt: now })
     .where(inArray(activityPlanRuns.id, runIds));
+  // One audit entry per cancelled run, listing the activities deleted from it.
   for (const runId of runIds) {
-    await audit(ctx, { entity: 'chatter.activity_plan_run', recordId: runId, action: 'cancel', after: { cancelledAt: now } });
+    const deletedIds = deleted.filter((d) => d.planRunId === runId).map((d) => d.id);
+    await audit(ctx, {
+      entity: 'chatter.activity_plan_run',
+      recordId: runId,
+      action: 'cancel',
+      before: { cancelledAt: null },
+      after: { cancelledAt: now, deletedActivityIds: deletedIds },
+    });
   }
   return ok({ cancelledRuns: runIds.length, deletedActivities: deleted.length });
 }
