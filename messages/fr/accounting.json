@@ -1,1 +1,115 @@
-{}
+{
+  "module": {
+    "name": "Comptabilité"
+  },
+  "menu": {
+    "entries": "Écritures",
+    "accounts": "Plan comptable",
+    "journals": "Journaux",
+    "reports": "États"
+  },
+  "fields": {
+    "date": "Date",
+    "journal": "Journal",
+    "ref": "Référence",
+    "account": "Compte",
+    "label": "Libellé",
+    "debit": "Débit",
+    "credit": "Crédit",
+    "code": "Code",
+    "name": "Intitulé",
+    "type": "Type",
+    "accountClass": "Classe",
+    "number": "Numéro",
+    "state": "État",
+    "partner": "Tiers"
+  },
+  "options": {
+    "type": {
+      "asset": "Actif",
+      "liability": "Passif",
+      "equity": "Capitaux propres",
+      "income": "Produit",
+      "expense": "Charge"
+    },
+    "state": {
+      "draft": "Brouillon",
+      "posted": "Comptabilisée"
+    },
+    "journalType": {
+      "sale": "Vente",
+      "purchase": "Achat",
+      "cash": "Caisse",
+      "bank": "Banque",
+      "general": "Opérations diverses"
+    }
+  },
+  "form": {
+    "pickAccount": "Choisir un compte",
+    "addLine": "Ajouter une ligne",
+    "removeLine": "Supprimer la ligne",
+    "post": "Comptabiliser"
+  },
+  "accounts": {
+    "title": "Plan comptable (SCF)",
+    "verifyNote": "⚠ Les comptes sont à valider par un expert-comptable."
+  },
+  "journals": {
+    "title": "Journaux"
+  },
+  "entries": {
+    "title": "Écritures comptables",
+    "new": "Nouvelle écriture",
+    "newTitle": "Nouvelle écriture manuelle"
+  },
+  "detail": {
+    "reverse": "Extourner",
+    "total": "Total"
+  },
+  "reports": {
+    "title": "États comptables",
+    "tabs": {
+      "trial": "Balance",
+      "ledger": "Grand livre",
+      "partners": "Soldes tiers",
+      "g50": "G50 (TVA) ⚠"
+    },
+    "year": "Année",
+    "month": "Mois",
+    "from": "Du",
+    "to": "Au",
+    "apply": "Appliquer",
+    "totals": "Totaux",
+    "balanced": "Équilibrée : Σ débit = Σ crédit.",
+    "notBalanced": "Non équilibrée : vérifiez les écritures.",
+    "balance": "Solde",
+    "pickAccount": "Choisissez un compte pour afficher le grand livre.",
+    "g50": {
+      "period": "Période : {from} → {to}",
+      "collected": "TVA collectée (4457)",
+      "deductible": "TVA déductible (4456)",
+      "net": "TVA à payer",
+      "verify": "⚠ Brouillon de calcul uniquement : à vérifier par un expert-comptable avant toute déclaration."
+    }
+  },
+  "errors": {
+    "generic": "Une erreur est survenue. Réessayez.",
+    "ENTRY_NEEDS_TWO_LINES": "Une écriture doit avoir au moins deux lignes.",
+    "LINE_NEEDS_ONE_SIDE": "Chaque ligne doit avoir un débit OU un crédit.",
+    "NEGATIVE_AMOUNT": "Les montants ne peuvent pas être négatifs.",
+    "ENTRY_NOT_BALANCED": "L'écriture n'est pas équilibrée : Σ débit ≠ Σ crédit.",
+    "ENTRY_LINES_INVALID": "Lignes invalides. Vérifiez les montants.",
+    "ACCOUNT_NOT_FOUND": "Compte introuvable dans le plan comptable.",
+    "JOURNAL_NOT_FOUND": "Journal introuvable.",
+    "ENTRY_NOT_FOUND": "Écriture introuvable.",
+    "ENTRY_NOT_POSTED": "Seule une écriture comptabilisée peut être extournée.",
+    "ENTRY_ALREADY_REVERSED": "Cette écriture a déjà été extournée.",
+    "ENTRY_IS_POSTED": "Une écriture comptabilisée ne peut pas être modifiée. Extournez-la.",
+    "POSTED_IMMUTABLE": "Un document comptabilisé ne peut pas être modifié.",
+    "FORBIDDEN": "Accès refusé.",
+    "NOT_FOUND": "Introuvable.",
+    "STATE": "Action impossible dans cet état.",
+    "CONFLICT": "Conflit : l'action a déjà été effectuée.",
+    "INTERNAL": "Erreur interne."
+  }
+}

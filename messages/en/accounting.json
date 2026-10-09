@@ -1,1 +1,115 @@
-{}
+{
+  "module": {
+    "name": "Accounting"
+  },
+  "menu": {
+    "entries": "Entries",
+    "accounts": "Chart of accounts",
+    "journals": "Journals",
+    "reports": "Reports"
+  },
+  "fields": {
+    "date": "Date",
+    "journal": "Journal",
+    "ref": "Reference",
+    "account": "Account",
+    "label": "Label",
+    "debit": "Debit",
+    "credit": "Credit",
+    "code": "Code",
+    "name": "Name",
+    "type": "Type",
+    "accountClass": "Class",
+    "number": "Number",
+    "state": "State",
+    "partner": "Partner"
+  },
+  "options": {
+    "type": {
+      "asset": "Asset",
+      "liability": "Liability",
+      "equity": "Equity",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "state": {
+      "draft": "Draft",
+      "posted": "Posted"
+    },
+    "journalType": {
+      "sale": "Sale",
+      "purchase": "Purchase",
+      "cash": "Cash",
+      "bank": "Bank",
+      "general": "General"
+    }
+  },
+  "form": {
+    "pickAccount": "Pick an account",
+    "addLine": "Add line",
+    "removeLine": "Remove line",
+    "post": "Post entry"
+  },
+  "accounts": {
+    "title": "Chart of accounts (SCF)",
+    "verifyNote": "⚠ Accounts need review by a chartered accountant."
+  },
+  "journals": {
+    "title": "Journals"
+  },
+  "entries": {
+    "title": "Journal entries",
+    "new": "New entry",
+    "newTitle": "New manual entry"
+  },
+  "detail": {
+    "reverse": "Reverse",
+    "total": "Total"
+  },
+  "reports": {
+    "title": "Accounting reports",
+    "tabs": {
+      "trial": "Trial balance",
+      "ledger": "General ledger",
+      "partners": "Partner balances",
+      "g50": "G50 (VAT) ⚠"
+    },
+    "year": "Year",
+    "month": "Month",
+    "from": "From",
+    "to": "To",
+    "apply": "Apply",
+    "totals": "Totals",
+    "balanced": "Balanced: total debit = total credit.",
+    "notBalanced": "Not balanced: check the entries.",
+    "balance": "Balance",
+    "pickAccount": "Pick an account to show the ledger.",
+    "g50": {
+      "period": "Period: {from} to {to}",
+      "collected": "VAT collected (4457)",
+      "deductible": "VAT deductible (4456)",
+      "net": "VAT due",
+      "verify": "⚠ Calculation draft only: verify with a chartered accountant before filing."
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong. Try again.",
+    "ENTRY_NEEDS_TWO_LINES": "An entry needs at least two lines.",
+    "LINE_NEEDS_ONE_SIDE": "Each line needs either a debit or a credit.",
+    "NEGATIVE_AMOUNT": "Amounts cannot be negative.",
+    "ENTRY_NOT_BALANCED": "The entry is not balanced: total debit ≠ total credit.",
+    "ENTRY_LINES_INVALID": "Invalid lines. Check the amounts.",
+    "ACCOUNT_NOT_FOUND": "Account not found in the chart of accounts.",
+    "JOURNAL_NOT_FOUND": "Journal not found.",
+    "ENTRY_NOT_FOUND": "Entry not found.",
+    "ENTRY_NOT_POSTED": "Only a posted entry can be reversed.",
+    "ENTRY_ALREADY_REVERSED": "This entry has already been reversed.",
+    "ENTRY_IS_POSTED": "A posted entry cannot be edited. Reverse it instead.",
+    "POSTED_IMMUTABLE": "Posted documents cannot be changed.",
+    "FORBIDDEN": "Access denied.",
+    "NOT_FOUND": "Not found.",
+    "STATE": "Action not allowed in this state.",
+    "CONFLICT": "Conflict: the action was already done.",
+    "INTERNAL": "Internal error."
+  }
+}
