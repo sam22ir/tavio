@@ -1,0 +1,88 @@
+{
+  "wizard": {
+    "brandAlt": "Revora",
+    "stepOf": "Step {current} of {total}",
+    "back": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "continue": "Continue",
+    "sendInvites": "Send invitations",
+    "pending": "Please wait…"
+  },
+  "basics": {
+    "title": "Set up your company",
+    "subtitle": "Tell us about your business. You can change everything later.",
+    "legalName": "Legal name",
+    "legalNameHint": "At least 2 characters.",
+    "phone": "Phone",
+    "wilaya": "Wilaya",
+    "wilayaPlaceholder": "Choose a wilaya",
+    "logo": "Logo (optional)",
+    "logoHint": "JPG, PNG or WebP, 10 MB maximum."
+  },
+  "type": {
+    "title": "What is your business?",
+    "subtitle": "We turn on the modules that fit your work. You can add or remove them later.",
+    "commerce": "Retail / shop",
+    "commerceHint": "Counter and credit sales, stock, invoices, customers.",
+    "wholesale": "Wholesale / distribution",
+    "wholesaleHint": "Purchases, bulk sales, stock, accounting, suppliers.",
+    "services": "Services",
+    "servicesHint": "Sales pipeline, projects, customer support, invoicing.",
+    "other": "Other",
+    "otherHint": "All default modules."
+  },
+  "team": {
+    "title": "Invite your team",
+    "subtitle": "Add the people who will work with you. You can also do this later.",
+    "email": "Email address",
+    "role": "Role",
+    "addRow": "Add a person",
+    "removeRow": "Remove",
+    "roles": {
+      "admin": "Administrator",
+      "manager": "Manager",
+      "staff": "Staff"
+    },
+    "sentEmail": "Invitation sent to {email}.",
+    "createdLink": "Invitation link for {email}:",
+    "failed": "Failed for {email}."
+  },
+  "done": {
+    "title": "Your workspace is ready",
+    "subtitle": "How would you like to start?",
+    "invitesSummary": "{count} invitation(s) processed.",
+    "sampleTitle": "Explore with sample data",
+    "sampleHint": "Fictional products, customers, sales, invoices and contracts. You can clear them at any time.",
+    "sampleCta": "Explore",
+    "emptyTitle": "Start empty",
+    "emptyHint": "Your workspace stays blank. You will add your own data.",
+    "emptyCta": "Start empty",
+    "helpTitle": "Need help getting started?",
+    "helpCta": "Request a free audit"
+  },
+  "errors": {
+    "validation": "Please check the information you entered.",
+    "session": "Your session has expired. Sign in again.",
+    "forbidden": "You are not allowed to change this company.",
+    "generic": "Something went wrong. Try again.",
+    "logo": "Logo rejected: unsupported format or size.",
+    "sampleFailed": "Could not load sample data. Try again."
+  },
+  "banner": {
+    "active": "Sample data active",
+    "clear": "Clear",
+    "confirm": "Delete all sample data?",
+    "confirmAction": "Confirm",
+    "cancel": "Cancel",
+    "failed": "Could not clear the sample data."
+  },
+  "checklist": {
+    "title": "Getting started",
+    "progress": "{done} of {total} steps done",
+    "product": "Add a product",
+    "customer": "Add a customer",
+    "sale": "Make a first sale or contract",
+    "team": "Invite a teammate"
+  }
+}

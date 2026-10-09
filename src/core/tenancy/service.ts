@@ -1,5 +1,5 @@
 // Tenancy service. Runs as the owner connection (getDb(), no withTenant) and always filters by userId.
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq, gte } from 'drizzle-orm';
 import { getDb } from '@/core/db/client';
 import {
   companies,
@@ -117,6 +117,32 @@ export async function createCompany(
   } catch {
     return err('INTERNAL', 'could not create company');
   }
+}
+
+/**
+ * A company this user created in the last `windowMs` with the same legal name. Used to make a repeated
+ * create (double submit, reload) return the first company instead of making a duplicate.
+ */
+export async function findRecentOwnedCompany(
+  userId: string,
+  legalName: string,
+  windowMs = 2 * 60 * 1000,
+  db: Db = getDb(),
+): Promise<{ id: string } | null> {
+  const since = new Date(Date.now() - windowMs);
+  const [row] = await db
+    .select({ id: companies.id })
+    .from(companies)
+    .where(
+      and(
+        eq(companies.createdBy, userId),
+        eq(companies.legalName, legalName.trim()),
+        gte(companies.createdAt, since),
+      ),
+    )
+    .orderBy(desc(companies.createdAt))
+    .limit(1);
+  return row ?? null;
 }
 
 export async function loadTenantArgs(

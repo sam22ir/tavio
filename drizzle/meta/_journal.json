@@ -71,6 +71,13 @@
       "when": 1791545338797,
       "tag": "0009_team_ai_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1791584037792,
+      "tag": "0010_onboarding_sample_data",
+      "breakpoints": true
     }
   ]
 }
