@@ -1,1 +1,92 @@
-{}
+{
+  "module": { "name": "HR" },
+  "menu": {
+    "employees": "Employees",
+    "departments": "Departments",
+    "leave": "Leave",
+    "attendance": "Attendance"
+  },
+  "fields": {
+    "displayName": "Name",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "jobTitle": "Job title",
+    "department": "Department",
+    "departmentName": "Department name",
+    "manager": "Manager",
+    "hireDate": "Hire date",
+    "phone": "Phone",
+    "email": "Email",
+    "nin": "National ID number",
+    "active": "Active",
+    "archived": "Archived",
+    "noneOption": "None",
+    "employee": "Employee",
+    "leaveType": "Leave type",
+    "leaveTypeName": "Leave type name",
+    "fromDate": "From",
+    "toDate": "To",
+    "period": "Period",
+    "days": "Days",
+    "reason": "Reason (optional)",
+    "state": "Status",
+    "choose": "Choose…",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "options": {
+    "leaveState": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "approved": "Approved",
+      "refused": "Refused"
+    }
+  },
+  "actions": {
+    "save": "Save",
+    "archive": "Archive",
+    "reactivate": "Reactivate",
+    "createRequest": "Create request",
+    "addLeaveType": "Add leave type",
+    "addDepartment": "Add department",
+    "submit": "Submit",
+    "approve": "Approve",
+    "refuse": "Refuse",
+    "show": "Show",
+    "label": "Actions"
+  },
+  "employee": {
+    "title": "Employees",
+    "new": "New employee",
+    "edit": "Details",
+    "activity": "Activity",
+    "error": "Could not load employees."
+  },
+  "department": {
+    "title": "Departments",
+    "error": "Could not load departments."
+  },
+  "leave": {
+    "title": "Leave",
+    "new": "New leave request",
+    "types": "Leave types",
+    "list": "Requests",
+    "filter": "Filter requests",
+    "all": "All",
+    "error": "Could not load leave requests."
+  },
+  "attendance": {
+    "title": "Attendance",
+    "mine": "My attendance",
+    "checkIn": "Check in",
+    "checkOut": "Check out",
+    "noEmployee": "No employee record is linked to your account.",
+    "summary": "Monthly summary",
+    "month": "Month",
+    "daysPresent": "Days present",
+    "hours": "Hours",
+    "open": "Open",
+    "recent": "Recent check-ins",
+    "error": "Could not load attendance."
+  }
+}
