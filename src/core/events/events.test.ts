@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Ctx } from '@/core/ctx';
 import type { Tx } from '@/core/db/types';
 import { emit, on } from './index';
+import { EVENT_NAMES, type EventCatalog } from './catalog';
 
 function fakeCtx() {
   const values = vi.fn(async () => undefined);
@@ -38,5 +39,35 @@ describe('events bus', () => {
 
     await expect(emit(ctx, { name: 'test.fail.happened', payload: {} })).rejects.toThrow('handler boom');
     expect(insert).not.toHaveBeenCalled();
+  });
+});
+
+describe('event catalog (W13-EVENTS)', () => {
+  it('lists the W13 CRM, chatter and credit-sales events', () => {
+    const w13 = [
+      'crm.lead.created',
+      'crm.lead.stage_changed',
+      'crm.lead.won',
+      'crm.lead.lost',
+      'chatter.activity.done',
+      'credit_sales.contract.state_changed',
+    ] as const;
+    for (const name of w13) {
+      expect(EVENT_NAMES).toContain(name);
+    }
+    expect(new Set(EVENT_NAMES).size).toBe(EVENT_NAMES.length);
+  });
+
+  it('types the W13 payloads with the agreed fields', () => {
+    const lost: EventCatalog['crm.lead.lost'] = { leadId: 'l1', lostReasonId: 'r1' };
+    const done: EventCatalog['chatter.activity.done'] = {
+      activityId: 'a1', entity: 'crm.lead', recordId: 'l1', activityTypeId: null, result: null,
+    };
+    const state: EventCatalog['credit_sales.contract.state_changed'] = {
+      contractId: 'k1', partnerId: 'p1', fromState: 'submitted', toState: 'under_review',
+    };
+    expect(lost.lostReasonId).toBe('r1');
+    expect(done.result).toBeNull();
+    expect(state.toState).toBe('under_review');
   });
 });
