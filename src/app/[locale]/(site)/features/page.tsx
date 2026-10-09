@@ -72,7 +72,7 @@ export default async function FeaturesOverviewPage({ params }: { params: Promise
       {/* Hero: pill, headline with one accent word, subline. */}
       <section className="relative overflow-hidden px-4 pb-12 pt-14 md:pb-16 md:pt-24">
         <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[70%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[380px] w-[640px] -translate-x-1/2 rounded-full" />
+        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[380px] w-[min(640px,100%)] -translate-x-1/2 rounded-full" />
         <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-7 text-center">
           <PillLabel>{t('overview.eyebrow')}</PillLabel>
           <h1 className="s-h1 max-w-[18ch] text-balance">

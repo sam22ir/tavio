@@ -36,7 +36,7 @@ export default async function SolutionsIndexPage({ params }: { params: Promise<{
       {/* Hero: pill, headline and intro on the cream background with the soft glow. */}
       <section className="relative overflow-hidden px-4 pb-12 pt-14 md:pb-16 md:pt-24">
         <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[400px] w-[640px] -translate-x-1/2 rounded-full" />
+        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[400px] w-[min(640px,100%)] -translate-x-1/2 rounded-full" />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <PillLabel>{t('indexEyebrow')}</PillLabel>
           <h1 className="s-h1 text-balance">{t('indexTitle')}</h1>

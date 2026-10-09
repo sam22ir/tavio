@@ -86,7 +86,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       {/* Hero: pill, headline with accent, intro, indicative note. */}
       <section className="relative overflow-hidden px-4 pb-6 pt-14 md:pt-24">
         <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[420px] w-[680px] -translate-x-1/2 rounded-full" />
+        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[420px] w-[min(680px,100%)] -translate-x-1/2 rounded-full" />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <PillLabel>{t('pricing.eyebrow')}</PillLabel>
           <h1 className="s-h1 text-balance">
@@ -101,7 +101,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         <PricingToggle
           monthly={monthly}
           yearly={yearly}
-          labels={{ monthly: t('pricing.monthly'), yearly: t('pricing.yearly'), badge: t('pricing.yearlyBadge') }}
+          labels={{ monthly: t('pricing.monthly'), yearly: t('pricing.yearly'), badge: t('pricing.yearlyBadge'), save: t('pricing.yearlySave') }}
         />
         <p className="mt-8 text-center text-sm text-[color:var(--s-muted)]">{t('pricing.indicative')}</p>
       </Section>
