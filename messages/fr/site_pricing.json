@@ -1,1 +1,211 @@
-{}
+{
+  "pricing": {
+    "meta": {
+      "title": "Tarifs | Tavio",
+      "description": "Des tarifs clairs en dinars algériens (DZD), par utilisateur. Commencez gratuitement, payez par CCP, virement ou espèces."
+    },
+    "title": "Des tarifs simples, en DZD",
+    "body": "Vous payez par utilisateur et par mois. Commencez gratuitement et passez à un plan supérieur quand votre équipe grandit.",
+    "indicative": "Prix indicatifs. Les montants définitifs sont confirmés sur votre devis avant la souscription.",
+    "monthly": "Mensuel",
+    "yearly": "Annuel",
+    "yearlyBadge": "2 mois offerts (indicatif)",
+    "perUserMonth": "/ utilisateur / mois",
+    "perUserYear": "/ utilisateur / an",
+    "free": "Gratuit",
+    "usersLimit": "Jusqu'à {count} utilisateurs",
+    "cta": "Commencer",
+    "popular": "Le plus choisi",
+    "compareTitle": "Comparer les plans",
+    "compareFeature": "Fonctionnalité",
+    "compareUsers": "Utilisateurs",
+    "compareCaption": "Tableau comparatif des plans Gratuit, Pro et Business",
+    "payment": {
+      "title": "Modes de paiement",
+      "body": "Payez comme vous en avez l'habitude. Les modalités exactes sont précisées sur votre devis.",
+      "items": [
+        {
+          "title": "CCP",
+          "body": "Paiement par versement sur votre compte CCP."
+        },
+        {
+          "title": "Virement bancaire",
+          "body": "Virement vers le compte de Tavio, avec une référence de facture."
+        },
+        {
+          "title": "Espèces",
+          "body": "Paiement en espèces, reçu à l'appui."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Questions sur les tarifs",
+      "items": [
+        {
+          "question": "Les prix sont-ils par utilisateur ?",
+          "answer": "Oui. Le prix est indiqué en dinars algériens (DZD), par utilisateur et par mois ou par an."
+        },
+        {
+          "question": "Puis-je commencer gratuitement ?",
+          "answer": "Oui. Le plan Gratuit est limité à un utilisateur et inclut les ventes à crédit et les contacts."
+        },
+        {
+          "question": "Comment payer ?",
+          "answer": "Par CCP, par virement bancaire ou en espèces. Les modalités sont précisées sur votre devis."
+        },
+        {
+          "question": "Puis-je changer de plan plus tard ?",
+          "answer": "Oui, vous pouvez passer à un plan supérieur quand votre équipe grandit. Les modalités sont précisées à la souscription."
+        },
+        {
+          "question": "Les prix sont-ils définitifs ?",
+          "answer": "Non, ce sont des prix indicatifs. Le montant final est confirmé avant votre souscription."
+        },
+        {
+          "question": "Puis-je garder mes données sur mes propres serveurs ?",
+          "answer": "Oui, pour les entreprises qui doivent garder leurs données en Algérie. Consultez la page On-premise."
+        }
+      ]
+    },
+    "bottomCta": {
+      "title": "Un plan pour commencer demain",
+      "body": "Créez votre compte, ajoutez vos clients et votre première vente à crédit en quelques minutes."
+    },
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "solutions": {
+    "indexMeta": {
+      "title": "Solutions par métier | Tavio",
+      "description": "Tavio pour les magasins d'électroménager, les concessionnaires, les cliniques, les centres de formation et les commerces avec caisse."
+    },
+    "indexTitle": "Une solution pour votre métier",
+    "indexBody": "Chaque activité vend et encaisse différemment. Choisissez la page qui ressemble à votre quotidien.",
+    "problemTitle": "Le problème",
+    "solutionTitle": "Comment Tavio vous aide",
+    "modulesTitle": "Modules utilisés",
+    "seeAll": "Toutes les solutions",
+    "related": "Autres solutions",
+    "ctaTitle": "Essayez avec vos propres clients",
+    "ctaBody": "Créez votre compte gratuitement et configurez votre premier plan de paiement en quelques minutes.",
+    "modules": {
+      "credit": "Ventes à crédit",
+      "crm": "CRM et clients",
+      "invoicing": "Facturation",
+      "pos": "Caisse (POS)",
+      "inventory": "Stock et achats",
+      "accounting": "Comptabilité",
+      "hr": "Ressources humaines",
+      "helpdesk": "Support et projets",
+      "website": "Site et boutique",
+      "platform": "API et automatisation"
+    },
+    "items": {
+      "electromenager-credit": {
+        "title": "Électroménager et ameublement à crédit",
+        "short": "Vendez à crédit et suivez chaque échéance, du premier versement au dernier.",
+        "problem": "Vos clients achètent à crédit, mais les échéances sont notées sur des cahiers. Vous ne savez pas toujours qui doit quoi, ni qui est en retard.",
+        "solution": "Créez un plan d'échelonnement pour chaque client, suivez les échéances payées ou en retard, et relancez en un clic. Chaque facture reste liée à son dossier.",
+        "modules": [
+          "credit",
+          "crm",
+          "invoicing"
+        ]
+      },
+      "car-dealers": {
+        "title": "Concessionnaires automobiles",
+        "short": "Suivez chaque prospect, chaque acompte et chaque véhicule au même endroit.",
+        "problem": "Chaque véhicule a son dossier, ses acomptes et ses prospects. Les informations sont dispersées entre des fichiers, des messages et des carnets.",
+        "solution": "Un pipeline commercial pour suivre chaque prospect, des devis et des factures pour chaque vente, et un suivi du stock pour savoir ce qui reste disponible.",
+        "modules": [
+          "crm",
+          "invoicing",
+          "inventory"
+        ]
+      },
+      "clinics": {
+        "title": "Cliniques et cabinets",
+        "short": "Fiches clients, facturation avec TVA et paiements échelonnés, en un seul outil.",
+        "problem": "Les patients règlent en plusieurs fois, les actes doivent être facturés proprement et les dossiers restent difficiles à retrouver quand on en a besoin.",
+        "solution": "Des fiches clients, une facturation claire avec TVA, des paiements échelonnés avec relances, et un accès depuis un téléphone, y compris en arabe.",
+        "modules": [
+          "crm",
+          "credit",
+          "invoicing"
+        ]
+      },
+      "training-centers": {
+        "title": "Centres de formation",
+        "short": "Inscriptions, paiements par tranches et comptabilité suivis dans une seule application.",
+        "problem": "Les inscriptions arrivent par plusieurs canaux, les paiements se font en plusieurs tranches et la comptabilité a du mal à suivre.",
+        "solution": "Un suivi des prospects et des inscriptions, la facturation de chaque formation, des échéanciers de paiement et une comptabilité générale alimentée par les ventes.",
+        "modules": [
+          "crm",
+          "credit",
+          "accounting"
+        ]
+      },
+      "retail-pos": {
+        "title": "Commerces de détail avec caisse",
+        "short": "Une caisse rapide, un stock à jour et des factures générées à chaque vente.",
+        "problem": "La caisse, le stock et les factures ne se parlent pas. Vous découvrez les ruptures trop tard et la comptabilité se fait à la main.",
+        "solution": "Une caisse simple à utiliser, un stock mis à jour à chaque vente, des alertes de réapprovisionnement et des factures prêtes à imprimer.",
+        "modules": [
+          "pos",
+          "inventory",
+          "invoicing"
+        ]
+      }
+    },
+    "cta": "Commencer gratuitement"
+  },
+  "onPremise": {
+    "meta": {
+      "title": "On-premise | Tavio",
+      "description": "Installez Tavio sur vos propres serveurs en Algérie, avec Docker, sauvegardes et support d'installation."
+    },
+    "title": "Gardez vos données en Algérie",
+    "body": "Certaines entreprises doivent garder leurs données sur le territoire algérien. Tavio peut être installé sur vos propres serveurs, avec Docker.",
+    "legal": "⚠ Cadre juridique (loi 18-07 sur la protection des données personnelles) : à valider par un juriste avant publication.",
+    "requirementsTitle": "Ce qu'il faut pour l'installer",
+    "requirements": [
+      "Docker Engine 24 ou plus, avec le plugin Compose",
+      "Un serveur avec au moins 2 vCPU, 4 Go de RAM et 40 Go de disque",
+      "Un nom de domaine et un proxy HTTPS (Caddy, nginx ou Traefik)"
+    ],
+    "stepsTitle": "Installation en trois étapes",
+    "steps": [
+      {
+        "title": "Préparer le serveur",
+        "body": "Installez Docker, ouvrez uniquement le port HTTPS vers le proxy et gardez la base de données fermée à Internet."
+      },
+      {
+        "title": "Configurer et démarrer",
+        "body": "Renseignez le fichier d'environnement (secrets, URL publique, stockage S3) puis lancez les conteneurs. Les migrations s'appliquent automatiquement."
+      },
+      {
+        "title": "Mettre à jour",
+        "body": "Sauvegardez, récupérez la nouvelle version et relancez les conteneurs. Les migrations déjà appliquées ne sont pas rejouées."
+      }
+    ],
+    "backupsTitle": "Sauvegardes et restauration",
+    "backups": [
+      "Une sauvegarde de la base de données est créée par script, compressée et conservée sur 14 jours.",
+      "Les fichiers (factures, pièces jointes) sont sauvegardés avec le même calendrier que la base.",
+      "La restauration se fait sur une base vide, en quelques commandes documentées."
+    ],
+    "includedTitle": "Ce qui est inclus",
+    "included": [
+      "L'application complète, avec tous les modules de votre plan",
+      "Les instructions d'installation, de mise à jour et de sauvegarde",
+      "Les tâches planifiées (relances, envoi des notifications)",
+      "Une aide à la configuration initiale, sur demande"
+    ],
+    "supportTitle": "Support",
+    "support": "Un accompagnement d'installation et un contrat de support sont disponibles sur demande. Les conditions sont définies dans votre devis.",
+    "ctaTitle": "Parlons de votre installation",
+    "ctaBody": "Dites-nous combien d'utilisateurs vous êtes et quelles contraintes de données vous avez. Nous revenons vers vous.",
+    "cta": "Nous contacter",
+    "pricingCta": "Voir les tarifs"
+  }
+}

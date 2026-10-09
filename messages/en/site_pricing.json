@@ -1,1 +1,211 @@
-{}
+{
+  "pricing": {
+    "meta": {
+      "title": "Pricing | Tavio",
+      "description": "Clear pricing in Algerian dinars (DZD), per user. Start free and pay by CCP, bank transfer or cash."
+    },
+    "title": "Simple pricing, in DZD",
+    "body": "You pay per user, per month. Start free and move to a higher plan when your team grows.",
+    "indicative": "Indicative prices. Final amounts are confirmed in your quote before you subscribe.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlyBadge": "2 months free (indicative)",
+    "perUserMonth": "/ user / month",
+    "perUserYear": "/ user / year",
+    "free": "Free",
+    "usersLimit": "Up to {count} users",
+    "cta": "Start",
+    "popular": "Most chosen",
+    "compareTitle": "Compare plans",
+    "compareFeature": "Feature",
+    "compareUsers": "Users",
+    "compareCaption": "Comparison table of the Free, Pro and Business plans",
+    "payment": {
+      "title": "Payment methods",
+      "body": "Pay the way you are used to. Exact terms are set out in your quote.",
+      "items": [
+        {
+          "title": "CCP",
+          "body": "Pay by transfer to your CCP account."
+        },
+        {
+          "title": "Bank transfer",
+          "body": "Transfer to the Tavio account, with your invoice reference."
+        },
+        {
+          "title": "Cash",
+          "body": "Pay in cash, with a receipt."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Pricing questions",
+      "items": [
+        {
+          "question": "Are prices per user?",
+          "answer": "Yes. Prices are in Algerian dinars (DZD), per user, per month or per year."
+        },
+        {
+          "question": "Can I start for free?",
+          "answer": "Yes. The Free plan is limited to one user and includes credit sales and contacts."
+        },
+        {
+          "question": "How do I pay?",
+          "answer": "By CCP, bank transfer or cash. Terms are set out in your quote."
+        },
+        {
+          "question": "Can I change plan later?",
+          "answer": "Yes, you can move to a higher plan as your team grows. Terms are set out when you subscribe."
+        },
+        {
+          "question": "Are prices final?",
+          "answer": "No, they are indicative. The final amount is confirmed before you subscribe."
+        },
+        {
+          "question": "Can I keep my data on my own servers?",
+          "answer": "Yes, for companies that must keep their data in Algeria. See the On-premise page."
+        }
+      ]
+    },
+    "bottomCta": {
+      "title": "A plan to start tomorrow",
+      "body": "Create your account, add your customers and your first credit sale in a few minutes."
+    },
+    "yes": "Yes",
+    "no": "No"
+  },
+  "solutions": {
+    "indexMeta": {
+      "title": "Solutions by business | Tavio",
+      "description": "Tavio for appliance and furniture shops, car dealers, clinics, training centres and retail shops with a till."
+    },
+    "indexTitle": "A solution for your business",
+    "indexBody": "Every business sells and collects differently. Pick the page that looks like your day.",
+    "problemTitle": "The problem",
+    "solutionTitle": "How Tavio helps",
+    "modulesTitle": "Modules used",
+    "seeAll": "All solutions",
+    "related": "Other solutions",
+    "ctaTitle": "Try it with your own customers",
+    "ctaBody": "Create your account for free and set up your first payment plan in a few minutes.",
+    "modules": {
+      "credit": "Credit sales",
+      "crm": "CRM and customers",
+      "invoicing": "Invoicing",
+      "pos": "Point of sale",
+      "inventory": "Stock and purchases",
+      "accounting": "Accounting",
+      "hr": "Human resources",
+      "helpdesk": "Support and projects",
+      "website": "Website and shop",
+      "platform": "API and automation"
+    },
+    "items": {
+      "electromenager-credit": {
+        "title": "Appliance and furniture shops on credit",
+        "short": "Sell on credit and track every instalment, from the first payment to the last.",
+        "problem": "Your customers buy on credit, but instalments are written in notebooks. You do not always know who owes what, or who is late.",
+        "solution": "Set up an instalment plan for each customer, track paid and late instalments, and send a reminder in one click. Every invoice stays linked to its file.",
+        "modules": [
+          "credit",
+          "crm",
+          "invoicing"
+        ]
+      },
+      "car-dealers": {
+        "title": "Car dealers",
+        "short": "Follow every prospect, deposit and vehicle in one place.",
+        "problem": "Each vehicle has its own file, deposits and prospects. The information is spread across files, messages and notebooks.",
+        "solution": "A sales pipeline to follow each prospect, quotes and invoices for each sale, and stock tracking so you know what is still available.",
+        "modules": [
+          "crm",
+          "invoicing",
+          "inventory"
+        ]
+      },
+      "clinics": {
+        "title": "Clinics and practices",
+        "short": "Customer files, VAT invoicing and instalment payments, in one tool.",
+        "problem": "Patients pay in several instalments, services must be invoiced cleanly, and records are hard to find when you need them.",
+        "solution": "Customer files, clear VAT invoices, instalment payments with reminders, and access from a phone, in Arabic or French.",
+        "modules": [
+          "crm",
+          "credit",
+          "invoicing"
+        ]
+      },
+      "training-centers": {
+        "title": "Training centres",
+        "short": "Enrolments, instalment payments and accounts tracked in one application.",
+        "problem": "Enrolments come in through several channels, payments are made in instalments, and the accounts struggle to keep up.",
+        "solution": "Follow prospects and enrolments, invoice each course, manage payment schedules, and keep general accounts fed by your sales.",
+        "modules": [
+          "crm",
+          "credit",
+          "accounting"
+        ]
+      },
+      "retail-pos": {
+        "title": "Retail shops with a till",
+        "short": "A fast till, an up-to-date stock and an invoice for every sale.",
+        "problem": "The till, the stock and the invoices do not talk to each other. You find out about stock-outs too late and the books are done by hand.",
+        "solution": "A till that is simple to use, stock updated with every sale, restock alerts and invoices ready to print.",
+        "modules": [
+          "pos",
+          "inventory",
+          "invoicing"
+        ]
+      }
+    },
+    "cta": "Start for free"
+  },
+  "onPremise": {
+    "meta": {
+      "title": "On-premise | Tavio",
+      "description": "Install Tavio on your own servers in Algeria, with Docker, backups and installation support."
+    },
+    "title": "Keep your data in Algeria",
+    "body": "Some companies must keep their data on Algerian soil. Tavio can run on your own servers, with Docker.",
+    "legal": "⚠ Legal framework (Law 18-07 on personal data protection): to be reviewed by a lawyer before publication.",
+    "requirementsTitle": "What you need to install it",
+    "requirements": [
+      "Docker Engine 24 or later, with the Compose plugin",
+      "A server with at least 2 vCPU, 4 GB RAM and 40 GB disk",
+      "A domain name and an HTTPS reverse proxy (Caddy, nginx or Traefik)"
+    ],
+    "stepsTitle": "Installation in three steps",
+    "steps": [
+      {
+        "title": "Prepare the server",
+        "body": "Install Docker, open only the HTTPS port to the proxy, and keep the database closed to the internet."
+      },
+      {
+        "title": "Configure and start",
+        "body": "Fill in the environment file (secrets, public URL, S3 storage), then start the containers. Migrations apply automatically."
+      },
+      {
+        "title": "Update",
+        "body": "Back up, fetch the new release and restart the containers. Migrations already applied are not run again."
+      }
+    ],
+    "backupsTitle": "Backups and restore",
+    "backups": [
+      "A database backup is created by script, compressed and kept for 14 days.",
+      "Files (invoices, attachments) are backed up on the same schedule as the database.",
+      "Restore runs on an empty database, in a few documented commands."
+    ],
+    "includedTitle": "What is included",
+    "included": [
+      "The full application, with all the modules of your plan",
+      "Install, update and backup instructions",
+      "Scheduled jobs (reminders, notifications)",
+      "Help with the first setup, on request"
+    ],
+    "supportTitle": "Support",
+    "support": "Installation help and a support contract are available on request. Terms are set out in your quote.",
+    "ctaTitle": "Let's talk about your installation",
+    "ctaBody": "Tell us how many users you are and what data constraints you have. We will get back to you.",
+    "cta": "Contact us",
+    "pricingCta": "See pricing"
+  }
+}
