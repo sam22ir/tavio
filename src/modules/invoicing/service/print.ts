@@ -1,5 +1,6 @@
 import type { Locale } from '@/core/ctx';
 import { formatDzd, type Cents } from '@/core/money';
+import { amountInWords } from '@/core/money/words';
 
 export interface PrintLabels {
   title: string; seller: string; buyer: string; nif: string; nis: string; rc: string; ai: string; address: string;
@@ -85,7 +86,7 @@ td.n,th.n{text-align:end}
 <tr><td>${l.amount}</td><td class="n">${money(input.untaxedCents)}</td></tr>
 ${vat}
 ${input.stampCents > BigInt(0) ? `<tr><td>${l.stampDuty}</td><td class="n">${money(input.stampCents)}</td></tr>` : ''}
-<tr class="grand"><td>${l.totalInWords}</td><td class="n">${money(input.totalCents)}</td></tr>
+<tr class="grand"><td>${l.totalInWords} : ${e(amountInWords(input.totalCents, input.locale))}</td><td class="n">${money(input.totalCents)}</td></tr>
 </table>
 </body></html>`;
 }
