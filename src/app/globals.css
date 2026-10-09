@@ -108,3 +108,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* App pages (everything except the marketing site): Tailwind v4 defaults borders to currentColor,
+   which made every card and table border black. Use the soft border token instead. */
+body:not(:has(.site)) *,
+body:not(:has(.site)) ::before,
+body:not(:has(.site)) ::after {
+  border-color: var(--border);
+}
