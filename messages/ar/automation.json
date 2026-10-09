@@ -1,1 +1,64 @@
-{}
+{
+  "module": {
+    "name": "الأتمتة"
+  },
+  "menu": {
+    "rules": "الأتمتة"
+  },
+  "title": "قواعد الأتمتة",
+  "empty": "لا توجد قواعد بعد. أنشئ قاعدة أدناه.",
+  "new": "قاعدة جديدة",
+  "save": "حفظ",
+  "status": {
+    "active": "مفعّلة",
+    "inactive": "معطّلة"
+  },
+  "fields": {
+    "name": "الاسم",
+    "triggerEvent": "عندما يحدث هذا",
+    "condition": "فقط إذا (اختياري)",
+    "condField": "حقل الحدث، مثال totalCents",
+    "condOp": "المعامل",
+    "condValue": "القيمة",
+    "action": "نفّذ هذا",
+    "entity": "نوع السجل، مثال sales.order",
+    "recordIdField": "الحقل الذي يحمل معرّف السجل، مثال orderId",
+    "typeKey": "مفتاح نوع النشاط",
+    "summary": "ملخص النشاط",
+    "dueInDays": "الاستحقاق (بالأيام)",
+    "body": "نص الملاحظة. استخدم {حقل} لقيم الحدث",
+    "url": "رابط الـ webhook (https)",
+    "active": "مفعّلة"
+  },
+  "hints": {
+    "condition": "اترك الحقل فارغاً للتنفيذ عند كل حدث. تُقارن المبالغ كأرقام.",
+    "body": "مثال: تم تسجيل دفعة بقيمة {totalCents} سنتيم."
+  },
+  "triggers": {
+    "sales.order.confirmed": "تأكيد طلب بيع",
+    "invoicing.invoice.posted": "ترحيل فاتورة",
+    "invoicing.payment.registered": "تسجيل دفعة",
+    "purchases.order.received": "استلام طلب شراء",
+    "pos.order.paid": "دفع طلب نقطة البيع",
+    "inventory.move.done": "إتمام حركة مخزون",
+    "credit_sales.payment.recorded": "تسجيل دفعة قسط"
+  },
+  "ops": {
+    "eq": "يساوي",
+    "neq": "لا يساوي",
+    "gt": "أكبر من",
+    "gte": "أكبر من أو يساوي",
+    "lt": "أصغر من",
+    "lte": "أصغر من أو يساوي"
+  },
+  "actions": {
+    "create_activity": "إنشاء نشاط",
+    "post_note": "نشر ملاحظة",
+    "webhook": "استدعاء webhook"
+  },
+  "errors": {
+    "invalid": "القاعدة غير صالحة. تحقق من الحقول.",
+    "actionConfig": "إعدادات الإجراء غير مكتملة."
+  },
+  "forbidden": "ليس لديك صلاحية الوصول إلى الأتمتة."
+}

@@ -1,1 +1,19 @@
-{}
+{
+  "module": { "name": "Abonnement" },
+  "menu": { "billing": "Facturation" },
+  "title": "Facturation",
+  "forbidden": "Vous n'avez pas accès à la facturation.",
+  "plan": "Formule",
+  "state": "Statut",
+  "seats": "Utilisateurs (sièges)",
+  "monthly": "Total mensuel",
+  "trialEnds": "Fin de l'essai",
+  "periodEnds": "Fin de la période en cours",
+  "states": { "trial": "Essai", "active": "Actif", "past_due": "Paiement en retard", "cancelled": "Résilié" },
+  "payment": {
+    "title": "Comment payer",
+    "ccp": "Payez par CCP ou virement bancaire sur le compte communiqué par le support Tavio.",
+    "transfer": "Modes de paiement : CCP, virement bancaire ou espèces à notre bureau.",
+    "reference": "Indiquez votre NIF comme référence de paiement, puis envoyez le justificatif au support."
+  }
+}
