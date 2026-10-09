@@ -22,7 +22,7 @@ tmp="$file.partial"
 # Remove the partial file if anything fails, so no broken backup is left behind.
 trap 'rm -f "$tmp"' EXIT
 
-pg_dump --no-owner --no-privileges --format=plain "$DATABASE_URL" | gzip -9 > "$tmp"
+pg_dump --no-owner --format=plain "$DATABASE_URL" | gzip -9 > "$tmp"
 mv "$tmp" "$file"
 trap - EXIT
 echo "backup written: $file ($(du -h "$file" | cut -f1))"

@@ -1,0 +1,82 @@
+name: On-prem stack
+
+# Builds the Docker image, boots the full on-prem stack (postgres, migrate, app, gotenberg, minio),
+# smoke-tests it, then runs a backup + restore drill. Proves the on-prem packaging actually works.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  onprem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write .env with throwaway secrets
+        run: |
+          {
+            echo "POSTGRES_PASSWORD=$(openssl rand -hex 16)"
+            echo "BETTER_AUTH_SECRET=$(openssl rand -hex 32)"
+            echo "BETTER_AUTH_URL=http://localhost:3000"
+            echo "CRON_SECRET=$(openssl rand -hex 16)"
+            echo "MINIO_ROOT_USER=tavio"
+            echo "MINIO_ROOT_PASSWORD=$(openssl rand -hex 16)"
+          } > .env
+
+      - name: Build and start the stack
+        run: docker compose up -d --build
+
+      - name: Wait for the app
+        run: |
+          for i in $(seq 1 90); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/fr/login || true)
+            [ "$code" = "200" ] && echo "app up after ${i}x2s" && exit 0
+            sleep 2
+          done
+          docker compose ps; docker compose logs --tail=200 migrate app; exit 1
+
+      - name: Smoke test
+        run: |
+          set -e
+          test "$(curl -s http://localhost:3000/api/auth/ok)" = '{"ok":true}'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/ar/signup)" = 200
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/fr/dashboard)" = 307
+          # Sign up a throwaway user against the local container and check the session cookie.
+          code=$(curl -s -o /tmp/signup.json -w '%{http_code}' -c /tmp/cj -H 'content-type: application/json' \
+            -H 'origin: http://localhost:3000' \
+            -d '{"name":"CI","email":"ci@example.test","password":"ci-only-password-123"}' \
+            http://localhost:3000/api/auth/sign-up/email)
+          echo "signup status $code"; test "$code" = 200
+          grep -q session_token /tmp/cj
+          # Logged-in dashboard redirects to onboarding (no company yet).
+          loc=$(curl -s -o /dev/null -w '%{redirect_url}' -b /tmp/cj http://localhost:3000/fr/dashboard)
+          echo "redirect: $loc"; echo "$loc" | grep -q onboarding
+          set -a; . ./.env; set +a
+          curl -sf -X POST -H "authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/daily
+          curl -sf -X POST -H "authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/outbox
+
+      - name: Backup and restore drill
+        run: |
+          set -e
+          set -a; . ./.env; set +a
+          docker compose cp scripts/backup.sh postgres:/backup.sh
+          docker compose exec -T -e DATABASE_URL="postgres://tavio:$POSTGRES_PASSWORD@localhost:5432/tavio" \
+            -e BACKUP_DIR=/backups postgres bash /backup.sh
+          f=$(docker compose exec -T postgres sh -c 'ls -1t /backups/*.sql.gz | head -1')
+          docker compose exec -T postgres psql -U tavio -d postgres -c 'create database tavio_restore'
+          docker compose exec -T postgres sh -c "gunzip -c $f | psql -q -v ON_ERROR_STOP=1 -U tavio -d tavio_restore"
+          q="select (select count(*) from users)||'/'||(select count(*) from pg_policies)||'/'||(select count(*) from information_schema.role_table_grants where grantee='tavio_app')"
+          a=$(docker compose exec -T postgres psql -U tavio -d tavio -tAc "$q")
+          b=$(docker compose exec -T postgres psql -U tavio -d tavio_restore -tAc "$q")
+          echo "original users/policies/grants=$a restored=$b"
+          test "$a" = "$b"
+
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs --tail=300
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
