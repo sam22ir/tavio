@@ -1,1 +1,27 @@
-{}
+{
+  "title": "Intelligence artificielle",
+  "description": "Assistant IA pour les brouillons, la recherche en langage naturel et la saisie des factures. Les fonctions IA restent désactivées tant que la clé n'est pas configurée.",
+  "status": {
+    "title": "État de la configuration",
+    "state": "État",
+    "configured": "Configurée",
+    "not_configured": "Non configurée",
+    "provider": "Fournisseur",
+    "model": "Modèle",
+    "none": "Aucun",
+    "vision_on": "Lecture d'images activée (factures photographiées).",
+    "vision_off": "Lecture d'images désactivée : configurez AI_VISION_MODEL pour scanner des factures."
+  },
+  "usage": {
+    "title": "Utilisation ce mois-ci",
+    "empty": "Aucun appel IA ce mois-ci.",
+    "feature": "Fonction",
+    "calls": "Appels",
+    "input_tokens": "Tokens entrée",
+    "output_tokens": "Tokens sortie"
+  },
+  "setup": {
+    "title": "Configuration",
+    "body": "Définissez les secrets suivants avec wrangler. La clé n'est jamais affichée dans l'application. AI_PROVIDER vaut openai-compatible, anthropic ou mock ; AI_DAILY_LIMIT fixe le plafond quotidien (200 par défaut)."
+  }
+}

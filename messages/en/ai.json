@@ -1,1 +1,27 @@
-{}
+{
+  "title": "Artificial intelligence",
+  "description": "AI helpers for reminder drafts, natural-language search and invoice scanning. AI features stay off until the key is configured.",
+  "status": {
+    "title": "Configuration status",
+    "state": "State",
+    "configured": "Configured",
+    "not_configured": "Not configured",
+    "provider": "Provider",
+    "model": "Model",
+    "none": "None",
+    "vision_on": "Image reading is on (photographed invoices).",
+    "vision_off": "Image reading is off: set AI_VISION_MODEL to scan invoices."
+  },
+  "usage": {
+    "title": "Usage this month",
+    "empty": "No AI calls this month.",
+    "feature": "Feature",
+    "calls": "Calls",
+    "input_tokens": "Input tokens",
+    "output_tokens": "Output tokens"
+  },
+  "setup": {
+    "title": "Setup",
+    "body": "Set the secrets below with wrangler. The key is never shown in the app. AI_PROVIDER is openai-compatible, anthropic or mock; AI_DAILY_LIMIT sets the daily cap (200 by default)."
+  }
+}
