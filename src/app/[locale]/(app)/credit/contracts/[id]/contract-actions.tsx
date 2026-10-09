@@ -56,7 +56,7 @@ export function ContractActions({ contractId, state }: Props) {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {state === 'draft' ? (
+      {state === 'draft' || state === 'reserved' ? (
         <Button onClick={activate} disabled={pending}>{t('contract.activate')}</Button>
       ) : null}
       {state === 'draft' || state === 'active' ? (
