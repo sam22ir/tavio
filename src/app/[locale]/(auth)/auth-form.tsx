@@ -63,7 +63,14 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
         <Input id="email" name="email" type="email" autoComplete="email" dir="ltr" required />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="password">{t('fields.password')}</Label>
+        <div className="flex items-center justify-between gap-2">
+          <Label htmlFor="password">{t('fields.password')}</Label>
+          {mode === 'login' && (
+            <Link href={`/${locale}/forgot-password`} className="text-sm text-primary underline-offset-4 hover:underline">
+              {t('login.forgot_link')}
+            </Link>
+          )}
+        </div>
         <Input
           id="password"
           name="password"
