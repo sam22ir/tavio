@@ -22,3 +22,5 @@ export { SiteHeader } from './SiteHeader';
 export { SiteFooter } from './SiteFooter';
 export { LocaleSwitcher } from './LocaleSwitcher';
 export type { SiteAction } from './types';
+export { Reveal, RevealList, RevealItem } from './motion/Reveal';
+export { Parallax } from './motion/Parallax';

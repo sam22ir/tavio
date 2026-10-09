@@ -17,6 +17,10 @@ import {
   FeatureList,
   FloatingBadges,
   ModulesOrbit,
+  Parallax,
+  Reveal,
+  RevealList,
+  RevealItem,
   PillLabel,
   PricingCards,
   Section,
@@ -101,14 +105,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
 
           <div className="relative mx-auto mt-16 w-full max-w-5xl">
-            <DeviceFrame name="dashboard" locale={locale} device="laptop" priority className="hidden w-full md:block" />
-            <DeviceFrame
-              name="phone-dashboard"
-              locale={locale}
-              device="phone"
-              priority
-              className="s-float mx-auto w-[72%] max-w-[300px] md:absolute md:-bottom-10 md:end-2 md:w-[24%] md:max-w-[230px]"
-            />
+            <Parallax distance={24} className="hidden w-full md:block">
+              <DeviceFrame name="dashboard" locale={locale} device="laptop" priority className="w-full" />
+            </Parallax>
+            <Parallax distance={70} className="mx-auto w-[72%] max-w-[300px] md:absolute md:-bottom-10 md:end-2 md:w-[24%] md:max-w-[230px]">
+              <DeviceFrame name="phone-dashboard" locale={locale} device="phone" priority className="s-float" />
+            </Parallax>
             <FloatingBadges
               items={[
                 { kind: 'dzd', label: 'DZD' },
@@ -131,7 +133,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       {/* Before and after. */}
-      <Section>
+      <Reveal><Section>
         <div className="flex flex-col gap-12">
           <SectionHeading eyebrow={t('before.eyebrow')} title={t('before.title')} body={t('before.body')} />
           <ConnectorDiagram
@@ -142,11 +144,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             center={<span className="s-mark !size-14 !rounded-2xl !text-2xl">T</span>}
           />
         </div>
-      </Section>
+      </Section></Reveal>
 
       {/* Three alternating feature sections: screenshot + title/subline list. */}
       {features.map((feature, i) => (
-        <Section key={feature.screen} tone={i === 1 ? 'muted' : 'default'}>
+        <Reveal key={feature.screen}>
+        <Section tone={i === 1 ? 'muted' : 'default'}>
           <div className="grid items-center gap-12 md:grid-cols-2 md:gap-20">
             <div className={`flex flex-col gap-6 ${i % 2 === 1 ? 'md:order-2' : ''}`}>
               <PillLabel>{feature.eyebrow}</PillLabel>
@@ -161,10 +164,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
           </div>
         </Section>
+        </Reveal>
       ))}
 
       {/* Modules orbit, linking to each feature page. */}
-      <Section id="modules">
+      <Reveal><Section id="modules">
         <div className="flex flex-col items-center gap-14">
           <SectionHeading eyebrow={t('modules.eyebrow')} title={t('modules.title')} body={t('modules.body')} />
           <ModulesOrbit
@@ -172,31 +176,31 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             center={<span className="s-mark !size-14 !rounded-2xl !text-2xl">T</span>}
           />
         </div>
-      </Section>
+      </Section></Reveal>
 
       {/* Built for Algeria: asymmetric bento, collapses to one column. */}
-      <Section tone="muted">
+      <Reveal><Section tone="muted">
         <div className="flex flex-col gap-12">
           <SectionHeading eyebrow={t('algeria.eyebrow')} title={t('algeria.title')} body={t('algeria.body')} />
-          <ul className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <RevealList className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {algeria.map((item, i) => {
               const Icon = ALGERIA_ICONS[i] ?? Banknote;
               return (
-                <li key={item.title} className="s-panel flex flex-col justify-between gap-6 p-7 md:p-8">
+                <RevealItem key={item.title} className="s-panel flex flex-col justify-between gap-6 p-7 md:p-8">
                   <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
                     <Icon size={20} strokeWidth={1.75} aria-hidden />
                   </span>
                   <h3 className="text-xl">{item.title}</h3>
                   <p className="leading-relaxed text-[color:var(--s-muted)]">{item.body}</p>
-                </li>
+                </RevealItem>
               );
             })}
-          </ul>
+          </RevealList>
         </div>
-      </Section>
+      </Section></Reveal>
 
       {/* The one dark section: AI helpers and on-premise, with the CRM screen. */}
-      <section className="s-dark px-4 py-24 md:py-36">
+      <Reveal><section className="s-dark px-4 py-24 md:py-36">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-14 md:grid-cols-2 md:gap-20">
           <div className="flex flex-col gap-6">
             <PillLabel tone="dark">{t('dark.eyebrow')}</PillLabel>
@@ -208,18 +212,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
           <DeviceFrame name="crm-kanban" locale={locale} alt="" className="min-w-0" />
         </div>
-      </section>
+      </section></Reveal>
 
       {/* How it works: curved timeline. */}
-      <Section>
+      <Reveal><Section>
         <div className="flex flex-col gap-16">
           <SectionHeading eyebrow={t('how.eyebrow')} title={t('how.title')} />
           <CurvedTimeline steps={how} />
         </div>
-      </Section>
+      </Section></Reveal>
 
       {/* Pricing teaser. */}
-      <Section tone="muted">
+      <Reveal><Section tone="muted">
         <div className="flex flex-col gap-12">
           <SectionHeading eyebrow={t('pricing.eyebrow')} title={t('pricing.title')} body={t('pricing.body')} />
           <PricingCards plans={plans} />
@@ -227,22 +231,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <CtaLink href={localeHref(locale, '/pricing')} label={t('pricing.cta')} variant="light" />
           </div>
         </div>
-      </Section>
+      </Section></Reveal>
 
-      <Section>
+      <Reveal><Section>
         <div className="grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
           <SectionHeading eyebrow={t('faq.eyebrow')} title={t('faq.title')} />
           <Faq items={faq} />
         </div>
-      </Section>
+      </Section></Reveal>
 
-      <Section className="pt-0">
+      <Reveal><Section className="pt-0">
         <CtaBand
           title={t('cta.title')}
           body={t('cta.body')}
           primary={{ label: t('cta.primary'), href: localeHref(locale, '/signup') }}
         />
-      </Section>
+      </Section></Reveal>
     </>
   );
 }
