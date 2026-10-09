@@ -27,6 +27,9 @@ import {
   Section,
 } from '@/site/components';
 
+/** Only the listed slugs exist; anything else is a 404 at build time. */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) => SOLUTION_SLUGS.map((slug) => ({ locale, slug })));
 }

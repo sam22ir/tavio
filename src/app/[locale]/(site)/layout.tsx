@@ -2,8 +2,7 @@ import { hasLocale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Aref_Ruqaa, IBM_Plex_Sans_Arabic, Inter, Inter_Tight, Instrument_Serif } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { getSession } from '@/core/auth/session';
-import { routing } from '@/i18n/routing';
+import { routing, type Locale } from '@/i18n/routing';
 import { SiteFooter, SiteHeader } from '@/site/components';
 import '@/site/site.css';
 
@@ -14,8 +13,10 @@ const instrumentSerif = Instrument_Serif({ subsets: ['latin'], weight: '400', st
 const plexArabic = IBM_Plex_Sans_Arabic({ subsets: ['arabic'], weight: ['400', '500', '600', '700'], variable: '--f-plex-ar' });
 const arefRuqaa = Aref_Ruqaa({ subsets: ['arabic'], weight: ['400', '700'], variable: '--f-aref' });
 
-// The header shows "Open app" for signed-in visitors, so the marketing site reads the session.
-export const dynamic = 'force-dynamic';
+/** Prerender the marketing site for every locale. No request-time data is read here. */
+export function generateStaticParams(): { locale: Locale }[] {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export default async function SiteLayout({
   children,
@@ -27,7 +28,6 @@ export default async function SiteLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const user = await getSession();
 
   const fontVars =
     locale === 'ar'
@@ -36,7 +36,7 @@ export default async function SiteLayout({
 
   return (
     <div data-locale={locale} className={`site flex min-h-[100dvh] flex-col ${fontVars.join(' ')}`}>
-      <SiteHeader locale={locale} signedIn={user !== null} />
+      <SiteHeader locale={locale} />
       <main className="flex-1">{children}</main>
       <SiteFooter locale={locale} />
     </div>

@@ -8,7 +8,6 @@ import { routing, type Locale } from '@/i18n/routing';
 import { buildMetadata } from '@/site/seo';
 import { PageHero, Section } from '@/site/components';
 import { ContactForm } from '@/site/contact/ContactForm';
-import { CONTACT_TYPES, type ContactType } from '@/site/contact/schema';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -43,22 +42,11 @@ function ChannelCard({
   );
 }
 
-export default async function ContactPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ locale: string }>;
-  searchParams: Promise<{ type?: string | string[] }>;
-}) {
+export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('site_company.contact');
-
-  // `?type=audit|demo|services|other` preselects the request type. Anything else falls back to "other".
-  const { type } = await searchParams;
-  const requested = Array.isArray(type) ? type[0] : type;
-  const defaultType: ContactType = (CONTACT_TYPES as readonly string[]).includes(requested ?? '') ? (requested as ContactType) : 'other';
 
   // Public number for the WhatsApp button. Digits only, e.g. 213550123456. Hidden when unset.
   const whatsapp = (process.env.NEXT_PUBLIC_CONTACT_WHATSAPP ?? '').replace(/\D/g, '');
@@ -98,7 +86,7 @@ export default async function ContactPage({
             </div>
           </div>
 
-          <ContactForm defaultType={defaultType} />
+          <ContactForm />
         </div>
       </Section>
     </>

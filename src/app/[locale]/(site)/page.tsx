@@ -28,8 +28,6 @@ import {
   type PricingPlan,
 } from '@/site/components';
 
-export const dynamic = 'force-dynamic';
-
 /** Pillar icons, in message order. */
 const PILLAR_ICONS: LucideIcon[] = [Megaphone, Handshake, Boxes, BarChart3, Cpu];
 /** Service icons, in message order. */

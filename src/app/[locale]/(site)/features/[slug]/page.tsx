@@ -21,6 +21,9 @@ interface FeatureCopy {
 type Params = Promise<{ locale: string; slug: string }>;
 
 /** Prerender every module page for each locale. Unknown slugs fall through to `notFound()`. */
+/** Only the listed slugs exist; anything else is a 404 at build time. */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) => FEATURE_SLUGS.map((slug) => ({ locale, slug })));
 }
