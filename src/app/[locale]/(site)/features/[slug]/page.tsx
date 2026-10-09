@@ -8,7 +8,7 @@ import { routing } from '@/i18n/routing';
 import { getFeature } from '@/site/content/features';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata, FEATURE_SLUGS } from '@/site/seo';
-import { CtaBand, CtaLink, DeviceFrame, Emphasis, FeatureList, PillLabel, Reveal, Section } from '@/site/components';
+import { BlueHero, CtaBand, CtaLink, DeviceFrame, FeatureList, PillLabel, Reveal, Section } from '@/site/components';
 
 interface FeatureCopy {
   title: string;
@@ -45,22 +45,18 @@ export default async function FeatureDetailPage({ params }: { params: Params }) 
 
   return (
     <>
-      {/* Hero: pill with the module name, headline with one accent word, subline, two CTAs. */}
-      <section className="relative overflow-hidden px-4 pb-16 pt-14 md:pt-24">
-        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[70%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[12%] h-[380px] w-[min(640px,100%)] -translate-x-1/2 rounded-full" />
-        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-7 text-center">
-          <PillLabel>{item.title}</PillLabel>
-          <h1 className="s-h1 max-w-[18ch] text-balance">
-            <Emphasis text={item.headline} />
-          </h1>
-          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{item.tagline}</p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <CtaLink href={localeHref(locale, '/signup')} label={t('detail.cta')} />
-            <CtaLink href={localeHref(locale, '/pricing')} label={t('detail.secondary')} variant="light" arrow={false} />
-          </div>
-        </div>
-      </section>
+<BlueHero
+          uppercase={locale !== 'ar'}
+          eyebrow={item.title}
+          title={item.headline}
+          subtitle={item.tagline}
+          actions={
+            <>
+              <CtaLink href={localeHref(locale, '/signup')} label={t('detail.cta')} variant="light" />
+              <CtaLink href={localeHref(locale, '/pricing')} label={t('detail.secondary')} variant="light" arrow={false} />
+            </>
+          }
+        />
 
       {/* Large real screenshot. */}
       <section className="px-4 pb-8">

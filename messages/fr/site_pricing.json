@@ -1,11 +1,11 @@
 {
   "pricing": {
     "meta": {
-      "title": "Tarifs | Tavio",
+      "title": "Tarifs | Revora",
       "description": "Des tarifs clairs en dinars algériens (DZD), par utilisateur. Commencez gratuitement, payez par CCP, virement ou espèces."
     },
-    "title": "Des tarifs simples, en DZD",
-    "body": "Vous payez par utilisateur et par mois. Commencez gratuitement et passez à un plan supérieur quand votre équipe grandit.",
+    "title": "Des tarifs simples pour la *plateforme*, en DZD",
+    "body": "Vous payez par utilisateur et par mois. Commencez gratuitement et passez à un plan supérieur quand votre équipe grandit. Besoin d'un accompagnement ? Nos services se chiffrent sur devis.",
     "indicative": "Prix indicatifs. Les montants définitifs sont confirmés sur votre devis avant la souscription.",
     "monthly": "Mensuel",
     "yearly": "Annuel",
@@ -30,7 +30,7 @@
         },
         {
           "title": "Virement bancaire",
-          "body": "Virement vers le compte de Tavio, avec une référence de facture."
+          "body": "Virement vers le compte de Revora, avec une référence de facture."
         },
         {
           "title": "Espèces",
@@ -73,18 +73,41 @@
     },
     "yes": "Oui",
     "no": "Non",
-    "eyebrow": "Tarifs",
-    "yearlySave": "-2 mois"
+    "eyebrow": "Plateforme",
+    "yearlySave": "-2 mois",
+    "services": {
+      "title": "Services sur devis",
+      "body": "La plateforme ne suffit pas toujours. Notre équipe, qui a travaillé en marketing, en vente et en back-office, vous aide à trouver où la croissance se perd, puis à la reconstruire.",
+      "items": [
+        {
+          "title": "Audit",
+          "body": "Nous analysons votre activité et identifions où vous perdez des ventes, du temps et de la marge."
+        },
+        {
+          "title": "Mise en place",
+          "body": "Configuration de la plateforme selon vos process, import de vos données et premiers paramétrages."
+        },
+        {
+          "title": "Formation",
+          "body": "Formation de vos équipes, du gérant au vendeur, en français ou en arabe."
+        },
+        {
+          "title": "Accompagnement",
+          "body": "Support continu et optimisation de vos process, au rythme de votre croissance."
+        }
+      ],
+      "cta": "Découvrir nos services"
+    }
   },
   "solutions": {
     "indexMeta": {
-      "title": "Solutions par métier | Tavio",
-      "description": "Tavio pour les magasins d'électroménager, les concessionnaires, les cliniques, les centres de formation et les commerces avec caisse."
+      "title": "Solutions par métier | Revora",
+      "description": "Revora pour les magasins d'électroménager, les concessionnaires, les cliniques, les centres de formation et les commerces avec caisse."
     },
-    "indexTitle": "Une solution pour votre métier",
-    "indexBody": "Chaque activité vend et encaisse différemment. Choisissez la page qui ressemble à votre quotidien.",
+    "indexTitle": "Une solution pour *votre* métier",
+    "indexBody": "Chaque activité perd de la croissance à un endroit différent. Choisissez votre secteur pour voir comment Revora intervient, avec la plateforme et nos services.",
     "problemTitle": "Le problème",
-    "solutionTitle": "Comment Tavio vous aide",
+    "solutionTitle": "Comment Revora vous aide",
     "modulesTitle": "Modules utilisés",
     "seeAll": "Toutes les solutions",
     "related": "Autres solutions",
@@ -104,10 +127,10 @@
     },
     "items": {
       "electromenager-credit": {
-        "title": "Électroménager et ameublement à crédit",
-        "short": "Vendez à crédit et suivez chaque échéance, du premier versement au dernier.",
-        "problem": "Vos clients achètent à crédit, mais les échéances sont notées sur des cahiers. Vous ne savez pas toujours qui doit quoi, ni qui est en retard.",
-        "solution": "Créez un plan d'échelonnement pour chaque client, suivez les échéances payées ou en retard, et relancez en un clic. Chaque facture reste liée à son dossier.",
+        "title": "Électroménager et vente à crédit",
+        "short": "Vendez à crédit sans perdre une échéance, et transformez vos clients en acheteurs réguliers.",
+        "problem": "Vos ventes à crédit sont notées sur des cahiers. Vous ne savez pas toujours qui doit quoi, ni qui est en retard, et les relances prennent du temps à vos vendeurs.",
+        "solution": "Revora suit chaque échéancier, relance les retards et garde chaque contrat lié à son client. Nos services auditent votre process de crédit et le mettent en place avec votre équipe.",
         "modules": [
           "credit",
           "crm",
@@ -129,8 +152,8 @@
       "car-dealers": {
         "title": "Concessionnaires automobiles",
         "short": "Suivez chaque prospect, chaque acompte et chaque véhicule au même endroit.",
-        "problem": "Chaque véhicule a son dossier, ses acomptes et ses prospects. Les informations sont dispersées entre des fichiers, des messages et des carnets.",
-        "solution": "Un pipeline commercial pour suivre chaque prospect, des devis et des factures pour chaque vente, et un suivi du stock pour savoir ce qui reste disponible.",
+        "problem": "Chaque véhicule a son dossier, ses acomptes et ses prospects. Les informations sont dispersées entre fichiers, messages et carnets, et les prospects refroidissent.",
+        "solution": "Un pipeline commercial pour chaque prospect, des devis et factures liés à chaque vente, et un suivi du stock. Nos services structurent le process de vente et forment votre équipe.",
         "modules": [
           "crm",
           "invoicing",
@@ -150,79 +173,130 @@
         ]
       },
       "clinics": {
-        "title": "Cliniques et cabinets",
-        "short": "Fiches clients, facturation avec TVA et paiements échelonnés, en un seul outil.",
-        "problem": "Les patients règlent en plusieurs fois, les actes doivent être facturés proprement et les dossiers restent difficiles à retrouver quand on en a besoin.",
-        "solution": "Des fiches clients, une facturation claire avec TVA, des paiements échelonnés avec relances, et un accès depuis un téléphone, y compris en arabe.",
+        "title": "Santé : cliniques et cabinets",
+        "short": "Fiches patients, facturation avec TVA et paiements échelonnés, dans un seul outil.",
+        "problem": "Les patients règlent en plusieurs fois, les actes doivent être facturés proprement et les dossiers sont difficiles à retrouver quand on en a besoin.",
+        "solution": "Des fiches clients, une facturation claire avec TVA, des paiements échelonnés avec relances et un accès depuis un téléphone. Nos services organisent l'accueil et la facturation.",
         "modules": [
           "crm",
           "credit",
           "invoicing"
         ],
-        "headline": "Vos patients paient en plusieurs fois, *sans friction*.",
-        "problemLine": "Les paiements échelonnés se suivent mal.",
+        "headline": "Moins de dossiers *perdus*, plus de paiements à l'heure.",
+        "problemLine": "Paiements étalés, dossiers difficiles à suivre.",
         "before": [
-          "Dossiers patients difficiles à retrouver",
-          "Factures TVA faites à la main",
-          "Paiements échelonnés suivis sur un cahier"
+          "Dossiers papier difficiles à retrouver",
+          "Paiements échelonnés suivis de mémoire",
+          "Factures reprises à la main"
         ],
         "after": [
-          "Fiches clients consultables partout",
-          "Factures claires avec TVA",
-          "Échéanciers et relances automatiques"
+          "Fiches clients centralisées",
+          "Facturation avec TVA et paiements échelonnés",
+          "Relances et suivi depuis un téléphone"
         ]
       },
       "training-centers": {
         "title": "Centres de formation",
-        "short": "Inscriptions, paiements par tranches et comptabilité suivis dans une seule application.",
-        "problem": "Les inscriptions arrivent par plusieurs canaux, les paiements se font en plusieurs tranches et la comptabilité a du mal à suivre.",
-        "solution": "Un suivi des prospects et des inscriptions, la facturation de chaque formation, des échéanciers de paiement et une comptabilité générale alimentée par les ventes.",
+        "short": "Inscriptions, factures et relances des stagiaires, pour remplir vos sessions.",
+        "problem": "Les inscriptions arrivent par plusieurs canaux, les paiements sont échelonnés et les relances se font à la main, ce qui fait perdre des inscriptions.",
+        "solution": "Un pipeline pour chaque prospect, des factures et échéanciers par stagiaire, et des relances automatiques. Nos services mettent en place le parcours d'inscription.",
         "modules": [
           "crm",
           "credit",
-          "accounting"
+          "invoicing"
         ],
-        "headline": "Inscriptions et tranches, *au même endroit*.",
-        "problemLine": "Les inscriptions et les tranches arrivent par plusieurs canaux.",
+        "headline": "Plus d'inscriptions, *moins de relances manuelles*.",
+        "problemLine": "Inscriptions et paiements suivis à la main.",
         "before": [
-          "Inscriptions reçues par plusieurs canaux",
-          "Tranches de paiement suivies à la main",
-          "Comptabilité en retard sur les ventes"
+          "Inscriptions dispersées entre messages",
+          "Paiements échelonnés suivis sur papier",
+          "Relances oubliées"
         ],
         "after": [
-          "Prospects et inscriptions dans un seul pipeline",
-          "Échéanciers de paiement par élève",
-          "Comptabilité alimentée par les ventes"
+          "Pipeline d'inscription par prospect",
+          "Factures et échéanciers par stagiaire",
+          "Relances automatiques et WhatsApp"
         ]
       },
       "retail-pos": {
-        "title": "Commerces de détail avec caisse",
-        "short": "Une caisse rapide, un stock à jour et des factures générées à chaque vente.",
-        "problem": "La caisse, le stock et les factures ne se parlent pas. Vous découvrez les ruptures trop tard et la comptabilité se fait à la main.",
-        "solution": "Une caisse simple à utiliser, un stock mis à jour à chaque vente, des alertes de réapprovisionnement et des factures prêtes à imprimer.",
+        "title": "Commerce et distribution",
+        "short": "Caisse, stock et ventes reliés, pour vendre plus sans rupture ni erreur.",
+        "problem": "Le stock n'est pas à jour, la caisse et la facturation ne se parlent pas, et vous ne voyez pas vos marges en temps réel.",
+        "solution": "La caisse est reliée au stock et à la facturation, les tableaux de bord montrent vos ventes en direct, et nos services organisent vos approvisionnements.",
         "modules": [
           "pos",
           "inventory",
-          "invoicing"
+          "invoicing",
+          "accounting",
+          "website"
         ],
-        "headline": "Caisse, stock et factures, *enfin synchronisés*.",
-        "problemLine": "La caisse, le stock et la comptabilité ne se parlent pas.",
+        "headline": "Vendez sans rupture, *avec un stock fiable*.",
+        "problemLine": "Stock, caisse et factures ne se parlent pas.",
         "before": [
-          "Ruptures de stock découvertes trop tard",
-          "Caisse et factures non rapprochées",
-          "Comptabilité refaite à la main"
+          "Stock tenu à la main",
+          "Caisse et facturation séparées",
+          "Marges découvertes en fin de mois"
         ],
         "after": [
-          "Stock mis à jour à chaque vente",
-          "Alertes de réapprovisionnement",
-          "Factures prêtes à imprimer"
+          "Stock relié à chaque vente",
+          "Caisse et facturation au même endroit",
+          "Indicateurs de ventes en temps réel"
+        ]
+      },
+      "professional-services": {
+        "title": "Services et prestataires",
+        "short": "Devis, projets et facturation des prestations, avec un suivi du temps passé.",
+        "problem": "Les devis partent en retard, les projets dérapent et le temps passé n'est pas facturé correctement.",
+        "solution": "Devis et factures liés aux projets, suivi du temps par tâche et support client structuré. Nos services analysent où vos prestations perdent de la marge.",
+        "headline": "Chaque prestation, *facturée et suivie*.",
+        "problemLine": "Devis en retard et temps non facturé.",
+        "before": [
+          "Devis envoyés en retard",
+          "Projets suivis dans des messages",
+          "Temps passé non facturé"
+        ],
+        "after": [
+          "Devis et factures liés aux projets",
+          "Temps saisi par tâche",
+          "Support client structuré"
+        ],
+        "modules": [
+          "crm",
+          "invoicing",
+          "helpdesk",
+          "hr",
+          "platform"
+        ]
+      },
+      "industry": {
+        "title": "Industrie et production",
+        "short": "Stock, achats et comptabilité SCF pour suivre les matières et les coûts.",
+        "problem": "Les matières premières sont mal suivies, les commandes fournisseurs sont décidées au feeling et les coûts ne sont connus qu'en fin de mois.",
+        "solution": "Stock multi-entrepôts, bons de commande fournisseurs et écritures comptables SCF. Nos services cadrent vos achats et votre production avec votre équipe.",
+        "headline": "Matières et coûts, *sous contrôle*.",
+        "problemLine": "Stock et coûts mal suivis.",
+        "before": [
+          "Matières suivies sur tableur",
+          "Achats décidés sans seuil",
+          "Coûts connus en fin de mois"
+        ],
+        "after": [
+          "Stock et seuils de réapprovisionnement",
+          "Bons de commande et factures fournisseurs",
+          "Écritures SCF suivies en continu"
+        ],
+        "modules": [
+          "inventory",
+          "accounting",
+          "hr",
+          "platform"
         ]
       }
     },
     "cta": "Commencer gratuitement",
     "indexEyebrow": "Solutions par métier",
-    "beforeLabel": "Avant Tavio",
-    "afterLabel": "Avec Tavio",
+    "beforeLabel": "Avant Revora",
+    "afterLabel": "Avec Revora",
     "moduleBodies": {
       "credit": "Plans d'échelonnement, échéances payées ou en retard, relances.",
       "crm": "Fiches clients, pipeline commercial et historique des échanges.",
@@ -233,17 +307,22 @@
       "hr": "Fiches employés et suivi de base.",
       "helpdesk": "Tickets de support et projets suivis par équipe.",
       "website": "Site et boutique reliés à votre stock et à vos commandes.",
-      "platform": "API et automatisations pour connecter Tavio à vos outils."
+      "platform": "API et automatisations pour connecter Revora à vos outils."
     },
-    "open": "Voir la solution"
+    "open": "Voir la solution",
+    "services": {
+      "title": "La plateforme et nos services",
+      "body": "La plateforme donne les outils. Nos services mettent en place la méthode : audit, configuration, formation et suivi.",
+      "cta": "Voir les services"
+    }
   },
   "onPremise": {
     "meta": {
-      "title": "On-premise | Tavio",
-      "description": "Installez Tavio sur vos propres serveurs en Algérie, avec Docker, sauvegardes et support d'installation."
+      "title": "On-premise | Revora",
+      "description": "Installez Revora sur vos propres serveurs en Algérie, avec Docker, sauvegardes et support d'installation."
     },
     "title": "Vos données *restent en Algérie*",
-    "body": "Certaines entreprises doivent garder leurs données sur le territoire algérien. Tavio peut être installé sur vos propres serveurs, avec Docker.",
+    "body": "Certaines entreprises doivent garder leurs données sur le territoire algérien. Revora peut être installé sur vos propres serveurs, avec Docker.",
     "legal": "⚠ Cadre juridique (loi 18-07 sur la protection des données personnelles) : à valider par un juriste avant publication.",
     "requirementsTitle": "Ce qu'il faut pour l'installer",
     "requirements": [
@@ -293,7 +372,7 @@
     "guarantees": [
       {
         "title": "Données sur vos serveurs",
-        "body": "Tavio tourne sur votre infrastructure, en Algérie. Vous gardez la main sur vos données."
+        "body": "Revora tourne sur votre infrastructure, en Algérie. Vous gardez la main sur vos données."
       },
       {
         "title": "Sauvegardes planifiées",

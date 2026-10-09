@@ -26,6 +26,8 @@ export const SOLUTION_SLUGS = [
   'clinics',
   'training-centers',
   'retail-pos',
+  'professional-services',
+  'industry',
 ] as const;
 
 /** Public marketing paths, relative to the locale prefix. */

@@ -1,17 +1,39 @@
 {
   "overview": {
-    "metaTitle": "Modules Tavio : gestion commerciale pour PME algériennes",
-    "metaDescription": "Crédit, CRM, facturation, stock, comptabilité, caisse, RH, projets et boutique en ligne, dans une seule application.",
-    "title": "Tout votre commerce, *dans une seule* application.",
-    "body": "Une seule application pour vendre, facturer, gérer le stock et suivre votre équipe. Choisissez un module pour voir ce qu'il fait.",
-    "eyebrow": "Modules"
+    "metaTitle": "Plateforme Revora : croissance, ventes et opérations pour les entreprises algériennes",
+    "metaDescription": "Acquisition, ventes, opérations, données et technologie réunies dans une plateforme, avec des services d'audit, de mise en place et de formation.",
+    "title": "Cinq piliers pour *faire croître* votre entreprise.",
+    "body": "La plateforme Revora relie l'acquisition, les ventes, les opérations, les données et la technologie. Chaque module répond à un point précis où la croissance se perd.",
+    "eyebrow": "Plateforme",
+    "pillars": {
+      "acquisition": {
+        "title": "Acquisition",
+        "body": "Trouvez, suivez et convertissez vos prospects : CRM, boutique en ligne, campagnes WhatsApp et captation des demandes."
+      },
+      "sales": {
+        "title": "Ventes",
+        "body": "Devis, ventes à crédit, caisse et relances : chaque vente est suivie jusqu'à l'encaissement."
+      },
+      "operations": {
+        "title": "Opérations",
+        "body": "Facturation, stock, achats, comptabilité SCF, RH et support : le quotidien de l'entreprise, sans tableur."
+      },
+      "data": {
+        "title": "Data",
+        "body": "Tableaux de bord, indicateurs clés, rapports et assistant IA pour décider à partir de vos chiffres."
+      },
+      "technology": {
+        "title": "Technologie",
+        "body": "API, webhooks, automatisations, champs personnalisés et installation sur vos propres serveurs."
+      }
+    }
   },
   "detail": {
     "cta": "Commencer gratuitement",
     "secondary": "Voir les tarifs",
     "capabilitiesTitle": "Ce que vous pouvez faire",
     "relatedTitle": "Modules liés",
-    "ctaTitle": "Essayez Tavio avec vos propres données",
+    "ctaTitle": "Essayez Revora avec vos propres données",
     "ctaBody": "Créez votre espace en quelques minutes, puis importez vos clients et vos produits.",
     "ctaPrimary": "Commencer gratuitement"
   },
@@ -126,7 +148,7 @@
       "body": "Recevez les commandes de votre boutique en ligne directement dans votre gestion, avec le même stock et les mêmes clients.",
       "capabilities": [
         "Paramètres du site et de la boutique",
-        "Commandes web reçues dans Tavio",
+        "Commandes web reçues dans Revora",
         "Conversion d'une commande web en vente",
         "Annulation d'une commande web",
         "Même stock et mêmes clients que votre caisse"
@@ -149,7 +171,7 @@
     "platform": {
       "title": "Plateforme",
       "tagline": "API, webhooks, champs personnalisés et automatisations.",
-      "body": "Adaptez Tavio à votre activité et reliez-le à vos outils existants.",
+      "body": "Adaptez Revora à votre activité et reliez-le à vos outils existants.",
       "capabilities": [
         "Clés API pour vos intégrations",
         "Webhooks pour recevoir les événements en temps réel",
@@ -157,7 +179,7 @@
         "Règles d'automatisation sans code",
         "Révocation d'une clé API à tout moment"
       ],
-      "headline": "Adaptez Tavio à *votre* activité."
+      "headline": "Adaptez Revora à *votre* activité."
     }
   }
 }

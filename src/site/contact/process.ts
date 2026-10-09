@@ -1,5 +1,13 @@
 import type { EmailMessage } from '@/core/adapters/email';
-import { contactSchema, HONEYPOT_FIELD } from './schema';
+import { contactSchema, HONEYPOT_FIELD, type ContactType } from './schema';
+
+/** French labels for each request type, used in the team email and its subject. */
+export const CONTACT_TYPE_LABELS: Record<ContactType, string> = {
+  audit: 'Audit gratuit',
+  demo: 'Démo de la plateforme',
+  services: 'Services',
+  other: 'Autre',
+};
 import type { RateLimiter } from './rate-limit';
 
 export type ContactOutcome =
@@ -55,7 +63,9 @@ export async function processContact(input: Record<string, unknown>, ip: string,
   }
 
   const data = parsed.data;
+  const typeLabel = CONTACT_TYPE_LABELS[data.type];
   const rows: [string, string][] = [
+    ['Motif', typeLabel],
     ['Nom', data.name],
     ['Entreprise', data.company || '-'],
     ['Téléphone', data.phone],
@@ -69,7 +79,7 @@ export async function processContact(input: Record<string, unknown>, ip: string,
 
   const result = await deps.send({
     to: deps.recipient,
-    subject: `Nouveau contact Tavio : ${data.company || data.name}`,
+    subject: `Nouveau contact Revora [${typeLabel}] : ${data.company || data.name}`,
     html,
     text,
     replyTo: data.email,

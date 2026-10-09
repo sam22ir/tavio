@@ -4,12 +4,12 @@ import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
 import { FieldError, Input, Label, TextArea, TextField } from '@heroui/react';
 import { submitContact, type ContactState } from './actions';
-import { HONEYPOT_FIELD } from './schema';
+import { CONTACT_TYPES, HONEYPOT_FIELD, type ContactType } from './schema';
 
 const initial: ContactState = { status: 'idle' };
 
 /** Contact form: server action, zod validation on the server, honeypot, success and error states. */
-export function ContactForm() {
+export function ContactForm({ defaultType = 'other' }: { defaultType?: ContactType }) {
   const t = useTranslations('site_company.contact');
   const [state, formAction, pending] = useActionState(submitContact, initial);
 
@@ -28,6 +28,20 @@ export function ContactForm() {
   return (
     <form action={formAction} className="s-panel flex min-w-0 flex-col gap-5 p-6 md:p-8" noValidate>
       <div className="grid min-w-0 gap-5 sm:grid-cols-2">
+        <label className="flex min-w-0 flex-col gap-2 sm:col-span-2">
+          <span className="text-sm font-medium">{t('type.label')}</span>
+          <select
+            name="type"
+            defaultValue={defaultType}
+            className="h-12 w-full rounded-[var(--field-radius)] border border-[color:var(--field-border)] bg-[var(--field-background)] px-4 text-[color:var(--field-foreground)]"
+          >
+            {CONTACT_TYPES.map((value) => (
+              <option key={value} value={value}>
+                {t(`type.options.${value}`)}
+              </option>
+            ))}
+          </select>
+        </label>
         <TextField name="name" isRequired isInvalid={invalid('name')} className="flex min-w-0 flex-col gap-2">
           <Label>{t('form.name')}</Label>
           <Input id="contact-name" autoComplete="name" />

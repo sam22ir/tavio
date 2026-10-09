@@ -1,11 +1,11 @@
 {
   "pricing": {
     "meta": {
-      "title": "Pricing | Tavio",
+      "title": "Pricing | Revora",
       "description": "Clear pricing in Algerian dinars (DZD), per user. Start free and pay by CCP, bank transfer or cash."
     },
-    "title": "Simple pricing, in DZD",
-    "body": "You pay per user, per month. Start free and move to a higher plan when your team grows.",
+    "title": "Simple pricing for the *platform*, in DZD",
+    "body": "You pay per user, per month. Start for free and move up a plan as your team grows. Need support? Our services are priced on quote.",
     "indicative": "Indicative prices. Final amounts are confirmed in your quote before you subscribe.",
     "monthly": "Monthly",
     "yearly": "Yearly",
@@ -30,7 +30,7 @@
         },
         {
           "title": "Bank transfer",
-          "body": "Transfer to the Tavio account, with your invoice reference."
+          "body": "Transfer to the Revora account, with your invoice reference."
         },
         {
           "title": "Cash",
@@ -73,18 +73,41 @@
     },
     "yes": "Yes",
     "no": "No",
-    "eyebrow": "Pricing",
-    "yearlySave": "-2 months"
+    "eyebrow": "Platform",
+    "yearlySave": "-2 months",
+    "services": {
+      "title": "Services on quote",
+      "body": "The platform is not always enough on its own. Our team, who worked in marketing, sales and back office, helps you find where growth is lost, then rebuild it.",
+      "items": [
+        {
+          "title": "Audit",
+          "body": "We review how your business works and show where you lose sales, time and margin."
+        },
+        {
+          "title": "Setup",
+          "body": "Platform configuration to match your processes, data import and first settings."
+        },
+        {
+          "title": "Training",
+          "body": "Training for your team, from the manager to the sales staff, in French or Arabic."
+        },
+        {
+          "title": "Support",
+          "body": "Ongoing support and process optimisation, at the pace of your growth."
+        }
+      ],
+      "cta": "Discover our services"
+    }
   },
   "solutions": {
     "indexMeta": {
-      "title": "Solutions by business | Tavio",
-      "description": "Tavio for appliance and furniture shops, car dealers, clinics, training centres and retail shops with a till."
+      "title": "Solutions by business | Revora",
+      "description": "Revora for appliance and furniture shops, car dealers, clinics, training centres and retail shops with a till."
     },
-    "indexTitle": "A solution for your business",
-    "indexBody": "Every business sells and collects differently. Pick the page that looks like your day.",
+    "indexTitle": "A solution for *your* business",
+    "indexBody": "Every business loses growth in a different place. Choose your sector to see how Revora helps, with the platform and our services.",
     "problemTitle": "The problem",
-    "solutionTitle": "How Tavio helps",
+    "solutionTitle": "How Revora helps",
     "modulesTitle": "Modules used",
     "seeAll": "All solutions",
     "related": "Other solutions",
@@ -104,20 +127,20 @@
     },
     "items": {
       "electromenager-credit": {
-        "title": "Appliance and furniture shops on credit",
-        "short": "Sell on credit and track every instalment, from the first payment to the last.",
-        "problem": "Your customers buy on credit, but instalments are written in notebooks. You do not always know who owes what, or who is late.",
-        "solution": "Set up an instalment plan for each customer, track paid and late instalments, and send a reminder in one click. Every invoice stays linked to its file.",
+        "title": "Appliances and credit sales",
+        "short": "Sell on credit without missing a single instalment, and turn customers into regular buyers.",
+        "problem": "Your credit sales are written in notebooks. You don't always know who owes what or who is late, and chasing payments takes your sales team's time.",
+        "solution": "Revora tracks every payment schedule, chases late payments and keeps each contract linked to its customer. Our services audit your credit process and set it up with your team.",
         "modules": [
           "credit",
           "crm",
           "invoicing"
         ],
-        "headline": "Sell on credit, *without missing an installment*.",
-        "problemLine": "Your installments are written in notebooks.",
+        "headline": "Sell on credit, *without missing an instalment*.",
+        "problemLine": "Your instalments are written in notebooks.",
         "before": [
-          "Installments written in notebooks",
-          "Guarantors and IOUs on paper",
+          "Instalments written in notebooks",
+          "Guarantors and debt notes on paper",
           "Late payments found too late"
         ],
         "after": [
@@ -129,8 +152,8 @@
       "car-dealers": {
         "title": "Car dealers",
         "short": "Follow every prospect, deposit and vehicle in one place.",
-        "problem": "Each vehicle has its own file, deposits and prospects. The information is spread across files, messages and notebooks.",
-        "solution": "A sales pipeline to follow each prospect, quotes and invoices for each sale, and stock tracking so you know what is still available.",
+        "problem": "Each vehicle has its file, its deposits and its prospects. Information is scattered across files, messages and notebooks, and prospects go cold.",
+        "solution": "A sales pipeline for every prospect, quotes and invoices linked to each sale, and stock tracking. Our services structure the sales process and train your team.",
         "modules": [
           "crm",
           "invoicing",
@@ -139,90 +162,141 @@
         "headline": "Every vehicle, *its full file*.",
         "problemLine": "Contracts, deposits and prospects are scattered.",
         "before": [
-          "Paper contracts and guarantors to dig up",
-          "Prospects spread across messages and notebooks",
+          "Paper contracts and guarantors to find",
+          "Prospects scattered across messages and notebooks",
           "Deposits noted by hand"
         ],
         "after": [
-          "Numbered contracts with linked invoices",
+          "Numbered contracts and linked invoices",
           "A sales pipeline for every prospect",
           "Deposit schedules and reminders"
         ]
       },
       "clinics": {
-        "title": "Clinics and practices",
-        "short": "Customer files, VAT invoicing and instalment payments, in one tool.",
-        "problem": "Patients pay in several instalments, services must be invoiced cleanly, and records are hard to find when you need them.",
-        "solution": "Customer files, clear VAT invoices, instalment payments with reminders, and access from a phone, in Arabic or French.",
+        "title": "Health: clinics and practices",
+        "short": "Patient files, VAT invoicing and instalment payments, in one tool.",
+        "problem": "Patients pay in several instalments, services must be invoiced correctly, and records are hard to find when you need them.",
+        "solution": "Customer files, clear VAT invoicing, instalment payments with reminders and access from a phone. Our services organise reception and billing.",
         "modules": [
           "crm",
           "credit",
           "invoicing"
         ],
-        "headline": "Your patients pay in installments, *smoothly*.",
-        "problemLine": "Installment payments are hard to follow.",
+        "headline": "Fewer lost files, *more payments on time*.",
+        "problemLine": "Split payments and files that are hard to follow.",
         "before": [
-          "Patient files hard to find",
-          "VAT invoices done by hand",
-          "Installment plans tracked in a notebook"
+          "Paper files that are hard to find",
+          "Instalments tracked from memory",
+          "Invoices rewritten by hand"
         ],
         "after": [
-          "Patient records available anywhere",
-          "Clear invoices with VAT",
-          "Payment schedules and automatic reminders"
+          "Centralised patient files",
+          "VAT invoicing and instalment payments",
+          "Reminders and tracking from a phone"
         ]
       },
       "training-centers": {
         "title": "Training centres",
-        "short": "Enrolments, instalment payments and accounts tracked in one application.",
-        "problem": "Enrolments come in through several channels, payments are made in instalments, and the accounts struggle to keep up.",
-        "solution": "Follow prospects and enrolments, invoice each course, manage payment schedules, and keep general accounts fed by your sales.",
+        "short": "Enrolments, invoices and learner reminders, to fill your sessions.",
+        "problem": "Enrolments arrive through many channels, payments are split and reminders are sent by hand, so enrolments are lost.",
+        "solution": "A pipeline for every prospect, invoices and schedules per learner, and automatic reminders. Our services set up the enrolment path.",
         "modules": [
           "crm",
           "credit",
-          "accounting"
+          "invoicing"
         ],
-        "headline": "Enrolments and payment plans, *in one place*.",
-        "problemLine": "Enrolments and payment plans arrive through many channels.",
+        "headline": "More enrolments, *fewer manual reminders*.",
+        "problemLine": "Enrolments and payments tracked by hand.",
         "before": [
-          "Enrolments arriving through many channels",
-          "Payment plans tracked by hand",
-          "Accounts lagging behind sales"
+          "Enrolments scattered across messages",
+          "Split payments tracked on paper",
+          "Reminders forgotten"
         ],
         "after": [
-          "Prospects and enrolments in one pipeline",
-          "Payment schedules per learner",
-          "Accounts fed by your sales"
+          "An enrolment pipeline per prospect",
+          "Invoices and schedules per learner",
+          "Automatic reminders and WhatsApp"
         ]
       },
       "retail-pos": {
-        "title": "Retail shops with a till",
-        "short": "A fast till, an up-to-date stock and an invoice for every sale.",
-        "problem": "The till, the stock and the invoices do not talk to each other. You find out about stock-outs too late and the books are done by hand.",
-        "solution": "A till that is simple to use, stock updated with every sale, restock alerts and invoices ready to print.",
+        "title": "Retail and distribution",
+        "short": "Till, stock and sales connected, so you sell more without stock-outs or errors.",
+        "problem": "Stock is out of date, the till and invoicing don't talk to each other, and you can't see your margins in real time.",
+        "solution": "The till is linked to stock and invoicing, dashboards show your sales live, and our services organise your restocking.",
         "modules": [
           "pos",
           "inventory",
-          "invoicing"
+          "invoicing",
+          "accounting",
+          "website"
         ],
-        "headline": "Till, stock and invoices, *finally in sync*.",
-        "problemLine": "The till, stock and accounts do not talk to each other.",
+        "headline": "Sell without stock-outs, *with reliable stock*.",
+        "problemLine": "Stock, till and invoices don't talk to each other.",
         "before": [
-          "Stock-outs found too late",
-          "Till and invoices not reconciled",
-          "Accounts redone by hand"
+          "Stock counted by hand",
+          "Till and invoicing kept apart",
+          "Margins discovered at month end"
         ],
         "after": [
-          "Stock updated with every sale",
-          "Restock alerts",
-          "Invoices ready to print"
+          "Stock linked to every sale",
+          "Till and invoicing in one place",
+          "Sales indicators in real time"
+        ]
+      },
+      "professional-services": {
+        "title": "Services and contractors",
+        "short": "Quotes, projects and billing of services, with time tracking.",
+        "problem": "Quotes go out late, projects drift and time spent is not billed properly.",
+        "solution": "Quotes and invoices linked to projects, time tracked per task and structured client support. Our services find where your services lose margin.",
+        "headline": "Every service, *billed and tracked*.",
+        "problemLine": "Late quotes and unbilled time.",
+        "before": [
+          "Quotes sent late",
+          "Projects tracked in messages",
+          "Time spent not billed"
+        ],
+        "after": [
+          "Quotes and invoices linked to projects",
+          "Time entered per task",
+          "Structured client support"
+        ],
+        "modules": [
+          "crm",
+          "invoicing",
+          "helpdesk",
+          "hr",
+          "platform"
+        ]
+      },
+      "industry": {
+        "title": "Industry and production",
+        "short": "Stock, purchasing and SCF accounting to track materials and costs.",
+        "problem": "Raw materials are poorly tracked, supplier orders are placed on instinct and costs are only known at month end.",
+        "solution": "Multi-warehouse stock, supplier purchase orders and SCF accounting entries. Our services frame your purchasing and production with your team.",
+        "headline": "Materials and costs, *under control*.",
+        "problemLine": "Stock and costs are poorly tracked.",
+        "before": [
+          "Materials tracked in spreadsheets",
+          "Purchases made without thresholds",
+          "Costs known only at month end"
+        ],
+        "after": [
+          "Stock and reorder thresholds",
+          "Purchase orders and supplier invoices",
+          "SCF entries tracked continuously"
+        ],
+        "modules": [
+          "inventory",
+          "accounting",
+          "hr",
+          "platform"
         ]
       }
     },
     "cta": "Start for free",
     "indexEyebrow": "Solutions by business",
-    "beforeLabel": "Before Tavio",
-    "afterLabel": "With Tavio",
+    "beforeLabel": "Before Revora",
+    "afterLabel": "With Revora",
     "moduleBodies": {
       "credit": "Payment plans, paid or overdue installments, and reminders.",
       "crm": "Customer records, sales pipeline and conversation history.",
@@ -233,17 +307,22 @@
       "hr": "Employee records and basic follow-up.",
       "helpdesk": "Support tickets and projects tracked per team.",
       "website": "A site and a shop linked to your stock and orders.",
-      "platform": "API and automation to connect Tavio to your tools."
+      "platform": "API and automation to connect Revora to your tools."
     },
-    "open": "View solution"
+    "open": "View solution",
+    "services": {
+      "title": "The platform and our services",
+      "body": "The platform gives you the tools. Our services put the method in place: audit, setup, training and follow-up.",
+      "cta": "See the services"
+    }
   },
   "onPremise": {
     "meta": {
-      "title": "On-premise | Tavio",
-      "description": "Install Tavio on your own servers in Algeria, with Docker, backups and installation support."
+      "title": "On-premise | Revora",
+      "description": "Install Revora on your own servers in Algeria, with Docker, backups and installation support."
     },
     "title": "Your data *stays in Algeria*",
-    "body": "Some companies must keep their data on Algerian soil. Tavio can run on your own servers, with Docker.",
+    "body": "Some companies must keep their data on Algerian soil. Revora can run on your own servers, with Docker.",
     "legal": "⚠ Legal framework (Law 18-07 on personal data protection): to be reviewed by a lawyer before publication.",
     "requirementsTitle": "What you need to install it",
     "requirements": [
@@ -293,7 +372,7 @@
     "guarantees": [
       {
         "title": "Data on your servers",
-        "body": "Tavio runs on your infrastructure, in Algeria. You stay in control of your data."
+        "body": "Revora runs on your infrastructure, in Algeria. You stay in control of your data."
       },
       {
         "title": "Scheduled backups",

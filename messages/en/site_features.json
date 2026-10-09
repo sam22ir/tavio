@@ -1,17 +1,39 @@
 {
   "overview": {
-    "metaTitle": "Tavio modules: business management for Algerian SMEs",
-    "metaDescription": "Credit sales, CRM, invoicing, stock, accounting, point of sale, HR, projects and online shop, in one app.",
-    "title": "Everything your business needs, *in one app*.",
-    "body": "One app to sell, invoice, manage stock and keep your team on track. Pick a module to see what it does.",
-    "eyebrow": "Modules"
+    "metaTitle": "Revora platform: growth, sales and operations for Algerian businesses",
+    "metaDescription": "Acquisition, sales, operations, data and technology in one platform, with audit, setup and training services.",
+    "title": "Five pillars to *grow* your business.",
+    "body": "The Revora platform connects acquisition, sales, operations, data and technology. Each module targets a precise point where growth is lost.",
+    "eyebrow": "Platform",
+    "pillars": {
+      "acquisition": {
+        "title": "Acquisition",
+        "body": "Find, follow and convert prospects: CRM, web shop, WhatsApp campaigns and lead capture."
+      },
+      "sales": {
+        "title": "Sales",
+        "body": "Quotes, credit sales, POS and follow-ups: every sale is tracked through to payment."
+      },
+      "operations": {
+        "title": "Operations",
+        "body": "Invoicing, stock, purchases, SCF accounting, HR and helpdesk: the daily work of the business, without spreadsheets."
+      },
+      "data": {
+        "title": "Data",
+        "body": "Dashboards, KPIs, reports and an AI assistant to decide from your own numbers."
+      },
+      "technology": {
+        "title": "Technology",
+        "body": "API, webhooks, automation, custom fields and installation on your own servers."
+      }
+    }
   },
   "detail": {
     "cta": "Start free",
     "secondary": "See pricing",
     "capabilitiesTitle": "What you can do",
     "relatedTitle": "Related modules",
-    "ctaTitle": "Try Tavio with your own data",
+    "ctaTitle": "Try Revora with your own data",
     "ctaBody": "Set up your space in a few minutes, then import your customers and products.",
     "ctaPrimary": "Start free"
   },
@@ -126,7 +148,7 @@
       "body": "Receive orders from your online shop directly in your management app, with the same stock and customers.",
       "capabilities": [
         "Website and shop settings",
-        "Web orders received in Tavio",
+        "Web orders received in Revora",
         "Convert a web order into a sale",
         "Cancel a web order",
         "Same stock and customers as your till"
@@ -149,7 +171,7 @@
     "platform": {
       "title": "Platform",
       "tagline": "API, webhooks, custom fields and automations.",
-      "body": "Adapt Tavio to your business and connect it to the tools you already use.",
+      "body": "Adapt Revora to your business and connect it to the tools you already use.",
       "capabilities": [
         "API keys for your integrations",
         "Webhooks to receive events in real time",
@@ -157,7 +179,7 @@
         "No-code automation rules",
         "Revoke an API key at any time"
       ],
-      "headline": "Make Tavio *fit* your business."
+      "headline": "Make Revora *fit* your business."
     }
   }
 }

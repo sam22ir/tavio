@@ -8,13 +8,22 @@ export type FeatureSlug = (typeof FEATURE_SLUGS)[number];
 
 export interface FeatureDef {
   slug: FeatureSlug;
-  /** Which Tavio screen mock-up illustrates the module. */
+  /** Which Revora screen mock-up illustrates the module. */
   mock: MockVariant;
   /** Real app screenshot (`public/screens/<screen>-<locale>.png`) shown on the detail page. */
   screen: ScreenName;
   /** Other modules shown at the bottom of the detail page. Never the module itself. */
   related: readonly FeatureSlug[];
 }
+
+/** The five growth pillars of the overview page, in display order. Copy lives under `overview.pillars.<key>`. */
+export const PILLARS = [
+  { key: 'acquisition', slugs: ['crm', 'website-shop'] },
+  { key: 'sales', slugs: ['credit-sales', 'sales-invoicing', 'pos'] },
+  { key: 'operations', slugs: ['inventory-purchases', 'accounting', 'hr', 'projects-helpdesk'] },
+  { key: 'data', slugs: ['ai'] },
+  { key: 'technology', slugs: ['platform'] },
+] as const satisfies readonly { key: string; slugs: readonly FeatureSlug[] }[];
 
 /** Copy (title, tagline, body, capabilities) lives in `messages/<locale>/site_features.json` under `items.<slug>`. */
 export const FEATURES = [
