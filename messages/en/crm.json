@@ -110,6 +110,11 @@
     "noTeams": "No teams yet.",
     "allTeams": "All teams",
     "teamFilter": "Team",
-    "applyFilter": "Apply"
+    "applyFilter": "Apply",
+    "restrictVisibility": "Restrict lead visibility by team",
+    "restrictVisibilityHint": "Off: everyone who can read leads sees all leads. On: users see their own leads, their team leads (with the view-team permission) and the leads of teams they lead. Users with view-all see everything.",
+    "visibilityTitle": "Lead visibility",
+    "visibilityOpen": "All leads are visible to users who can read leads.",
+    "saveSetting": "Save setting"
   }
 }

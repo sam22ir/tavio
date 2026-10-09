@@ -100,6 +100,20 @@ export const lostReasons = pgTable(
   ],
 );
 
+// CRM settings (one row per company, created on first save). Tenant table.
+// restrict_lead_visibility: when false, every user with crm.lead.read sees all leads.
+export const crmSettings = pgTable(
+  'crm_settings',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    restrictLeadVisibility: boolean('restrict_lead_visibility').notNull().default(false),
+  },
+  (t) => [uniqueIndex('crm_settings_company_id_key').on(t.companyId)],
+);
+
 // Sales teams. Tenant table. A leader sees every lead of the team.
 export const salesTeams = pgTable(
   'sales_teams',
@@ -293,6 +307,7 @@ export type LostReason = typeof lostReasons.$inferSelect;
 export type NewLostReason = typeof lostReasons.$inferInsert;
 export type Lead = typeof leads.$inferSelect;
 export type NewLead = typeof leads.$inferInsert;
+export type CrmSettings = typeof crmSettings.$inferSelect;
 export type SalesTeam = typeof salesTeams.$inferSelect;
 export type NewSalesTeam = typeof salesTeams.$inferInsert;
 export type SalesTeamMember = typeof salesTeamMembers.$inferSelect;

@@ -7,7 +7,8 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { buttonVariants } from '@/ui/primitives/button';
 import { cn } from '@/ui/lib/cn';
 import * as crm from '@/modules/crm/service';
-import { saveTeamFormAction } from '@/modules/crm/actions';
+import { saveTeamFormAction, setLeadVisibilityAction } from '@/modules/crm/actions';
+import { Button } from '@/ui/primitives/button';
 import { TeamForm } from '@/modules/crm/ui/team-form';
 
 export default async function CrmTeamsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -17,9 +18,18 @@ export default async function CrmTeamsPage({ params }: { params: Promise<{ local
 
   const t = await getTranslations('crm.ui');
   const data = await withPageCtx(async (ctx) => {
-    const [teams, members] = await Promise.all([crm.listTeams(ctx), crm.listMemberOptions(ctx)]);
-    if (!teams.ok || !members.ok) return null;
-    return { teams: teams.value, members: members.value, canManage: ctx.perms.has('crm.lead.write') };
+    const [teams, members, restriction] = await Promise.all([
+      crm.listTeams(ctx),
+      crm.listMemberOptions(ctx),
+      crm.getLeadVisibilityRestriction(ctx),
+    ]);
+    if (!teams.ok || !members.ok || !restriction.ok) return null;
+    return {
+      teams: teams.value,
+      members: members.value,
+      restricted: restriction.value.restricted,
+      canManage: ctx.perms.has('crm.lead.write'),
+    };
   });
 
   return (
@@ -37,6 +47,23 @@ export default async function CrmTeamsPage({ params }: { params: Promise<{ local
         </p>
       ) : (
         <>
+          <section className="flex flex-col gap-2 rounded-md border p-4">
+            <h2 className="text-base font-semibold">{t('visibilityTitle')}</h2>
+            <p className="text-sm text-muted-foreground">{t('restrictVisibilityHint')}</p>
+            {data.canManage ? (
+              <form action={setLeadVisibilityAction} className="flex items-center gap-3">
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" name="restricted" defaultChecked={data.restricted} />
+                  {t('restrictVisibility')}
+                </label>
+                <Button type="submit" size="sm">
+                  {t('saveSetting')}
+                </Button>
+              </form>
+            ) : (
+              <p className="text-sm">{data.restricted ? t('restrictVisibility') : t('visibilityOpen')}</p>
+            )}
+          </section>
           {data.teams.length === 0 ? <p className="text-sm text-muted-foreground">{t('noTeams')}</p> : null}
           {data.canManage
             ? data.teams.map((team) => (

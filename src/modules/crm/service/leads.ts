@@ -166,7 +166,7 @@ export async function listLeads(ctx: Ctx, q: ListQuery): Promise<Result<ListResu
     eq(leads.companyId, ctx.companyId),
     eq(leads.active, q.filters.active !== 'false'),
   ];
-  const scope = leadScope(ctx);
+  const scope = await leadScope(ctx);
   if (scope) conds.push(scope);
 
   if (q.q) {
@@ -235,7 +235,7 @@ export async function leadsByStage(
     .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipelineId)))
     .orderBy(asc(stages.position));
 
-  const scope = leadScope(ctx);
+  const scope = await leadScope(ctx);
   const leadRows = await leadQuery(ctx.tx)
     .where(
       and(
@@ -260,18 +260,20 @@ export async function getLead(ctx: Ctx, id: string): Promise<Result<LeadRow>> {
   const perm = requirePerm(ctx, 'crm.lead.read');
   if (!perm.ok) return perm;
   if (!UUID_RE.test(id)) return err('NOT_FOUND', 'Lead not found');
-  const scope = leadScope(ctx);
+  const scope = await leadScope(ctx);
   const [row] = await leadQuery(ctx.tx).where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id), scope));
   if (!row) return err('NOT_FOUND', 'Lead not found');
   return ok(row);
 }
 
 // Locks the lead row for the rest of the transaction.
+// Every lead mutation loads the lead through the visibility scope, so an out-of-scope lead is NOT_FOUND.
 async function lockLead(ctx: Ctx, id: string) {
+  const scope = await leadScope(ctx);
   const [row] = await ctx.tx
     .select()
     .from(leads)
-    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id)))
+    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id), scope))
     .for('update');
   return row;
 }

@@ -110,6 +110,11 @@
     "noTeams": "Aucune équipe pour le moment.",
     "allTeams": "Toutes les équipes",
     "teamFilter": "Équipe",
-    "applyFilter": "Appliquer"
+    "applyFilter": "Appliquer",
+    "restrictVisibility": "Limiter la visibilité des leads par équipe",
+    "restrictVisibilityHint": "Désactivé : tous les utilisateurs qui peuvent lire les leads voient tous les leads. Activé : les utilisateurs voient leurs propres leads, les leads de leur équipe (avec la permission de voir l’équipe) et ceux des équipes qu’ils dirigent. Les utilisateurs avec la permission de tout voir voient tout.",
+    "visibilityTitle": "Visibilité des leads",
+    "visibilityOpen": "Tous les leads sont visibles par les utilisateurs qui peuvent lire les leads.",
+    "saveSetting": "Enregistrer le réglage"
   }
 }

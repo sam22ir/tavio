@@ -102,6 +102,11 @@ const saveTeamDefined = defineAction(
   (ctx, input) => crm.saveTeam(ctx, input),
 );
 
+const setVisibilityDefined = defineAction(
+  { perm: 'crm.lead.write', schema: z.object({ restricted: z.boolean() }), module: 'crm' },
+  (ctx, input) => crm.setLeadVisibilityRestriction(ctx, input.restricted),
+);
+
 function refresh() {
   revalidatePath('/', 'layout');
 }
@@ -168,4 +173,10 @@ export async function saveTeamFormAction(prev: FormState, fd: FormData): Promise
     return { ok: true, message: 'saved' };
   }
   return { ok: false, message: result.error.code };
+}
+
+/** Form action for the "Restrict lead visibility by team" checkbox on the teams page. */
+export async function setLeadVisibilityAction(fd: FormData): Promise<void> {
+  const result = await setVisibilityDefined({ restricted: fd.get('restricted') === 'on' });
+  if (result.ok) refresh();
 }

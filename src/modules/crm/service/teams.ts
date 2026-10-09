@@ -5,7 +5,7 @@ import { audit } from '@/core/audit';
 import type { Tx } from '@/core/db/types';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
-import { leads, salesTeamMembers, salesTeams } from '../schema';
+import { crmSettings, leads, salesTeamMembers, salesTeams } from '../schema';
 
 export type LeadScopeMode = 'all' | 'team' | 'own';
 
@@ -19,8 +19,22 @@ export function leadScopeMode(perms: ReadonlySet<string>): LeadScopeMode {
   return 'own';
 }
 
-/** SQL restricting leads to what the ctx user may see. Undefined when the user sees every lead. */
-export function leadScope(ctx: Ctx): SQL | undefined {
+/** Whether the company restricts lead visibility. Off unless a settings row turns it on. */
+export async function isLeadVisibilityRestricted(tx: Tx, companyId: string): Promise<boolean> {
+  const [row] = await tx
+    .select({ restricted: crmSettings.restrictLeadVisibility })
+    .from(crmSettings)
+    .where(eq(crmSettings.companyId, companyId))
+    .limit(1);
+  return row?.restricted ?? false;
+}
+
+/**
+ * SQL restricting leads to what the ctx user may see. Undefined when the company does not restrict
+ * visibility (every crm.lead.read user sees all leads) or when the user holds view_all.
+ */
+export async function leadScope(ctx: Ctx): Promise<SQL | undefined> {
+  if (!(await isLeadVisibilityRestricted(ctx.tx, ctx.companyId))) return undefined;
   const mode = leadScopeMode(ctx.perms);
   if (mode === 'all') return undefined;
 
@@ -56,6 +70,34 @@ export async function teamIdForUser(tx: Tx, companyId: string, userId: string): 
     .where(and(eq(salesTeamMembers.companyId, companyId), eq(salesTeamMembers.userId, userId)))
     .limit(1);
   return row?.teamId ?? null;
+}
+
+export async function getLeadVisibilityRestriction(ctx: Ctx): Promise<Result<{ restricted: boolean }>> {
+  const perm = requirePerm(ctx, 'crm.lead.read');
+  if (!perm.ok) return perm;
+  return ok({ restricted: await isLeadVisibilityRestricted(ctx.tx, ctx.companyId) });
+}
+
+/** Turns lead visibility restriction on or off for the company. Off is the default. */
+export async function setLeadVisibilityRestriction(ctx: Ctx, restricted: boolean): Promise<Result<{ restricted: boolean }>> {
+  const perm = requirePerm(ctx, 'crm.lead.write');
+  if (!perm.ok) return perm;
+  const before = await isLeadVisibilityRestricted(ctx.tx, ctx.companyId);
+  await ctx.tx
+    .insert(crmSettings)
+    .values({ companyId: ctx.companyId, restrictLeadVisibility: restricted, createdBy: ctx.userId })
+    .onConflictDoUpdate({
+      target: crmSettings.companyId,
+      set: { restrictLeadVisibility: restricted, updatedAt: new Date() },
+    });
+  await audit(ctx, {
+    entity: 'crm.settings',
+    recordId: ctx.companyId,
+    action: 'update',
+    before: { restrictLeadVisibility: before },
+    after: { restrictLeadVisibility: restricted },
+  });
+  return ok({ restricted });
 }
 
 export interface TeamRow {
