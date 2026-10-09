@@ -1,1 +1,86 @@
-{}
+{
+  "module": { "name": "Facturation" },
+  "menu": { "customers": "Factures clients", "vendors": "Factures fournisseurs" },
+  "list": {
+    "customers": "Factures clients",
+    "vendors": "Factures fournisseurs",
+    "new": "Nouvelle facture",
+    "newVendor": "Nouvelle facture fournisseur",
+    "empty": "Aucune facture pour le moment.",
+    "col": { "number": "Numéro", "date": "Date", "partner": "Partenaire", "total": "Total", "state": "Statut", "payment": "Paiement" }
+  },
+  "form": {
+    "type": "Type",
+    "partner": "Partenaire",
+    "date": "Date",
+    "dueDate": "Échéance",
+    "description": "Désignation",
+    "quantity": "Quantité",
+    "unitPrice": "Prix unitaire (DA)",
+    "tax": "TVA",
+    "noTax": "Sans TVA",
+    "submit": "Créer le brouillon"
+  },
+  "type": {
+    "out_invoice": "Facture",
+    "out_refund": "Avoir",
+    "in_invoice": "Facture fournisseur",
+    "in_refund": "Avoir fournisseur"
+  },
+  "state": { "draft": "Brouillon", "posted": "Comptabilisée", "cancelled": "Annulée" },
+  "payment": { "not_paid": "Non payée", "partial": "Partiellement payée", "paid": "Payée" },
+  "method": { "cash": "Espèces", "ccp": "CCP", "transfer": "Virement", "cib": "CIB", "edahabia": "Edahabia", "cheque": "Chèque" },
+  "detail": {
+    "title": "Document",
+    "post": "Comptabiliser",
+    "cancel": "Annuler le brouillon",
+    "refund": "Créer un avoir",
+    "print": "Imprimer",
+    "lines": "Lignes",
+    "untaxed": "Total HT",
+    "tax": "TVA",
+    "stamp": "Timbre fiscal",
+    "total": "Total TTC",
+    "paid": "Payé",
+    "residual": "Reste à payer",
+    "payment": {
+      "title": "Enregistrer un paiement",
+      "amount": "Montant (DA)",
+      "method": "Mode",
+      "date": "Date",
+      "reference": "Référence",
+      "submit": "Enregistrer"
+    },
+    "payments": "Paiements",
+    "noPayments": "Aucun paiement."
+  },
+  "error": {
+    "VALIDATION": "Données invalides.",
+    "NOT_FOUND": "Introuvable.",
+    "FORBIDDEN": "Action non autorisée.",
+    "STATE": "Cette action n'est pas possible dans l'état actuel.",
+    "POSTED_IMMUTABLE": "Document comptabilisé : modification interdite. Créez un avoir.",
+    "INTERNAL": "Erreur interne."
+  },
+  "print": {
+    "title": "Facture",
+    "seller": "Vendeur",
+    "buyer": "Acheteur",
+    "nif": "NIF",
+    "nis": "NIS",
+    "rc": "RC",
+    "ai": "AI",
+    "address": "Adresse",
+    "number": "N°",
+    "date": "Date",
+    "description": "Désignation",
+    "qty": "Qté",
+    "unit": "P.U. HT",
+    "amount": "Montant HT",
+    "vatRate": "Taux TVA",
+    "vat": "TVA",
+    "stampDuty": "Droit de timbre",
+    "totalInWords": "Total en chiffres",
+    "print": "Imprimer"
+  }
+}
