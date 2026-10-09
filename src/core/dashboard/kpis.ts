@@ -6,6 +6,7 @@ import { leads } from '@/modules/crm/schema';
 
 export interface DashboardKpis {
   dueTodayCents: bigint;
+  dueTodayCount: number;
   overdueCents: bigint;
   overdueCount: number;
   collectedThisMonthCents: bigint;
@@ -15,6 +16,7 @@ export interface DashboardKpis {
 
 const ZERO_KPIS: DashboardKpis = {
   dueTodayCents: 0n,
+  dueTodayCount: 0,
   overdueCents: 0n,
   overdueCount: 0,
   collectedThisMonthCents: 0n,
@@ -43,6 +45,7 @@ export async function dashboardKpis(ctx: Ctx): Promise<DashboardKpis> {
     const [inst] = await ctx.tx
       .select({
         dueToday: sql<string>`coalesce(sum(case when ${creditInstallments.dueDate} = current_date then ${creditInstallments.amountCents} - ${creditInstallments.paidCents} else 0 end), 0)`,
+        dueTodayCount: sql<string>`count(*) filter (where ${creditInstallments.dueDate} = current_date)`,
         overdue: sql<string>`coalesce(sum(case when ${creditInstallments.dueDate} < current_date then ${creditInstallments.amountCents} - ${creditInstallments.paidCents} else 0 end), 0)`,
         overdueCount: sql<string>`count(*) filter (where ${creditInstallments.dueDate} < current_date)`,
       })
@@ -74,6 +77,7 @@ export async function dashboardKpis(ctx: Ctx): Promise<DashboardKpis> {
       .where(and(eq(creditContracts.companyId, ctx.companyId), eq(creditContracts.state, 'active')));
 
     kpis.dueTodayCents = BigInt(inst?.dueToday ?? 0);
+    kpis.dueTodayCount = Number(inst?.dueTodayCount ?? 0);
     kpis.overdueCents = BigInt(inst?.overdue ?? 0);
     kpis.overdueCount = Number(inst?.overdueCount ?? 0);
     kpis.collectedThisMonthCents = BigInt(collected?.total ?? 0);

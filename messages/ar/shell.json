@@ -51,7 +51,17 @@
     "today": "اليوم",
     "todayEmpty": "لا شيء للقيام به اليوم.",
     "applications": "التطبيقات",
-    "applicationsEmpty": "لا يوجد تطبيق متاح بصلاحياتك."
+    "applicationsEmpty": "لا يوجد تطبيق متاح بصلاحياتك.",
+    "chips": {
+      "dueToday": "استحقاقات اليوم",
+      "overdue": "متأخرة",
+      "activities": "الأنشطة"
+    },
+    "lists": {
+      "due": "الاستحقاقات",
+      "activities": "الأنشطة"
+    },
+    "viewAll": "عرض الكل ←"
   },
   "pillars": {
     "acquisition": "الاستقطاب",

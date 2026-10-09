@@ -51,7 +51,17 @@
     "today": "Aujourd'hui",
     "todayEmpty": "Rien à faire aujourd'hui.",
     "applications": "Applications",
-    "applicationsEmpty": "Aucune application n'est accessible avec vos droits."
+    "applicationsEmpty": "Aucune application n'est accessible avec vos droits.",
+    "chips": {
+      "dueToday": "Échéances du jour",
+      "overdue": "En retard",
+      "activities": "Activités"
+    },
+    "lists": {
+      "due": "Échéances",
+      "activities": "Activités"
+    },
+    "viewAll": "Tout voir →"
   },
   "pillars": {
     "acquisition": "Acquisition",

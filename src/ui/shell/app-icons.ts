@@ -54,9 +54,9 @@ export function appIcon(name: string): LucideIcon {
 
 /** Brand-adjacent accent per pillar, used for launcher icon chips. */
 export const PILLAR_COLOR: Record<AppPillar, string> = {
-  acquisition: '#08409D',
-  sales: '#0F7B5F',
-  operations: '#B45309',
+  acquisition: '#C2410C',
+  sales: '#08409D',
+  operations: '#0F7B5F',
   data: '#7C3AED',
   technology: '#475569',
 };

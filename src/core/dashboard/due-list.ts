@@ -1,6 +1,7 @@
 import { and, asc, eq, sql } from 'drizzle-orm';
 import type { Ctx } from '@/core/ctx';
 import { creditContracts, creditInstallments } from '@/modules/credit_sales/schema';
+import { partners } from '@/modules/contacts/schema';
 
 export interface DueItem {
   contractId: string;
@@ -9,6 +10,7 @@ export interface DueItem {
   dueDate: string;
   remainingCents: bigint;
   daysLate: number;
+  clientName: string | null;
 }
 
 /** Up to `limit` unpaid installments of active contracts that are due today or overdue, oldest first. */
@@ -21,9 +23,11 @@ export async function dueTodayAndOverdue(ctx: Ctx, limit = 5): Promise<DueItem[]
       dueDate: creditInstallments.dueDate,
       remaining: sql<string>`${creditInstallments.amountCents} - ${creditInstallments.paidCents}`,
       daysLate: sql<string>`greatest(current_date - ${creditInstallments.dueDate}, 0)`,
+      clientName: partners.displayName,
     })
     .from(creditInstallments)
     .innerJoin(creditContracts, eq(creditContracts.id, creditInstallments.contractId))
+    .leftJoin(partners, eq(partners.id, creditContracts.partnerId))
     .where(
       and(
         eq(creditInstallments.companyId, ctx.companyId),
@@ -42,5 +46,6 @@ export async function dueTodayAndOverdue(ctx: Ctx, limit = 5): Promise<DueItem[]
     dueDate: r.dueDate,
     remainingCents: BigInt(r.remaining),
     daysLate: Number(r.daysLate),
+    clientName: r.clientName ?? null,
   }));
 }
