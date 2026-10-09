@@ -14,6 +14,7 @@ import {
   markLostAction,
   markWonAction,
   reopenLeadAction,
+  logAttemptAction,
   updateLeadFormAction,
 } from '@/modules/crm/actions';
 import { leadFormEntity } from '@/modules/crm/ui/form-entity';
@@ -44,15 +45,20 @@ export default async function LeadPage({
     const reasons = await crm.listLostReasons(ctx);
     const pipeline = await crm.ensureDefaultPipeline(ctx);
     const stages = pipeline.ok ? await crm.listStages(ctx, pipeline.value.id) : null;
+    // listStages has no requirements column; leadsByStage carries it per stage.
+    const groups = pipeline.ok ? await crm.leadsByStage(ctx, pipeline.value.id) : null;
+    const requirements =
+      groups?.ok ? (groups.value.find((g) => g.stage.id === lead.value.stageId)?.stage.requirements ?? null) : null;
     return {
       lead: lead.value,
       reasons: reasons.ok ? (reasons.value as { id: string; name: string }[]) : [],
       stages: stages?.ok ? stages.value.map((s) => ({ id: s.id, name: s.name })) : [],
+      requirements,
     };
   });
   if (!data) notFound();
 
-  const { lead, reasons, stages } = data;
+  const { lead, reasons, stages, requirements } = data;
   const stageName = stages.find((s) => s.id === lead.stageId)?.name ?? (lead.stageName as string | undefined);
   const cents = lead.expectedCents;
   const amount = cents === null ? '—' : formatDzd(cents, loc);
@@ -76,6 +82,12 @@ export default async function LeadPage({
           <dt className="text-muted-foreground">{t('expected')}</dt>
           <dd>{amount}</dd>
         </dl>
+        {requirements ? (
+          <div className="rounded-md border bg-muted/40 p-3 text-sm">
+            <p className="font-medium">{t('stageRequirements')}</p>
+            <p className="whitespace-pre-line text-muted-foreground">{requirements}</p>
+          </div>
+        ) : null}
         <LeadStatusActions
           id={id}
           status={String(lead.status ?? 'open')}
@@ -83,6 +95,7 @@ export default async function LeadPage({
           markWon={markWonAction}
           markLost={markLostAction}
           reopen={reopenLeadAction}
+          logAttempt={logAttemptAction}
         />
         <div className="flex flex-wrap gap-2">
           {phone ? (

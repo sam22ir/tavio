@@ -95,6 +95,7 @@
     "whatsapp": "واتساب",
     "convert": "تحويل إلى عقد بيع بالتقسيط",
     "logAttempt": "تسجيل محاولة",
-    "daysInStage": "{count, plural, one {يوم واحد في المرحلة} two {يومان في المرحلة} few {# أيام في المرحلة} many {# يومًا في المرحلة} other {# يوم في المرحلة}}"
+    "daysInStage": "{count, plural, one {يوم واحد في المرحلة} two {يومان في المرحلة} few {# أيام في المرحلة} many {# يومًا في المرحلة} other {# يوم في المرحلة}}",
+    "stageRequirements": "متطلبات هذه المرحلة"
   }
 }

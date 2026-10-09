@@ -95,6 +95,7 @@
     "whatsapp": "WhatsApp",
     "convert": "Convert to credit contract",
     "logAttempt": "Log attempt",
-    "daysInStage": "{count, plural, one {# day in stage} other {# days in stage}}"
+    "daysInStage": "{count, plural, one {# day in stage} other {# days in stage}}",
+    "stageRequirements": "Requirements for this stage"
   }
 }
