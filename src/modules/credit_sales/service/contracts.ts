@@ -362,7 +362,7 @@ export async function cancelContract(ctx: Ctx, id: string, reason: string): Prom
   if (!loaded.ok) return loaded;
   const contract = loaded.value;
   if (!canTransition(contract.state, 'cancelled')) {
-    return err('STATE', 'Only draft or active contracts can be cancelled');
+    return err('STATE', 'This contract can no longer be cancelled');
   }
   if (!cancelReason.startsWith('force:') && (await hasPayments(ctx, contract))) {
     return err('STATE', 'Contract has payments; a reason starting with "force:" is needed to cancel it');

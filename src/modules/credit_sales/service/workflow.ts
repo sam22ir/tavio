@@ -1,9 +1,10 @@
 // Contract workflow: submit, review, decision, reserve, back office handoff, central risk and bank (W13-CREDIT).
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
+import { memberships } from '@/core/db/schema';
 import { creditContracts } from '../schema';
 import { createContractDocuments, requiredDocumentsMissing } from './documents';
 import { loadContractForUpdate } from './contracts';
@@ -86,6 +87,15 @@ export async function sendToBo(ctx: Ctx, id: string, boOwnerId: string): Promise
   if (!(BO_STATES as readonly string[]).includes(contract.state)) {
     return err('STATE', 'Only submitted or under-review contracts can be sent to BO');
   }
+  const [member] = await ctx.tx
+    .select({ id: memberships.id })
+    .from(memberships)
+    .where(and(
+      eq(memberships.companyId, ctx.companyId),
+      eq(memberships.userId, boOwnerId),
+      eq(memberships.status, 'active'),
+    ));
+  if (!member) return err('VALIDATION', 'BO owner must be an active member of this company', { field: 'boOwnerId' });
   if (contract.sentToBoAt) return err('CONFLICT', 'Contract was already sent to BO');
   const now = new Date();
   await ctx.tx
@@ -96,13 +106,17 @@ export async function sendToBo(ctx: Ctx, id: string, boOwnerId: string): Promise
   return ok({ id });
 }
 
-/** BO confirms it has received the file. */
+/** BO confirms receipt. Only the BO owner, or a user who can activate contracts, may do it. */
 export async function acknowledgeBoReceipt(ctx: Ctx, id: string): Promise<Result<{ id: string }>> {
-  const perm = requirePerm(ctx, 'credit_sales.contract.write');
+  const perm = requirePerm(ctx, 'credit_sales.contract.read');
   if (!perm.ok) return perm;
   const loaded = await loadContractForUpdate(ctx, id);
   if (!loaded.ok) return loaded;
   const contract = loaded.value;
+  const isBoOwner = contract.boOwnerId !== null && contract.boOwnerId === ctx.userId;
+  if (!isBoOwner && !ctx.perms.has('credit_sales.contract.activate')) {
+    return err('FORBIDDEN', 'Only the BO owner can acknowledge receipt');
+  }
   if (!contract.sentToBoAt) return err('STATE', 'Contract was not sent to BO');
   if (contract.receivedByBoAt) return err('CONFLICT', 'Receipt already acknowledged');
   const now = new Date();

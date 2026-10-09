@@ -24,11 +24,12 @@ describe('contract transitions', () => {
     expect(canTransition('active', 'draft')).toBe(false);
   });
 
-  it('keeps cancel only for draft and active contracts', () => {
-    expect(canTransition('draft', 'cancelled')).toBe(true);
-    expect(canTransition('active', 'cancelled')).toBe(true);
-    expect(canTransition('submitted', 'cancelled')).toBe(false);
-    expect(canTransition('reserved', 'cancelled')).toBe(false);
+  it('allows cancel before activation, and not once terminal', () => {
+    for (const from of ['draft', 'submitted', 'under_review', 'approved', 'reserved', 'active']) {
+      expect(canTransition(from, 'cancelled')).toBe(true);
+    }
+    expect(canTransition('refused', 'cancelled')).toBe(false);
+    expect(canTransition('cancelled', 'cancelled')).toBe(false);
   });
 
   it('treats unknown states as having no moves', () => {
@@ -37,7 +38,7 @@ describe('contract transitions', () => {
   });
 
   it('lists next states for the workflow bar', () => {
-    expect(nextStates('under_review')).toEqual(['approved', 'refused']);
+    expect(nextStates('under_review')).toEqual(['approved', 'refused', 'cancelled']);
     expect(nextStates('refused')).toEqual([]);
   });
 });

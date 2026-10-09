@@ -63,7 +63,7 @@ const boAction = defineAction(
   (ctx, input) => sendToBo(ctx, input.id, input.boOwnerId),
 );
 const boAckAction = defineAction(
-  { perm: 'credit_sales.contract.write', schema: idSchema, module: 'credit_sales' },
+  { perm: 'credit_sales.contract.read', schema: idSchema, module: 'credit_sales' },
   (ctx, input) => acknowledgeBoReceipt(ctx, input.id),
 );
 const riskAction = defineAction(
@@ -78,7 +78,7 @@ const documentAction = defineAction(
   { perm: 'credit_sales.contract.write', schema: documentSchema, module: 'credit_sales' },
   (ctx, input) => setContractDocumentStatus(ctx, input.id, {
     status: input.status,
-    fileId: input.fileId ?? null,
+    fileId: input.fileId,
     note: input.note ?? null,
   }),
 );

@@ -4,6 +4,7 @@ import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
+import { files } from '@/core/db/schema';
 import { creditContractDocuments, creditDocumentRequirements } from '../schema';
 import { loadContractForUpdate } from './contracts';
 
@@ -141,6 +142,7 @@ export async function listContractDocuments(ctx: Ctx, contractId: string): Promi
 
 export interface SetDocumentInput {
   status: DocumentStatus;
+  /** undefined keeps the current file, null clears it, a UUID attaches a file of this company. */
   fileId?: string | null;
   note?: string | null;
 }
@@ -152,7 +154,14 @@ export async function setContractDocumentStatus(ctx: Ctx, documentId: string, in
   if (!(DOCUMENT_STATUSES as readonly string[]).includes(input.status)) {
     return err('VALIDATION', 'Unknown document status', { field: 'status' });
   }
-  if (input.fileId && !UUID_RE.test(input.fileId)) return err('VALIDATION', 'fileId must be a UUID', { field: 'fileId' });
+  if (typeof input.fileId === 'string') {
+    if (!UUID_RE.test(input.fileId)) return err('VALIDATION', 'fileId must be a UUID', { field: 'fileId' });
+    const [file] = await ctx.tx
+      .select({ id: files.id })
+      .from(files)
+      .where(and(eq(files.id, input.fileId), eq(files.companyId, ctx.companyId)));
+    if (!file) return err('VALIDATION', 'File not found in this company', { field: 'fileId' });
+  }
 
   const [doc] = await ctx.tx
     .select()
@@ -171,7 +180,7 @@ export async function setContractDocumentStatus(ctx: Ctx, documentId: string, in
     .update(creditContractDocuments)
     .set({
       status: input.status,
-      fileId: input.fileId ?? doc.fileId,
+      fileId: input.fileId === undefined ? doc.fileId : input.fileId,
       note: input.note?.trim() || null,
       updatedAt: new Date(),
     })

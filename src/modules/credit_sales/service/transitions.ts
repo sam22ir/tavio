@@ -22,13 +22,13 @@ export type ContractState = (typeof CONTRACT_STATES)[number];
 
 const ENTITY = 'credit_sales.contract';
 
-// Allowed moves. Anything not listed is refused.
+// Allowed moves. Anything not listed is refused. Cancel releases nothing itself; other modules react to state_changed.
 const TRANSITIONS: Record<ContractState, readonly ContractState[]> = {
   draft: ['submitted', 'active', 'cancelled'],
-  submitted: ['under_review'],
-  under_review: ['approved', 'refused'],
-  approved: ['reserved'],
-  reserved: ['active'],
+  submitted: ['under_review', 'cancelled'],
+  under_review: ['approved', 'refused', 'cancelled'],
+  approved: ['reserved', 'cancelled'],
+  reserved: ['active', 'cancelled'],
   active: ['cancelled'],
   refused: [],
   completed: [],
