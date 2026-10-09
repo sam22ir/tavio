@@ -1,4 +1,4 @@
-# Tavio
+# Revora
 
 A modular business suite for Algerian SMEs, in French, Arabic (RTL) and English. It has 20 modules:
 - **Core:** contacts, products, Algerian taxes (l10n_dz), chatter and activities

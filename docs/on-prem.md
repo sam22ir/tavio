@@ -1,6 +1,6 @@
 # On-prem deployment
 
-Tavio runs as one container plus PostgreSQL, Gotenberg (PDF rendering) and SeaweedFS (S3) (S3-compatible file storage). The `docker-compose.yml` at the repo root wires them together.
+Revora runs as one container plus PostgreSQL, Gotenberg (PDF rendering) and SeaweedFS (S3) (S3-compatible file storage). The `docker-compose.yml` at the repo root wires them together.
 
 ## Requirements
 

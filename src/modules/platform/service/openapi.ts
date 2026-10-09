@@ -11,7 +11,7 @@ export function buildOpenApiDocument(baseUrl: string): Record<string, unknown> {
   });
   return {
     openapi: '3.1.0',
-    info: { title: 'Tavio REST API', version: '1.0.0' },
+    info: { title: 'Revora REST API', version: '1.0.0' },
     servers: [{ url: baseUrl }],
     security: [{ bearerAuth: [] }],
     components: {

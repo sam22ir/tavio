@@ -36,7 +36,7 @@ describe('auth email templates', () => {
     });
     expect(mail.html).not.toContain('<b>Acme</b>');
     expect(mail.html).toContain('&lt;b&gt;Acme&lt;/b&gt;');
-    expect(mail.subject).toBe('Sam & Co invited you to join <b>Acme</b> on Tavio');
+    expect(mail.subject).toBe('Sam & Co invited you to join <b>Acme</b> on Revora');
   });
 
   it('renders the invitation in Arabic with rtl', () => {

@@ -1,6 +1,8 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
+/** Legacy header, still sent for existing integrations. */
 export const SIGNATURE_HEADER = 'X-Tavio-Signature';
+export const SIGNATURE_HEADER_REVORA = 'X-Revora-Signature';
 
 /** `sha256=<hex>` over the exact request body, keyed with the webhook secret. */
 export function signPayload(secret: string, body: string): string {

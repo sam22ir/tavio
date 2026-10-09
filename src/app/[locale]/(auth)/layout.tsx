@@ -21,7 +21,11 @@ export default async function AuthLayout({
     <main className="flex flex-1 flex-col items-center justify-center gap-6 p-4">
       <Card className="w-full max-w-sm gap-6 p-6">
         <header className="flex flex-col gap-1 text-center">
-          <h1 className="text-2xl font-semibold">{t('app.name')}</h1>
+          <h1 className="flex items-center justify-center gap-2 text-2xl font-semibold">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/revora-mark-blue.svg" alt="" width={28} height={28} className="size-7" />
+            {t('app.name')}
+          </h1>
           <p className="text-sm text-muted-foreground">{t('app.tagline')}</p>
         </header>
         {children}
