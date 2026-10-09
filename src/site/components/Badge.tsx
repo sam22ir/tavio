@@ -1,10 +1,17 @@
 import type { ReactNode } from 'react';
-import { Badge as UiBadge } from '@/ui/primitives/badge';
 
 /**
  * Small status or highlight label.
- * `accent` uses the brand colour, `neutral` is an outline badge.
+ * `accent` is the green soft pill, `neutral` is a white hairline pill.
  */
 export function Badge({ tone = 'neutral', children }: { tone?: 'accent' | 'neutral'; children: ReactNode }) {
-  return <UiBadge variant={tone === 'accent' ? 'default' : 'outline'}>{children}</UiBadge>;
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
+        tone === 'accent' ? 'bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]' : 'border border-[rgba(15,26,23,0.1)] bg-white'
+      }`}
+    >
+      {children}
+    </span>
+  );
 }

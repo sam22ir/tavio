@@ -1,9 +1,8 @@
-import Link from 'next/link';
-import { Button } from '@/ui/primitives/button';
+import { CtaLink } from './CtaLink';
 import type { SiteAction } from './types';
 
 /**
- * Full-width closing call to action on a brand-tinted band.
+ * Closing call to action on a deep green band.
  * Mobile: stacked. Desktop: text and buttons side by side.
  */
 export function CtaBand({ title, body, primary, secondary }: {
@@ -13,20 +12,14 @@ export function CtaBand({ title, body, primary, secondary }: {
   secondary?: SiteAction;
 }) {
   return (
-    <div className="flex flex-col items-start justify-between gap-8 rounded-3xl bg-primary px-6 py-12 text-primary-foreground md:flex-row md:items-center md:px-12">
+    <div className="s-cta-band flex flex-col items-start justify-between gap-8 px-6 py-14 md:flex-row md:items-center md:px-14">
       <div className="flex max-w-2xl flex-col gap-3">
-        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">{title}</h2>
-        {body ? <p className="opacity-90">{body}</p> : null}
+        <h2 className="s-h2 text-balance">{title}</h2>
+        {body ? <p className="text-[17px] leading-relaxed text-white/80">{body}</p> : null}
       </div>
       <div className="flex flex-wrap gap-3">
-        <Button asChild size="lg" variant="secondary">
-          <Link href={primary.href}>{primary.label}</Link>
-        </Button>
-        {secondary ? (
-          <Button asChild size="lg" variant="outline">
-            <Link href={secondary.href}>{secondary.label}</Link>
-          </Button>
-        ) : null}
+        <CtaLink href={primary.href} label={primary.label} variant="light" />
+        {secondary ? <CtaLink href={secondary.href} label={secondary.label} variant="accent" arrow={false} /> : null}
       </div>
     </div>
   );

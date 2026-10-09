@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Button } from '@/ui/primitives/button';
 import { Badge } from './Badge';
 
 export interface PricingPlan {
@@ -13,14 +12,14 @@ export interface PricingPlan {
   features: string[];
   href: string;
   cta: string;
-  /** Marks the plan most buyers pick. */
+  /** Marks the plan most buyers pick. Shown on the dark ink card. */
   highlighted?: boolean;
   badge?: string;
 }
 
 /**
  * Plan cards for the pricing teaser and the pricing page.
- * Mobile: 1 column. Desktop: one column per plan.
+ * Mobile: 1 column. Desktop: one column per plan. The highlighted plan is an ink card.
  */
 export function PricingCards({ plans }: { plans: PricingPlan[] }) {
   return (
@@ -28,27 +27,37 @@ export function PricingCards({ plans }: { plans: PricingPlan[] }) {
       {plans.map((plan) => (
         <li
           key={plan.name}
-          className={`flex flex-col gap-5 rounded-2xl border p-6 ${
-            plan.highlighted ? 'border-primary bg-card ring-1 ring-primary/40' : 'border-border bg-card'
+          className={`flex flex-col gap-5 rounded-[28px] p-7 ${
+            plan.highlighted
+              ? 'bg-[var(--s-ink)] text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.14),0_24px_48px_-24px_rgba(15,26,23,0.6)]'
+              : 's-panel'
           }`}
         >
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-lg font-semibold">{plan.name}</h3>
+            <h3 className="text-lg">{plan.name}</h3>
             {plan.badge ? <Badge tone="accent">{plan.badge}</Badge> : null}
           </div>
           <div className="flex flex-col gap-1">
-            <p className="text-3xl font-semibold tracking-tight"><bdi>{plan.price}</bdi></p>
-            <p className="text-sm text-muted-foreground">{plan.period}</p>
+            <p className="text-4xl font-bold tracking-tight"><bdi>{plan.price}</bdi></p>
+            <p className={`text-sm ${plan.highlighted ? 'text-white/65' : 'text-[color:var(--s-muted)]'}`}>{plan.period}</p>
           </div>
           <p className="text-sm font-medium">{plan.users}</p>
-          <ul className="flex flex-1 flex-col gap-2 text-sm text-muted-foreground">
+          <ul className={`flex flex-1 flex-col gap-2 text-[15px] ${plan.highlighted ? 'text-white/75' : 'text-[color:var(--s-muted)]'}`}>
             {plan.features.map((f) => (
               <li key={f}>{f}</li>
             ))}
           </ul>
-          <Button asChild variant={plan.highlighted ? 'default' : 'outline'} className="w-full">
-            <Link href={plan.href}>{plan.cta}</Link>
-          </Button>
+          <Link
+            href={plan.href}
+            className={`s-btn s-btn-arrow w-full justify-between ${plan.highlighted ? 's-btn-light' : 's-btn-dark'}`}
+          >
+            <span>{plan.cta}</span>
+            <span className="s-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" className="s-flip-rtl" aria-hidden>
+                <path d="M7 17 17 7M9 7h8v8" />
+              </svg>
+            </span>
+          </Link>
         </li>
       ))}
     </ul>

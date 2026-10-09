@@ -6,12 +6,12 @@ export interface FeatureGridItem {
   body: string;
   href: string;
   icon?: ReactNode;
-  /** Tints the card with the brand colour for visual variety. */
+  /** Gives the card the accent tint for visual variety. */
   featured?: boolean;
 }
 
 /**
- * Grid of linked feature cards, for module highlights.
+ * Grid of linked module cards on white panels.
  * Mobile: 1 column. Tablet: 2. Desktop: `columns` (default 4).
  */
 export function FeatureGrid({ items, columns = 4 }: { items: FeatureGridItem[]; columns?: 2 | 3 | 4 }) {
@@ -22,13 +22,13 @@ export function FeatureGrid({ items, columns = 4 }: { items: FeatureGridItem[]; 
         <li key={item.href}>
           <Link
             href={item.href}
-            className={`flex h-full flex-col gap-3 rounded-2xl border p-6 transition-colors hover:border-primary/60 ${
-              item.featured ? 'border-primary/30 bg-primary/10' : 'border-border bg-card'
+            className={`s-panel flex h-full flex-col gap-3 p-6 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 ${
+              item.featured ? 'bg-[var(--s-accent-soft)]' : ''
             }`}
           >
-            {item.icon ? <span className="text-primary">{item.icon}</span> : null}
-            <span className="text-lg font-semibold">{item.title}</span>
-            <span className="text-sm leading-relaxed text-muted-foreground">{item.body}</span>
+            {item.icon ? <span className="text-[color:var(--s-accent)]">{item.icon}</span> : null}
+            <span className="text-lg font-bold tracking-tight">{item.title}</span>
+            <span className="text-[15px] leading-relaxed text-[color:var(--s-muted)]">{item.body}</span>
           </Link>
         </li>
       ))}
