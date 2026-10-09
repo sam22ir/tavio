@@ -7,6 +7,7 @@ import { defineAction, toFormAction } from '@/core/actions/define-action';
 import type { FormState } from '@/core/entities/types';
 import { settingsInput, saveSettings } from './service/settings';
 import { transitionWebOrder } from './service/orders';
+import { convertWebOrderToSale } from './service/convert';
 
 const MODULE = 'website';
 
@@ -25,6 +26,13 @@ const transitionAction = defineAction(
   (ctx, { id, action }) => transitionWebOrder(ctx, id, action),
 );
 
+const convertInput = z.object({ id: z.uuid() });
+
+const convertAction = defineAction(
+  { perm: 'website.order.write', schema: convertInput, module: MODULE },
+  (ctx, { id }) => convertWebOrderToSale(ctx, id),
+);
+
 /** Form action for the storefront settings page. */
 export async function saveSettingsForm(prev: FormState, formData: FormData): Promise<FormState> {
   const locale = await getLocale();
@@ -34,12 +42,12 @@ export async function saveSettingsForm(prev: FormState, formData: FormData): Pro
   })(prev, formData);
 }
 
-/**
- * Admin "Convert" button. It only marks the web order confirmed. It does not create a sale order:
- * the integrator wires sales later, so this module must not call sales.
- */
+/** Admin "Convert" button. Creates a draft sale order, links it, and confirms the web order. */
 export async function convertWebOrderForm(formData: FormData): Promise<void> {
-  await runTransition(formData, 'confirm');
+  const locale = await getLocale();
+  const id = String(formData.get('id') ?? '');
+  await convertAction({ id });
+  redirect(`/${locale}/website/orders/${encodeURIComponent(id)}`);
 }
 
 /** Admin cancel button for a new web order. */

@@ -1,6 +1,7 @@
 import { and, eq, ne } from 'drizzle-orm';
 import { z } from 'zod';
 import { audit } from '@/core/audit';
+import { getDb } from '@/core/db/client';
 import type { Ctx } from '@/core/ctx';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
@@ -50,7 +51,9 @@ export async function saveSettings(ctx: Ctx, input: SettingsInput): Promise<Resu
   }
 
   // Slugs are global because the public URL carries no tenant.
-  const [taken] = await ctx.tx
+  // Read on the owner connection: RLS would hide another company's slug from the tenant transaction,
+  // and the unique index would then fail the insert instead of returning CONFLICT.
+  const [taken] = await getDb()
     .select({ id: websiteSettings.id })
     .from(websiteSettings)
     .where(and(eq(websiteSettings.slug, input.slug), ne(websiteSettings.companyId, ctx.companyId)))

@@ -82,8 +82,8 @@ export async function getWebOrder(ctx: Ctx, id: string): Promise<Result<WebOrder
 }
 
 /**
- * Moves a web order on. "confirm" is the admin Convert button: it only marks the order confirmed.
- * It does not create a sale order, because a direct call into sales is not allowed.
+ * Moves a web order on. "confirm" only marks the order confirmed. The Convert button uses
+ * convertWebOrderToSale (service/convert.ts), which also creates the sale order.
  */
 export async function transitionWebOrder(
   ctx: Ctx,

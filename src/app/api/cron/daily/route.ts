@@ -1,3 +1,4 @@
+import '@/modules/event-handlers';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb } from '@/core/db/client';
 import { runDailyReminders } from '@/modules/credit_sales/jobs/daily-reminders';

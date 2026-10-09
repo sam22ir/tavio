@@ -1,6 +1,8 @@
+import '@/modules/event-handlers';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb } from '@/core/db/client';
 import { drainOutbox } from '@/core/events';
+import { handleAutomationWebhook, handleOutboxRow, AUTOMATION_WEBHOOK_EVENT } from '@/modules/platform/outbox-handler';
 
 
 // Reads CRON_SECRET from the Workers env when available, otherwise from process.env (Node).
@@ -19,9 +21,11 @@ export async function POST(request: Request): Promise<Response> {
   if (!secret || request.headers.get('authorization') !== `Bearer ${secret}`) {
     return Response.json({ error: 'unauthorized' }, { status: 401 });
   }
-  const processed = await drainOutbox(getDb(), async (row) => {
-    // Real handlers arrive in P2/P3.
-    console.log('outbox event', row.eventName);
+  const db = getDb();
+  const processed = await drainOutbox(db, async (row) => {
+    // Automation webhooks carry their own URL. Platform webhooks fan out to subscribed endpoints.
+    if (row.eventName === AUTOMATION_WEBHOOK_EVENT) await handleAutomationWebhook(row);
+    else await handleOutboxRow(row, db);
   });
   return Response.json({ processed });
 }
