@@ -21,7 +21,7 @@ export interface SolutionSeed {
   /** Screenshot name in `public/screens/<name>-<locale>.png`. */
   screen: string;
   /** Icon name, mapped to a lucide icon on the index page. */
-  icon: 'appliance' | 'car' | 'clinic' | 'training' | 'store';
+  icon: 'appliance' | 'car' | 'clinic' | 'training' | 'store' | 'services' | 'industry';
 }
 
 // `satisfies Record<SolutionSlug, ...>` fails to compile if a slug from SOLUTION_SLUGS is missing.
@@ -31,6 +31,8 @@ export const SOLUTION_SEEDS = {
   clinics: { slug: 'clinics', screen: 'overdue', icon: 'clinic' },
   'training-centers': { slug: 'training-centers', screen: 'invoice', icon: 'training' },
   'retail-pos': { slug: 'retail-pos', screen: 'pos', icon: 'store' },
+  'professional-services': { slug: 'professional-services', screen: 'invoice', icon: 'services' },
+  industry: { slug: 'industry', screen: 'dashboard', icon: 'industry' },
 } satisfies Record<SolutionSlug, SolutionSeed>;
 
 export function isSolutionSlug(value: string): value is SolutionSlug {

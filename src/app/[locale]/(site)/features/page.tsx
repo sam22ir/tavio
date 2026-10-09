@@ -19,12 +19,12 @@ import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { FEATURES, type FeatureSlug } from '@/site/content/features';
+import { FEATURES, PILLARS, type FeatureSlug } from '@/site/content/features';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
-import { CtaBand, Emphasis, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
+import { BlueHero, CtaBand, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
 
-/** One icon per module, shown in a soft-green circle on each card. */
+/** One icon per module, shown in a soft blue circle on each card. */
 const MODULE_ICONS: Record<FeatureSlug, LucideIcon> = {
   'credit-sales': CreditCard,
   crm: Users,
@@ -37,16 +37,6 @@ const MODULE_ICONS: Record<FeatureSlug, LucideIcon> = {
   'website-shop': ShoppingBag,
   ai: Sparkles,
   platform: Plug,
-};
-
-/**
- * Bento spans on md+ (3 columns), by index. Rows: [2,1] [1,1,1] [1,2] [1,1,1] [3].
- * Full class names so Tailwind picks them up.
- */
-const BENTO_SPAN: Record<number, string> = {
-  0: 'md:col-span-2',
-  6: 'md:col-span-2',
-  10: 'md:col-span-3',
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -69,51 +59,54 @@ export default async function FeaturesOverviewPage({ params }: { params: Promise
 
   return (
     <>
-      {/* Hero: pill, headline with one accent word, subline. */}
-      <section className="relative overflow-hidden px-4 pb-12 pt-14 md:pb-16 md:pt-24">
-        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[70%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[380px] w-[min(640px,100%)] -translate-x-1/2 rounded-full" />
-        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-7 text-center">
-          <PillLabel>{t('overview.eyebrow')}</PillLabel>
-          <h1 className="s-h1 max-w-[18ch] text-balance">
-            <Emphasis text={t('overview.title')} />
-          </h1>
-          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('overview.body')}</p>
-        </div>
-      </section>
+      <BlueHero eyebrow={t('overview.eyebrow')} title={t('overview.title')} subtitle={t('overview.body')} />
 
-      {/* Bento grid of module cards, each linking to its detail page. */}
-      <Section className="pt-6 md:pt-10">
-        <RevealList as="ul" className="grid list-none grid-cols-1 gap-4 md:grid-cols-3">
-          {FEATURES.map((f, i) => {
-            const Icon = MODULE_ICONS[f.slug];
-            return (
-              <RevealItem key={f.slug} className={`min-w-0 ${BENTO_SPAN[i] ?? ''}`}>
-                <Link
-                  href={localeHref(locale, `/features/${f.slug}`)}
-                  className="s-panel group flex h-full flex-col justify-between gap-8 p-7 transition-transform duration-300 hover:-translate-y-0.5 md:p-8"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
-                      <Icon size={20} strokeWidth={1.75} aria-hidden />
-                    </span>
-                    <ArrowUpRight
-                      size={18}
-                      strokeWidth={1.75}
-                      aria-hidden
-                      className="s-flip-rtl text-[color:var(--s-muted)] transition-colors group-hover:text-[color:var(--s-accent)]"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <h2 className="text-xl">{t(`items.${f.slug}.title`)}</h2>
-                    <p className="leading-relaxed text-[color:var(--s-muted)]">{t(`items.${f.slug}.tagline`)}</p>
-                  </div>
-                </Link>
-              </RevealItem>
-            );
-          })}
-        </RevealList>
-      </Section>
+      {/* The five growth pillars, each with its module cards linking to the detail pages. */}
+      {PILLARS.map((pillar, pi) => {
+        const modules = FEATURES.filter((f) => (pillar.slugs as readonly string[]).includes(f.slug));
+        return (
+          <Reveal key={pillar.key}>
+            <Section tone={pi % 2 === 1 ? 'muted' : 'default'} className={pi === 0 ? 'pt-14 md:pt-20' : undefined}>
+              <div className="flex flex-col gap-10">
+                <div className="flex max-w-2xl flex-col gap-4">
+                  <PillLabel>{t(`overview.pillars.${pillar.key}.title`)}</PillLabel>
+                  <h2 className="s-h2 !text-[2.25rem] md:!text-[2.75rem]">{t(`overview.pillars.${pillar.key}.title`)}</h2>
+                  <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t(`overview.pillars.${pillar.key}.body`)}</p>
+                </div>
+                <RevealList as="ul" className="grid list-none grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {modules.map((f) => {
+                    const Icon = MODULE_ICONS[f.slug];
+                    return (
+                      <RevealItem key={f.slug} className="min-w-0">
+                        <Link
+                          href={localeHref(locale, `/features/${f.slug}`)}
+                          className="s-panel group flex h-full flex-col justify-between gap-8 p-7 transition-transform duration-300 hover:-translate-y-0.5 md:p-8"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
+                              <Icon size={20} strokeWidth={1.75} aria-hidden />
+                            </span>
+                            <ArrowUpRight
+                              size={18}
+                              strokeWidth={1.75}
+                              aria-hidden
+                              className="s-flip-rtl text-[color:var(--s-muted)] transition-colors group-hover:text-[color:var(--s-accent)]"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <h3 className="text-xl">{t(`items.${f.slug}.title`)}</h3>
+                            <p className="leading-relaxed text-[color:var(--s-muted)]">{t(`items.${f.slug}.tagline`)}</p>
+                          </div>
+                        </Link>
+                      </RevealItem>
+                    );
+                  })}
+                </RevealList>
+              </div>
+            </Section>
+          </Reveal>
+        );
+      })}
 
       <Reveal>
         <Section tone="muted">

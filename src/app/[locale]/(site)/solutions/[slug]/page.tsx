@@ -15,6 +15,7 @@ import {
 } from '@/site/content/solutions';
 import {
   ConnectorDiagram,
+  BlueHero,
   CtaBand,
   CtaLink,
   DeviceFrame,
@@ -22,6 +23,7 @@ import {
   FeatureList,
   PillLabel,
   Reveal,
+  RevoraLogo,
   Section,
 } from '@/site/components';
 
@@ -38,7 +40,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return buildMetadata({
     locale,
     path: `/solutions/${slug}`,
-    title: `${t('title')} | Tavio`,
+    title: `${t('title')} | Revora`,
     description: t('short'),
   });
 }
@@ -59,24 +61,20 @@ export default async function SolutionPage({ params }: { params: Params }) {
 
   return (
     <>
-      {/* Hero: pill, headline with the accent phrase, short intro and the two CTAs. */}
-      <section className="relative overflow-hidden px-4 pb-16 pt-14 md:pb-20 md:pt-24">
-        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[14%] h-[440px] w-[min(680px,100%)] -translate-x-1/2 rounded-full" />
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-7 text-center">
-          <PillLabel>{t('indexEyebrow')}</PillLabel>
-          <h1 className="s-h1 max-w-[18ch] text-balance">
-            <Emphasis text={item('headline')} />
-          </h1>
-          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{item('short')}</p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <CtaLink href={signupHref} label={t('cta')} />
-            <CtaLink href={localeHref(locale, '/solutions')} label={t('seeAll')} variant="light" arrow={false} />
-          </div>
-        </div>
-      </section>
+<BlueHero
+          uppercase={locale !== 'ar'}
+          eyebrow={t('indexEyebrow')}
+          title={item('headline')}
+          subtitle={item('short')}
+          actions={
+            <>
+              <CtaLink href={signupHref} label={t('cta')} variant="light" />
+              <CtaLink href={localeHref(locale, '/solutions')} label={t('seeAll')} variant="light" arrow={false} />
+            </>
+          }
+        />
 
-      {/* Before and after: the paper-and-notebook version against the Tavio version. */}
+      {/* Before and after: the paper-and-notebook version against the Revora version. */}
       <Reveal>
         <Section tone="muted">
           <div className="flex flex-col gap-12">
@@ -91,8 +89,21 @@ export default async function SolutionPage({ params }: { params: Params }) {
               afterLabel={t('afterLabel')}
               before={before}
               after={after}
-              center={<span className="s-mark !size-14 !rounded-2xl !text-2xl">T</span>}
+              center={<span className="inline-flex size-16 items-center justify-center rounded-2xl bg-white shadow-[var(--s-shadow)]"><RevoraLogo variant="mark" className="h-8 w-8" /></span>}
             />
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* Revora platform and services: the method behind the software. */}
+      <Reveal>
+        <Section className="pt-0">
+          <div className="s-panel grid gap-6 p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-xl">{t('services.title')}</h2>
+              <p className="leading-relaxed text-[color:var(--s-muted)]">{t('services.body')}</p>
+            </div>
+            <CtaLink href={localeHref(locale, '/services')} label={t('services.cta')} />
           </div>
         </Section>
       </Reveal>

@@ -3,12 +3,12 @@ import Link from 'next/link';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ArrowRight, Car, GraduationCap, HeartPulse, Refrigerator, ShoppingCart, type LucideIcon } from 'lucide-react';
+import { ArrowRight, Briefcase, Car, Factory, GraduationCap, HeartPulse, Refrigerator, ShoppingCart, type LucideIcon } from 'lucide-react';
 import { routing } from '@/i18n/routing';
 import { buildMetadata, SOLUTION_SLUGS } from '@/site/seo';
 import { localeHref } from '@/site/content/nav';
 import { SOLUTION_SEEDS, type SolutionSlug } from '@/site/content/solutions';
-import { CtaBand, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
+import { BlueHero, CtaBand, CtaLink, Reveal, RevealItem, RevealList, Section } from '@/site/components';
 
 const ICONS: Record<(typeof SOLUTION_SEEDS)[SolutionSlug]['icon'], LucideIcon> = {
   appliance: Refrigerator,
@@ -16,6 +16,8 @@ const ICONS: Record<(typeof SOLUTION_SEEDS)[SolutionSlug]['icon'], LucideIcon> =
   clinic: HeartPulse,
   training: GraduationCap,
   store: ShoppingCart,
+  services: Briefcase,
+  industry: Factory,
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -33,16 +35,7 @@ export default async function SolutionsIndexPage({ params }: { params: Promise<{
 
   return (
     <>
-      {/* Hero: pill, headline and intro on the cream background with the soft glow. */}
-      <section className="relative overflow-hidden px-4 pb-12 pt-14 md:pb-16 md:pt-24">
-        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[400px] w-[min(640px,100%)] -translate-x-1/2 rounded-full" />
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          <PillLabel>{t('indexEyebrow')}</PillLabel>
-          <h1 className="s-h1 text-balance">{t('indexTitle')}</h1>
-          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('indexBody')}</p>
-        </div>
-      </section>
+<BlueHero uppercase={locale !== 'ar'} eyebrow={t('indexEyebrow')} title={t('indexTitle')} subtitle={t('indexBody')} />
 
       {/* One card per business type: icon, the problem in one line, and a link. */}
       <Reveal>
@@ -72,6 +65,18 @@ export default async function SolutionsIndexPage({ params }: { params: Promise<{
               );
             })}
           </RevealList>
+        </Section>
+      </Reveal>
+
+      <Reveal>
+        <Section className="pt-0">
+          <div className="s-panel grid gap-6 p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-xl">{t('services.title')}</h2>
+              <p className="leading-relaxed text-[color:var(--s-muted)]">{t('services.body')}</p>
+            </div>
+            <CtaLink href={localeHref(locale, '/services')} label={t('services.cta')} />
+          </div>
         </Section>
       </Reveal>
 

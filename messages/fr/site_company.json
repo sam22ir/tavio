@@ -1,69 +1,69 @@
 {
   "about": {
     "meta": {
-      "title": "À propos de Tavio",
-      "description": "Tavio est une alternative simple et moderne aux ERP lourds, pensée pour les commerces algériens, en français et en arabe."
+      "title": "À propos de Revora",
+      "description": "Revora est une alternative simple et moderne aux ERP lourds, pensée pour les commerces algériens, en français et en arabe."
     },
-    "eyebrow": "À propos",
-    "title": "Une alternative *moderne* aux ERP lourds, pensée pour l'Algérie",
-    "body": "Les ERP classiques sont lourds, chers et pensés pour les grandes entreprises. Tavio réunit ventes à crédit, clients, facturation et stock dans une seule application, en français et en arabe.",
+    "eyebrow": "La croissance est un système.",
+    "title": "Revora, une entreprise de *croissance* pour les affaires",
+    "body": "Revora aide les entreprises à construire des systèmes qui font croître leur activité : acquisition client, ventes, opérations, données et technologie, pensés ensemble. Nous sommes basés à Alger.",
     "principles": {
-      "title": "Nos principes",
+      "title": "Qui nous sommes",
       "items": [
         {
-          "title": "Français et arabe",
-          "body": "L'application et les documents existent dans les deux langues, pour toute l'équipe, du gérant au vendeur."
+          "title": "Des professionnels du terrain",
+          "body": "Notre équipe a travaillé en marketing, en vente et en back-office. Nous savons ce qui se passe réellement dans une entreprise."
         },
         {
-          "title": "Simple et rapide",
-          "body": "Une interface claire qui fonctionne sur un téléphone d'entrée de gamme, même avec une connexion modeste."
+          "title": "Comprendre avant de construire",
+          "body": "Nous commençons par comprendre comment votre activité fonctionne, puis nous identifions où la croissance se perd."
         },
         {
-          "title": "Prix justes en dinars",
-          "body": "Des tarifs indicatifs en DZD, par utilisateur, détaillés sur la page Tarifs."
+          "title": "Des systèmes, pas des slogans",
+          "body": "Nous construisons des process et des outils qui améliorent vos performances, mesurables mois après mois."
         },
         {
-          "title": "Vos données vous appartiennent",
-          "body": "Vos données restent dans le cloud Tavio, hébergé dans l'Union européenne, ou sur vos propres serveurs."
+          "title": "Né du marché, pas de la théorie",
+          "body": "Revora vient de l'expérience concrète du marché. Nous voulons être un partenaire de long terme, dans tous les secteurs, depuis Alger."
         }
       ]
     },
     "roadmap": {
-      "eyebrow": "Où nous allons",
-      "title": "Une feuille de route construite avec les commerçants",
-      "body": "Nous avançons par étapes, en écoutant les commerçants qui utilisent Tavio.",
+      "eyebrow": "Notre approche",
+      "title": "Quatre étapes pour *faire croître* votre activité",
+      "body": "Notre méthode est simple : comprendre, identifier, construire, puis durer.",
       "steps": [
         {
-          "title": "Ventes à crédit",
-          "body": "Aujourd'hui : échéanciers, suivi des paiements et relances des impayés."
+          "title": "Comprendre",
+          "body": "Nous étudions votre activité, vos équipes et vos clients pour savoir comment l'entreprise fonctionne vraiment."
         },
         {
-          "title": "La suite complète",
-          "body": "Clients, stock, facturation et comptabilité SCF réunis dans une seule application."
+          "title": "Identifier",
+          "body": "Nous repérons où la croissance se perd : prospects non suivis, ventes non relancées, stock mal anticipé, données absentes."
         },
         {
-          "title": "Assistants IA",
-          "body": "Aides optionnelles pour rédiger, relancer et analyser, avec le fournisseur de votre choix."
+          "title": "Construire",
+          "body": "Nous mettons en place les systèmes, avec la plateforme Revora et nos services, puis nous les faisons vivre avec vous."
         },
         {
-          "title": "On-premise et partenaires",
-          "body": "Installation sur vos propres serveurs en Algérie, et intégrations avec vos partenaires."
+          "title": "Durer",
+          "body": "Nous restons à vos côtés, mesurons les résultats et optimisons, au rythme de votre croissance."
         }
       ]
     },
     "cta": {
-      "title": "Essayez Tavio avec vos propres clients",
-      "body": "Créez un compte et saisissez vos premières ventes à crédit en quelques minutes.",
-      "primary": "Commencer gratuitement"
+      "title": "Parlons de votre croissance",
+      "body": "Demandez un audit gratuit : nous identifions avec vous où votre croissance se perd.",
+      "primary": "Demander un audit gratuit"
     }
   },
   "contact": {
     "meta": {
       "title": "Contact : parlons de votre commerce",
-      "description": "Écrivez à l'équipe Tavio en français ou en arabe. Nous vous répondons par e-mail ou sur WhatsApp."
+      "description": "Écrivez à l'équipe Revora en français ou en arabe. Nous vous répondons par e-mail ou sur WhatsApp."
     },
-    "title": "Parlons de votre commerce",
-    "body": "Dites-nous ce que vous vendez et ce qui vous ralentit aujourd'hui. Nous répondons en français ou en arabe.",
+    "title": "Parlons de *votre croissance*",
+    "body": "Dites-nous ce que vous vendez et où votre activité ralentit. Nous répondons en français ou en arabe, et l'audit gratuit est le meilleur point de départ.",
     "email": "Par e-mail",
     "whatsapp": {
       "title": "Par WhatsApp",
@@ -94,18 +94,27 @@
     },
     "emailBody": "Pour un devis, une démo ou un problème de compte.",
     "pilot": {
-      "title": "Programme pilote",
-      "body": "Nous accompagnons nos premiers commerces à Sétif, Alger et Oran, de la configuration à la première facture."
+      "title": "Audit gratuit",
+      "body": "Un diagnostic de votre activité, sans engagement, pour identifier où votre croissance se perd."
     },
     "response": {
       "title": "Délai de réponse",
       "body": "Nous répondons en général sous deux jours ouvrés, en français ou en arabe."
     },
-    "eyebrow": "Contact"
+    "eyebrow": "Contact",
+    "type": {
+      "label": "Motif de votre demande",
+      "options": {
+        "audit": "Audit gratuit",
+        "demo": "Démo de la plateforme",
+        "services": "Services",
+        "other": "Autre"
+      }
+    }
   },
   "faq": {
     "meta": {
-      "title": "Questions fréquentes sur Tavio",
+      "title": "Questions fréquentes sur Revora",
       "description": "Langues, ventes à crédit, tarifs en dinars, données, offre On-premise et assistant IA : les réponses essentielles."
     },
     "title": "Questions fréquentes",
@@ -115,7 +124,7 @@
         "title": "Produit",
         "items": [
           {
-            "question": "Tavio fonctionne-t-il en arabe et en français ?",
+            "question": "Revora fonctionne-t-il en arabe et en français ?",
             "answer": "Oui. L'interface et les documents sont disponibles en français, en arabe et en anglais. Chaque utilisateur choisit sa langue."
           },
           {
@@ -123,7 +132,7 @@
             "answer": "Oui. Vous créez un plan d'échelonnement, suivez chaque échéance et relancez les clients en retard."
           },
           {
-            "question": "Tavio fonctionne-t-il sur téléphone ?",
+            "question": "Revora fonctionne-t-il sur téléphone ?",
             "answer": "Oui. L'application est conçue pour les téléphones d'entrée de gamme comme pour les ordinateurs."
           },
           {
@@ -154,7 +163,7 @@
         "items": [
           {
             "question": "Où sont stockées mes données ?",
-            "answer": "Dans le cloud Tavio, hébergé dans l'Union européenne (Paris), ou sur vos propres serveurs avec l'offre On-premise."
+            "answer": "Dans le cloud Revora, hébergé dans l'Union européenne (Paris), ou sur vos propres serveurs avec l'offre On-premise."
           },
           {
             "question": "Mes données sont-elles protégées par la loi ?",
@@ -171,7 +180,7 @@
         "items": [
           {
             "question": "Qu'est-ce que l'offre On-premise ?",
-            "answer": "Tavio installé sur vos propres serveurs, avec Docker, pour garder vos données en Algérie."
+            "answer": "Revora installé sur vos propres serveurs, avec Docker, pour garder vos données en Algérie."
           },
           {
             "question": "Qui gère les sauvegardes ?",
@@ -183,7 +192,7 @@
         "title": "Assistant IA",
         "items": [
           {
-            "question": "Quelle IA utilise Tavio ?",
+            "question": "Quelle IA utilise Revora ?",
             "answer": "Les fonctions d'aide par IA sont optionnelles et fonctionnent avec le fournisseur de votre choix."
           },
           {
@@ -191,7 +200,7 @@
             "answer": "Seules les informations que vous envoyez à l'assistant sont transmises au fournisseur choisi. Vous pouvez désactiver ces fonctions."
           },
           {
-            "question": "Puis-je utiliser Tavio sans l'IA ?",
+            "question": "Puis-je utiliser Revora sans l'IA ?",
             "answer": "Oui. Toutes les fonctions de gestion fonctionnent sans l'assistant IA."
           }
         ]
@@ -237,7 +246,7 @@
         {
           "title": "Lieu de stockage",
           "body": [
-            "Par défaut, les données sont hébergées dans le cloud Tavio, dans l'Union européenne (Paris). Les clients qui le souhaitent peuvent héberger leurs données en Algérie, sur leurs propres serveurs (offre On-premise)."
+            "Par défaut, les données sont hébergées dans le cloud Revora, dans l'Union européenne (Paris). Les clients qui le souhaitent peuvent héberger leurs données en Algérie, sur leurs propres serveurs (offre On-premise)."
           ]
         },
         {
@@ -263,7 +272,7 @@
     "terms": {
       "meta": {
         "title": "Conditions d'utilisation",
-        "description": "Conditions d'utilisation de Tavio : compte, abonnement, données, disponibilité et résiliation."
+        "description": "Conditions d'utilisation de Revora : compte, abonnement, données, disponibilité et résiliation."
       },
       "title": "Conditions d'utilisation",
       "updated": "Dernière mise à jour : [date à compléter]",
@@ -272,7 +281,7 @@
         {
           "title": "Objet",
           "body": [
-            "Ces conditions régissent l'accès et l'utilisation de la plateforme Tavio, éditée par [raison sociale à compléter]."
+            "Ces conditions régissent l'accès et l'utilisation de la plateforme Revora, éditée par [raison sociale à compléter]."
           ]
         },
         {

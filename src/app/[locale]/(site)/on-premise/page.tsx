@@ -7,11 +7,11 @@ import { routing } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
 import {
+  BlueHero,
   CtaBand,
   CtaLink,
   CurvedTimeline,
   Emphasis,
-  PillLabel,
   Reveal,
   RevealItem,
   RevealList,
@@ -41,24 +41,13 @@ export default async function OnPremisePage({ params }: { params: Promise<{ loca
 
   return (
     <>
-      {/* Dark hero: the one cinematic dark band, with the accent headline. */}
-      <section className="s-dark relative overflow-hidden px-4 pb-24 pt-20 md:pb-36 md:pt-32">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-full"
-          style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(127,209,178,0.16), transparent 70%)' }}
+<BlueHero
+          uppercase={locale !== 'ar'}
+          eyebrow={t('eyebrow')}
+          title={t('title')}
+          subtitle={t('body')}
+          actions={<CtaLink href={contactHref} label={t('cta')} variant="light" />}
         />
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-7 text-center">
-          <PillLabel tone="dark">{t('eyebrow')}</PillLabel>
-          <h1 className="s-h1 text-balance">
-            <Emphasis text={t('title')} />
-          </h1>
-          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('body')}</p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <CtaLink href={contactHref} label={t('cta')} variant="light" />
-          </div>
-        </div>
-      </section>
 
       {/* Guarantees: a bento of four tiles. */}
       <Reveal>

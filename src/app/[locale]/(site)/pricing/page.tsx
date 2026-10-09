@@ -2,16 +2,17 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Check, Banknote, Landmark, Mailbox, Minus } from 'lucide-react';
+import { Check, Banknote, ClipboardCheck, GraduationCap, Landmark, LifeBuoy, Mailbox, Minus, Settings2 } from 'lucide-react';
+import Link from 'next/link';
 import { SAAS_PLAN_SEED, type SaasPlanSeed } from '@/modules/subscriptions/plans';
 import { routing } from '@/i18n/routing';
 import { buildMetadata } from '@/site/seo';
 import { localeHref } from '@/site/content/nav';
 import {
+  BlueHero,
   CtaBand,
   Emphasis,
   Faq,
-  PillLabel,
   Reveal,
   Section,
   type PricingPlan,
@@ -35,6 +36,9 @@ const ROWS: { key: SolutionModuleKey; moduleId: string }[] = [
 
 /** Payment method icons, in the order of `pricing.payment.items`. */
 const PAYMENT_ICONS = [Mailbox, Landmark, Banknote];
+
+/** Icons for the services on quote band, in `pricing.services.items` order. */
+const SERVICE_ICONS = [ClipboardCheck, Settings2, GraduationCap, LifeBuoy];
 
 /** Formats a whole-DZD amount with space thousands separators. */
 function formatDzd(amount: number): string {
@@ -80,21 +84,11 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
   const yearly = SAAS_PLAN_SEED.map((p) => buildPlans(p, 'yearly'));
   const payment = t.raw('pricing.payment.items') as { title: string; body: string }[];
   const faq = t.raw('pricing.faq.items') as { question: string; answer: string }[];
+  const serviceItems = t.raw('pricing.services.items') as { title: string; body: string }[];
 
   return (
     <>
-      {/* Hero: pill, headline with accent, intro, indicative note. */}
-      <section className="relative overflow-hidden px-4 pb-6 pt-14 md:pt-24">
-        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[80%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[420px] w-[min(680px,100%)] -translate-x-1/2 rounded-full" />
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          <PillLabel>{t('pricing.eyebrow')}</PillLabel>
-          <h1 className="s-h1 text-balance">
-            <Emphasis text={t('pricing.title')} />
-          </h1>
-          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('pricing.body')}</p>
-        </div>
-      </section>
+<BlueHero uppercase={locale !== 'ar'} eyebrow={t('pricing.eyebrow')} title={t('pricing.title')} subtitle={t('pricing.body')} />
 
       {/* Plans: monthly / yearly toggle and the plan cards. */}
       <Section className="pt-10 md:pt-14">
@@ -163,6 +157,39 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
                 </tbody>
               </table>
             </div>
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* Services on quote: audit, setup, training and support, linked to the services page. */}
+      <Reveal>
+        <Section tone="muted">
+          <div className="flex flex-col gap-12">
+            <div className="flex max-w-2xl flex-col gap-5">
+              <h2 className="s-h2 !text-[2.25rem] md:!text-[2.75rem]">
+                <Emphasis text={t('pricing.services.title')} />
+              </h2>
+              <p className="text-[17px] leading-relaxed text-[color:var(--s-muted)]">{t('pricing.services.body')}</p>
+            </div>
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {serviceItems.map((item, i) => {
+                const Icon = SERVICE_ICONS[i] ?? ClipboardCheck;
+                return (
+                  <li key={item.title} className="s-panel flex flex-col gap-5 p-7">
+                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-[var(--s-accent-soft)] text-[color:var(--s-accent)]">
+                      <Icon size={20} strokeWidth={1.75} aria-hidden />
+                    </span>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-xl">{item.title}</h3>
+                      <p className="leading-relaxed text-[color:var(--s-muted)]">{item.body}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            <Link href={localeHref(locale, '/services')} className="s-btn s-btn-dark w-fit rounded-full px-6 py-3 text-sm font-medium">
+              {t('pricing.services.cta')}
+            </Link>
           </div>
         </Section>
       </Reveal>

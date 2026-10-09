@@ -18,7 +18,7 @@ function deps(overrides: Partial<ContactDeps> = {}): ContactDeps & { send: Retur
   return {
     send,
     limiter: createRateLimiter({ max: 3, windowMs: 60_000 }),
-    recipient: 'team@tavio.test',
+    recipient: 'team@revora.test',
     ...overrides,
   } as ContactDeps & { send: ReturnType<typeof vi.fn> };
 }
@@ -50,6 +50,21 @@ describe('contactSchema', () => {
   });
 });
 
+describe('contact type', () => {
+  it('defaults to other and rejects unknown types', () => {
+    expect(contactSchema.parse(valid).type).toBe('other');
+    expect(contactSchema.safeParse({ ...valid, type: 'hack' }).success).toBe(false);
+  });
+
+  it('puts the request type in the email subject and body', async () => {
+    const d = deps();
+    await processContact({ ...valid, type: 'audit' }, '5.5.5.5', d);
+    const mail = d.send.mock.calls[0]?.[0];
+    expect(mail?.subject).toBe('Nouveau contact Revora [Audit gratuit] : Électro Benali');
+    expect(mail?.text).toContain('Motif : Audit gratuit');
+  });
+});
+
 describe('processContact', () => {
   it('sends an email with the reply-to set to the visitor', async () => {
     const d = deps();
@@ -57,7 +72,7 @@ describe('processContact', () => {
     expect(outcome).toEqual({ status: 'sent' });
     expect(d.send).toHaveBeenCalledTimes(1);
     const mail = d.send.mock.calls[0]?.[0];
-    expect(mail?.to).toBe('team@tavio.test');
+    expect(mail?.to).toBe('team@revora.test');
     expect(mail?.replyTo).toBe('karim@example.dz');
   });
 

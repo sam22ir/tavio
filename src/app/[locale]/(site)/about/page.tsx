@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
-import { CtaBand, CurvedTimeline, Emphasis, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
+import { BlueHero, CtaBand, CurvedTimeline, Emphasis, PillLabel, Reveal, RevealItem, RevealList, Section } from '@/site/components';
 
 /** Icons for the principles bento, in message order. */
 const PRINCIPLE_ICONS: LucideIcon[] = [Languages, Zap, Banknote, ShieldCheck];
@@ -29,18 +29,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   return (
     <>
-      {/* Hero: Emphasis headline over a soft glow and grid. */}
-      <section className="relative overflow-hidden px-4 pb-16 pt-14 md:pb-24 md:pt-24">
-        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[70%]" />
-        <div aria-hidden className="s-glow pointer-events-none absolute start-1/2 top-[10%] h-[420px] w-[min(640px,100%)] -translate-x-1/2 rounded-full" />
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-7 text-center">
-          <PillLabel>{t('eyebrow')}</PillLabel>
-          <h1 className="s-h1 text-balance">
-            <Emphasis text={t('title')} />
-          </h1>
-          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('body')}</p>
-        </div>
-      </section>
+<BlueHero uppercase={locale !== 'ar'} eyebrow={t('eyebrow')} title={t('title')} subtitle={t('body')} />
 
       {/* Principles bento: the first tile is wide, the rest share the row. */}
       <Reveal>
