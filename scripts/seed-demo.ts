@@ -5,16 +5,19 @@
 import { existsSync, readFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { getAuth } from '../src/core/auth/server';
 import { getDb } from '../src/core/db/client';
 import { withTenant } from '../src/core/db/tenant';
-import { companies } from '../src/core/db/schema/tenancy';
+import { companies, companyModules, memberships, roles } from '../src/core/db/schema/tenancy';
+import type { Db } from '../src/core/db/types';
+import type { TenantArgs } from '../src/core/db/tenant';
+import { DEFAULT_MODULES } from '../src/core/tenancy/default-roles';
 import { users } from '../src/core/db/schema/auth';
 import type { Ctx } from '../src/core/ctx';
 import { loadDevEnv } from '../src/core/env/load-dev-env';
 import type { Result } from '../src/core/result';
-import { createCompany, listMyCompanies, loadTenantArgs } from '../src/core/tenancy/service';
+import { createCompany, listMyCompanies, loadTenantArgs, MODULE_VERSION } from '../src/core/tenancy/service';
 import { loadAlgerianDefaults, taxOptions } from '../src/modules/l10n_dz/service/taxes';
 import { partners } from '../src/modules/contacts/schema';
 import { createPartner, type PartnerInput } from '../src/modules/contacts/service/partners';
@@ -40,6 +43,10 @@ import {
 import { listOverdue, recordPayment, type PaymentMethod } from '../src/modules/credit_sales/service/payments';
 import { creditContracts } from '../src/modules/credit_sales/schema';
 import { ensureActivity, postMessage } from '../src/modules/chatter/service';
+import { activityTypes } from '../src/modules/chatter/schema';
+import { ACTIVITY_TYPE_SEED } from '../src/modules/chatter/entities';
+import { creditPayments } from '../src/modules/credit_sales/schema';
+import { invoices as invoiceRows } from '../src/modules/invoicing/schema';
 
 loadDevEnv();
 
@@ -209,12 +216,20 @@ async function ensureCompany(userId: string): Promise<string> {
     );
     companyId = created.companyId;
   }
-  // Fictional tax identifiers. createCompany has no input for them, so they are filled only when empty.
+  await fillTaxIdentifiers(companyId, db);
+  return companyId;
+}
+
+// Fictional tax identifiers. createCompany has no input for them. Filled only when empty and not already used by
+// another company (nif and rc are unique), so a second demo company keeps them blank.
+async function fillTaxIdentifiers(companyId: string, db: Db): Promise<void> {
   await db
     .update(companies)
     .set({ nif: COMPANY_NIF, rc: COMPANY_RC })
-    .where(sql`${companies.id} = ${companyId} and ${companies.nif} is null`);
-  return companyId;
+    .where(
+      sql`${companies.id} = ${companyId} and ${companies.nif} is null
+        and not exists (select 1 from ${companies} c2 where c2.nif = ${COMPANY_NIF} or c2.rc = ${COMPANY_RC})`,
+    );
 }
 
 async function seedPartners(ctx: Ctx): Promise<{ partnerIds: Map<string, string>; supplierId: string }> {
@@ -556,64 +571,181 @@ async function seedChatter(ctx: Ctx, contractIds: string[]): Promise<void> {
   }
 }
 
-async function main(): Promise<void> {
-  const credentials = readDemoCredentials();
-  const db = getDb();
-  let step = 'user';
-  try {
-    const userId = await ensureUser(credentials);
-    step = 'company';
-    const companyId = await ensureCompany(userId);
-    const tenant = must(await loadTenantArgs(userId, companyId, 'fr'), 'load tenant');
-    const run = <T>(fn: (ctx: Ctx) => Promise<T>): Promise<T> => withTenant(tenant, fn, db);
+// Company setup that createCompany would normally do. Idempotent: only missing rows are inserted.
+async function ensureCompanySetup(ctx: Ctx): Promise<void> {
+  await ctx.tx
+    .insert(companyModules)
+    .values(
+      DEFAULT_MODULES.map((moduleId) => ({
+        companyId: ctx.companyId,
+        moduleId,
+        version: MODULE_VERSION,
+        enabled: true,
+        enabledAt: new Date(),
+        createdBy: ctx.userId,
+      })),
+    )
+    .onConflictDoNothing();
+  const types = await ctx.tx
+    .select({ id: activityTypes.id })
+    .from(activityTypes)
+    .where(eq(activityTypes.companyId, ctx.companyId));
+  if (types.length === 0) {
+    await ctx.tx.insert(activityTypes).values(
+      ACTIVITY_TYPE_SEED.map((t) => ({
+        companyId: ctx.companyId,
+        name: t.key,
+        defaultDays: t.defaultDays,
+        icon: t.icon,
+        createdBy: ctx.userId,
+      })),
+    );
+  }
+}
 
-    step = 'taxes';
-    await run((ctx) => loadAlgerianDefaults(ctx).then((r) => must(r, 'taxes')));
-    const taxId = await run(async (ctx) => {
-      const options = await taxOptions(ctx);
-      return (options.find((o) => o.label.includes('19')) ?? options[0])?.value;
-    });
+// Runs every seeding block for one tenant. `state.step` names the block in error messages.
+async function seedCompanyData(tenant: TenantArgs, db: Db, state: { step: string }): Promise<void> {
+  const run = <T>(fn: (ctx: Ctx) => Promise<T>): Promise<T> => withTenant(tenant, fn, db);
 
-    step = 'partners';
-    const { partnerIds, supplierId } = await run((ctx) => seedPartners(ctx));
+  state.step = 'taxes';
+  await run((ctx) => loadAlgerianDefaults(ctx).then((r) => must(r, 'taxes')));
+  const taxId = await run(async (ctx) => {
+    const options = await taxOptions(ctx);
+    return (options.find((o) => o.label.includes('19')) ?? options[0])?.value;
+  });
 
-    step = 'products';
-    const productIds = await run((ctx) => seedProducts(ctx));
+  state.step = 'partners';
+  const { partnerIds, supplierId } = await run((ctx) => seedPartners(ctx));
 
-    step = 'stock';
-    await run((ctx) => seedStock(ctx, supplierId, productIds));
+  state.step = 'products';
+  const productIds = await run((ctx) => seedProducts(ctx));
 
-    step = 'sales';
-    await run((ctx) => seedSales(ctx, partnerIds, productIds, taxId));
+  state.step = 'stock';
+  await run((ctx) => seedStock(ctx, supplierId, productIds));
 
-    step = 'invoices';
-    await run((ctx) => seedInvoices(ctx, partnerIds, productIds, taxId));
+  state.step = 'sales';
+  await run((ctx) => seedSales(ctx, partnerIds, productIds, taxId));
 
-    step = 'crm';
-    await run((ctx) => seedLeads(ctx, partnerIds));
+  state.step = 'invoices';
+  await run((ctx) => seedInvoices(ctx, partnerIds, productIds, taxId));
 
-    step = 'contracts';
-    const contracts = await run((ctx) => seedContracts(ctx, partnerIds, productIds));
+  state.step = 'crm';
+  await run((ctx) => seedLeads(ctx, partnerIds));
 
-    step = 'chatter';
-    if (contracts.created > 0) await run((ctx) => seedChatter(ctx, contracts.contractIds));
+  state.step = 'contracts';
+  const contracts = await run((ctx) => seedContracts(ctx, partnerIds, productIds));
 
-    step = 'counts';
-    const counts = await run(async (ctx) => {
-      const contractRows = await ctx.tx.select({ id: creditContracts.id }).from(creditContracts).where(eq(creditContracts.companyId, ctx.companyId));
-      const partnerRows = await ctx.tx.select({ id: partners.id }).from(partners).where(eq(partners.companyId, ctx.companyId));
-      const productRows = await ctx.tx.select({ id: products.id }).from(products).where(eq(products.companyId, ctx.companyId));
+  state.step = 'chatter';
+  if (contracts.created > 0) await run((ctx) => seedChatter(ctx, contracts.contractIds));
+}
+
+async function companyCounts(tenant: TenantArgs, db: Db): Promise<Record<string, number>> {
+  return withTenant(
+    tenant,
+    async (ctx) => {
+      const rowsOf = async (table: typeof partners | typeof products | typeof creditContracts | typeof creditPayments | typeof invoiceRows | typeof leads): Promise<number> =>
+        (await ctx.tx.select({ id: table.id }).from(table).where(eq(table.companyId, ctx.companyId))).length;
       const overdue = await listOverdue(ctx);
       return {
-        contracts: contractRows.length,
-        partners: partnerRows.length,
-        products: productRows.length,
-        overdue: overdue.length,
+        partners: await rowsOf(partners),
+        products: await rowsOf(products),
+        creditContracts: await rowsOf(creditContracts),
+        creditPayments: await rowsOf(creditPayments),
+        invoices: await rowsOf(invoiceRows),
+        leads: await rowsOf(leads),
+        overdueInstallments: overdue.length,
       };
-    });
-    console.log(JSON.stringify(counts));
+    },
+    db,
+  );
+}
+
+// Company ids from repeatable or comma-separated --company flags.
+function parseCompanyArgs(argv: string[]): string[] {
+  const ids: string[] = [];
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i] ?? '';
+    let raw: string | undefined;
+    if (arg === '--company') {
+      raw = argv[++i];
+      if (!raw) throw new Error('--company needs a value');
+    } else if (arg.startsWith('--company=')) {
+      raw = arg.slice('--company='.length);
+    } else {
+      continue;
+    }
+    for (const part of raw.split(',')) {
+      const id = part.trim();
+      if (id) ids.push(id);
+    }
+  }
+  for (const id of ids) {
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) throw new Error('invalid --company id');
+  }
+  return [...new Set(ids)];
+}
+
+// The owner of an existing company is the user whose membership carries the owner role.
+async function findOwnerId(companyId: string, db: Db): Promise<string> {
+  const [row] = await db
+    .select({ userId: memberships.userId })
+    .from(memberships)
+    .innerJoin(roles, eq(roles.id, memberships.roleId))
+    .where(and(eq(memberships.companyId, companyId), eq(memberships.status, 'active'), eq(roles.key, 'owner')));
+  if (!row) throw new Error('owner membership missing');
+  return row.userId;
+}
+
+async function seedExistingCompany(companyId: string, db: Db, state: { step: string }): Promise<'seeded' | 'skipped'> {
+  const userId = await findOwnerId(companyId, db);
+  const tenant = must(await loadTenantArgs(userId, companyId, 'fr'), 'load tenant');
+  const existing = await withTenant(
+    tenant,
+    (ctx) => ctx.tx.select({ id: creditContracts.id }).from(creditContracts).where(eq(creditContracts.companyId, ctx.companyId)).limit(1),
+    db,
+  );
+  // Credit contracts are seeded last; every earlier step skips rows it already made, so a half-seeded company resumes.
+  if (existing.length > 0) {
+    console.log(`${companyId}: skipped (already seeded)`);
+    return 'skipped';
+  }
+  state.step = 'setup';
+  await withTenant(tenant, (ctx) => ensureCompanySetup(ctx), db);
+  // Real companies keep their own NIF/RC: no fictional tax identifiers here.
+  await seedCompanyData(tenant, db, state);
+  console.log(`${companyId}: ${JSON.stringify(await companyCounts(tenant, db))}`);
+  return 'seeded';
+}
+
+async function main(): Promise<void> {
+  const db = getDb();
+  const targets = parseCompanyArgs(process.argv.slice(2));
+  if (targets.length > 0) {
+    for (const companyId of targets) {
+      const state = { step: 'company' };
+      try {
+        const outcome = await seedExistingCompany(companyId, db, state);
+        if (outcome === 'seeded') console.log(`${companyId}: seeded`);
+      } catch (e: unknown) {
+        console.error(`db:seed-demo failed for ${companyId} at ${state.step}`, e instanceof Error ? e.name : 'unknown');
+        process.exitCode = 1;
+      }
+    }
+    return;
+  }
+
+  const state = { step: 'user' };
+  try {
+    const credentials = readDemoCredentials();
+    const userId = await ensureUser(credentials);
+    state.step = 'company';
+    const companyId = await ensureCompany(userId);
+    const tenant = must(await loadTenantArgs(userId, companyId, 'fr'), 'load tenant');
+    await seedCompanyData(tenant, db, state);
+    state.step = 'counts';
+    console.log(JSON.stringify(await companyCounts(tenant, db)));
   } catch (e: unknown) {
-    console.error(`db:seed-demo failed at ${step}`, e instanceof Error ? e.name : 'unknown');
+    console.error(`db:seed-demo failed at ${state.step}`, e instanceof Error ? e.name : 'unknown');
     process.exitCode = 1;
   }
 }

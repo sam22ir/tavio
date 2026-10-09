@@ -19,7 +19,7 @@ import { ACTIVITY_TYPE_SEED } from '@/modules/chatter/entities';
 export interface CompanySummary { id: string; name: string; roleKey: string }
 export interface NewCompanyInput { legalName: string; phone?: string; address?: string; wilayaCode?: string }
 
-const MODULE_VERSION = '0.1.0';
+export const MODULE_VERSION = '0.1.0';
 
 export async function listMyCompanies(userId: string, db: Db = getDb()): Promise<CompanySummary[]> {
   const rows = await db
