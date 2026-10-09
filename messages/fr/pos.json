@@ -1,1 +1,65 @@
-{}
+{
+  "module": {
+    "name": "Point de vente"
+  },
+  "menu": {
+    "sessions": "Point de vente"
+  },
+  "sessions": {
+    "title": "Sessions de caisse",
+    "openingCash": "Fond de caisse (DA)",
+    "open": "Ouvrir une session",
+    "none": "Aucune session pour le moment.",
+    "status": {
+      "open": "Ouverte",
+      "closed": "Clôturée"
+    }
+  },
+  "sale": {
+    "title": "Vente",
+    "search": "Rechercher un produit",
+    "empty": "Aucun produit trouvé.",
+    "cart": "Panier",
+    "cartEmpty": "Le panier est vide.",
+    "clear": "Vider",
+    "qtyDecrease": "Diminuer la quantité",
+    "qtyIncrease": "Augmenter la quantité",
+    "total": "Total",
+    "tendered": "Montant remis (DA)",
+    "change": "Monnaie à rendre",
+    "payWith": {
+      "cash": "Espèces",
+      "cib": "CIB",
+      "edahabia": "Edahabia"
+    },
+    "paid": "Paiement enregistré.",
+    "print": "Imprimer le ticket",
+    "newSale": "Nouvelle vente",
+    "ticketTitle": "Ticket de caisse",
+    "ticketNumber": "N°"
+  },
+  "session": {
+    "close": "Clôturer la session",
+    "closeTitle": "Clôturer la session",
+    "closeHelp": "Comptez les espèces dans la caisse. L'écart est calculé à partir des ventes en espèces.",
+    "closingCash": "Espèces comptées (DA)",
+    "expectedCash": "Espèces attendues",
+    "difference": "Écart",
+    "confirmClose": "Clôturer",
+    "cancel": "Annuler",
+    "done": "Terminé",
+    "back": "Retour aux sessions",
+    "closed": "Session clôturée",
+    "openingCash": "Fond de caisse",
+    "cashSales": "Ventes en espèces",
+    "cardSales": "Ventes CIB / Edahabia",
+    "orders": "Nombre de tickets"
+  },
+  "errors": {
+    "failed": "Opération impossible. Réessayez.",
+    "insufficient": "Montant remis insuffisant.",
+    "invalid": "Montant ou quantité invalide.",
+    "closed": "Cette session est clôturée.",
+    "alreadyOpen": "Une session est déjà ouverte."
+  }
+}
