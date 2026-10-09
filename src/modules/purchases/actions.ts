@@ -19,6 +19,7 @@ import {
   type ReceiveLineInput,
 } from './service/orders';
 import { QTY_RE, parseQty } from './service/math';
+import { addProductSupplier } from './service/product-suppliers';
 
 const MODULE = 'purchases';
 const WRITE = 'purchases.order.write';
@@ -160,4 +161,25 @@ export async function cancelOrderForm(formData: FormData): Promise<void> {
   const id = String(formData.get('id') ?? '');
   const result = await cancelAction({ id });
   return backToOrder(id, result.ok ? undefined : result.error);
+}
+
+const supplierInput = z.object({
+  productId: z.uuid(),
+  partnerId: z.uuid(),
+  sequence: z.coerce.number().int().min(1).max(9999),
+});
+const addSupplierAction = defineAction({ perm: WRITE, schema: supplierInput, module: MODULE }, (ctx, input) =>
+  addProductSupplier(ctx, input),
+);
+
+/** Form action: add or update a preferred supplier on the purchases suppliers page. */
+export async function addSupplierForm(formData: FormData): Promise<void> {
+  const locale = await getLocale();
+  const result = await addSupplierAction({
+    productId: String(formData.get('productId') ?? ''),
+    partnerId: String(formData.get('partnerId') ?? ''),
+    sequence: String(formData.get('sequence') ?? '10'),
+  });
+  const suffix = result.ok ? '' : `?error=${encodeURIComponent(result.error.code)}`;
+  redirect(`/${locale}/purchases/suppliers${suffix}`);
 }

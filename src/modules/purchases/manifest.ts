@@ -5,7 +5,7 @@ export const manifest = defineModule({
   id: 'purchases',
   name: 'purchases.module.name',
   version: '1.0.0',
-  depends: ['contacts', 'products', 'l10n_dz', 'invoicing'],
+  depends: ['contacts', 'products', 'l10n_dz', 'invoicing', 'credit_sales', 'chatter'],
   permissions: [
     'purchases.order.read',
     'purchases.order.write',
