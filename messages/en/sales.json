@@ -1,1 +1,84 @@
-{}
+{
+  "module": {
+    "name": "Sales"
+  },
+  "menu": {
+    "orders": "Quotations & orders"
+  },
+  "title": {
+    "list": "Quotations & orders",
+    "new": "New quotation",
+    "edit": "Edit quotation",
+    "print": "Quotation"
+  },
+  "actions": {
+    "new": "New quotation",
+    "save": "Save",
+    "send": "Mark as sent",
+    "confirm": "Confirm",
+    "invoice": "Create invoice",
+    "cancel": "Cancel",
+    "print": "Print",
+    "edit": "Edit",
+    "addLine": "Add line",
+    "removeLine": "Remove line"
+  },
+  "fields": {
+    "number": "Number",
+    "partnerId": "Customer",
+    "state": "Status",
+    "orderDate": "Date",
+    "validityDate": "Valid until",
+    "untaxedCents": "Untaxed total",
+    "taxCents": "VAT",
+    "totalCents": "Total",
+    "invoiced": "Invoiced",
+    "note": "Note",
+    "product": "Product",
+    "description": "Description",
+    "quantity": "Quantity",
+    "unitPrice": "Unit price (DA)",
+    "discount": "Discount (%)",
+    "tax": "Tax",
+    "subtotal": "Subtotal"
+  },
+  "options": {
+    "state": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "done": "Invoiced"
+    }
+  },
+  "hint": {
+    "number": "The number is assigned on confirmation.",
+    "noProduct": "No product"
+  },
+  "errors": {
+    "noLines": "Add at least one line.",
+    "notEditable": "This quotation can no longer be edited.",
+    "notConfirmable": "This quotation cannot be confirmed.",
+    "notCancellable": "This order cannot be cancelled.",
+    "alreadyInvoiced": "This order is already invoiced.",
+    "notConfirmed": "The order must be confirmed before invoicing.",
+    "invalidAmount": "Invalid amount.",
+    "failed": "Something went wrong. Try again."
+  },
+  "print": {
+    "validUntil": "Valid until",
+    "date": "Date",
+    "reference": "Reference",
+    "description": "Description",
+    "quantity": "Qty",
+    "unitPrice": "Unit price",
+    "discount": "Discount",
+    "total": "Total",
+    "untaxed": "Untaxed total",
+    "vat": "VAT",
+    "grandTotal": "Total incl. VAT",
+    "footer": "Quotation only, not a tax invoice. Seller legal details are set in company settings."
+  },
+  "empty": "No quotations or orders yet.",
+  "newLine": "New line"
+}

@@ -1,1 +1,84 @@
-{}
+{
+  "module": {
+    "name": "Ventes"
+  },
+  "menu": {
+    "orders": "Devis et commandes"
+  },
+  "title": {
+    "list": "Devis et commandes",
+    "new": "Nouveau devis",
+    "edit": "Modifier le devis",
+    "print": "Devis"
+  },
+  "actions": {
+    "new": "Nouveau devis",
+    "save": "Enregistrer",
+    "send": "Marquer envoyé",
+    "confirm": "Confirmer",
+    "invoice": "Créer la facture",
+    "cancel": "Annuler",
+    "print": "Imprimer",
+    "edit": "Modifier",
+    "addLine": "Ajouter une ligne",
+    "removeLine": "Supprimer la ligne"
+  },
+  "fields": {
+    "number": "Numéro",
+    "partnerId": "Client",
+    "state": "Statut",
+    "orderDate": "Date",
+    "validityDate": "Valide jusqu'au",
+    "untaxedCents": "Total HT",
+    "taxCents": "TVA",
+    "totalCents": "Total TTC",
+    "invoiced": "Facturé",
+    "note": "Note",
+    "product": "Produit",
+    "description": "Description",
+    "quantity": "Quantité",
+    "unitPrice": "Prix unitaire (DA)",
+    "discount": "Remise (%)",
+    "tax": "Taxe",
+    "subtotal": "Sous-total"
+  },
+  "options": {
+    "state": {
+      "draft": "Brouillon",
+      "sent": "Envoyé",
+      "confirmed": "Confirmé",
+      "cancelled": "Annulé",
+      "done": "Facturé"
+    }
+  },
+  "hint": {
+    "number": "Le numéro est attribué à la confirmation.",
+    "noProduct": "Aucun produit"
+  },
+  "errors": {
+    "noLines": "Ajoutez au moins une ligne.",
+    "notEditable": "Ce devis ne peut plus être modifié.",
+    "notConfirmable": "Ce devis ne peut pas être confirmé.",
+    "notCancellable": "Cette commande ne peut pas être annulée.",
+    "alreadyInvoiced": "Cette commande est déjà facturée.",
+    "notConfirmed": "La commande doit être confirmée avant facturation.",
+    "invalidAmount": "Montant invalide.",
+    "failed": "Une erreur est survenue. Réessayez."
+  },
+  "print": {
+    "validUntil": "Valide jusqu'au",
+    "date": "Date",
+    "reference": "Référence",
+    "description": "Désignation",
+    "quantity": "Qté",
+    "unitPrice": "P.U.",
+    "discount": "Remise",
+    "total": "Total",
+    "untaxed": "Total HT",
+    "vat": "TVA",
+    "grandTotal": "Total TTC",
+    "footer": "Devis sans valeur de facture. Les mentions légales du vendeur figurent dans les paramètres de la société."
+  },
+  "empty": "Aucun devis ni commande pour le moment.",
+  "newLine": "Nouvelle ligne"
+}
