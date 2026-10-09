@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { getDb } from '@/core/db/client';
+import { getDb, requestScopeKey } from '@/core/db/client';
 import { accounts, sessions, users, verifications } from '@/core/db/schema/auth';
 
 /** Origins allowed to call auth endpoints: BETTER_AUTH_URL plus comma-separated BETTER_AUTH_TRUSTED_ORIGINS. */
@@ -38,9 +38,22 @@ function createAuth() {
 export type Auth = ReturnType<typeof createAuth>;
 
 let instance: Auth | undefined;
+const perRequest = new WeakMap<object, Auth>();
 
-/** Lazily creates the auth instance so importing this module never opens a DB connection (e.g. during build). */
+/**
+ * Lazily creates the auth instance so importing this module never opens a DB connection (e.g. during build).
+ * On Workers the instance holds that request's DB pool, so it is cached per request, never globally.
+ */
 export function getAuth(): Auth {
+  const key = requestScopeKey();
+  if (key) {
+    let auth = perRequest.get(key);
+    if (!auth) {
+      auth = createAuth();
+      perRequest.set(key, auth);
+    }
+    return auth;
+  }
   instance ??= createAuth();
   return instance;
 }

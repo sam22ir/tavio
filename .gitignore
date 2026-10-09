@@ -46,3 +46,4 @@ supabase/.temp
 .open-next/
 .wrangler/
 .claude/
+.dev.vars*

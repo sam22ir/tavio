@@ -23,9 +23,26 @@ function getHyperdriveDb(): Db | undefined {
   const key = cf.ctx as object | undefined;
   const existing = key ? workerCache.get(key) : undefined;
   if (existing) return existing;
-  const db = drizzle(new Pool({ connectionString: hyperdrive.connectionString, max: 5 }));
+  const pool = new Pool({ connectionString: hyperdrive.connectionString, max: 5 });
+  // Workers closes sockets when the request ends; idle clients then emit errors we must not leak as unhandled.
+  pool.on('error', () => {});
+  const db = drizzle(pool);
   if (key) workerCache.set(key, db);
   return db;
+}
+
+/**
+ * Key identifying the current Workers request (its ExecutionContext), or undefined outside Workers.
+ * Anything holding I/O objects (DB pools, auth instances) must be cached per this key on Workers,
+ * because Workers forbids reusing I/O across requests.
+ */
+export function requestScopeKey(): object | undefined {
+  try {
+    const cf = getCloudflareContext({ async: false });
+    return (cf.ctx as object | undefined) ?? undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 // On Cloudflare (Hyperdrive) uses a per-request pool; otherwise lazily creates one Node pool from DATABASE_URL.
