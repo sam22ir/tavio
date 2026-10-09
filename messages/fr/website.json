@@ -1,1 +1,91 @@
-{}
+{
+  "module": {
+    "name": "Site web et boutique"
+  },
+  "menu": {
+    "settings": "Site web",
+    "orders": "Commandes web"
+  },
+  "fields": {
+    "enabled": "Boutique en ligne activée",
+    "slug": "Identifiant de la boutique (URL)",
+    "title": "Nom affiché",
+    "about": "À propos",
+    "phoneWhatsapp": "WhatsApp",
+    "showPrices": "Afficher les prix",
+    "number": "Numéro",
+    "customerName": "Client",
+    "phone": "Téléphone",
+    "wilayaCode": "Wilaya",
+    "totalCents": "Total (DZD)",
+    "state": "Statut",
+    "address": "Adresse"
+  },
+  "options": {
+    "state": {
+      "new": "Nouvelle",
+      "confirmed": "Confirmée",
+      "cancelled": "Annulée"
+    }
+  },
+  "settings": {
+    "title": "Site web et boutique",
+    "hint": "La boutique publique est accessible à l'adresse /shop/identifiant une fois activée. Paiement à la livraison.",
+    "save": "Enregistrer",
+    "error": "Impossible de charger les paramètres.",
+    "open_shop": "Voir la boutique"
+  },
+  "orders": {
+    "title": "Commandes web",
+    "error": "Impossible de charger les commandes.",
+    "convert": "Convertir (confirmer)",
+    "cancel": "Annuler la commande",
+    "activity": "Suivi",
+    "line": {
+      "product": "Produit",
+      "quantity": "Qté",
+      "subtotal": "Sous-total"
+    }
+  },
+  "shop": {
+    "home": "Accueil",
+    "cart": "Panier",
+    "products": "Produits",
+    "no_products": "Aucun produit disponible pour le moment.",
+    "add_to_cart": "Ajouter au panier",
+    "added": "Ajouté au panier.",
+    "view_cart": "Voir le panier"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide.",
+    "continue_shopping": "Continuer mes achats",
+    "whatsapp_intro": "Bonjour, je souhaite commander :",
+    "decrease": "Diminuer la quantité",
+    "increase": "Augmenter la quantité",
+    "remove": "Retirer",
+    "total": "Total",
+    "checkout": "Commander (paiement à la livraison)",
+    "order_whatsapp": "Commander sur WhatsApp"
+  },
+  "checkout": {
+    "title": "Finaliser la commande",
+    "cod_note": "Paiement en espèces à la livraison.",
+    "fields": {
+      "customerName": "Nom complet",
+      "phone": "Numéro de téléphone",
+      "wilayaCode": "Code wilaya (01 à 58)",
+      "address": "Adresse de livraison"
+    },
+    "wilaya_hint": "Entrez le code à deux chiffres de votre wilaya, par exemple 16 pour Alger.",
+    "submit": "Confirmer la commande",
+    "sending": "Envoi…",
+    "done_title": "Commande reçue",
+    "done_body": "Merci. Votre numéro de commande est {number}. Nous vous contactons pour la livraison.",
+    "errors": {
+      "rate_limited": "Trop de commandes ont été passées avec ce numéro. Réessayez plus tard ou contactez la boutique.",
+      "invalid": "Vérifiez les informations saisies, en particulier le téléphone et la wilaya.",
+      "generic": "La commande n'a pas pu être enregistrée. Réessayez."
+    }
+  }
+}
