@@ -35,13 +35,13 @@
     "body": "مثال: تم تسجيل دفعة بقيمة {totalCents} سنتيم."
   },
   "triggers": {
-    "sales.order.confirmed": "تأكيد طلب بيع",
-    "invoicing.invoice.posted": "ترحيل فاتورة",
-    "invoicing.payment.registered": "تسجيل دفعة",
-    "purchases.order.received": "استلام طلب شراء",
-    "pos.order.paid": "دفع طلب نقطة البيع",
-    "inventory.move.done": "إتمام حركة مخزون",
-    "credit_sales.payment.recorded": "تسجيل دفعة قسط"
+    "sales_order_confirmed": "تأكيد طلب بيع",
+    "invoicing_invoice_posted": "ترحيل فاتورة",
+    "invoicing_payment_registered": "تسجيل دفعة",
+    "purchases_order_received": "استلام طلب شراء",
+    "pos_order_paid": "دفع طلب نقطة البيع",
+    "inventory_move_done": "إتمام حركة مخزون",
+    "credit_sales_payment_recorded": "تسجيل دفعة قسط"
   },
   "ops": {
     "eq": "يساوي",

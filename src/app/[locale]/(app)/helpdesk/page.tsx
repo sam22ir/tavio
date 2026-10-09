@@ -9,7 +9,7 @@ import { listTicketsForBoard } from '@/modules/helpdesk/service/tickets';
 import { moveTicketStageAction } from '@/modules/helpdesk/actions';
 import { ticketEntity } from '@/modules/helpdesk/entities';
 import { buttonVariants } from '@/ui/primitives/button';
-import { Kanban } from '@/ui/views/kanban';
+import { LinkedKanban } from '@/ui/views/linked-kanban';
 import { cn } from '@/ui/lib/cn';
 
 export default async function HelpdeskBoardPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -38,12 +38,12 @@ export default async function HelpdeskBoardPage({ params }: { params: Promise<{ 
       </header>
 
       {result.ok ? (
-        <Kanban
+        <LinkedKanban
           entity={ticketEntity}
           columns={TICKET_STAGES.map((s) => ({ id: s, label: t(`options.stage.${s}`) }))}
           rows={result.value}
           onMove={moveTicketStageAction}
-          rowHref={(row) => `/${locale}/helpdesk/${row.id}`}
+          basePath={`/${locale}/helpdesk`}
         />
       ) : (
         <p role="alert" className="text-sm text-destructive">

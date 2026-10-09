@@ -58,7 +58,7 @@ export function RuleForm({
         {t('fields.triggerEvent')}
         <select name="triggerEvent" required defaultValue={defaults.triggerEvent ?? TRIGGER_EVENTS[0]} className={input}>
           {TRIGGER_EVENTS.map((e) => (
-            <option key={e} value={e}>{t(`triggers.${e}`)}</option>
+            <option key={e} value={e}>{t(`triggers.${e.replaceAll(".", "_")}`)}</option>
           ))}
         </select>
       </label>

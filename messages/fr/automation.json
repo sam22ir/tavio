@@ -35,13 +35,13 @@
     "body": "Exemple : paiement de {totalCents} centimes enregistré."
   },
   "triggers": {
-    "sales.order.confirmed": "Commande de vente confirmée",
-    "invoicing.invoice.posted": "Facture validée",
-    "invoicing.payment.registered": "Paiement enregistré",
-    "purchases.order.received": "Commande d'achat reçue",
-    "pos.order.paid": "Vente caisse payée",
-    "inventory.move.done": "Mouvement de stock effectué",
-    "credit_sales.payment.recorded": "Paiement d'échéance enregistré"
+    "sales_order_confirmed": "Commande de vente confirmée",
+    "invoicing_invoice_posted": "Facture validée",
+    "invoicing_payment_registered": "Paiement enregistré",
+    "purchases_order_received": "Commande d'achat reçue",
+    "pos_order_paid": "Vente caisse payée",
+    "inventory_move_done": "Mouvement de stock effectué",
+    "credit_sales_payment_recorded": "Paiement d'échéance enregistré"
   },
   "ops": {
     "eq": "égal à",

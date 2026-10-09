@@ -12,7 +12,7 @@ import type { Project, ProjectTask } from '@/modules/projects/schema';
 import { ok, type Result } from '@/core/result';
 import { Chatter } from '@/modules/chatter/ui/chatter';
 import { Button } from '@/ui/primitives/button';
-import { Kanban } from '@/ui/views/kanban';
+import { LinkedKanban } from '@/ui/views/linked-kanban';
 import { RecordForm } from '@/ui/views/record-form';
 
 interface Board {
@@ -81,12 +81,12 @@ export default async function ProjectDetailPage({
 
       <section aria-labelledby="project-tasks" className="flex flex-col gap-3">
         <h2 id="project-tasks" className="text-base font-semibold">{t('project.tasks')}</h2>
-        <Kanban
+        <LinkedKanban
           entity={taskEntity}
           columns={stages.map((s) => ({ id: s.id, label: s.name }))}
           rows={tasks.map((task) => ({ ...task, id: task.id }))}
           onMove={moveTaskStage}
-          rowHref={(row) => `/${currentLocale}/projects/tasks/${row.id}`}
+          basePath={`/${currentLocale}/projects/tasks`}
         />
       </section>
 

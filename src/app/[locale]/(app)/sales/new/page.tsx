@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { saleLookups } from '@/modules/sales/service/orders';
-import { OrderForm, emptyOrderForm } from '@/modules/sales/ui/order-form';
+import { OrderForm } from '@/modules/sales/ui/order-form';
+import { emptyOrderForm } from '@/modules/sales/ui/order-form-defaults';
 import { todayAlgiers } from '../_lib';
 
 export default async function NewSaleOrderPage({ params }: { params: Promise<{ locale: string }> }) {

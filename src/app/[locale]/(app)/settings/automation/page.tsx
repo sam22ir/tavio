@@ -50,7 +50,7 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
           return (
             <details key={rule.id} className="rounded-lg border p-4">
               <summary className="cursor-pointer font-medium">
-                {rule.name} · {t(`triggers.${rule.triggerEvent}`)} · {rule.active ? t('status.active') : t('status.inactive')}
+                {rule.name} · {t(`triggers.${rule.triggerEvent.replaceAll(".", "_")}`)} · {rule.active ? t('status.active') : t('status.inactive')}
               </summary>
               <div className="mt-4">
                 <RuleForm action={updateRuleForm} defaults={defaults} />

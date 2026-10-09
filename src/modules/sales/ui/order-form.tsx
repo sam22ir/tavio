@@ -6,36 +6,11 @@ import { useTranslations } from 'next-intl';
 import { createSaleOrderAction, updateSaleOrderAction } from '../actions';
 import type { SaleLookups } from '../service/orders';
 
-export interface OrderLineDraft {
-  key: string;
-  productId: string;
-  description: string;
-  quantity: string;
-  unitPrice: string;
-  discount: string;
-  taxId: string;
-}
-
-export interface OrderFormInitial {
-  id?: string;
-  partnerId: string;
-  orderDate: string;
-  validityDate: string;
-  note: string;
-  lines: OrderLineDraft[];
-}
+export type { OrderLineDraft, OrderFormInitial } from './order-form-defaults';
+import { newLine, type OrderFormInitial, type OrderLineDraft } from './order-form-defaults';
 
 const INPUT = 'min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm';
 
-function newLine(): OrderLineDraft {
-  return { key: crypto.randomUUID(), productId: '', description: '', quantity: '1', unitPrice: '', discount: '0', taxId: '' };
-}
-
-export function emptyOrderForm(today: string): OrderFormInitial {
-  return { partnerId: '', orderDate: today, validityDate: '', note: '', lines: [newLine()] };
-}
-
-// Quotation form with editable lines. Totals are computed on the server; the server validates again.
 export function OrderForm({
   lookups,
   initial,

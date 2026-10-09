@@ -35,13 +35,13 @@
     "body": "Example: Payment of {totalCents} cents recorded."
   },
   "triggers": {
-    "sales.order.confirmed": "Sales order confirmed",
-    "invoicing.invoice.posted": "Invoice posted",
-    "invoicing.payment.registered": "Payment registered",
-    "purchases.order.received": "Purchase order received",
-    "pos.order.paid": "POS order paid",
-    "inventory.move.done": "Stock move done",
-    "credit_sales.payment.recorded": "Instalment payment recorded"
+    "sales_order_confirmed": "Sales order confirmed",
+    "invoicing_invoice_posted": "Invoice posted",
+    "invoicing_payment_registered": "Payment registered",
+    "purchases_order_received": "Purchase order received",
+    "pos_order_paid": "POS order paid",
+    "inventory_move_done": "Stock move done",
+    "credit_sales_payment_recorded": "Instalment payment recorded"
   },
   "ops": {
     "eq": "equals",
