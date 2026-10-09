@@ -1,1 +1,68 @@
-{}
+{
+  "module": {
+    "name": "Marketing"
+  },
+  "menu": {
+    "campaigns": "Campaigns"
+  },
+  "page": {
+    "title": "Marketing campaigns",
+    "new": "New campaign",
+    "error": "Could not load campaigns."
+  },
+  "fields": {
+    "name": "Campaign name",
+    "channel": "Channel",
+    "language": "Message language",
+    "messageFr": "Message (French)",
+    "messageAr": "Message (Arabic)",
+    "segmentCustomer": "Customers only",
+    "segmentProspect": "Prospects only",
+    "segmentWilaya": "Wilaya (code 01 to 58)",
+    "segmentHasOverdue": "With overdue installments",
+    "state": "Status"
+  },
+  "options": {
+    "channel": {
+      "whatsapp": "WhatsApp",
+      "sms": "SMS",
+      "email": "Email"
+    },
+    "language": {
+      "fr": "French",
+      "ar": "Arabic"
+    },
+    "state": {
+      "draft": "Draft",
+      "ready": "Recipients ready",
+      "sent": "Sent"
+    },
+    "recipientStatus": {
+      "pending": "Pending",
+      "sent": "Sent",
+      "failed": "Failed"
+    }
+  },
+  "editor": {
+    "placeholdersHint": "Available placeholders: {name} (customer name) and {shop} (shop name).",
+    "create": "Create campaign",
+    "save": "Save",
+    "sampleName": "Amina",
+    "preview": "Preview",
+    "buildRecipients": "Build recipients",
+    "buildHint": "Recipients come from the segment. Partners without a phone are skipped. Rebuilding clears pending recipients.",
+    "details": "Campaign details",
+    "locked": "This campaign has been sent and can no longer be edited."
+  },
+  "recipients": {
+    "title": "Recipients",
+    "open": "View recipients",
+    "empty": "No recipients yet. Build them from the campaign page.",
+    "openWhatsapp": "Open WhatsApp",
+    "markSent": "Mark sent",
+    "markPending": "Mark pending",
+    "markFailed": "Mark failed",
+    "progress": "{sent} sent of {total}",
+    "noBulkNote": "Messages are sent one by one from WhatsApp. No bulk sending is offered."
+  }
+}

@@ -1,1 +1,68 @@
-{}
+{
+  "module": {
+    "name": "Marketing"
+  },
+  "menu": {
+    "campaigns": "Campagnes"
+  },
+  "page": {
+    "title": "Campagnes marketing",
+    "new": "Nouvelle campagne",
+    "error": "Impossible de charger les campagnes."
+  },
+  "fields": {
+    "name": "Nom de la campagne",
+    "channel": "Canal",
+    "language": "Langue du message",
+    "messageFr": "Message (français)",
+    "messageAr": "Message (arabe)",
+    "segmentCustomer": "Clients uniquement",
+    "segmentProspect": "Prospects uniquement",
+    "segmentWilaya": "Wilaya (code 01 à 58)",
+    "segmentHasOverdue": "Avec échéances en retard",
+    "state": "Statut"
+  },
+  "options": {
+    "channel": {
+      "whatsapp": "WhatsApp",
+      "sms": "SMS",
+      "email": "E-mail"
+    },
+    "language": {
+      "fr": "Français",
+      "ar": "Arabe"
+    },
+    "state": {
+      "draft": "Brouillon",
+      "ready": "Destinataires prêts",
+      "sent": "Envoyée"
+    },
+    "recipientStatus": {
+      "pending": "En attente",
+      "sent": "Envoyé",
+      "failed": "Échec"
+    }
+  },
+  "editor": {
+    "placeholdersHint": "Variables disponibles : {name} (nom du client) et {shop} (nom de la boutique).",
+    "create": "Créer la campagne",
+    "save": "Enregistrer",
+    "sampleName": "Amina",
+    "preview": "Aperçu",
+    "buildRecipients": "Générer les destinataires",
+    "buildHint": "Les destinataires sont tirés du segment. Les partenaires sans téléphone sont ignorés. Régénérer efface les destinataires en attente.",
+    "details": "Détails de la campagne",
+    "locked": "Cette campagne est envoyée et ne peut plus être modifiée."
+  },
+  "recipients": {
+    "title": "Destinataires",
+    "open": "Voir les destinataires",
+    "empty": "Aucun destinataire. Générez-les depuis la campagne.",
+    "openWhatsapp": "Ouvrir WhatsApp",
+    "markSent": "Marquer envoyé",
+    "markPending": "Remettre en attente",
+    "markFailed": "Marquer échec",
+    "progress": "{sent} envoyé(s) sur {total}",
+    "noBulkNote": "L'envoi se fait message par message depuis WhatsApp. Aucun envoi groupé n'est proposé."
+  }
+}
