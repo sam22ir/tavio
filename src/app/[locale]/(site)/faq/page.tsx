@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { routing, type Locale } from '@/i18n/routing';
 import { localeHref } from '@/site/content/nav';
 import { buildMetadata } from '@/site/seo';
-import { Faq, Section, SectionHeading } from '@/site/components';
+import { CtaBand, Emphasis, PillLabel, Reveal, Section } from '@/site/components';
+import { FaqFilter } from './FaqFilter';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -25,25 +25,35 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
 
   return (
     <>
-      <Section className="pt-12 md:pt-20">
-        <SectionHeading as="h1" title={t('title')} body={t('body')} />
-      </Section>
+      {/* Hero */}
+      <section className="relative overflow-hidden px-4 pb-10 pt-14 md:pt-24">
+        <div aria-hidden className="s-grid-bg pointer-events-none absolute inset-x-0 top-0 h-[70%]" />
+        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+          <PillLabel>{t('eyebrow')}</PillLabel>
+          <h1 className="s-h1 text-balance">
+            <Emphasis text={t('title')} />
+          </h1>
+          <p className="max-w-[58ch] text-[17px] leading-relaxed text-[color:var(--s-muted)] md:text-lg">{t('body')}</p>
+        </div>
+      </section>
 
-      {groups.map((group) => (
-        <Section key={group.title}>
-          <h2 className="mb-6 text-xl font-semibold tracking-tight md:text-2xl">{group.title}</h2>
-          <Faq items={group.items} />
+      <Reveal>
+        <Section className="pt-8">
+          <div className="mx-auto max-w-3xl">
+            <FaqFilter groups={groups} allLabel={t('all')} />
+          </div>
         </Section>
-      ))}
+      </Reveal>
 
-      <Section tone="muted">
-        <p className="text-base">
-          {t('stillQuestions')}{' '}
-          <Link href={localeHref(locale, '/contact')} className="font-medium text-primary underline-offset-4 hover:underline">
-            {t('contactLink')}
-          </Link>
-        </p>
-      </Section>
+      <Reveal>
+        <Section className="pt-0">
+          <CtaBand
+            title={t('cta.title')}
+            body={t('cta.body')}
+            primary={{ label: t('cta.primary'), href: localeHref(locale, '/contact') }}
+          />
+        </Section>
+      </Reveal>
     </>
   );
 }
