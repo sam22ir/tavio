@@ -29,6 +29,9 @@ export const SCF_CHART_SEED: readonly AccountSeed[] = [
   { code: '512', name: 'Banque', accountClass: 5, type: 'asset', reconcilable: true, verify: VERIFY },
   { code: '53', name: 'Caisse', accountClass: 5, type: 'asset', reconcilable: true, verify: VERIFY },
   { code: '445', name: 'Taxes (droit de timbre)', accountClass: 4, type: 'liability', reconcilable: false, verify: VERIFY },
+  // ⚠ Added for credit sales: the markup (majoration) on instalment contracts. Confirm with the accountant
+  // whether 708 (produits annexes) or 706 (services) is the right class for it.
+  { code: '708', name: 'Produits annexes (majoration vente à crédit)', accountClass: 7, type: 'income', reconcilable: false, verify: VERIFY },
 ];
 
 export const JOURNAL_SEED: readonly { code: string; name: string; type: Journal['type'] }[] = [

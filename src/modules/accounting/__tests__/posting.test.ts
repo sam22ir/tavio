@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { SCF_CHART_SEED, JOURNAL_SEED } from '../service/chart';
 import {
   checkBalanced,
+  creditContractLines,
+  creditPaymentLines,
   g50Summary,
   invertLines,
   invoiceLines,
@@ -196,3 +198,31 @@ describe('seeds', () => {
     for (const code of ['VT', 'AC', 'CA', 'BQ']) expect(codes).toContain(code);
   });
 });
+
+describe('creditPaymentLines and creditContractLines', () => {
+  const c = (n: number) => BigInt(n);
+  it('books an instalment receipt in cash to 53 against 411, and by bank otherwise', () => {
+    const cash = creditPaymentLines({ partnerId: 'p1', amountCents: c(5000), method: 'cash', reference: 'CR-1' });
+    expect(cash.map((l) => [l.accountCode, l.debitCents, l.creditCents])).toEqual([
+      ['53', c(5000), c(0)],
+      ['411', c(0), c(5000)],
+    ]);
+    const bank = creditPaymentLines({ partnerId: 'p1', amountCents: c(5000), method: 'ccp', reference: 'CR-1' });
+    expect(bank[0]?.accountCode).toBe('512');
+    expect(checkBalanced(bank).ok).toBe(true);
+  });
+
+  it('books an activation as 411 for financed plus down payment, against cash price and markup', () => {
+    const lines = creditContractLines({
+      partnerId: 'p1', number: 'CR-1', financedCents: c(90000), downPaymentCents: c(30000),
+      cashPriceCents: c(100000), markupCents: c(20000),
+    });
+    expect(lines.map((l) => [l.accountCode, l.debitCents, l.creditCents])).toEqual([
+      ['411', c(120000), c(0)],
+      ['700', c(0), c(100000)],
+      ['708', c(0), c(20000)],
+    ]);
+    expect(checkBalanced(lines).ok).toBe(true);
+  });
+});
+

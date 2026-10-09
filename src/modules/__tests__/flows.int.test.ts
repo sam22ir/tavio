@@ -10,7 +10,7 @@ import { deleteTestCompanies } from '@/testing/db-cleanup';
 import '@/modules/event-handlers';
 import { createPartner } from '@/modules/contacts/service/partners';
 import { products, uoms } from '@/modules/products/schema';
-import { journalEntries, journalLines } from '@/modules/accounting/schema';
+import { accounts, journalEntries, journalLines } from '@/modules/accounting/schema';
 import { stockMoves } from '@/modules/inventory/schema';
 import { onHandByLocation } from '@/modules/inventory/service/stock';
 import {
@@ -19,6 +19,9 @@ import {
   createSaleOrder,
 } from '@/modules/sales/service/orders';
 import { postInvoice, registerPayment } from '@/modules/invoicing/service/invoices';
+import { invoices } from '@/modules/invoicing/schema';
+import { activateContract, createDraftContract } from '@/modules/credit_sales/service/contracts';
+import { recordPayment } from '@/modules/credit_sales/service/payments';
 import {
   confirmOrder as confirmPurchaseOrder,
   createOrder as createPurchaseOrder,
@@ -160,6 +163,119 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('cross-module flows (integration)', ()
         ),
       );
     expect(entries).toHaveLength(1);
+  });
+
+  it('settles 411 on a cash payment that carries timbre, with balanced entries', async () => {
+    // 1000 DA invoice. Paying 1001 DA in cash adds 1 DA timbre (tier 300 to 30 000 DA), so the invoice total
+    // becomes 1001 DA and the payment settles it exactly.
+    const created = await withTenant(args, (ctx) =>
+      createSaleOrder(ctx, {
+        partnerId,
+        orderDate: '2026-10-02',
+        lines: [{ productId, description: 'Cement bag', quantity: '1', unitPrice: '1000', discount: '0', taxId: null }],
+      }),
+    );
+    expect(created.ok).toBe(true);
+    const orderId = created.ok ? created.value.id : '';
+    expect((await withTenant(args, (ctx) => confirmSaleOrder(ctx, orderId))).ok).toBe(true);
+    const invoice = await withTenant(args, (ctx) => createInvoiceFromOrder(ctx, orderId));
+    expect(invoice.ok).toBe(true);
+    const newInvoiceId = invoice.ok ? invoice.value.invoiceId : '';
+    expect((await withTenant(args, (ctx) => postInvoice(ctx, newInvoiceId))).ok).toBe(true);
+
+    const paid = await withTenant(args, (ctx) =>
+      registerPayment(ctx, newInvoiceId, { amountCents: BigInt(100100), method: 'cash' }),
+    );
+    expect(paid.ok).toBe(true);
+    const paymentId = paid.ok ? paid.value.paymentId : '';
+
+    const [invoiceRow] = await db
+      .select({ totalCents: invoices.totalCents, stampCents: invoices.stampCents, paymentState: invoices.paymentState })
+      .from(invoices)
+      .where(eq(invoices.id, newInvoiceId));
+    expect(invoiceRow?.stampCents).toBe(BigInt(100));
+    expect(invoiceRow?.paymentState).toBe('paid');
+
+    const entryRows = await db
+      .select({ id: journalEntries.id })
+      .from(journalEntries)
+      .where(
+        and(
+          eq(journalEntries.companyId, companyId),
+          inArray(journalEntries.sourceId, [newInvoiceId, paymentId]),
+        ),
+      );
+    const lines = await db
+      .select({ code: accounts.code, debit: journalLines.debitCents, credit: journalLines.creditCents })
+      .from(journalLines)
+      .innerJoin(accounts, eq(journalLines.accountId, accounts.id))
+      .where(inArray(journalLines.entryId, entryRows.map((e) => e.id)));
+    const sum = (xs: bigint[]) => xs.reduce((a, b) => a + b, BigInt(0));
+    const debit411 = sum(lines.filter((l) => l.code === '411').map((l) => l.debit));
+    const credit411 = sum(lines.filter((l) => l.code === '411').map((l) => l.credit));
+    expect(debit411).toBe(BigInt(100000));
+    expect(credit411).toBe(debit411);
+    expect(sum(lines.filter((l) => l.code === '445').map((l) => l.credit))).toBe(BigInt(100));
+    expect(sum(lines.map((l) => l.debit))).toBe(sum(lines.map((l) => l.credit)));
+  });
+
+  it('activates an instalment contract, records a receipt, and books both entries balanced', async () => {
+    const draft = await withTenant(args, (ctx) =>
+      createDraftContract(ctx, {
+        partnerId,
+        lines: [{ description: 'Fridge', quantity: '1', unitPriceCents: BigInt(100000) }],
+        downPaymentCents: BigInt(0),
+        markupRate: '20',
+        installmentsCount: 2,
+        frequency: 'monthly',
+        startDate: '2026-11-01',
+      }),
+    );
+    expect(draft.ok).toBe(true);
+    const contractId = draft.ok ? draft.value.id : '';
+    const activated = await withTenant(args, (ctx) => activateContract(ctx, contractId));
+    expect(activated.ok).toBe(true);
+
+    const activation = await db
+      .select({ id: journalEntries.id })
+      .from(journalEntries)
+      .where(
+        and(
+          eq(journalEntries.companyId, companyId),
+          eq(journalEntries.sourceEntity, 'credit_sales.contract'),
+          eq(journalEntries.sourceId, contractId),
+        ),
+      );
+    expect(activation).toHaveLength(1);
+
+    const receipt = await withTenant(args, (ctx) =>
+      recordPayment(ctx, { contractId, amountCents: BigInt(50000), method: 'cash' }),
+    );
+    expect(receipt.ok).toBe(true);
+    const paymentId = receipt.ok ? receipt.value.paymentId : '';
+    const payment = await db
+      .select({ id: journalEntries.id })
+      .from(journalEntries)
+      .where(
+        and(
+          eq(journalEntries.companyId, companyId),
+          eq(journalEntries.sourceEntity, 'credit_sales.payment'),
+          eq(journalEntries.sourceId, paymentId),
+        ),
+      );
+    expect(payment).toHaveLength(1);
+
+    const lines = await db
+      .select({ code: accounts.code, debit: journalLines.debitCents, credit: journalLines.creditCents })
+      .from(journalLines)
+      .innerJoin(accounts, eq(journalLines.accountId, accounts.id))
+      .where(inArray(journalLines.entryId, [...activation, ...payment].map((e) => e.id)));
+    const sum = (xs: bigint[]) => xs.reduce((a, b) => a + b, BigInt(0));
+    expect(sum(lines.map((l) => l.debit))).toBe(sum(lines.map((l) => l.credit)));
+    // 411 owed: 120 000 DA total (100 000 cash + 20 000 markup), less the 50 000 receipt.
+    const net411 = sum(lines.filter((l) => l.code === '411').map((l) => l.debit)) -
+      sum(lines.filter((l) => l.code === '411').map((l) => l.credit));
+    expect(net411).toBe(BigInt(70000));
   });
 
   it('receives a purchase order and increases stock', async () => {

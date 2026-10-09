@@ -90,6 +90,8 @@ export interface PaymentForPosting {
   amountCents: bigint;
   method: string;
   reference: string;
+  /** Timbre fiscal collected with a cash payment on an out_invoice. Part of amountCents. */
+  stampCents?: bigint;
 }
 
 /** Cash-register account for cash payments, bank for everything else. */
@@ -100,6 +102,8 @@ export function treasuryAccount(method: string): '53' | '512' {
 /**
  * Customer receipt (out_invoice): Dr 512|53 / Cr 411. Customer refund: Dr 411 / Cr 512|53.
  * Supplier payment (in_invoice): Dr 401 / Cr 512|53. Supplier refund: Cr 401 / Dr 512|53.
+ * Cash receipt with timbre (out_invoice, stampCents > 0): Dr 53 full cash / Cr 411 (cash - stamp) / Cr 445 stamp.
+ * ⚠ Needs accountant verification: stamp duty (445) on the cash receipt.
  */
 export function paymentLines(p: PaymentForPosting): DraftLine[] {
   const treasury = treasuryAccount(p.method);
@@ -107,6 +111,14 @@ export function paymentLines(p: PaymentForPosting): DraftLine[] {
   const partnerDebit = p.type === 'out_refund' || p.type === 'in_invoice';
   const partnerSide: Side = partnerDebit ? 'debit' : 'credit';
   const treasurySide: Side = partnerDebit ? 'credit' : 'debit';
+  const stamp = p.stampCents ?? ZERO;
+  if (stamp > ZERO && p.type === 'out_invoice') {
+    return [
+      ...line(treasury, 'debit', p.amountCents, null, p.reference),
+      ...line('411', 'credit', p.amountCents - stamp, p.partnerId, p.reference),
+      ...line('445', 'credit', stamp, null, p.reference),
+    ];
+  }
   return [
     ...line(treasury, treasurySide, p.amountCents, null, p.reference),
     ...line(partnerAccount, partnerSide, p.amountCents, p.partnerId, p.reference),
@@ -120,6 +132,43 @@ export interface PosPaidForPosting {
   totalCents: bigint;
   untaxedCents: bigint;
   taxCents: bigint;
+}
+
+export interface CreditPaymentForPosting {
+  partnerId: string;
+  amountCents: bigint;
+  method: string;
+  reference: string;
+}
+
+/** Instalment receipt: Dr 53 (cash) or 512 (other methods) / Cr 411 client. */
+export function creditPaymentLines(p: CreditPaymentForPosting): DraftLine[] {
+  return [
+    ...line(treasuryAccount(p.method), 'debit', p.amountCents, null, p.reference),
+    ...line('411', 'credit', p.amountCents, p.partnerId, p.reference),
+  ];
+}
+
+export interface CreditContractForPosting {
+  partnerId: string;
+  number: string;
+  financedCents: bigint;
+  downPaymentCents: bigint;
+  cashPriceCents: bigint;
+  markupCents: bigint;
+}
+
+/**
+ * Instalment contract activation: Dr 411 (financed + down payment) / Cr 700 cash price / Cr 708 markup.
+ * Financed + down payment equals cash price + markup, so the entry balances.
+ * ⚠ Needs accountant verification: markup account (708) and whether it belongs in 700 or a financial income account.
+ */
+export function creditContractLines(c: CreditContractForPosting): DraftLine[] {
+  return [
+    ...line('411', 'debit', c.financedCents + c.downPaymentCents, c.partnerId, c.number),
+    ...line('700', 'credit', c.cashPriceCents, null, c.number),
+    ...line('708', 'credit', c.markupCents, null, c.number),
+  ];
 }
 
 /** POS sale: Dr 53 (cash) or 512 (card) total / Cr 700 untaxed / Cr 4457 VAT. */

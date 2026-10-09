@@ -43,10 +43,11 @@ Chemins relatifs à la racine du dépôt. Numéros de ligne au commit de rédact
 - [ ] Validé / [ ] À corriger : ____
 
 ### S2. Bornes des tranches : incohérence entre commentaire et code
-- **Valeur actuelle :** le commentaire de `data.ts` dit que `maxAmountDa` est une borne **incluse**. Le code de `stampDutyCents` applique l'intervalle **[min, max[** (borne haute exclue). Exemple : 30 000 DA tombe dans la tranche 1,5 DA, pas dans la tranche 1 DA.
-- **Fichier :** `src/modules/l10n_dz/data.ts`, lignes 50-52 (commentaire) ; `src/modules/invoicing/service/math.ts`, lignes 64-66 et 69-70 (code).
-- **Source :** aucune source sur la borne exacte.
-- **Question :** La borne 30 000 DA appartient-elle à la tranche 1 DA ou à la tranche 1,5 DA ? Même question pour 300 DA, 100 000 DA. Le code ou le commentaire doit être corrigé selon la réponse.
+
+- **Valeur actuelle :** le commentaire de `data.ts` indique désormais que `maxAmountDa` est une borne **exclue** : une tranche couvre `[minAmountDa, maxAmountDa[`, et la borne haute d'une tranche est la borne basse de la suivante. Le code (`stampDutyCents`) applique cet intervalle. Résultat : 300 DA tombe dans la tranche 1 DA, 30 000 DA dans la tranche 1,5 DA, 100 000 DA dans la tranche 2 DA. Les tests aux bornes sont dans `src/modules/invoicing/__tests__/math.test.ts`.
+- **Fichier :** `src/modules/l10n_dz/data.ts`, lignes 50-52 (commentaire corrigé) ; `src/modules/invoicing/service/math.ts`, lignes 64-74 (code inchangé).
+- **Source :** aucune source sur la borne exacte. Le choix retenu suit la structure des données (chaque minimum égale le maximum précédent).
+- **Question :** Confirmer que la borne haute est exclue dans le texte légal (30 000 DA dans la tranche 1,5 DA ; 300 DA dans la tranche 1 DA ; 100 000 DA dans la tranche 2 DA). Si la règle légale est inclusive, le code et les tests doivent changer ensemble.
 - [ ] Validé / [ ] À corriger : ____
 
 ### S3. Base de calcul et assiette du timbre
@@ -64,10 +65,11 @@ Chemins relatifs à la racine du dépôt. Numéros de ligne au commit de rédact
 - [ ] Validé / [ ] À corriger : ____
 
 ### S5. Écriture comptable du timbre (445) : constat
-- **Valeur actuelle :** le compte 445 n'est écrit que dans l'écriture de **vente**, à partir de `invoice.stampCents` au moment de la validation (qui vaut 0, car le timbre est calculé au paiement). L'écriture de paiement (`paymentLines`) ne reçoit que le montant encaissé : aucune ligne 445 n'est donc générée au paiement. Constat tiré de la lecture du code, à confirmer par un test.
-- **Fichier :** `src/modules/accounting/events.ts`, lignes 22-41 (vente), 43-65 (paiement) ; `src/modules/accounting/service/posting.ts`, lignes 63-66 (commentaire), 68-76, 104-114.
+
+- **Valeur actuelle :** au paiement en espèces d'une facture de vente (`out_invoice`), le timbre calculé sur ce paiement est comptabilisé dans le journal CA : Dr 53 pour le montant total encaissé, Cr 411 pour le montant encaissé moins le timbre, Cr 445 pour le timbre. Exemple : 1 001 DA encaissés, 1 DA de timbre : Dr 53 1 001 DA ; Cr 411 1 000 DA ; Cr 445 1 DA. Le compte 411 est alors soldé. Les paiements par banque ne portent pas de timbre. Le champ `stampCents` de l'événement `invoicing.payment.registered` porte ce montant.
+- **Fichier :** `src/modules/accounting/events.ts` (handler `invoicing.payment.registered`) ; `src/modules/accounting/service/posting.ts` (`paymentLines`) ; `src/core/events/catalog.ts` (champ `stampCents`) ; test d'intégration `src/modules/__tests__/flows.int.test.ts`.
 - **Source :** aucune.
-- **Question :** Le timbre encaissé doit-il être comptabilisé au crédit du 445 au moment du paiement ? Dans quel journal ? Le montant encaissé en espèces, timbre inclus, doit-il être ventilé entre 411 (ou 700) et 445 ?
+- **Question :** Ce traitement (445 crédité au paiement, 411 soldé du montant hors timbre) est-il conforme ? Le timbre encaissé doit-il être reversé sur une déclaration particulière ?
 - [ ] Validé / [ ] À corriger : ____
 
 ---
@@ -232,10 +234,11 @@ Le plan comptable seedé est limité à 9 comptes et 5 journaux. Chaque compte p
 - [ ] Validé / [ ] À corriger : ____
 
 ### E6. Ventes à crédit (vente à tempérament)
-- **Valeur actuelle :** aucune écriture comptable n'est générée. Les seuls gestionnaires d'événements comptables sont `invoicing.invoice.posted`, `invoicing.payment.registered` et `pos.order.paid`. Les paiements de `credit_sales.payment.recorded` ne sont pas comptabilisés.
-- **Fichier :** `src/modules/accounting/events.ts`, lignes 22, 43, 67 (seuls handlers présents).
-- **Source :** aucune.
-- **Question :** Quelles écritures doivent être générées pour une vente à crédit (vente à la livraison, en 411 pour l'échéancier, majoration en produit financier ou en 700) ? Ce point bloque la comptabilité des ventes à crédit.
+
+- **Valeur actuelle :** à l'activation du contrat (journal VT) : Dr 411 pour le montant financé plus l'acompte ; Cr 700 pour le prix comptant ; Cr 708 pour la majoration. Le compte 708 « Produits annexes (majoration vente à crédit) » a été ajouté au plan seedé avec le marqueur ⚠. Pas de 4457, car le code n'applique pas de TVA à la vente à crédit. À chaque encaissement client (`credit_sales.payment.recorded`) : Dr 53 si espèces, sinon Dr 512 ; Cr 411. Les deux types d'écritures sont idempotents par source (`credit_sales.contract` et `credit_sales.payment`).
+- **Fichier :** `src/modules/accounting/events.ts` (handlers `credit_sales.contract.activated` et `credit_sales.payment.recorded`) ; `src/modules/accounting/service/posting.ts` (`creditContractLines`, `creditPaymentLines`) ; `src/modules/accounting/service/chart.ts` (compte 708) ; `src/core/events/catalog.ts`.
+- **Source :** aucune. Choix de conception à valider.
+- **Question :** Le compte 708 est-il le bon pour la majoration, ou faut-il un compte de produit financier ? La vente doit-elle être constatée à l'activation (choix actuel) ou à la livraison ? Le 4457 est-il dû sur la majoration ?
 - [ ] Validé / [ ] À corriger : ____
 
 ---
@@ -275,10 +278,11 @@ Le plan comptable seedé est limité à 9 comptes et 5 journaux. Chaque compte p
 - [ ] Validé / [ ] À corriger : ____
 
 ### M2. Libellé « total en lettres » sans conversion
-- **Valeur actuelle :** la ligne du total porte le libellé `totalInWords`, mais affiche le montant chiffré (`money(totalCents)`), pas le montant en lettres.
-- **Fichier :** `src/modules/invoicing/service/print.ts`, ligne 88 (et libellé ligne 7).
-- **Source :** aucune.
-- **Question :** La mention du montant en lettres est-elle obligatoire sur facture ? Si oui, en quelle langue ? (Constat de code : le libellé et le contenu ne correspondent pas. À corriger côté application si la mention est requise.)
+
+- **Valeur actuelle :** la facture imprime une ligne « Total en lettres » (libellé `totalInWords`, fr : « Total en lettres », ar : « المجموع بالحروف », en : « Total in words ») suivie du montant en lettres, puis le montant en chiffres dans la colonne de droite. Le montant en lettres est produit par `amountInWords` (`src/core/money/words.ts`) : dinars algériens et centimes, en français (règles d'accord : « et un », « quatre-vingts », « cent/cents », « mille » invariable, « de » après un million), en arabe (arabe standard, jusqu'aux milliards) ou en anglais.
+- **Fichier :** `src/modules/invoicing/service/print.ts` (ligne du total) ; `src/core/money/words.ts` ; tests `src/core/money/words.test.ts`.
+- **Source :** aucune source officielle consultée sur la mention obligatoire.
+- **Question :** La mention du montant en lettres est-elle obligatoire sur facture, et dans quelle langue ? Les formulations (« dinars algériens et zéro centime ») et les règles arabes sont-elles acceptées par l'expert-comptable ?
 - [ ] Validé / [ ] À corriger : ____
 
 ### M3. Reçu de paiement

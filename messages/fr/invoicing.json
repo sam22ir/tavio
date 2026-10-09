@@ -108,7 +108,7 @@
     "vatRate": "Taux TVA",
     "vat": "TVA",
     "stampDuty": "Droit de timbre",
-    "totalInWords": "Total en chiffres",
+    "totalInWords": "Total en lettres",
     "print": "Imprimer"
   },
   "editor": {

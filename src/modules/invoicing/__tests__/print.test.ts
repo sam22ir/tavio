@@ -41,5 +41,6 @@ describe('buildInvoicePrintHtml', () => {
   it('shows VAT per rate and omits stamp duty when zero', () => {
     expect(html).toContain('TVA 9%');
     expect(html).not.toContain('Timbre');
+    expect(html).toContain('Total : quatre cent trente-six dinars algériens et zéro centime');
   });
 });
