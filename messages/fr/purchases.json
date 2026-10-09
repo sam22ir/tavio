@@ -20,7 +20,9 @@
       "remaining": "reste",
       "partial": "Réceptionner la sélection",
       "all": "Tout réceptionner"
-    }
+    },
+    "sourceContract": "Créé depuis le contrat",
+    "openContract": "Ouvrir le contrat"
   },
   "fields": {
     "number": "Numéro",

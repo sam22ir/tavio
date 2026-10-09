@@ -20,7 +20,9 @@
       "remaining": "المتبقي",
       "partial": "استلام المحدد",
       "all": "استلام الكل"
-    }
+    },
+    "sourceContract": "تم إنشاؤه من العقد",
+    "openContract": "فتح العقد"
   },
   "fields": {
     "number": "الرقم",
