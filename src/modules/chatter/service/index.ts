@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, isNull, ne, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, lt, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { emit } from '@/core/events';
@@ -399,6 +399,27 @@ export async function myOpenActivities(ctx: Ctx, limit: number): Promise<OpenAct
     dueDate: r.activity.dueDate,
     typeName: r.typeName,
   }));
+}
+
+/**
+ * Number of open activities assigned to a user (default: the current user). With `overdue`, only
+ * those whose due date is before today.
+ */
+export async function countOpenActivities(
+  ctx: Ctx,
+  opts: { overdue?: boolean; assigneeId?: string } = {},
+): Promise<number> {
+  const [row] = await ctx.tx
+    .select({ n: sql<string>`count(*)` })
+    .from(activities)
+    .where(
+      and(
+        eq(activities.assigneeId, opts.assigneeId ?? ctx.userId),
+        isNull(activities.doneAt),
+        opts.overdue ? lt(activities.dueDate, todayIso()) : undefined,
+      ),
+    );
+  return Number(row?.n ?? 0);
 }
 
 /** Active members of the company, for the activity assignee select. */

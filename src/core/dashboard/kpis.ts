@@ -3,6 +3,9 @@ import type { Ctx } from '@/core/ctx';
 import { companyModules } from '@/core/db/schema';
 import { creditContracts, creditInstallments, creditPayments } from '@/modules/credit_sales/schema';
 import { leads } from '@/modules/crm/schema';
+import { countOpenActivities } from '@/modules/chatter/service';
+import { scopedLeadCount } from '@/modules/crm/service';
+import { EMPTY_LEAD_KPIS, leadKpis, type LeadKpis } from './lead-kpis';
 
 export interface DashboardKpis {
   dueTodayCents: bigint;
@@ -12,6 +15,9 @@ export interface DashboardKpis {
   collectedThisMonthCents: bigint;
   activeContracts: number;
   openLeads: number;
+  /** Open activities of the current user whose due date has passed. */
+  overdueActivities: number;
+  leads: LeadKpis;
 }
 
 const ZERO_KPIS: DashboardKpis = {
@@ -22,6 +28,8 @@ const ZERO_KPIS: DashboardKpis = {
   collectedThisMonthCents: 0n,
   activeContracts: 0,
   openLeads: 0,
+  overdueActivities: 0,
+  leads: EMPTY_LEAD_KPIS,
 };
 
 /** Enabled module ids for the current company, read inside the tenant transaction. */
@@ -40,6 +48,8 @@ async function enabledModuleIds(ctx: Ctx): Promise<Set<string>> {
 export async function dashboardKpis(ctx: Ctx): Promise<DashboardKpis> {
   const modules = await enabledModuleIds(ctx);
   const kpis: DashboardKpis = { ...ZERO_KPIS };
+
+  kpis.overdueActivities = await countOpenActivities(ctx, { overdue: true });
 
   if (modules.has('credit_sales')) {
     const [inst] = await ctx.tx
@@ -85,11 +95,9 @@ export async function dashboardKpis(ctx: Ctx): Promise<DashboardKpis> {
   }
 
   if (modules.has('crm')) {
-    const [row] = await ctx.tx
-      .select({ n: sql<string>`count(*)` })
-      .from(leads)
-      .where(and(eq(leads.companyId, ctx.companyId), eq(leads.status, 'open'), eq(leads.active, true)));
-    kpis.openLeads = Number(row?.n ?? 0);
+    const open = await scopedLeadCount(ctx, eq(leads.status, 'open'));
+    kpis.openLeads = open.ok ? open.value : 0;
+    kpis.leads = await leadKpis(ctx);
   }
 
   return kpis;

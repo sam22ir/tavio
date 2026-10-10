@@ -38,7 +38,15 @@
     "resultPlaceholder": "Result (optional)",
     "resultPlaceholderRequired": "Result (required)",
     "result": "Result",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "filters": {
+      "label": "Filter activities",
+      "all": "All",
+      "today": "Today",
+      "overdue": "Overdue",
+      "planned": "Planned"
+    },
+    "dueToday": "Due today"
   },
   "type": {
     "call": "Call",

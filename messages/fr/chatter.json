@@ -38,7 +38,15 @@
     "resultPlaceholder": "Résultat (facultatif)",
     "resultPlaceholderRequired": "Résultat (requis)",
     "result": "Résultat",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "filters": {
+      "label": "Filtrer les activités",
+      "all": "Toutes",
+      "today": "Aujourd'hui",
+      "overdue": "En retard",
+      "planned": "Planifiées"
+    },
+    "dueToday": "Échéance aujourd'hui"
   },
   "type": {
     "call": "Appel",
