@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { EVENT_NAMES } from '@/core/events/catalog';
 import { actionConfigSchemas } from '../config';
-import { TRIGGER_EVENTS } from '../engine';
-import { checkUpdateValue, timeConfigSchema } from '../fields';
+import { canRunRule, MAX_CHAIN_DEPTH, runInRuleChain, TRIGGER_EVENTS } from '../engine';
+import { checkUpdateValue, readableColumns, timeConfigSchema, UPDATABLE_FIELDS } from '../fields';
 import { parseSteps, parseUpdateLines, toRuleInput } from '../form';
 import { ruleInput } from '../service/rules';
 
@@ -15,10 +15,19 @@ describe('trigger events', () => {
 });
 
 describe('checkUpdateValue', () => {
-  it('refuses to set a lead lost or won', () => {
-    expect(checkUpdateValue('lead', 'status', 'lost')).toMatch(/cannot/);
-    expect(checkUpdateValue('lead', 'status', 'won')).toMatch(/cannot/);
-    expect(checkUpdateValue('lead', 'status', 'open')).toBeNull();
+  it('never allows lead status changes, which go through the CRM services', () => {
+    expect(checkUpdateValue('lead', 'status', 'lost')).toMatch(/cannot be updated/);
+    expect(checkUpdateValue('lead', 'status', 'won')).toMatch(/cannot be updated/);
+    expect(checkUpdateValue('lead', 'status', 'open')).toMatch(/cannot be updated/);
+  });
+
+  it('marks bo_owner_id as a user-id field', () => {
+    expect(UPDATABLE_FIELDS.credit_contract.bo_owner_id?.userId).toBe(true);
+  });
+
+  it('readable columns for time rules exclude anything not listed', () => {
+    expect(readableColumns('activity')).toContain('due_date');
+    expect(readableColumns('activity')).not.toContain('summary');
   });
 
   it('never allows state columns on credit contracts', () => {
@@ -36,7 +45,7 @@ describe('checkUpdateValue', () => {
 });
 
 describe('action configs', () => {
-  it('update_record rejects a refused field value at save time', () => {
+  it('update_record rejects a state field at save time', () => {
     const r = actionConfigSchemas.update_record.safeParse({ entity: 'lead', recordIdField: 'id', updates: { status: 'lost' } });
     expect(r.success).toBe(false);
   });
@@ -89,5 +98,25 @@ describe('form helpers', () => {
   it('turns unreadable steps into an empty list', () => {
     expect(parseSteps('not json')).toEqual([]);
     expect(parseSteps('[{"action":"post_note"}]')).toHaveLength(1);
+  });
+});
+
+describe('rule chain guard', () => {
+  it('blocks a rule from re-entering itself and caps nested depth', async () => {
+    expect(canRunRule('r1')).toBe(true);
+    await runInRuleChain('r1', async () => {
+      expect(canRunRule('r1')).toBe(false);
+      expect(canRunRule('r2')).toBe(true);
+    });
+    const nest = async (n: number): Promise<void> => {
+      if (n === 0) return;
+      await runInRuleChain(`r${n}`, async () => {
+        await nest(n - 1);
+      });
+    };
+    await nest(MAX_CHAIN_DEPTH);
+    await runInRuleChain('x1', async () => runInRuleChain('x2', async () => runInRuleChain('x3', async () => {
+      expect(canRunRule('x4')).toBe(false);
+    })));
   });
 });

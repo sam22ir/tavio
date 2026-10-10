@@ -35,8 +35,8 @@ export interface UpdatableField {
   /** Value shape: a regex the value must match, or a fixed list. */
   pattern?: RegExp;
   allowed?: readonly string[];
-  /** Values the rule may never write (terminal states that have their own services). */
-  refused?: readonly string[];
+  /** The value is a user id and must be an active member of the company. */
+  userId?: boolean;
   maxLength: number;
 }
 
@@ -47,11 +47,9 @@ export const UPDATABLE_FIELDS: Record<UpdateEntity, Record<string, UpdatableFiel
     channel: { allowed: ['phone', 'whatsapp', 'showroom', 'web', 'referral', 'other'], maxLength: 20 },
     expected_close_date: { pattern: /^\d{4}-\d{2}-\d{2}$/, maxLength: 10 },
     probability: { pattern: /^(100|[0-9]{1,2})$/, maxLength: 3 },
-    // Lost and won leads change only through the CRM services, which record the reason and emit events.
-    status: { pattern: /^[a-z_]{1,40}$/, refused: ['lost', 'won'], maxLength: 40 },
   },
   credit_contract: {
-    bo_owner_id: { pattern: UUID, maxLength: 36 },
+    bo_owner_id: { pattern: UUID, userId: true, maxLength: 36 },
     decision_reason: { maxLength: 500 },
     next_action: { maxLength: 200 },
     bank_name: { maxLength: 120 },
@@ -65,10 +63,22 @@ export function checkUpdateValue(entity: UpdateEntity, field: string, value: str
   const spec = UPDATABLE_FIELDS[entity][field];
   if (!spec) return `Field ${field} cannot be updated by automation`;
   if (value.length > spec.maxLength) return `Value too long for ${field}`;
-  if (spec.refused?.includes(value)) return `Automation cannot set ${field} to ${value}`;
   if (spec.allowed && !spec.allowed.includes(value)) return `Invalid value for ${field}`;
   if (spec.pattern && !spec.pattern.test(value)) return `Invalid value for ${field}`;
   return null;
+}
+
+// Extra readable state columns for conditions. Read-only for automation: they are never in UPDATABLE_FIELDS.
+const READABLE_STATE: Record<TimeEntity, readonly string[]> = {
+  lead: ['status'],
+  activity: ['done_at'],
+  credit_contract: ['state'],
+};
+
+/** Columns a time rule may read for conditions and templates. Keeps the time-rule SELECT narrow. */
+export function readableColumns(entity: TimeEntity): string[] {
+  const updatable = entity in UPDATABLE_FIELDS ? Object.keys(UPDATABLE_FIELDS[entity as UpdateEntity]) : [];
+  return [...new Set(['id', ...TIME_DATE_FIELDS[entity], ...READABLE_STATE[entity], ...updatable])];
 }
 
 export const timeConfigSchema = z

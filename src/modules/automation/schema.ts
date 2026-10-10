@@ -44,11 +44,16 @@ export const automationRuleRuns = pgTable(
       .references(() => companies.id),
     ruleId: uuid('rule_id')
       .notNull()
-      .references(() => automationRules.id),
+      .references(() => automationRules.id, { onDelete: 'cascade' }),
     recordId: uuid('record_id').notNull(),
+    // done: the action took effect. skipped: the record was due but its conditions did not match.
+    status: text('status').notNull().default('done'),
     firedAt: timestamp('fired_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [uniqueIndex('automation_rule_runs_company_rule_record_uq').on(t.companyId, t.ruleId, t.recordId)],
+  (t) => [
+    uniqueIndex('automation_rule_runs_company_rule_record_uq').on(t.companyId, t.ruleId, t.recordId),
+    check('automation_rule_runs_status_check', sql`${t.status} in ('done','skipped')`),
+  ],
 );
 
 export type AutomationRule = typeof automationRules.$inferSelect;

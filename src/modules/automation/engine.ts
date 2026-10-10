@@ -1,20 +1,38 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { and, eq, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import type { DomainEvent } from '@/core/events';
 import { outbox } from '@/core/db/schema';
 import { EVENT_NAMES, type EventName } from '@/core/events/catalog';
-import { ensureActivity, postMessage, todayIso } from '@/modules/chatter/service';
+import { assertMembers, ensureActivity, postMessage, todayIso } from '@/modules/chatter/service';
 import { cancelPlanRuns, launchPlan } from '@/modules/chatter/service/plans';
 import { actionConfigSchemas, type ActionName } from './config';
 import { conditionsSchema, matchesConditions, readPath } from './conditions';
-import { checkUpdateValue, RECORD_ENTITIES, type UpdateEntity } from './fields';
+import { checkUpdateValue, RECORD_ENTITIES, UPDATABLE_FIELDS, type UpdateEntity } from './fields';
 import { automationRules } from './schema';
 
 // Every catalog event can trigger a rule. Time rules are handled by runTimedRules.
 export const TRIGGER_EVENTS = EVENT_NAMES satisfies readonly EventName[];
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// Automation actions can emit events (for example chatter.activity.done) that trigger other rules.
+// The chain of rules currently running is carried through the async context, so a rule never
+// re-enters itself and nested automation stops at MAX_CHAIN_DEPTH.
+export const MAX_CHAIN_DEPTH = 3;
+const runChain = new AsyncLocalStorage<readonly string[]>();
+
+/** Whether a rule may run now: not already in the current chain and the chain is short enough. */
+export function canRunRule(ruleId: string): boolean {
+  const chain = runChain.getStore() ?? [];
+  return !chain.includes(ruleId) && chain.length < MAX_CHAIN_DEPTH;
+}
+
+/** Runs fn with ruleId added to the current chain. Events emitted inside fn see the chain. */
+export function runInRuleChain<T>(ruleId: string, fn: () => Promise<T>): Promise<T> {
+  return runChain.run([...(runChain.getStore() ?? []), ruleId], fn);
+}
 
 /** Replaces {path} placeholders with payload values. Missing values become empty strings. */
 export function renderTemplate(template: string, payload: unknown): string {
@@ -140,6 +158,11 @@ export async function updateRecord(
   if (fields.length === 0) return false;
   for (const [field, value] of fields) {
     if (checkUpdateValue(entity, field, value) !== null) return false;
+    // User-id fields must name an active member of this company.
+    if (UPDATABLE_FIELDS[entity][field]?.userId) {
+      const members = await assertMembers(ctx, [value]);
+      if (!members.ok) return false;
+    }
   }
   const assignments = fields.map(([field, value]) => sql`${sql.identifier(field)} = ${value}`);
   const res = await ctx.tx.execute(
@@ -185,8 +208,11 @@ export async function runAutomations(ctx: Ctx, event: DomainEvent): Promise<numb
     const conditions = conditionsSchema.safeParse(rule.conditions);
     if (!conditions.success || !matchesConditions(event.payload, conditions.data)) continue;
     if (!(rule.action in actionConfigSchemas)) continue;
+    if (!canRunRule(rule.id)) continue;
     const action = rule.action as ActionName;
-    const done = await runInSavepoint(ctx, (sub) => executeAction(sub, event, action, rule.actionConfig));
+    const done = await runInRuleChain(rule.id, () =>
+      runInSavepoint(ctx, (sub) => executeAction(sub, event, action, rule.actionConfig)),
+    );
     if (done) ran += 1;
   }
   return ran;
