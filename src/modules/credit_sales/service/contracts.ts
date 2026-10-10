@@ -19,6 +19,7 @@ import {
   creditReceipts,
 } from '../schema';
 import { buildSchedule, isIsoDate, type ScheduleLine } from './schedule';
+import { CONTRACT_STATES, canTransition, transitionContract } from './transitions';
 
 export type Frequency = 'monthly' | 'weekly';
 export interface ContractLineInput { productId?: string; description: string; quantity: string; unitPriceCents: bigint }
@@ -51,7 +52,6 @@ const RATE_RE = /^\d+(\.\d{1,4})?$/;
 const MAX_INSTALLMENTS = 120;
 const THOUSAND = BigInt(1000);
 const ZERO = BigInt(0);
-const DRAFT_STATES_FOR_CANCEL = ['draft', 'active'] as const;
 const DAY_FORMAT = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'Africa/Algiers',
   year: 'numeric',
@@ -188,7 +188,7 @@ function lineRows(ctx: Ctx, contractId: string, lines: ComputedLine[]): typeof c
   }));
 }
 
-async function loadContractForUpdate(ctx: Ctx, id: string): Promise<Result<ContractRow>> {
+export async function loadContractForUpdate(ctx: Ctx, id: string): Promise<Result<ContractRow>> {
   if (!UUID_RE.test(id)) return err('NOT_FOUND', 'Contract not found');
   const [row] = await ctx.tx
     .select()
@@ -304,7 +304,7 @@ export async function activateContract(ctx: Ctx, id: string): Promise<Result<{ i
   const loaded = await loadContractForUpdate(ctx, id);
   if (!loaded.ok) return loaded;
   const contract = loaded.value;
-  if (contract.state !== 'draft') return err('STATE', 'Only draft contracts can be activated');
+  if (!canTransition(contract.state, 'active')) return err('STATE', 'Only draft or reserved contracts can be activated');
 
   // Check the schedule before taking a number, so a failed activation does not use one up.
   if (contract.financedCents <= ZERO) return err('VALIDATION', 'Nothing to finance');
@@ -319,10 +319,12 @@ export async function activateContract(ctx: Ctx, id: string): Promise<Result<{ i
   }
 
   const number = await nextNumber(ctx, ENTITY, { prefix: 'CR-{YYYY}-', padding: 5 });
-  await ctx.tx
-    .update(creditContracts)
-    .set({ reference: number, state: 'active', confirmedAt: new Date(), updatedAt: new Date() })
-    .where(eq(creditContracts.id, id));
+  const moved = await transitionContract(ctx, contract, 'active', {
+    action: 'activate',
+    set: { reference: number, confirmedAt: new Date() },
+    auditAfter: { reference: number, installments: schedule.length },
+  });
+  if (!moved.ok) return moved;
   await ctx.tx.insert(creditInstallments).values(
     schedule.map((line) => ({
       companyId: ctx.companyId,
@@ -334,13 +336,6 @@ export async function activateContract(ctx: Ctx, id: string): Promise<Result<{ i
       paidCents: ZERO,
     })),
   );
-  await audit(ctx, {
-    entity: ENTITY,
-    recordId: id,
-    action: 'activate',
-    before: { state: 'draft' },
-    after: { state: 'active', reference: number, installments: schedule.length },
-  });
   await emit(ctx, {
     name: 'credit_sales.contract.activated',
     payload: {
@@ -366,25 +361,18 @@ export async function cancelContract(ctx: Ctx, id: string, reason: string): Prom
   const loaded = await loadContractForUpdate(ctx, id);
   if (!loaded.ok) return loaded;
   const contract = loaded.value;
-  if (!(DRAFT_STATES_FOR_CANCEL as readonly string[]).includes(contract.state)) {
-    return err('STATE', 'Only draft or active contracts can be cancelled');
+  if (!canTransition(contract.state, 'cancelled')) {
+    return err('STATE', 'This contract can no longer be cancelled');
   }
   if (!cancelReason.startsWith('force:') && (await hasPayments(ctx, contract))) {
     return err('STATE', 'Contract has payments; a reason starting with "force:" is needed to cancel it');
   }
 
-  await ctx.tx
-    .update(creditContracts)
-    .set({ state: 'cancelled', cancelledAt: new Date(), cancelReason, updatedAt: new Date() })
-    .where(eq(creditContracts.id, id));
-  await audit(ctx, {
-    entity: ENTITY,
-    recordId: id,
+  return transitionContract(ctx, contract, 'cancelled', {
     action: 'cancel',
-    before: { state: contract.state },
-    after: { state: 'cancelled', reason: cancelReason },
+    set: { cancelledAt: new Date(), cancelReason },
+    auditAfter: { reason: cancelReason },
   });
-  return ok({ id });
 }
 
 export async function getContract(ctx: Ctx, id: string): Promise<Result<ContractDetail>> {
@@ -485,7 +473,7 @@ export async function listContracts(ctx: Ctx, q: ListQuery): Promise<ListResult<
     if (match) conditions.push(match);
   }
   const state = q.filters.state;
-  if (state && (['draft', 'active', 'completed', 'cancelled', 'defaulted'] as readonly string[]).includes(state)) {
+  if (state && (CONTRACT_STATES as readonly string[]).includes(state)) {
     conditions.push(eq(creditContracts.state, state));
   }
   const where = and(...conditions);

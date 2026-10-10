@@ -7,6 +7,7 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd } from '@/core/money';
 import { routing } from '@/i18n/routing';
 import { Chatter } from '@/modules/chatter/ui/chatter';
+import { SourceContractLink } from '@/modules/purchases/ui/source-contract-link';
 import { cancelOrderForm, confirmOrderForm, createBillForm, receiveOrderForm } from '@/modules/purchases/actions';
 import { getOrder } from '@/modules/purchases/service/orders';
 import { formatQty, parseQty, remainingQty } from '@/modules/purchases/service/math';
@@ -64,6 +65,8 @@ export default async function PurchaseOrderDetailPage({
           {order.billed ? <span>· {t('order.billed')}</span> : null}
         </div>
       </header>
+
+      <SourceContractLink locale={locale} sourceEntity={order.sourceEntity} sourceId={order.sourceId} />
 
       {errorCode ? (
         <>

@@ -51,9 +51,16 @@ export const purchaseOrders = pgTable(
     // True once a vendor bill has been created from the order
     billed: boolean('billed').notNull().default(false),
     note: text('note'),
+    // Document that created the order, e.g. credit_sales.contract (null for manual orders)
+    sourceEntity: text('source_entity'),
+    sourceId: uuid('source_id'),
   },
   (t) => [
     index('purchase_orders_company_id_state_idx').on(t.companyId, t.state),
+    // One order per supplier per source document: a redelivered event cannot create a second order.
+    uniqueIndex('purchase_orders_company_id_source_partner_uq')
+      .on(t.companyId, t.sourceEntity, t.sourceId, t.partnerId)
+      .where(sql`${t.sourceId} is not null`),
     index('purchase_orders_company_id_partner_id_idx').on(t.companyId, t.partnerId),
     uniqueIndex('purchase_orders_company_id_number_uq').on(t.companyId, t.number),
     check(
@@ -99,5 +106,30 @@ export const purchaseOrderLines = pgTable(
   ],
 );
 
+// Preferred suppliers per product, used to split a source document (e.g. an approved contract) into orders. Tenant table.
+export const purchaseProductSuppliers = pgTable(
+  'purchase_product_suppliers',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id),
+    partnerId: uuid('partner_id')
+      .notNull()
+      .references(() => partners.id),
+    // Lowest sequence wins when a product has several suppliers
+    sequence: integer('sequence').notNull().default(10),
+    active: boolean('active').notNull().default(true),
+  },
+  (t) => [
+    index('purchase_product_suppliers_company_id_product_id_idx').on(t.companyId, t.productId),
+    uniqueIndex('purchase_product_suppliers_company_product_partner_uq').on(t.companyId, t.productId, t.partnerId),
+  ],
+);
+
 export type PurchaseOrder = typeof purchaseOrders.$inferSelect;
 export type PurchaseOrderLine = typeof purchaseOrderLines.$inferSelect;
+export type PurchaseProductSupplier = typeof purchaseProductSuppliers.$inferSelect;

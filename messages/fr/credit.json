@@ -5,7 +5,8 @@
   "menu": {
     "contracts": "Contrats",
     "payments": "Paiements",
-    "overdue": "Échéances en retard"
+    "overdue": "Échéances en retard",
+    "requirements": "Documents requis"
   },
   "fields": {
     "reference": "Référence",
@@ -37,7 +38,12 @@
       "cancelled": "Annulé",
       "defaulted": "Défaillant",
       "posted": "Enregistré",
-      "reversed": "Extourné"
+      "reversed": "Extourné",
+      "submitted": "Soumis",
+      "under_review": "En étude",
+      "approved": "Approuvé",
+      "refused": "Refusé",
+      "reserved": "Réservé"
     },
     "frequency": {
       "monthly": "Mensuelle",
@@ -175,5 +181,68 @@
     "paid": "Payé",
     "remaining": "Restant",
     "late": "En retard"
+  },
+  "workflow": {
+    "bar": "Workflow",
+    "actions": {
+      "submit": "Soumettre",
+      "review": "Lancer l'étude",
+      "reserve": "Marquer réservé",
+      "activate": "Activer"
+    },
+    "documents": {
+      "title": "Documents",
+      "empty": "Les documents sont créés à la soumission du contrat.",
+      "required": "Obligatoire",
+      "optional": "Facultatif",
+      "missing": "Manquant",
+      "received": "Reçu",
+      "rejected": "Rejeté",
+      "markReceived": "Marquer reçu",
+      "markRejected": "Marquer rejeté",
+      "missingNames": "Encore manquant : {names}"
+    },
+    "bo": {
+      "title": "Back office",
+      "owner": "Responsable BO",
+      "send": "Envoyer au BO",
+      "sentAt": "Envoyé au BO",
+      "acknowledge": "Accuser réception",
+      "receivedAt": "Reçu par le BO"
+    },
+    "decision": {
+      "title": "Décision",
+      "reason": "Motif",
+      "nextAction": "Action suivante",
+      "decidedAt": "Décidé le",
+      "approve": "Approuver",
+      "refuse": "Refuser",
+      "reasonRequired": "Un motif est requis pour refuser."
+    },
+    "risk": {
+      "title": "Centrale des risques",
+      "checkedAt": "Vérifié le",
+      "clear": "Sans incident",
+      "flagged": "Signalé",
+      "record": "Enregistrer le résultat"
+    },
+    "bank": {
+      "title": "Banque",
+      "name": "Nom de la banque",
+      "reference": "Référence bancaire",
+      "notifiedAt": "Notifiée le",
+      "notify": "Notifier la banque",
+      "nameRequired": "Le nom de la banque est requis."
+    },
+    "done": "Enregistré"
+  },
+  "requirements": {
+    "title": "Documents requis",
+    "add": "Ajouter un document",
+    "name": "Nom",
+    "required": "Obligatoire",
+    "active": "Actif",
+    "save": "Enregistrer",
+    "saved": "Document enregistré"
   }
 }

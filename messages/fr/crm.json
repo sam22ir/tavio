@@ -26,7 +26,9 @@
     "lostAt": "Perdu le",
     "wonAt": "Gagné le",
     "convertedContractId": "Contrat converti",
-    "active": "Actif"
+    "active": "Actif",
+    "channel": "Canal",
+    "attemptCount": "Tentatives"
   },
   "options": {
     "type": {
@@ -50,6 +52,14 @@
     "priority": {
       "0": "Normale",
       "1": "Haute"
+    },
+    "channel": {
+      "phone": "Téléphone",
+      "whatsapp": "WhatsApp",
+      "showroom": "Showroom",
+      "web": "Web",
+      "referral": "Recommandation",
+      "other": "Autre"
     }
   },
   "lead": {
@@ -83,6 +93,9 @@
     "expected": "CA attendu",
     "call": "Appeler",
     "whatsapp": "WhatsApp",
-    "convert": "Convertir en contrat à crédit"
+    "convert": "Convertir en contrat à crédit",
+    "logAttempt": "Enregistrer une tentative",
+    "daysInStage": "{count, plural, one {# jour en étape} other {# jours en étape}}",
+    "stageRequirements": "Exigences de cette étape"
   }
 }

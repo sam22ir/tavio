@@ -21,6 +21,11 @@ export const contractEntity: EntityDef = {
       readonly: true,
       options: [
         { value: 'draft', label: 'credit.options.state.draft' },
+        { value: 'submitted', label: 'credit.options.state.submitted' },
+        { value: 'under_review', label: 'credit.options.state.under_review' },
+        { value: 'approved', label: 'credit.options.state.approved' },
+        { value: 'refused', label: 'credit.options.state.refused' },
+        { value: 'reserved', label: 'credit.options.state.reserved' },
         { value: 'active', label: 'credit.options.state.active' },
         { value: 'completed', label: 'credit.options.state.completed' },
         { value: 'cancelled', label: 'credit.options.state.cancelled' },
