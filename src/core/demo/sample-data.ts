@@ -36,6 +36,7 @@ import {
 } from '@/modules/credit_sales/service/contracts';
 import { recordPayment, type PaymentMethod } from '@/modules/credit_sales/service/payments';
 import { creditContracts } from '@/modules/credit_sales/schema';
+import { deliverDemoGoods } from './deliver-goods';
 import { ensureActivity, postMessage } from '@/modules/chatter/service';
 import { activityTypes } from '@/modules/chatter/schema';
 import { ACTIVITY_TYPE_SEED } from '@/modules/chatter/entities';
@@ -541,6 +542,9 @@ export async function seedCompanyData(tenant: TenantArgs, db: Db, state: { step:
 
   state.step = 'contracts';
   const contracts = await run((ctx) => seedContracts(ctx, partnerIds, productIds));
+
+  state.step = 'deliveries';
+  await run((ctx) => deliverDemoGoods(ctx));
 
   state.step = 'chatter';
   if (contracts.created > 0) await run((ctx) => seedChatter(ctx, contracts.contractIds));
