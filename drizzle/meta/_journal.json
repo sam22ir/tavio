@@ -113,6 +113,13 @@
       "when": 1791653257169,
       "tag": "0015_w14_stock_valuation",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1791659529276,
+      "tag": "0016_w15_legal_accounting",
+      "breakpoints": true
     }
   ]
 }
