@@ -29,6 +29,7 @@
     "description": "Désignation",
     "quantity": "Quantité",
     "unitPrice": "Prix unitaire (DA)",
+    "discount": "Remise %",
     "tax": "TVA",
     "noTax": "Sans TVA",
     "submit": "Créer le brouillon"
@@ -104,6 +105,7 @@
     "description": "Désignation",
     "qty": "Qté",
     "unit": "P.U. HT",
+    "discount": "Remise %",
     "amount": "Montant HT",
     "vatRate": "Taux TVA",
     "vat": "TVA",

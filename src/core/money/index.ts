@@ -88,3 +88,28 @@ export function splitEven(total: Cents, n: number): Cents[] {
 export function sumCents(xs: readonly Cents[]): Cents {
   return xs.reduce<Cents>((acc, x) => acc + x, ZERO);
 }
+
+const QTY_SCALE = BigInt(1000); // quantities scaled by 10^3
+const RATE_SCALE = BigInt(10000); // percentages scaled by 10^4
+const ONE_HUNDRED_PERCENT = BigInt(100) * RATE_SCALE;
+
+/** Parses a percent such as "10" or "7.5" into a rate scaled by 10^4. Empty means 0. Returns null outside 0..100. */
+export function parseDiscountRate(input: string): bigint | null {
+  const trimmed = input.trim() === '' ? '0' : input.trim();
+  const match = /^(\d{1,3})(?:\.(\d{1,4}))?$/.exec(trimmed);
+  if (!match) return null;
+  const whole = BigInt(match[1] as string);
+  const frac = BigInt((match[2] ?? '').padEnd(4, '0') || '0');
+  const scaled = whole * RATE_SCALE + frac;
+  return scaled <= ONE_HUNDRED_PERCENT ? scaled : null;
+}
+
+/**
+ * Line subtotal = qty * unitPrice * (1 - discount), rounded half-up to the centime, before tax.
+ * qtyScaled is quantity * 10^3, discountScaled is percent * 10^4 (see parseDiscountRate).
+ * Shared by sales orders and invoices so quote and invoice totals match to the cent.
+ */
+export function lineSubtotal(qtyScaled: bigint, unitPriceCents: Cents, discountScaled: bigint): Cents {
+  const numerator = qtyScaled * unitPriceCents * (ONE_HUNDRED_PERCENT - discountScaled);
+  return roundHalfUp(numerator, QTY_SCALE * ONE_HUNDRED_PERCENT);
+}

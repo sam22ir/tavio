@@ -8,7 +8,8 @@
     "adjustments": "Adjustments",
     "low_stock": "Low stock",
     "warehouses": "Warehouses",
-    "deliveries": "Deliveries"
+    "deliveries": "Deliveries",
+    "valuation": "Valuation"
   },
   "fields": {
     "reference": "Reference",
@@ -116,5 +117,14 @@
     "lines_title": "Lines",
     "receipt_title": "Receipt",
     "open": "Open"
+  },
+  "valuation": {
+    "title": "Stock valuation",
+    "help": "Quantity, weighted average cost (CMUP) and value per product. The average cost is computed across all warehouses.",
+    "all_warehouses": "All warehouses",
+    "filter": "Filter",
+    "avg_cost": "Average cost (CMUP)",
+    "value": "Value",
+    "total": "Total value"
   }
 }

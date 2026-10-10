@@ -112,6 +112,15 @@
       "amount": "Amount",
       "paid": "Paid",
       "status": "Status"
+    },
+    "delivery": {
+      "title": "Deliveries",
+      "status": {
+        "to_deliver": "To deliver",
+        "partial": "Partly delivered",
+        "delivered": "Delivered"
+      },
+      "none": "No delivery"
     }
   },
   "payment": {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { computeLine, computeTotals, paymentStateFor, parseQtyMilli, stampDutyCents } from '../service/math';
+import { computeOrderTotals } from '@/modules/sales/service/totals';
+import { computeLine, computeTotals, formatPercent, hasLineDiscount, paymentStateFor, parseQtyMilli, stampDutyCents } from '../service/math';
 
 const c = (n: number) => BigInt(n);
 
@@ -14,6 +15,56 @@ describe('parseQtyMilli', () => {
     expect(parseQtyMilli('-1')).toBeNull();
     expect(parseQtyMilli('1.2345')).toBeNull();
     expect(parseQtyMilli('abc')).toBeNull();
+  });
+});
+
+describe('computeLine with line discount', () => {
+  it('0% discount leaves the subtotal unchanged', () => {
+    // 3 x 333.33 DA = 999.99 DA, no discount
+    const r = computeLine({ quantity: '3', unitPriceCents: c(33333), ratePercent: '19', discountRate: '0' });
+    expect(r.subtotalCents).toBe(c(99999));
+    expect(r.taxCents).toBe(c(19000));
+  });
+  it('5% discount applies before VAT, rounded to the centime', () => {
+    // 999.99 DA x 0.95 = 949.9905 DA -> 94999 centimes; VAT 19% of 94999 = 18049.81 -> 18050
+    const r = computeLine({ quantity: '3', unitPriceCents: c(33333), ratePercent: '19', discountRate: '5' });
+    expect(r.subtotalCents).toBe(c(94999));
+    expect(r.taxCents).toBe(c(18050));
+  });
+  it('12.5% discount on a 10.01 DA unit price', () => {
+    // 10.01 DA x 0.875 = 8.75875 DA -> 876 centimes; no VAT
+    const r = computeLine({ quantity: '1', unitPriceCents: c(1001), ratePercent: '0', discountRate: '12.5' });
+    expect(r.subtotalCents).toBe(c(876));
+    expect(r.taxCents).toBe(c(0));
+  });
+  it('rounds exact half centimes up', () => {
+    // 4 centimes x 87.5% = 3.5 centimes -> 4
+    const half = computeLine({ quantity: '1', unitPriceCents: c(4), ratePercent: '0', discountRate: '12.5' });
+    expect(half.subtotalCents).toBe(c(4));
+    // 10 centimes x 95% = 9.5 centimes -> 10
+    const half2 = computeLine({ quantity: '1', unitPriceCents: c(10), ratePercent: '0', discountRate: '5' });
+    expect(half2.subtotalCents).toBe(c(10));
+  });
+  it('rejects a discount above 100% or malformed', () => {
+    expect(() => computeLine({ quantity: '1', unitPriceCents: c(100), ratePercent: '0', discountRate: '101' })).toThrow(RangeError);
+    expect(() => computeLine({ quantity: '1', unitPriceCents: c(100), ratePercent: '0', discountRate: 'abc' })).toThrow(RangeError);
+  });
+  it('helpers: hasLineDiscount and formatPercent', () => {
+    expect(hasLineDiscount('0')).toBe(false);
+    expect(hasLineDiscount('0.0000')).toBe(false);
+    expect(hasLineDiscount('12.5000')).toBe(true);
+    expect(formatPercent('10.0000')).toBe('10');
+    expect(formatPercent('12.5000')).toBe('12.5');
+  });
+  it('quote and invoice with a 10% line discount have identical untaxed, VAT and total', () => {
+    const quote = computeOrderTotals([{ quantity: '3', unitPriceCents: c(33333), discountRate: '10', taxRate: '19.0000' }]);
+    const invoice = computeTotals([{ quantity: '3', unitPriceCents: c(33333), ratePercent: '19', discountRate: '10' }]);
+    // 999.99 DA x 0.90 = 899.991 DA -> 89999 centimes; VAT 19% = 17099.81 -> 17100
+    expect(quote.untaxedCents).toBe(c(89999));
+    expect(quote.taxCents).toBe(c(17100));
+    expect(invoice.untaxedCents).toBe(quote.untaxedCents);
+    expect(invoice.taxCents).toBe(quote.taxCents);
+    expect(invoice.untaxedCents + invoice.taxCents).toBe(quote.totalCents);
   });
 });
 

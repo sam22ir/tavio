@@ -1,15 +1,16 @@
 import type { Locale } from '@/core/ctx';
 import { formatDzd, type Cents } from '@/core/money';
 import { amountInWords } from '@/core/money/words';
+import { formatPercent, hasLineDiscount } from './math';
 
 export interface PrintLabels {
   title: string; seller: string; buyer: string; nif: string; nis: string; rc: string; ai: string; address: string;
-  number: string; date: string; description: string; qty: string; unit: string; amount: string;
+  number: string; date: string; description: string; qty: string; unit: string; discount: string; amount: string;
   vatRate: string; vat: string; stampDuty: string; totalInWords: string; print: string;
 }
 
 export interface PrintParty { name: string; nif?: string | null; nis?: string | null; rc?: string | null; ai?: string | null; address?: string | null }
-export interface PrintLine { description: string; quantity: string; unitPriceCents: Cents; subtotalCents: Cents; ratePercent: string }
+export interface PrintLine { description: string; quantity: string; unitPriceCents: Cents; discountRate?: string; subtotalCents: Cents; ratePercent: string }
 
 export interface InvoicePrintInput {
   locale: Locale;
@@ -53,9 +54,12 @@ export function buildInvoicePrintHtml(input: InvoicePrintInput): string {
       .join('');
   const party = (title: string, p: PrintParty) =>
     `<section class="party"><h3>${e(title)}</h3><div class="name">${e(p.name)}</div>${p.address ? `<div>${e(p.address)}</div>` : ''}${ids(p)}</section>`;
+  // Discount column only when at least one line is discounted.
+  const showDiscount = input.lines.some((line) => hasLineDiscount(line.discountRate ?? '0'));
   const rows = input.lines
     .map(
-      (line) => `<tr><td>${e(line.description)}</td><td class="n">${e(line.quantity)}</td><td class="n">${money(line.unitPriceCents)}</td><td class="n">${money(line.subtotalCents)}</td><td class="n">${e(line.ratePercent)}%</td></tr>`,
+      (line) =>
+        `<tr><td>${e(line.description)}</td><td class="n">${e(line.quantity)}</td><td class="n">${money(line.unitPriceCents)}</td>${showDiscount ? `<td class="n">${e(formatPercent(line.discountRate ?? '0'))}</td>` : ''}<td class="n">${money(line.subtotalCents)}</td><td class="n">${e(line.ratePercent)}%</td></tr>`,
     )
     .join('');
   const vat = input.taxGroups
@@ -81,7 +85,7 @@ td.n,th.n{text-align:end}
 <body>
 <div class="head"><div><h1>${e(input.documentTitle)}</h1><div>${l.number} ${e(input.number)}</div><div>${l.date}: ${e(input.date)}</div></div></div>
 <div class="parties">${party(l.seller, input.seller)}${party(l.buyer, input.buyer)}</div>
-<table><thead><tr><th>${l.description}</th><th class="n">${l.qty}</th><th class="n">${l.unit}</th><th class="n">${l.amount}</th><th class="n">${l.vatRate}</th></tr></thead><tbody>${rows}</tbody></table>
+<table><thead><tr><th>${l.description}</th><th class="n">${l.qty}</th><th class="n">${l.unit}</th>${showDiscount ? `<th class="n">${l.discount}</th>` : ''}<th class="n">${l.amount}</th><th class="n">${l.vatRate}</th></tr></thead><tbody>${rows}</tbody></table>
 <table class="totals">
 <tr><td>${l.amount}</td><td class="n">${money(input.untaxedCents)}</td></tr>
 ${vat}

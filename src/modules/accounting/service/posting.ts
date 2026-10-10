@@ -1,4 +1,5 @@
 // Pure posting rules: balance check and event-to-lines mapping. No DB access, so these are unit tested.
+import type { StockMoveKind } from '@/core/events/catalog';
 import { err, ok, type Result } from '@/core/result';
 
 export type Side = 'debit' | 'credit';
@@ -57,16 +58,22 @@ export interface InvoiceForPosting {
   taxCents: bigint;
   stampCents: bigint;
   totalCents: bigint;
+  /**
+   * Purchases only: the untaxed part of the bill for stock-tracked goods. With perpetual inventory it is
+   * debited to 380 (cleared by the receipt's Dr 30 / Cr 380), and the rest stays on 600. Defaults to 0.
+   */
+  stockedUntaxedCents?: bigint;
 }
 
 /**
  * Sale: Dr 411 total / Cr 700 untaxed / Cr 4457 VAT / Cr 445 stamp.
- * Purchase: Cr 401 total / Dr 600 untaxed / Dr 4456 VAT / Dr 445 stamp.
+ * Purchase: Cr 401 total / Dr 380 stocked goods / Dr 600 rest of untaxed / Dr 4456 VAT / Dr 445 stamp.
  * Refunds (out_refund, in_refund) invert every line.
  * ⚠ Needs accountant verification: stamp duty (445) side and account choice.
  */
 export function invoiceLines(inv: InvoiceForPosting): DraftLine[] {
   const isSale = inv.type === 'out_invoice' || inv.type === 'out_refund';
+  const stocked = isSale ? 0n : (inv.stockedUntaxedCents ?? 0n);
   const lines = isSale
     ? [
         ...line('411', 'debit', inv.totalCents, inv.partnerId, inv.number),
@@ -76,7 +83,8 @@ export function invoiceLines(inv: InvoiceForPosting): DraftLine[] {
       ]
     : [
         ...line('401', 'credit', inv.totalCents, inv.partnerId, inv.number),
-        ...line('600', 'debit', inv.untaxedCents, null, inv.number),
+        ...line(INVENTORY_ACCOUNTS.stockedPurchases, 'debit', stocked, null, inv.number),
+        ...line('600', 'debit', inv.untaxedCents - stocked, null, inv.number),
         ...line('4456', 'debit', inv.taxCents, null, inv.number),
         ...line('445', 'debit', inv.stampCents, null, inv.number),
       ];
@@ -188,4 +196,41 @@ export function g50Summary(collectedCents: bigint, deductibleCents: bigint) {
     netDueCents: collectedCents - deductibleCents,
     needsAccountantReview: true as const,
   };
+}
+
+/**
+ * Account codes for perpetual inventory postings.
+ * SCF mapping to verify with the accountant.
+ */
+export const INVENTORY_ACCOUNTS = {
+  /** Stocks de marchandises, valued at weighted average cost. */
+  stock: '30',
+  /** Achats de marchandises stockés: goods received, the purchase side before the vendor bill. */
+  stockedPurchases: '380',
+  /** Achats de marchandises vendues (coût des marchandises vendues). Also used for stock losses and gains. */
+  costOfGoodsSold: '600',
+} as const;
+
+/**
+ * Journal lines for a valued stock move. Receipt: Dr 30 / Cr 380. Delivery: Dr 600 / Cr 30.
+ * Return: reverse of delivery (Dr 30 / Cr 600). Loss: Dr 600 / Cr 30. Gain: Dr 30 / Cr 600.
+ * Transfers between internal locations have no accounting effect. Zero value produces no lines.
+ * SCF mapping to verify with the accountant.
+ */
+export function stockMoveLines(input: { kind: StockMoveKind; valueCents: bigint; reference: string }): DraftLine[] {
+  const { stock, stockedPurchases, costOfGoodsSold } = INVENTORY_ACCOUNTS;
+  const v = input.valueCents;
+  const ref = input.reference;
+  switch (input.kind) {
+    case 'receipt':
+      return [...line(stock, 'debit', v, null, ref), ...line(stockedPurchases, 'credit', v, null, ref)];
+    case 'delivery':
+    case 'loss':
+      return [...line(costOfGoodsSold, 'debit', v, null, ref), ...line(stock, 'credit', v, null, ref)];
+    case 'return':
+    case 'gain':
+      return [...line(stock, 'debit', v, null, ref), ...line(costOfGoodsSold, 'credit', v, null, ref)];
+    case 'transfer':
+      return [];
+  }
 }

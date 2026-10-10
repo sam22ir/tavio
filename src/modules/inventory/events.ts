@@ -9,9 +9,9 @@ import type {
 import type { Ctx } from '@/core/ctx';
 import { creditContractLines } from '@/modules/credit_sales/schema';
 import { ensureDefaultWarehouse } from './service/warehouses';
-import { moveLines } from './service/moves';
+import { moveLines, stockTrackedLines } from './service/moves';
 import { closeReservations, releasesContractReservations, reserveLines } from './service/reservations';
-import { cancelOpenDeliveriesForSource, createDraftDelivery } from './service/deliveries';
+import { cancelOpenDeliveriesForSource, createDraftDelivery, returnDoneDeliveriesForSource } from './service/deliveries';
 
 const CONTRACT_ENTITY = 'credit_sales.contract';
 
@@ -73,6 +73,9 @@ on('credit_sales.contract.state_changed', async (ctx: Ctx, event) => {
     if (!released.ok) throw new Error(released.error.message);
   }
   if (p.toState === 'cancelled') {
+    // Goods already validated go back into stock (customer to internal); open deliveries are cancelled.
+    const returned = await returnDoneDeliveriesForSource(ctx, { sourceEntity: CONTRACT_ENTITY, sourceId: p.contractId });
+    if (!returned.ok) throw new Error(returned.error.message);
     const cancelled = await cancelOpenDeliveriesForSource(ctx, { sourceEntity: CONTRACT_ENTITY, sourceId: p.contractId });
     if (!cancelled.ok) throw new Error(cancelled.error.message);
     return;
@@ -80,10 +83,13 @@ on('credit_sales.contract.state_changed', async (ctx: Ctx, event) => {
   if (p.toState === 'refused') return;
   if (p.toState !== 'approved' && p.toState !== 'active') return;
 
-  const lines = await ctx.tx
-    .select({ productId: creditContractLines.productId, quantity: creditContractLines.quantity })
-    .from(creditContractLines)
-    .where(and(eq(creditContractLines.companyId, ctx.companyId), eq(creditContractLines.contractId, p.contractId)));
+  const lines = await stockTrackedLines(
+    ctx,
+    await ctx.tx
+      .select({ productId: creditContractLines.productId, quantity: creditContractLines.quantity })
+      .from(creditContractLines)
+      .where(and(eq(creditContractLines.companyId, ctx.companyId), eq(creditContractLines.contractId, p.contractId))),
+  );
 
   if (p.toState === 'approved') {
     const wh = await ensureDefaultWarehouse(ctx);

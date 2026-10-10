@@ -1,6 +1,11 @@
 // Cross-module event payloads (P4–P8). Modules communicate through these events only.
 // Amounts are bigint cents serialised as strings; quantities are decimal strings.
-export interface QtyLine { productId: string | null; quantity: string }
+export interface QtyLine {
+  productId: string | null;
+  quantity: string;
+  /** Unit cost in cents, excluding VAT. Set on purchase receipts (PO line unit price). */
+  unitCostCents?: string;
+}
 
 export interface SalesOrderConfirmed { orderId: string; partnerId: string; number: string; lines: QtyLine[] }
 export interface InvoicePosted {
@@ -31,6 +36,13 @@ export interface PosOrderPaid {
   orderId: string; sessionId: string; number: string; method: string;
   totalCents: string; untaxedCents: string; taxCents: string; lines: QtyLine[];
 }
+/** Classification of a validated stock move, derived from its locations. Transfers have no accounting effect. */
+export type StockMoveKind = 'receipt' | 'delivery' | 'return' | 'loss' | 'gain' | 'transfer';
+/** A done stock move with its valuation (CMUP). valueCents = quantity x unit cost, rounded to the cent. */
+export interface InventoryMovePosted {
+  moveId: string; reference: string; productId: string; kind: StockMoveKind;
+  quantity: string; unitCostCents: string; valueCents: string; date: string; // YYYY-MM-DD (Africa/Algiers)
+}
 export interface StockMoveDone { moveId: string; productId: string; quantity: string; fromLocationId: string; toLocationId: string }
 export interface CrmLeadCreated { leadId: string; stageId: string; userId: string | null; teamId: string | null }
 export interface CrmLeadStageChanged { leadId: string; fromStageId: string; toStageId: string; userId: string | null }
@@ -51,6 +63,7 @@ export interface EventCatalog {
   'purchases.order.received': PurchaseOrderReceived;
   'pos.order.paid': PosOrderPaid;
   'inventory.move.done': StockMoveDone;
+  'inventory.move.posted': InventoryMovePosted;
   'credit_sales.payment.recorded': CreditPaymentRecorded;
   'credit_sales.contract.activated': CreditContractActivated;
   'crm.lead.created': CrmLeadCreated;
@@ -70,6 +83,7 @@ export const EVENT_NAMES = [
   'purchases.order.received',
   'pos.order.paid',
   'inventory.move.done',
+  'inventory.move.posted',
   'credit_sales.payment.recorded',
   'credit_sales.contract.activated',
   'crm.lead.created',

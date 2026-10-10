@@ -410,6 +410,7 @@ export async function createInvoiceFromOrder(ctx: Ctx, id: string): Promise<Resu
       description: l.description,
       quantity: l.quantity,
       unitPriceCents: l.unitPriceCents,
+      discountRate: l.discountRate,
       taxId: l.taxId,
     })),
   });

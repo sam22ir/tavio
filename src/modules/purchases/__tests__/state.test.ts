@@ -28,10 +28,13 @@ describe('purchase order state machine', () => {
     expect(canCancel('cancelled', false)).toBe(false);
   });
 
-  it('bills confirmed or received orders once', () => {
-    expect(canBill('confirmed', false)).toBe(true);
-    expect(canBill('received', false)).toBe(true);
-    expect(canBill('received', true)).toBe(false);
-    expect(canBill('draft', false)).toBe(false);
+  it('bills confirmed or received orders while a line has unbilled receipt', () => {
+    const open = [{ receivedQty: '5.000', billedQty: '0.000' }];
+    const billedUp = [{ receivedQty: '5.000', billedQty: '5.000' }];
+    expect(canBill('confirmed', open)).toBe(true);
+    expect(canBill('received', open)).toBe(true);
+    expect(canBill('received', billedUp)).toBe(false);
+    expect(canBill('confirmed', [{ receivedQty: '0.000', billedQty: '0.000' }])).toBe(false);
+    expect(canBill('draft', open)).toBe(false);
   });
 });

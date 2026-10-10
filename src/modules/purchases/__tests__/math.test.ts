@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatQty, lineAmounts, parseQty, remainingQty, sumTotals } from '../service/math';
+import { formatQty, isFullyBilled, lineAmounts, parseQty, remainingQty, sumTotals, unbilledQty } from '../service/math';
 
 describe('parseQty', () => {
   it('parses whole and decimal quantities into thousandths', () => {
@@ -72,5 +72,19 @@ describe('remainingQty', () => {
 
   it('never goes negative', () => {
     expect(remainingQty('1.000', '4.000')).toBe(BigInt(0));
+  });
+});
+
+describe('billing quantities', () => {
+  it('unbilledQty is received minus billed, never negative', () => {
+    expect(unbilledQty('5.000', '0.000')).toBe(BigInt(5000));
+    expect(unbilledQty('10.000', '5.000')).toBe(BigInt(5000));
+    expect(unbilledQty('5.000', '5.000')).toBe(BigInt(0));
+  });
+
+  it('isFullyBilled needs every line at its ordered quantity', () => {
+    expect(isFullyBilled([{ quantity: '10.000', billedQty: '10.000' }, { quantity: '2.000', billedQty: '2.000' }])).toBe(true);
+    expect(isFullyBilled([{ quantity: '10.000', billedQty: '5.000' }, { quantity: '2.000', billedQty: '2.000' }])).toBe(false);
+    expect(isFullyBilled([])).toBe(false);
   });
 });

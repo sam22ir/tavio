@@ -4,6 +4,7 @@ import { formatDzd, type Cents } from '@/core/money';
 import type { Invoice, InvoiceLine, InvoicePayment } from '../schema';
 import { cancelInvoiceForm, postInvoiceForm, refundInvoiceForm, registerPaymentForm } from '../actions';
 import { PAYMENT_METHODS } from '../service/invoices';
+import { formatPercent, hasLineDiscount } from '../service/math';
 
 type T = (key: string) => string;
 export type Kind = 'customers' | 'vendors';
@@ -68,6 +69,7 @@ export function InvoiceDetail({
   const isDraft = invoice.state === 'draft';
   const isPosted = invoice.state === 'posted';
   const isInvoice = invoice.type === 'out_invoice' || invoice.type === 'in_invoice';
+  const showDiscount = lines.some((l) => hasLineDiscount(String(l.discountRate)));
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -95,10 +97,10 @@ export function InvoiceDetail({
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full text-sm">
-          <thead className="bg-muted"><tr><th className="p-2 text-start">{t('form.description')}</th><th className="p-2 text-start">{t('form.quantity')}</th><th className="p-2 text-start">{t('form.unitPrice')}</th></tr></thead>
+          <thead className="bg-muted"><tr><th className="p-2 text-start">{t('form.description')}</th><th className="p-2 text-start">{t('form.quantity')}</th><th className="p-2 text-start">{t('form.unitPrice')}</th>{showDiscount ? <th className="p-2 text-start">{t('form.discount')}</th> : null}</tr></thead>
           <tbody>
             {lines.map((l) => (
-              <tr key={l.id} className="border-t"><td className="p-2">{l.description}</td><td className="p-2">{String(l.quantity)}</td><td className="p-2">{fmt(l.unitPriceCents)}</td></tr>
+              <tr key={l.id} className="border-t"><td className="p-2">{l.description}</td><td className="p-2">{String(l.quantity)}</td><td className="p-2">{fmt(l.unitPriceCents)}</td>{showDiscount ? <td className="p-2">{formatPercent(String(l.discountRate))}</td> : null}</tr>
             ))}
           </tbody>
         </table>

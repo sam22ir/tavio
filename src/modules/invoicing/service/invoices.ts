@@ -124,6 +124,7 @@ export async function createRefund(ctx: Ctx, invoiceId: string): Promise<Result<
       description: l.description,
       quantity: String(l.quantity),
       unitPriceCents: l.unitPriceCents,
+      discountRate: l.discountRate,
       taxId: l.taxId,
     })),
   };

@@ -38,7 +38,8 @@
     "unitPrice": "Prix unitaire (DA)",
     "tax": "Taxe",
     "untaxed": "Total HT",
-    "total": "Total TTC"
+    "total": "Total TTC",
+    "billed": "Facturé"
   },
   "form": {
     "choose": "Choisir un fournisseur",
@@ -69,5 +70,19 @@
     "sequence": "Priorité",
     "add": "Ajouter ou modifier un fournisseur",
     "save": "Enregistrer"
+  },
+  "bills": {
+    "title": "Factures fournisseur",
+    "empty": "Aucune facture fournisseur pour le moment.",
+    "number": "Numéro",
+    "date": "Date",
+    "state": "Statut",
+    "amount": "Montant (DZD)",
+    "draftNumber": "Brouillon",
+    "states": {
+      "draft": "Brouillon",
+      "posted": "Validée",
+      "cancelled": "Annulée"
+    }
   }
 }

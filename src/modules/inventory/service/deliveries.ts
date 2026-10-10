@@ -10,7 +10,7 @@ import { products } from '@/modules/products/schema';
 import { deliveries, deliveryLines, type Delivery } from '../schema';
 import { closeReservations, aggregateLines, type ReservableLine } from './reservations';
 import { fromMilli } from './quantity';
-import { moveLines } from './moves';
+import { moveLines, stockTrackedLines } from './moves';
 import { ensureDefaultWarehouse } from './warehouses';
 
 export const DELIVERY_SOURCE_ENTITY = 'inventory.delivery';
@@ -159,8 +159,9 @@ export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Re
     .where(and(eq(deliveryLines.deliveryId, delivery.id), eq(deliveryLines.companyId, ctx.companyId)));
 
   const wh = await ensureDefaultWarehouse(ctx);
+  // Only stock-tracked goods move; a service line on the delivery is documentary.
   const posted = await moveLines(ctx, {
-    lines,
+    lines: await stockTrackedLines(ctx, lines),
     sourceEntity: DELIVERY_SOURCE_ENTITY,
     sourceId: delivery.id,
     reference: delivery.number,
@@ -280,6 +281,98 @@ export async function cancelOpenDeliveriesForSource(
     if (!done.ok) return done;
   }
   return ok({ cancelled: rows.length });
+}
+
+export const DELIVERY_RETURN_SOURCE_ENTITY = 'inventory.delivery.return';
+
+/**
+ * Takes back the goods of every validated (done) delivery sourced from a document, e.g. a credit
+ * contract cancelled after delivery: one posted move per product from the customer location to the
+ * internal location, per delivery. Idempotent (moveLines skips products already moved back).
+ * No permission check: called from event handlers.
+ */
+export async function returnDoneDeliveriesForSource(
+  ctx: Ctx,
+  input: { sourceEntity: string; sourceId: string },
+): Promise<Result<{ returned: number }>> {
+  const rows = await ctx.tx
+    .select({ id: deliveries.id, number: deliveries.number })
+    .from(deliveries)
+    .where(
+      and(
+        eq(deliveries.companyId, ctx.companyId),
+        eq(deliveries.sourceEntity, input.sourceEntity),
+        eq(deliveries.sourceId, input.sourceId),
+        eq(deliveries.state, 'done'),
+      ),
+    )
+    .for('update');
+  if (rows.length === 0) return ok({ returned: 0 });
+
+  const wh = await ensureDefaultWarehouse(ctx);
+  for (const row of rows) {
+    const lines = await ctx.tx
+      .select({ productId: deliveryLines.productId, quantity: deliveryLines.quantity })
+      .from(deliveryLines)
+      .where(and(eq(deliveryLines.deliveryId, row.id), eq(deliveryLines.companyId, ctx.companyId)));
+    const posted = await moveLines(ctx, {
+      lines,
+      sourceEntity: DELIVERY_RETURN_SOURCE_ENTITY,
+      sourceId: row.id,
+      reference: `${row.number}-RET`,
+      fromLocationId: wh.customerLocationId,
+      toLocationId: wh.internalLocationId,
+      post: true,
+    });
+    if (!posted.ok) return posted;
+  }
+  return ok({ returned: rows.length });
+}
+
+export type SourceDeliveryStatus = 'to_deliver' | 'partial' | 'delivered';
+
+export interface SourceDeliveryRow {
+  id: string;
+  number: string;
+  state: Delivery['state'];
+  deliveredAt: string | null;
+}
+
+/**
+ * Delivery status of a source document (e.g. a credit contract) and its live deliveries, newest first.
+ * 'delivered' when every live delivery is validated, 'partial' when some are validated and some still open,
+ * otherwise 'to_deliver'. Cancelled deliveries are left out.
+ */
+export async function sourceDeliveryStatus(
+  ctx: Ctx,
+  input: { sourceEntity: string; sourceId: string },
+): Promise<Result<{ status: SourceDeliveryStatus; deliveries: SourceDeliveryRow[] }>> {
+  const perm = requirePerm(ctx, 'inventory.delivery.read');
+  if (!perm.ok) return perm;
+  const rows = await ctx.tx
+    .select({ id: deliveries.id, number: deliveries.number, state: deliveries.state, deliveredAt: deliveries.deliveredAt })
+    .from(deliveries)
+    .where(
+      and(
+        eq(deliveries.companyId, ctx.companyId),
+        eq(deliveries.sourceEntity, input.sourceEntity),
+        eq(deliveries.sourceId, input.sourceId),
+        ne(deliveries.state, 'cancelled'),
+      ),
+    )
+    .orderBy(desc(deliveries.createdAt));
+  const done = rows.filter((r) => r.state === 'done').length;
+  const open = rows.length - done;
+  const status: SourceDeliveryStatus = done > 0 && open > 0 ? 'partial' : done > 0 ? 'delivered' : 'to_deliver';
+  return ok({
+    status,
+    deliveries: rows.map((r) => ({
+      id: r.id,
+      number: r.number,
+      state: r.state as Delivery['state'],
+      deliveredAt: r.deliveredAt ? r.deliveredAt.toISOString() : null,
+    })),
+  });
 }
 
 /** Deliveries of the company, newest first, with their line count. */

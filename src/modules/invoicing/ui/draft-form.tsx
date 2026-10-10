@@ -55,6 +55,7 @@ export function DraftForm({
         description: l.description,
         quantity: l.quantity,
         unitPrice: l.unitPrice,
+        discount: l.discount,
         taxId: l.taxId || null,
       })),
     };
@@ -121,11 +122,15 @@ export function DraftForm({
               {t('form.quantity')}
               <input required inputMode="decimal" className={INPUT} value={line.quantity} onChange={(e) => setLine(line.key, { quantity: e.target.value })} />
             </label>
-            <label className="flex flex-col gap-1 text-sm sm:col-span-3">
+            <label className="flex flex-col gap-1 text-sm sm:col-span-2">
+              {t('form.discount')}
+              <input inputMode="decimal" className={INPUT} value={line.discount} onChange={(e) => setLine(line.key, { discount: e.target.value })} />
+            </label>
+            <label className="flex flex-col gap-1 text-sm sm:col-span-4">
               {t('form.unitPrice')}
               <input required inputMode="decimal" className={INPUT} value={line.unitPrice} onChange={(e) => setLine(line.key, { unitPrice: e.target.value })} />
             </label>
-            <label className="flex flex-col gap-1 text-sm sm:col-span-3">
+            <label className="flex flex-col gap-1 text-sm sm:col-span-2">
               {t('form.tax')}
               <select className={INPUT} value={line.taxId} onChange={(e) => setLine(line.key, { taxId: e.target.value })}>
                 <option value="">{t('form.noTax')}</option>

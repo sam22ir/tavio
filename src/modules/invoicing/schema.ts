@@ -82,13 +82,18 @@ export const invoiceLines = pgTable(
     description: text('description').notNull(),
     quantity: numeric('quantity', { precision: 14, scale: 3 }).notNull(),
     unitPriceCents: bigint('unit_price_cents', { mode: 'bigint' }).notNull(),
+    // Line discount in percent (0..100, 4 decimals), same representation as sale_order_lines.discount_rate.
+    discountRate: numeric('discount_rate', { precision: 7, scale: 4 }).notNull().default('0'),
     taxId: uuid('tax_id').references(() => taxes.id),
     // Rate copied from the tax at posting time, so later rate changes do not alter history.
     taxRate: numeric('tax_rate', { precision: 7, scale: 4 }).notNull().default('0'),
     subtotalCents: bigint('subtotal_cents', { mode: 'bigint' }).notNull(),
     taxCents: bigint('tax_cents', { mode: 'bigint' }).notNull(),
   },
-  (t) => [index('invoice_lines_company_id_invoice_id_idx').on(t.companyId, t.invoiceId)],
+  (t) => [
+    index('invoice_lines_company_id_invoice_id_idx').on(t.companyId, t.invoiceId),
+    check('invoice_lines_discount_check', sql`${t.discountRate} >= 0 and ${t.discountRate} <= 100`),
+  ],
 );
 
 export const invoicePayments = pgTable(

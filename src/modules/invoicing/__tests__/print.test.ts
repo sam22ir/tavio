@@ -3,7 +3,7 @@ import { buildInvoicePrintHtml, escapeHtml, type PrintLabels } from '../service/
 
 const labels: PrintLabels = {
   title: 'Facture', seller: 'Vendeur', buyer: 'Acheteur', nif: 'NIF', nis: 'NIS', rc: 'RC', ai: 'AI', address: 'Adresse',
-  number: 'N°', date: 'Date', description: 'Désignation', qty: 'Qté', unit: 'P.U.', amount: 'HT', vatRate: 'Taux',
+  number: 'N°', date: 'Date', description: 'Désignation', qty: 'Qté', unit: 'P.U.', discount: 'Remise %', amount: 'HT', vatRate: 'Taux',
   vat: 'TVA', stampDuty: 'Timbre', totalInWords: 'Total', print: 'Imprimer',
 };
 

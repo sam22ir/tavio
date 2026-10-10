@@ -26,6 +26,9 @@ export const SCF_CHART_SEED: readonly AccountSeed[] = [
   { code: '4456', name: 'TVA déductible', accountClass: 4, type: 'asset', reconcilable: false, verify: VERIFY },
   { code: '700', name: 'Ventes de marchandises', accountClass: 7, type: 'income', reconcilable: false, verify: VERIFY },
   { code: '600', name: 'Achats de marchandises', accountClass: 6, type: 'expense', reconcilable: false, verify: VERIFY },
+  // Perpetual inventory (inventory.move.posted): stock at cost, and goods received but not yet billed.
+  { code: '30', name: 'Stocks de marchandises', accountClass: 3, type: 'asset', reconcilable: false, verify: VERIFY },
+  { code: '380', name: 'Achats de marchandises stockés (réceptions)', accountClass: 3, type: 'liability', reconcilable: false, verify: VERIFY },
   { code: '512', name: 'Banque', accountClass: 5, type: 'asset', reconcilable: true, verify: VERIFY },
   { code: '53', name: 'Caisse', accountClass: 5, type: 'asset', reconcilable: true, verify: VERIFY },
   { code: '445', name: 'Taxes (droit de timbre)', accountClass: 4, type: 'liability', reconcilable: false, verify: VERIFY },

@@ -27,6 +27,7 @@ export const manifest = defineModule({
     { label: 'inventory.menu.moves', href: '/inventory/moves', perm: 'inventory.move.read', order: 52 },
     { label: 'inventory.menu.adjustments', href: '/inventory/adjustments', perm: 'inventory.adjustment.write', order: 52 },
     { label: 'inventory.menu.low_stock', href: '/inventory/low-stock', perm: 'inventory.reorder.read', order: 52 },
+    { label: 'inventory.menu.valuation', href: '/inventory/valuation', perm: 'inventory.move.read', order: 52 },
     { label: 'inventory.menu.warehouses', href: '/inventory/warehouses', perm: 'inventory.warehouse.read', order: 52 },
     { label: 'inventory.menu.deliveries', href: '/inventory/deliveries', perm: 'inventory.delivery.read', order: 52 },
   ],

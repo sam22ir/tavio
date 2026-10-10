@@ -48,7 +48,7 @@ export const purchaseOrders = pgTable(
     untaxedCents: bigint('untaxed_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     taxCents: bigint('tax_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     totalCents: bigint('total_cents', { mode: 'bigint' }).notNull().default(sql`0`),
-    // True once a vendor bill has been created from the order
+    // True only when every line is fully billed (billed_qty >= quantity). Derived by createBillFromOrder.
     billed: boolean('billed').notNull().default(false),
     note: text('note'),
     // Document that created the order, e.g. credit_sales.contract (null for manual orders)
@@ -90,6 +90,8 @@ export const purchaseOrderLines = pgTable(
     description: text('description').notNull(),
     quantity: numeric('quantity', { precision: 14, scale: 3 }).notNull(),
     receivedQty: numeric('received_qty', { precision: 14, scale: 3 }).notNull().default('0'),
+    // Quantity already put on vendor bills, same unit as receivedQty. Bills are for received - billed.
+    billedQty: numeric('billed_qty', { precision: 14, scale: 3 }).notNull().default('0'),
     unitPriceCents: bigint('unit_price_cents', { mode: 'bigint' }).notNull(),
     taxId: uuid('tax_id').references(() => taxes.id),
     subtotalCents: bigint('subtotal_cents', { mode: 'bigint' }).notNull().default(sql`0`),
@@ -98,6 +100,10 @@ export const purchaseOrderLines = pgTable(
   (t) => [
     index('purchase_order_lines_company_id_order_id_idx').on(t.companyId, t.orderId),
     check('purchase_order_lines_quantity_check', sql`${t.quantity} > 0`),
+    check(
+      'purchase_order_lines_billed_check',
+      sql`${t.billedQty} >= 0 and ${t.billedQty} <= ${t.receivedQty}`,
+    ),
     check(
       'purchase_order_lines_received_check',
       sql`${t.receivedQty} >= 0 and ${t.receivedQty} <= ${t.quantity}`,

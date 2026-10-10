@@ -9,7 +9,14 @@ import { taxes } from '@/modules/l10n_dz/schema';
 import { invoiceLines, invoices } from '../schema';
 import { computeTotals, type LineInput } from './math';
 
-export interface NewInvoiceLine { productId?: string | null; description: string; quantity: string; unitPriceCents: bigint; taxId?: string | null }
+export interface NewInvoiceLine {
+  productId?: string | null;
+  description: string;
+  quantity: string;
+  unitPriceCents: bigint;
+  discountRate?: string | null; // percent 0..100, empty or omitted = 0
+  taxId?: string | null;
+}
 export interface NewInvoice {
   type: 'out_invoice' | 'out_refund' | 'in_invoice' | 'in_refund';
   partnerId: string;
@@ -33,6 +40,7 @@ export interface DraftPlan {
     description: string;
     quantity: string;
     unitPriceCents: bigint;
+    discountRate: string;
     taxId: string | null;
     taxRate: string;
     subtotalCents: Cents;
@@ -76,7 +84,7 @@ export async function planDraft(ctx: Ctx, input: NewInvoice): Promise<Result<Dra
     if (!l.description.trim()) return err('VALIDATION', 'line description required', { field: `lines.${i}.description` });
     const rate = l.taxId ? rateById.get(l.taxId) : '0';
     if (rate === undefined) return err('NOT_FOUND', 'tax not found', { field: `lines.${i}.taxId` });
-    lineInputs.push({ quantity: l.quantity, unitPriceCents: l.unitPriceCents, ratePercent: rate ?? '0' });
+    lineInputs.push({ quantity: l.quantity, unitPriceCents: l.unitPriceCents, ratePercent: rate ?? '0', discountRate: l.discountRate ?? '0' });
   }
   let totals;
   try {
@@ -96,6 +104,7 @@ export async function planDraft(ctx: Ctx, input: NewInvoice): Promise<Result<Dra
       description: l.description.trim(),
       quantity: l.quantity,
       unitPriceCents: l.unitPriceCents,
+      discountRate: lineInputs[i]?.discountRate ?? '0',
       taxId: l.taxId ?? null,
       taxRate: lineInputs[i]?.ratePercent ?? '0',
       subtotalCents: totals.lines[i]!.subtotalCents,

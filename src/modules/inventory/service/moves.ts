@@ -1,15 +1,17 @@
 import { alias } from 'drizzle-orm/pg-core';
-import { and, desc, eq, ne, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { emit } from '@/core/events';
-import type { StockMoveDone } from '@/core/events/catalog';
+import type { InventoryMovePosted, StockMoveDone, StockMoveKind } from '@/core/events/catalog';
 import { nextNumber } from '@/core/sequences';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { products } from '@/modules/products/schema';
 import { stockLocations, stockMoves } from '../schema';
 import { fromMilli, parsePositiveQty, toMilli } from './quantity';
+import { onHandByLocation } from './stock';
+import { classifyStockMove, isIncomingKind, nextAverageCost, roundDiv, type LocationType } from './valuation';
 
 export const MOVE_STATES = ['draft', 'done', 'cancelled'] as const;
 export type MoveState = (typeof MOVE_STATES)[number];
@@ -41,6 +43,8 @@ export interface MoveRow {
 export interface LineInput {
   productId: string | null;
   quantity: string;
+  /** Purchase unit cost in cents (receipts only). */
+  unitCostCents?: string;
 }
 
 /** Inserts a draft move without a permission check. Used by services and event handlers. */
@@ -54,9 +58,11 @@ async function insertDraftMove(
     toLocationId: string;
     sourceEntity?: string;
     sourceId?: string;
+    /** Purchase unit cost in cents, for receipts. Priced at posting. */
+    unitCostCents?: bigint;
   },
 ): Promise<string> {
-  const { sourceEntity, sourceId, ...rest } = values;
+  const { sourceEntity, sourceId, unitCostCents, ...rest } = values;
   const [row] = await ctx.tx
     .insert(stockMoves)
     .values({
@@ -66,13 +72,49 @@ async function insertDraftMove(
       state: 'draft',
       sourceEntity: sourceEntity ?? null,
       sourceId: sourceId ?? null,
+      unitCostCents: unitCostCents ?? null,
     })
     .returning({ id: stockMoves.id });
   if (!row) throw new Error('stock move insert returned no row');
   return row.id;
 }
 
-/** Marks a draft move done, audits it and emits inventory.move.done in the same transaction. */
+const ALGIERS_DAY = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Africa/Algiers',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+/**
+ * Unit cost of the delivery a customer return comes back from: the latest done outgoing move of the
+ * same product for the same source document. Null when the original cannot be found.
+ */
+async function originalOutgoingCost(ctx: Ctx, move: { sourceId: string | null; productId: string; toLocationId: string }): Promise<bigint | null> {
+  if (!move.sourceId) return null;
+  const [row] = await ctx.tx
+    .select({ unitCostCents: stockMoves.unitCostCents })
+    .from(stockMoves)
+    .where(
+      and(
+        eq(stockMoves.companyId, ctx.companyId),
+        eq(stockMoves.sourceId, move.sourceId),
+        eq(stockMoves.productId, move.productId),
+        eq(stockMoves.state, 'done'),
+        eq(stockMoves.fromLocationId, move.toLocationId),
+        isNotNull(stockMoves.unitCostCents),
+      ),
+    )
+    .orderBy(desc(stockMoves.doneAt))
+    .limit(1);
+  return row?.unitCostCents ?? null;
+}
+
+/**
+ * Marks a draft move done and values it at weighted average cost (CMUP). Updates the product's
+ * average for incoming moves, audits, and emits inventory.move.done and inventory.move.posted in the
+ * same transaction. The accounting module books inventory.move.posted.
+ */
 export async function postMove(ctx: Ctx, moveId: string): Promise<Result<void>> {
   const [move] = await ctx.tx
     .select()
@@ -82,16 +124,60 @@ export async function postMove(ctx: Ctx, moveId: string): Promise<Result<void>> 
   if (!move) return err('NOT_FOUND', 'Stock move not found');
   if (move.state !== 'draft') return err('CONFLICT', 'Only draft moves can be validated');
 
+  const [from] = await ctx.tx.select({ type: stockLocations.type }).from(stockLocations).where(eq(stockLocations.id, move.fromLocationId));
+  const [to] = await ctx.tx.select({ type: stockLocations.type }).from(stockLocations).where(eq(stockLocations.id, move.toLocationId));
+  if (!from || !to) return err('NOT_FOUND', 'Stock location not found');
+  const kind: StockMoveKind | null = classifyStockMove(from.type as LocationType, to.type as LocationType);
+
+  const [product] = await ctx.tx
+    .select({ avgCostCents: products.avgCostCents, costCents: products.costCents })
+    .from(products)
+    .where(and(eq(products.id, move.productId), eq(products.companyId, ctx.companyId)))
+    .for('update');
+  if (!product) return err('NOT_FOUND', 'Product not found');
+
+  const qtyMilli = toMilli(move.quantity) ?? 0n;
+  const onHandMilli = (await onHandByLocation(ctx, { productId: move.productId })).reduce(
+    (acc, r) => acc + (toMilli(r.quantity) ?? 0n),
+    0n,
+  );
+  const currentAvg = product.avgCostCents ?? product.costCents;
+
+  let valuation;
+  if (kind !== null && isIncomingKind(kind)) {
+    // Purchase price stored on the draft, then the original delivery cost for returns, else current average.
+    const origin = kind === 'return' && move.unitCostCents === null ? await originalOutgoingCost(ctx, move) : null;
+    const unit = move.unitCostCents ?? origin ?? currentAvg;
+    valuation = nextAverageCost({ onHandMilli, avgCostCents: currentAvg }, qtyMilli, { direction: 'in', unitCostCents: unit });
+    await ctx.tx
+      .update(products)
+      .set({ avgCostCents: valuation.avgCostCents, updatedAt: sql`now()` })
+      .where(eq(products.id, move.productId));
+  } else {
+    valuation = nextAverageCost({ onHandMilli, avgCostCents: currentAvg }, qtyMilli, { direction: 'out' });
+  }
+
   await ctx.tx
     .update(stockMoves)
-    .set({ state: 'done', doneAt: sql`now()`, updatedAt: sql`now()` })
+    .set({
+      state: 'done',
+      doneAt: sql`now()`,
+      updatedAt: sql`now()`,
+      unitCostCents: valuation.unitCostCents,
+      valueCents: valuation.valueCents,
+    })
     .where(eq(stockMoves.id, move.id));
   await audit(ctx, {
     entity: 'inventory.move',
     recordId: move.id,
     action: 'validate',
     before: { state: 'draft' },
-    after: { state: 'done', quantity: move.quantity },
+    after: {
+      state: 'done',
+      quantity: move.quantity,
+      unitCostCents: valuation.unitCostCents.toString(),
+      valueCents: valuation.valueCents.toString(),
+    },
   });
   const event: StockMoveDone = {
     moveId: move.id,
@@ -101,6 +187,19 @@ export async function postMove(ctx: Ctx, moveId: string): Promise<Result<void>> 
     toLocationId: move.toLocationId,
   };
   await emit(ctx, { name: 'inventory.move.done', payload: event });
+  if (kind !== null) {
+    const posted: InventoryMovePosted = {
+      moveId: move.id,
+      reference: move.reference,
+      productId: move.productId,
+      kind,
+      quantity: move.quantity,
+      unitCostCents: valuation.unitCostCents.toString(),
+      valueCents: valuation.valueCents.toString(),
+      date: ALGIERS_DAY.format(new Date()),
+    };
+    await emit(ctx, { name: 'inventory.move.posted', payload: posted });
+  }
   return ok(undefined);
 }
 
@@ -131,6 +230,25 @@ export async function findMoveBySource(
  * product, and skips products that already have a move for this source). Posts the moves when
  * `post` is true. Idempotent, so event redelivery creates nothing new.
  */
+/** Keeps only lines of stock-tracked goods. Services and non-stock products never reserve or move stock. */
+export async function stockTrackedLines<L extends { productId: string | null }>(ctx: Ctx, lines: readonly L[]): Promise<L[]> {
+  const ids = [...new Set(lines.map((l) => l.productId).filter((id): id is string => id !== null))];
+  if (ids.length === 0) return [];
+  const rows = await ctx.tx
+    .select({ id: products.id })
+    .from(products)
+    .where(
+      and(
+        eq(products.companyId, ctx.companyId),
+        eq(products.kind, 'goods'),
+        eq(products.trackStock, true),
+        inArray(products.id, ids),
+      ),
+    );
+  const tracked = new Set(rows.map((r) => r.id));
+  return lines.filter((l) => l.productId !== null && tracked.has(l.productId));
+}
+
 export async function moveLines(
   ctx: Ctx,
   input: {
@@ -143,25 +261,33 @@ export async function moveLines(
     post: boolean;
   },
 ): Promise<Result<{ created: number }>> {
-  const totals = new Map<string, bigint>();
+  // Per product: total quantity (thousandths) and cost weighted by quantity (thousandths x cents).
+  const totals = new Map<string, { milli: bigint; costMilli: bigint; hasCost: boolean }>();
   for (const line of input.lines) {
     if (!line.productId) continue;
     const milli = toMilli(line.quantity);
     if (milli === null || milli <= 0n) continue;
-    totals.set(line.productId, (totals.get(line.productId) ?? 0n) + milli);
+    const cost = line.unitCostCents !== undefined ? BigInt(line.unitCostCents) : null;
+    const prev = totals.get(line.productId) ?? { milli: 0n, costMilli: 0n, hasCost: false };
+    totals.set(line.productId, {
+      milli: prev.milli + milli,
+      costMilli: prev.costMilli + (cost !== null ? milli * cost : 0n),
+      hasCost: prev.hasCost || cost !== null,
+    });
   }
 
   let created = 0;
-  for (const [productId, milli] of totals) {
+  for (const [productId, total] of totals) {
     if (await findMoveBySource(ctx, input.sourceEntity, input.sourceId, productId)) continue;
     const moveId = await insertDraftMove(ctx, {
       reference: input.reference,
       productId,
-      quantity: fromMilli(milli),
+      quantity: fromMilli(total.milli),
       fromLocationId: input.fromLocationId,
       toLocationId: input.toLocationId,
       sourceEntity: input.sourceEntity,
       sourceId: input.sourceId,
+      unitCostCents: total.hasCost ? roundDiv(total.costMilli, total.milli) : undefined,
     });
     if (input.post) {
       const posted = await postMove(ctx, moveId);

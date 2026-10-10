@@ -53,3 +53,23 @@ export function remainingQty(quantity: string, receivedQty: string): bigint {
   const left = ordered - received;
   return left > ZERO ? left : ZERO;
 }
+
+/**
+ * Quantity received but not yet put on a vendor bill, in thousandths. Never negative.
+ * Bills are created for exactly this amount, per line.
+ */
+export function unbilledQty(receivedQty: string, billedQty: string): bigint {
+  const received = parseQty(receivedQty) ?? ZERO;
+  const billed = parseQty(billedQty) ?? ZERO;
+  const left = received - billed;
+  return left > ZERO ? left : ZERO;
+}
+
+/**
+ * Order-level billed flag. True only when every line is fully billed (billed_qty >= ordered quantity).
+ * Orders with partial receipts therefore stay unflagged until the last unit is billed.
+ */
+export function isFullyBilled(lines: readonly { quantity: string; billedQty: string }[]): boolean {
+  if (lines.length === 0) return false;
+  return lines.every((l) => (parseQty(l.billedQty) ?? ZERO) >= (parseQty(l.quantity) ?? ZERO));
+}

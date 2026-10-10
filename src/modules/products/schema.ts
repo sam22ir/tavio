@@ -67,6 +67,10 @@ export const products = pgTable(
     // centimes, tax excluded
     salePriceCents: bigint('sale_price_cents', { mode: 'bigint' }).notNull(),
     costCents: bigint('cost_cents', { mode: 'bigint' }).notNull(),
+    // Weighted average unit cost (CMUP), centimes. One value per product per company: products are
+    // company-scoped and the average runs across all warehouses. Null until the first receipt;
+    // readers fall back to costCents.
+    avgCostCents: bigint('avg_cost_cents', { mode: 'bigint' }),
     // FK → taxes.id (added by integrator)
     defaultTaxId: uuid('default_tax_id'),
     trackStock: boolean('track_stock').notNull().default(false),

@@ -7,6 +7,7 @@ import {
   g50Summary,
   invertLines,
   invoiceLines,
+  stockMoveLines,
   paymentLines,
   posLines,
   treasuryAccount,
@@ -89,6 +90,28 @@ describe('invoiceLines', () => {
     expect(lines.map((l) => l.accountCode)).toEqual(['401', '600', '4456']);
     expect(lines[0]).toMatchObject({ creditCents: C(11900) });
     expect(sum(lines, 'debitCents')).toBe(sum(lines, 'creditCents'));
+  });
+
+  it('posts stock-tracked goods on a purchase to 380 and the rest to 600', () => {
+    const lines = invoiceLines({ ...base, type: 'in_invoice', stockedUntaxedCents: C(7000) });
+    expect(lines.map((l) => l.accountCode)).toEqual(['401', '380', '600', '4456']);
+    expect(lines[1]).toMatchObject({ debitCents: C(7000) });
+    expect(lines[2]).toMatchObject({ debitCents: C(3000) });
+    expect(sum(lines, 'debitCents')).toBe(sum(lines, 'creditCents'));
+  });
+
+  it('nets 380 to zero across receipt and vendor bill', () => {
+    const bill = invoiceLines({ ...base, type: 'in_invoice', stockedUntaxedCents: C(10000) });
+    const receipt = stockMoveLines({ kind: 'receipt', valueCents: C(10000), reference: 'WH/IN/1' });
+    const net = [...bill, ...receipt]
+      .filter((l) => l.accountCode === '380')
+      .reduce((acc, l) => acc + l.debitCents - l.creditCents, 0n);
+    expect(net).toBe(0n);
+  });
+
+  it('ignores stocked amounts on sales', () => {
+    const lines = invoiceLines({ ...base, type: 'out_invoice', stockedUntaxedCents: C(5000) });
+    expect(lines.map((l) => l.accountCode)).toEqual(['411', '700', '4457']);
   });
 
   it('inverts every line for refunds', () => {

@@ -11,9 +11,10 @@ import { partners } from '@/modules/contacts/schema';
 import { taxes } from '@/modules/l10n_dz/schema';
 import { products } from '@/modules/products/schema';
 import { createInvoice } from '@/modules/invoicing/service/create';
+import { invoices } from '@/modules/invoicing/schema';
 import { purchaseOrderLines, purchaseOrders } from '../schema';
-import { formatQty, lineAmounts, parseQty, remainingQty, sumTotals, type LineAmounts } from './math';
-import { canBill, canCancel, canConfirm, canEdit, canReceive } from './state';
+import { formatQty, isFullyBilled, lineAmounts, parseQty, remainingQty, sumTotals, unbilledQty, type LineAmounts } from './math';
+import { canCancel, canConfirm, canEdit, canReceive, isBillableState } from './state';
 
 const ENTITY = 'purchases.order';
 const NUMBER_PREFIX = 'PO-{YYYY}-';
@@ -44,10 +45,18 @@ export interface OrderListRow {
   totalCents: string;
   [key: string]: unknown;
 }
+export interface OrderBillRow {
+  id: string;
+  number: string | null;
+  date: string;
+  state: string;
+  totalCents: bigint;
+}
 export interface OrderDetail {
   order: typeof purchaseOrders.$inferSelect;
   partnerName: string;
   lines: (typeof purchaseOrderLines.$inferSelect & { productName: string | null; taxRate: string | null })[];
+  bills: OrderBillRow[];
 }
 
 const today = (): string => DAY_FORMAT.format(new Date());
@@ -282,7 +291,7 @@ export async function receiveOrder(
   }
   if (toAdd.size === 0) return err('CONFLICT', 'nothing left to receive');
 
-  const received: { productId: string | null; quantity: string }[] = [];
+  const received: { productId: string | null; quantity: string; unitCostCents: string }[] = [];
   for (const [lineId, qty] of toAdd) {
     const row = byId.get(lineId);
     if (!row) continue;
@@ -291,7 +300,7 @@ export async function receiveOrder(
       .update(purchaseOrderLines)
       .set({ receivedQty: formatQty(total), updatedAt: sql`now()` })
       .where(eq(purchaseOrderLines.id, lineId));
-    received.push({ productId: row.productId, quantity: formatQty(qty) });
+    received.push({ productId: row.productId, quantity: formatQty(qty), unitCostCents: row.unitPriceCents.toString() });
   }
 
   const complete = rows.every((r) => {
@@ -319,15 +328,19 @@ export async function createBillFromOrder(ctx: Ctx, id: string): Promise<Result<
 
   const order = await lockOrder(ctx, id);
   if (!order) return err('NOT_FOUND', 'order not found');
-  if (!canBill(order.state, order.billed)) return err('CONFLICT', 'order cannot be billed in this state');
-
   const rows = await ctx.tx
     .select()
     .from(purchaseOrderLines)
     .where(eq(purchaseOrderLines.orderId, id))
-    .orderBy(purchaseOrderLines.sequence);
-  const billable = rows.filter((r) => (parseQty(r.receivedQty) ?? BigInt(0)) > BigInt(0));
-  if (billable.length === 0) return err('CONFLICT', 'nothing received to bill');
+    .orderBy(purchaseOrderLines.sequence)
+    .for('update');
+  if (!isBillableState(order.state)) return err('CONFLICT', 'order cannot be billed in this state');
+
+  // Bill what is received but not yet billed, per line. Lines with nothing to bill are skipped.
+  const toBill = rows
+    .map((r) => ({ row: r, qty: unbilledQty(r.receivedQty, r.billedQty) }))
+    .filter((b) => b.qty > BigInt(0));
+  if (toBill.length === 0) return err('CONFLICT', 'nothing received to bill');
 
   const result = await createInvoice(ctx, {
     type: 'in_invoice',
@@ -335,19 +348,31 @@ export async function createBillFromOrder(ctx: Ctx, id: string): Promise<Result<
     origin: order.number ?? undefined,
     sourceEntity: ENTITY,
     sourceId: id,
-    lines: billable.map((r) => ({
+    lines: toBill.map(({ row: r, qty }) => ({
       productId: r.productId,
       description: r.description,
-      quantity: r.receivedQty,
+      quantity: formatQty(qty),
       unitPriceCents: r.unitPriceCents,
       taxId: r.taxId,
     })),
   });
   if (!result.ok) return result;
 
+  for (const { row: r, qty } of toBill) {
+    await ctx.tx
+      .update(purchaseOrderLines)
+      .set({ billedQty: formatQty((parseQty(r.billedQty) ?? BigInt(0)) + qty), updatedAt: sql`now()` })
+      .where(eq(purchaseOrderLines.id, r.id));
+  }
+  // Order flag: every line fully billed. See isFullyBilled in math.ts.
+  const billedAfter = rows.map((r) => {
+    const bill = toBill.find((b) => b.row.id === r.id);
+    const billed = (parseQty(r.billedQty) ?? BigInt(0)) + (bill?.qty ?? BigInt(0));
+    return { quantity: r.quantity, billedQty: formatQty(billed) };
+  });
   await ctx.tx
     .update(purchaseOrders)
-    .set({ billed: true, updatedAt: sql`now()` })
+    .set({ billed: isFullyBilled(billedAfter), updatedAt: sql`now()` })
     .where(eq(purchaseOrders.id, id));
   await audit(ctx, { action: 'bill', entity: ENTITY, recordId: id, after: { invoiceId: result.value.id } });
   return ok({ invoiceId: result.value.id });
@@ -377,10 +402,30 @@ export async function getOrder(ctx: Ctx, id: string): Promise<Result<OrderDetail
     .where(eq(purchaseOrderLines.orderId, id))
     .orderBy(purchaseOrderLines.sequence);
 
+  const bills = await ctx.tx
+    .select({
+      id: invoices.id,
+      number: invoices.number,
+      date: invoices.date,
+      state: invoices.state,
+      totalCents: invoices.totalCents,
+    })
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.companyId, ctx.companyId),
+        eq(invoices.type, 'in_invoice'),
+        eq(invoices.sourceEntity, ENTITY),
+        eq(invoices.sourceId, id),
+      ),
+    )
+    .orderBy(desc(invoices.date), desc(invoices.createdAt));
+
   return ok({
     order: row.order,
     partnerName: row.partnerName,
     lines: lines.map((l) => ({ ...l.line, productName: l.productName ?? null, taxRate: l.taxRate ?? null })),
+    bills,
   });
 }
 

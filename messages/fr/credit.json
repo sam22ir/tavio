@@ -112,6 +112,15 @@
       "amount": "Montant",
       "paid": "Payé",
       "status": "Statut"
+    },
+    "delivery": {
+      "title": "Livraisons",
+      "status": {
+        "to_deliver": "À livrer",
+        "partial": "Livré partiellement",
+        "delivered": "Livré"
+      },
+      "none": "Aucune livraison"
     }
   },
   "payment": {
