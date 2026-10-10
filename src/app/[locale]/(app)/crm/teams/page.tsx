@@ -10,9 +10,32 @@ import * as crm from '@/modules/crm/service';
 import { saveTeamFormAction, setLeadVisibilityAction } from '@/modules/crm/actions';
 import { Button } from '@/ui/primitives/button';
 import { TeamForm } from '@/modules/crm/ui/team-form';
+import { applyMourabahaAction } from '@/modules/crm/templates/actions';
 
-export default async function CrmTeamsPage({ params }: { params: Promise<{ locale: string }> }) {
+const KNOWN_SKIPPED = ['automation', 'documents'] as const;
+type KnownSkipped = (typeof KNOWN_SKIPPED)[number];
+
+function isKnownSkipped(value: string): value is KnownSkipped {
+  return (KNOWN_SKIPPED as readonly string[]).includes(value);
+}
+
+function skippedLabels(raw: string, t: (key: 'skippedAutomation' | 'skippedDocuments') => string): string {
+  return raw
+    .split(',')
+    .filter(isKnownSkipped)
+    .map((s) => t(s === 'automation' ? 'skippedAutomation' : 'skippedDocuments'))
+    .join(', ');
+}
+
+export default async function CrmTeamsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ template?: string; skipped?: string }>;
+}) {
   const { locale } = await params;
+  const query = await searchParams;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
@@ -47,6 +70,17 @@ export default async function CrmTeamsPage({ params }: { params: Promise<{ local
         </p>
       ) : (
         <>
+          {query.template === 'applied' ? (
+            <p role="status" className="rounded-md border p-4 text-sm">
+              {t('mourabahaApplied')}
+              {query.skipped ? ` ${t('mourabahaSkipped', { steps: skippedLabels(query.skipped, t) })}` : ''}
+            </p>
+          ) : null}
+          {query.template === 'failed' ? (
+            <p role="alert" className="rounded-md border p-4 text-sm text-destructive">
+              {t('mourabahaFailed')}
+            </p>
+          ) : null}
           <section className="flex flex-col gap-2 rounded-md border p-4">
             <h2 className="text-base font-semibold">{t('visibilityTitle')}</h2>
             <p className="text-sm text-muted-foreground">{t('restrictVisibilityHint')}</p>
@@ -64,6 +98,17 @@ export default async function CrmTeamsPage({ params }: { params: Promise<{ local
               <p className="text-sm">{data.restricted ? t('restrictVisibility') : t('visibilityOpen')}</p>
             )}
           </section>
+          {data.canManage ? (
+            <section className="flex flex-col gap-2 rounded-md border p-4">
+              <h2 className="text-base font-semibold">{t('mourabahaTitle')}</h2>
+              <p className="text-sm text-muted-foreground">{t('mourabahaHint')}</p>
+              <form action={applyMourabahaAction}>
+                <Button type="submit" size="sm" variant="outline">
+                  {t('applyMourabaha')}
+                </Button>
+              </form>
+            </section>
+          ) : null}
           {data.teams.length === 0 ? <p className="text-sm text-muted-foreground">{t('noTeams')}</p> : null}
           {data.canManage
             ? data.teams.map((team) => (
