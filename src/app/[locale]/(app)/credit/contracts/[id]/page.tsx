@@ -8,6 +8,7 @@ import { formatDzd, type Cents } from '@/core/money';
 import { getContract } from '@/modules/credit_sales/service/contracts';
 import { listContractDocuments } from '@/modules/credit_sales/service/documents';
 import { listMembers } from '@/core/tenancy/members';
+import { CONTRACT_SOURCE_ENTITY, sourceDeliveryStatus } from '@/modules/inventory/service/deliveries';
 import { ContractWorkflowSections } from '@/modules/credit_sales/ui/contract-workflow-sections';
 import { WorkflowBar } from '@/modules/credit_sales/ui/workflow-bar';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
@@ -38,6 +39,10 @@ export default async function ContractDetailPage({
     return { ok: true as const, value: { docs: docs.value, members } };
   });
   if (!workflow.ok) notFound();
+  const deliveryRes = await withPageCtx((ctx) =>
+    sourceDeliveryStatus(ctx, { sourceEntity: CONTRACT_SOURCE_ENTITY, sourceId: id }),
+  );
+  const tInv = await getTranslations('inventory');
   const fmt = (c: Cents) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
   const receiptByPayment = new Map(receipts.map((r) => [r.paymentId, r]));
   const base = `/${locale}/credit/contracts`;
@@ -124,6 +129,27 @@ export default async function ContractDetailPage({
           },
         }}
       />
+
+      {deliveryRes.ok ? (
+        <section className="flex flex-col gap-2">
+          <h2 className="font-medium">
+            {t('contract.delivery.title')}: {t(`contract.delivery.status.${deliveryRes.value.status}`)}
+          </h2>
+          {deliveryRes.value.deliveries.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t('contract.delivery.none')}</p>
+          ) : (
+            <ul className="flex flex-col gap-1 text-sm">
+              {deliveryRes.value.deliveries.map((d) => (
+                <li key={d.id} className="flex flex-wrap items-center gap-2">
+                  <Link href={`/${locale}/inventory/deliveries/${d.id}`} className="underline">{d.number}</Link>
+                  <span className="text-muted-foreground">{tInv(`options.delivery_state.${d.state}`)}</span>
+                  {d.deliveredAt ? <span className="text-muted-foreground">{d.deliveredAt.slice(0, 10)}</span> : null}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ) : null}
 
       <section className="flex flex-col gap-2">
         <h2 className="font-medium">{t('contract.installments')}</h2>
