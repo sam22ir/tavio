@@ -66,3 +66,16 @@ export function whatsappLink(phone: string | null, text: string): string | null 
   if (!number) return null;
   return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
 }
+
+export interface InstallmentTitleData { seq: number | string; contractNumber: string; dueDate: string }
+
+// Activity titles are stored as text, so they are written in the company locale when created.
+const INSTALLMENT_TITLES: Record<Locale, (d: InstallmentTitleData) => string> = {
+  fr: (d) => `Versement ${d.seq} du contrat ${d.contractNumber}, échéance le ${d.dueDate}`,
+  ar: (d) => `القسط ${d.seq} للعقد ${d.contractNumber}، تاريخ الاستحقاق ${d.dueDate}`,
+  en: (d) => `Installment ${d.seq} of ${d.contractNumber} due ${d.dueDate}`,
+};
+
+export function installmentActivityTitle(locale: Locale, d: InstallmentTitleData): string {
+  return INSTALLMENT_TITLES[locale](d);
+}

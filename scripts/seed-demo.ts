@@ -17,6 +17,7 @@ import { users } from '../src/core/db/schema/auth';
 import { loadDevEnv } from '../src/core/env/load-dev-env';
 import { createCompany, listMyCompanies, loadTenantArgs } from '../src/core/tenancy/service';
 import { ensureCompanySetup, must, seedCompanyData } from '../src/core/demo/sample-data';
+import { repairDemoStock } from '../src/core/demo/repair-stock';
 import { partners } from '../src/modules/contacts/schema';
 import { products } from '../src/modules/products/schema';
 import { creditContracts, creditPayments } from '../src/modules/credit_sales/schema';
@@ -190,9 +191,33 @@ async function seedExistingCompany(companyId: string, db: Db, state: { step: str
   return 'seeded';
 }
 
+// Repairs stock and activity titles of existing companies (see src/core/demo/repair-stock.ts). Idempotent.
+async function repairExistingCompany(companyId: string, db: Db): Promise<void> {
+  const userId = await findOwnerId(companyId, db);
+  const tenant = must(await loadTenantArgs(userId, companyId, 'fr'), 'load tenant');
+  const report = await repairDemoStock(tenant, db);
+  console.log(`${companyId}: repaired ${JSON.stringify(report)}`);
+}
+
 async function main(): Promise<void> {
   const db = getDb();
-  const targets = parseCompanyArgs(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  if (argv.includes('--repair-stock')) {
+    const named = await db.select({ id: companies.id }).from(companies).where(eq(companies.legalName, COMPANY_NAME));
+    const targets = parseCompanyArgs(argv);
+    if (targets.length === 0) targets.push(...named.map((c) => c.id));
+    for (const companyId of targets) {
+      try {
+        await repairExistingCompany(companyId, db);
+      } catch (e: unknown) {
+        const cause = e instanceof Error && e.cause instanceof Error ? e.cause.message : '';
+        console.error(`repair-stock failed for ${companyId}`, e instanceof Error ? e.message.slice(0, 200) : 'unknown', cause.slice(0, 300));
+        process.exitCode = 1;
+      }
+    }
+    return;
+  }
+  const targets = parseCompanyArgs(argv);
   if (targets.length > 0) {
     for (const companyId of targets) {
       const state = { step: 'company' };
