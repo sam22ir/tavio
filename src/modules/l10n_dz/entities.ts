@@ -14,8 +14,9 @@ export const taxEntity: EntityDef = {
       list: true,
       filter: true,
       options: [
-        { value: 'vat', label: 'l10n.options.kind.vat' },
-        { value: 'stamp', label: 'l10n.options.kind.stamp' },
+        { value: 'tva', label: 'l10n.options.kind.tva' },
+        { value: 'tap', label: 'l10n.options.kind.tap' },
+        { value: 'retenue_source', label: 'l10n.options.kind.retenue_source' },
         { value: 'other', label: 'l10n.options.kind.other' },
       ],
     },

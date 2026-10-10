@@ -3,11 +3,12 @@ import { z } from 'zod';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { err, ok, type Result } from '@/core/result';
-import { DZ_TAX_DEFAULTS } from '../data';
+import { DZ_TAX_DEFAULTS, TAX_KINDS } from '../data';
 import { taxes, type Tax } from '../schema';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const RATE_RE = /^\d{1,3}(\.\d{1,4})?$/;
+const ACCOUNT_RE = /^\d{2,8}$/;
 
 // Empty optional strings from HTML forms become null.
 const emptyToNull = (v: unknown) => (v === '' || v === undefined ? null : v);
@@ -15,7 +16,7 @@ const emptyToNull = (v: unknown) => (v === '' || v === undefined ? null : v);
 export const taxInput = z.object({
   code: z.string().trim().min(1).max(20),
   name: z.string().trim().min(1).max(100),
-  kind: z.enum(['vat', 'stamp', 'other']),
+  kind: z.enum(TAX_KINDS),
   rate: z.string().trim().regex(RATE_RE, 'Invalid rate'),
   scope: z.enum(['sale', 'purchase', 'both']),
   validFrom: z.string().regex(DATE_RE, 'Invalid date'),
@@ -24,6 +25,8 @@ export const taxInput = z.object({
   isDefaultSale: z.boolean().default(false),
   isDefaultPurchase: z.boolean().default(false),
   active: z.boolean().default(true),
+  saleAccountCode: z.string().trim().regex(ACCOUNT_RE, 'Invalid account').default('447'),
+  purchaseAccountCode: z.string().trim().regex(ACCOUNT_RE, 'Invalid account').default('447'),
 });
 export type TaxInput = z.output<typeof taxInput>;
 
@@ -70,6 +73,8 @@ export async function createTax(ctx: Ctx, input: TaxInput): Promise<Result<Tax>>
       isDefaultSale: input.isDefaultSale,
       isDefaultPurchase: input.isDefaultPurchase,
       active: input.active,
+      saleAccountCode: input.saleAccountCode,
+      purchaseAccountCode: input.purchaseAccountCode,
     })
     .returning();
   if (!row) return err('INTERNAL', 'Insert returned no row');
@@ -105,6 +110,8 @@ export async function updateTax(ctx: Ctx, id: string, patch: Partial<TaxInput>):
       ...(patch.isDefaultSale !== undefined && { isDefaultSale: patch.isDefaultSale }),
       ...(patch.isDefaultPurchase !== undefined && { isDefaultPurchase: patch.isDefaultPurchase }),
       ...(patch.active !== undefined && { active: patch.active }),
+      ...(patch.saleAccountCode !== undefined && { saleAccountCode: patch.saleAccountCode }),
+      ...(patch.purchaseAccountCode !== undefined && { purchaseAccountCode: patch.purchaseAccountCode }),
       updatedAt: sql`now()`,
     })
     .where(and(eq(taxes.id, id), eq(taxes.companyId, ctx.companyId)))
@@ -151,6 +158,9 @@ export async function loadAlgerianDefaults(ctx: Ctx): Promise<Result<{ inserted:
     legalRef: d.legalRef,
     isDefaultSale: d.isDefaultSale,
     isDefaultPurchase: d.isDefaultPurchase,
+    saleAccountCode: d.saleAccountCode,
+    purchaseAccountCode: d.purchaseAccountCode,
+    active: d.active,
   }));
 
   const inserted = await ctx.tx

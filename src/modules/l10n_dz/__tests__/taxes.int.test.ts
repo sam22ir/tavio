@@ -33,7 +33,7 @@ describe('l10n_dz taxes', () => {
     expect(second).toEqual({ ok: true, value: { inserted: 0 } });
 
     const vat = await withTenant(a, async (ctx) =>
-      ctx.tx.select().from(taxes).where(and(eq(taxes.companyId, a.companyId), eq(taxes.kind, 'vat'))),
+      ctx.tx.select().from(taxes).where(and(eq(taxes.companyId, a.companyId), eq(taxes.kind, 'tva'))),
     );
     expect(vat).toHaveLength(2);
   });
@@ -43,7 +43,7 @@ describe('l10n_dz taxes', () => {
     const input = {
       code: 'TVA0',
       name: 'TVA 0%',
-      kind: 'vat' as const,
+      kind: 'tva' as const,
       rate: '0',
       scope: 'both' as const,
       validFrom: '2024-01-01',
@@ -52,6 +52,8 @@ describe('l10n_dz taxes', () => {
       isDefaultSale: false,
       isDefaultPurchase: false,
       active: true,
+      saleAccountCode: '447',
+      purchaseAccountCode: '447',
     };
     const created = await withTenant(a, (ctx) => createTax(ctx, input));
     expect(created.ok).toBe(true);

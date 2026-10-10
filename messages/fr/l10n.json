@@ -20,8 +20,9 @@
   },
   "options": {
     "kind": {
-      "vat": "TVA",
-      "stamp": "Timbre fiscal",
+      "tva": "TVA",
+      "tap": "TAP",
+      "retenue_source": "Retenue à la source",
       "other": "Autre"
     },
     "scope": {
@@ -53,5 +54,73 @@
     "valid_to_optional": "Facultatif",
     "empty": "Aucune taxe pour le moment.",
     "loading": "Chargement..."
+  },
+  "regime": {
+    "title": "Régime fiscal",
+    "help": "Régime de l’entreprise. Le choix doit être confirmé par votre expert-comptable.",
+    "label": "Régime",
+    "reel": "Régime réel",
+    "ifu": "IFU (impôt forfaitaire unique)",
+    "save": "Enregistrer le régime",
+    "saved": "Régime enregistré."
+  },
+  "stamp": {
+    "title": "Timbre fiscal",
+    "help": "Tranches du droit de timbre. Chaque tranche s’applique tant que le montant (en DA entiers) est inférieur au plafond. La dernière tranche n’a pas de plafond. ⚠ À vérifier par l’expert-comptable.",
+    "methods": "Modes de paiement soumis au timbre",
+    "tiers": "Tranches",
+    "tiers_help": "Laissez le plafond vide pour la dernière tranche. Une ligne vide est ignorée.",
+    "up_to": "Plafond (DA, exclu)",
+    "unbounded": "Sans plafond",
+    "mode": "Type",
+    "mode_fixed": "Montant fixe",
+    "mode_rate": "Taux",
+    "value_fixed": "Montant (DA)",
+    "value_rate": "Taux (%)",
+    "save": "Enregistrer le timbre",
+    "saved": "Paramètres du timbre enregistrés."
+  },
+  "methods": {
+    "cash": "Espèces",
+    "ccp": "CCP",
+    "transfer": "Virement",
+    "cib": "CIB",
+    "edahabia": "Edahabia",
+    "cheque": "Chèque"
+  },
+  "g50": {
+    "title": "Déclaration G50 (TVA mensuelle)",
+    "intro": "Préparez le brouillon du mois à partir des écritures validées, puis validez-le pour verrouiller le mois.",
+    "open": "Ouvrir les déclarations G50",
+    "draft_banner": "⚠ Brouillon à vérifier par l’expert-comptable. Ne constitue pas une déclaration officielle.",
+    "prev_year": "Année précédente",
+    "next_year": "Année suivante",
+    "export_csv": "Exporter CSV",
+    "export_xlsx": "Exporter XLSX",
+    "month": "Mois",
+    "status": "Statut",
+    "status_none": "Non préparé",
+    "status_draft": "Brouillon",
+    "status_validated": "Validé",
+    "collected": "TVA collectée",
+    "deductible": "TVA déductible",
+    "net": "TVA à payer",
+    "stamp": "Timbre",
+    "actions": "Actions",
+    "prepare": "Préparer",
+    "validate": "Valider",
+    "prepared": "Brouillon enregistré.",
+    "validated_ok": "Mois validé et verrouillé.",
+    "print": "Imprimer",
+    "period_locked": "Ce mois est verrouillé par une déclaration G50 validée. Les factures de ce mois ne peuvent plus être modifiées.",
+    "print_heading": "Déclaration G50 (brouillon)",
+    "print_period": "Période",
+    "print_draft_flag": "BROUILLON À VÉRIFIER PAR L’EXPERT-COMPTABLE",
+    "print_collected": "TVA collectée",
+    "print_deductible": "TVA déductible",
+    "print_net": "TVA à payer",
+    "print_stamp": "Timbre fiscal (445)",
+    "print_accounts": "Calculé à partir des écritures validées : 4457 (collectée), 4456 (déductible), 445 (timbre).",
+    "print_verify": "Montants indicatifs. Vérifiez-les avant toute déclaration."
   }
 }

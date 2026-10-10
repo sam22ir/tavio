@@ -20,8 +20,9 @@
   },
   "options": {
     "kind": {
-      "vat": "VAT",
-      "stamp": "Stamp duty",
+      "tva": "VAT",
+      "tap": "TAP (business activity tax)",
+      "retenue_source": "Withholding tax",
       "other": "Other"
     },
     "scope": {
@@ -53,5 +54,73 @@
     "valid_to_optional": "Optional",
     "empty": "No taxes yet.",
     "loading": "Loading..."
+  },
+  "regime": {
+    "title": "Tax regime",
+    "help": "Company tax regime. Confirm the choice with your accountant.",
+    "label": "Regime",
+    "reel": "Standard regime (régime réel)",
+    "ifu": "IFU (simplified flat-rate tax)",
+    "save": "Save regime",
+    "saved": "Regime saved."
+  },
+  "stamp": {
+    "title": "Stamp duty",
+    "help": "Stamp duty tiers. A tier applies while the amount (whole DA) is below its upper bound. The last tier has no bound. ⚠ To be verified by the accountant.",
+    "methods": "Payment methods subject to stamp duty",
+    "tiers": "Tiers",
+    "tiers_help": "Leave the bound empty for the last tier. Empty rows are ignored.",
+    "up_to": "Upper bound (DA, exclusive)",
+    "unbounded": "No bound",
+    "mode": "Type",
+    "mode_fixed": "Fixed amount",
+    "mode_rate": "Rate",
+    "value_fixed": "Amount (DA)",
+    "value_rate": "Rate (%)",
+    "save": "Save stamp settings",
+    "saved": "Stamp settings saved."
+  },
+  "methods": {
+    "cash": "Cash",
+    "ccp": "CCP",
+    "transfer": "Transfer",
+    "cib": "CIB",
+    "edahabia": "Edahabia",
+    "cheque": "Cheque"
+  },
+  "g50": {
+    "title": "G50 VAT return (monthly)",
+    "intro": "Prepare the month’s draft from posted entries, then validate it to lock the month.",
+    "open": "Open G50 declarations",
+    "draft_banner": "⚠ Draft to be verified by the accountant. Not an official filing.",
+    "prev_year": "Previous year",
+    "next_year": "Next year",
+    "export_csv": "Export CSV",
+    "export_xlsx": "Export XLSX",
+    "month": "Month",
+    "status": "Status",
+    "status_none": "Not prepared",
+    "status_draft": "Draft",
+    "status_validated": "Validated",
+    "collected": "VAT collected",
+    "deductible": "VAT deductible",
+    "net": "VAT payable",
+    "stamp": "Stamp duty",
+    "actions": "Actions",
+    "prepare": "Prepare",
+    "validate": "Validate",
+    "prepared": "Draft saved.",
+    "validated_ok": "Month validated and locked.",
+    "print": "Print",
+    "period_locked": "This month is locked by a validated G50 declaration. Its invoices can no longer be changed.",
+    "print_heading": "G50 VAT return (draft)",
+    "print_period": "Period",
+    "print_draft_flag": "DRAFT TO BE VERIFIED BY THE ACCOUNTANT",
+    "print_collected": "VAT collected",
+    "print_deductible": "VAT deductible",
+    "print_net": "VAT payable",
+    "print_stamp": "Stamp duty (445)",
+    "print_accounts": "Computed from posted entries: 4457 (collected), 4456 (deductible), 445 (stamp duty).",
+    "print_verify": "Indicative amounts. Verify before any filing."
   }
 }
