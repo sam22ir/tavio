@@ -16,6 +16,10 @@ th,td{border-bottom:1px solid #ccc;padding:4px 6px;text-align:start}
 .box{border:1px solid #999;padding:8px;margin-top:8px}
 .sig{display:flex;justify-content:space-between;gap:24px;margin-top:40px}
 .sig div{flex:1;border-top:1px solid #111;padding-top:4px;text-align:center}
+.clauses p{margin:2px 0;text-align:justify}
+.clauses .clause-title{font-weight:700;margin-top:6px}
+.clauses .gap{height:6px}
+.sig-name{display:block;font-size:11px}
 .void{color:#b00020;font-weight:700;border:2px solid #b00020;display:inline-block;padding:2px 8px}
 .receipt{width:148mm;margin:0 auto;padding:8mm}
 .contract{width:190mm;margin:0 auto;padding:10mm}

@@ -325,11 +325,15 @@ export const creditGuarantors = pgTable(
     contractId: uuid('contract_id')
       .notNull()
       .references(() => creditContracts.id, { onDelete: 'cascade' }),
-    // FK → partners.id (added by integrator). The guarantor
-    partnerId: uuid('partner_id').notNull(),
+    // FK → partners.id (added by integrator), optional: a guarantor may not be a client record.
+    partnerId: uuid('partner_id'),
+    fullName: text('full_name').notNull(),
+    nin: text('nin').notNull(),
+    phone: text('phone'),
+    address: text('address'),
     relation: text('relation'),
-    consentAt: timestamp('consent_at', { withTimezone: true }).notNull(),
-    consentTextVersion: text('consent_text_version').notNull(),
+    consentAt: timestamp('consent_at', { withTimezone: true }),
+    consentTextVersion: text('consent_text_version'),
     // FK → files.id (added by integrator), kind id_photo
     idPhotoFileId: uuid('id_photo_file_id'),
     // FK → files.id (added by integrator)
@@ -338,7 +342,40 @@ export const creditGuarantors = pgTable(
   (t) => [
     index('credit_sales_guarantors_company_contract_idx').on(t.companyId, t.contractId),
     index('credit_sales_guarantors_company_partner_idx').on(t.companyId, t.partnerId),
-    uniqueIndex('credit_sales_guarantors_contract_partner_key').on(t.contractId, t.partnerId),
+    uniqueIndex('credit_sales_guarantors_contract_partner_key')
+      .on(t.contractId, t.partnerId)
+      .where(sql`${t.partnerId} is not null`),
+    check('credit_sales_guarantors_nin_check', sql`length(${t.nin}) between 3 and 40`),
+  ],
+);
+
+// Per-company contract settings: clause templates (fr, ar), late penalty, city and the guarantor threshold.
+// Null clause text means the built-in default template is used.
+export const creditContractSettings = pgTable(
+  'contract_settings',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    clausesFr: text('clauses_fr'),
+    clausesAr: text('clauses_ar'),
+    city: text('city'),
+    // Percent per month, e.g. "2.5". Null leaves the penalty field blank in the contract.
+    latePenaltyRate: numeric('late_penalty_rate', { precision: 7, scale: 4 }),
+    // When set, activating a contract whose financed amount is above this needs a guarantor.
+    guarantorRequiredAboveCents: bigint('guarantor_required_above_cents', { mode: 'bigint' }),
+  },
+  (t) => [
+    uniqueIndex('credit_sales_contract_settings_company_key').on(t.companyId),
+    check(
+      'credit_sales_contract_settings_penalty_check',
+      sql`${t.latePenaltyRate} is null or ${t.latePenaltyRate} >= 0`,
+    ),
+    check(
+      'credit_sales_contract_settings_guarantor_check',
+      sql`${t.guarantorRequiredAboveCents} is null or ${t.guarantorRequiredAboveCents} >= 0`,
+    ),
   ],
 );
 
@@ -445,6 +482,8 @@ export type CreditPaymentAllocation = typeof creditPaymentAllocations.$inferSele
 export type NewCreditPaymentAllocation = typeof creditPaymentAllocations.$inferInsert;
 export type CreditReceipt = typeof creditReceipts.$inferSelect;
 export type NewCreditReceipt = typeof creditReceipts.$inferInsert;
+export type CreditContractSettings = typeof creditContractSettings.$inferSelect;
+export type NewCreditContractSettings = typeof creditContractSettings.$inferInsert;
 export type CreditGuarantor = typeof creditGuarantors.$inferSelect;
 export type NewCreditGuarantor = typeof creditGuarantors.$inferInsert;
 export type CreditClientScore = typeof creditClientScores.$inferSelect;

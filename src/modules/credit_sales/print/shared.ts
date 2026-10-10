@@ -51,7 +51,7 @@ const FR_LABELS = {
   dueDate: 'Échéance',
   amount: 'Montant',
   terms: 'Conditions',
-  termsPlaceholder: '[Clauses du contrat à compléter]',
+  guarantorSignature: 'Le garant',
   sellerSignature: 'Le vendeur',
   buyerSignature: 'L’acheteur',
   printButton: 'Imprimer',
@@ -93,7 +93,7 @@ const AR_LABELS = {
   dueDate: 'تاريخ الاستحقاق',
   amount: 'المبلغ',
   terms: 'الشروط',
-  termsPlaceholder: '[بنود العقد لتعبئتها]',
+  guarantorSignature: 'الكفيل',
   sellerSignature: 'البائع',
   buyerSignature: 'المشتري',
   printButton: 'طباعة',
@@ -135,7 +135,7 @@ const EN_LABELS = {
   dueDate: 'Due date',
   amount: 'Amount',
   terms: 'Terms',
-  termsPlaceholder: '[Contract terms to be completed]',
+  guarantorSignature: 'Guarantor',
   sellerSignature: 'Seller',
   buyerSignature: 'Buyer',
   printButton: 'Print',
@@ -166,6 +166,11 @@ export function formatDate(value: Date | string, locale: Locale): string {
     day: '2-digit',
     timeZone: 'Africa/Algiers',
   }).format(date);
+}
+
+/** Pure: true for article headings such as "Article 3 - ..." or "المادة 3 - ...", which print in bold. */
+export function isClauseTitle(line: string): boolean {
+  return /^(Article \d+|المادة \d+)/.test(line);
 }
 
 export function escapeHtml(value: string | null | undefined): string {

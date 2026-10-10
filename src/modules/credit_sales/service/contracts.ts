@@ -4,7 +4,7 @@ import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { emit } from '@/core/events';
 import type { ListQuery, ListResult, Row } from '@/core/entities/types';
-import { applyRate, roundHalfUp, sumCents, type Cents } from '@/core/money';
+import { applyRate, formatDzd, roundHalfUp, sumCents, type Cents } from '@/core/money';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { nextNumber } from '@/core/sequences';
@@ -13,12 +13,14 @@ import { partners } from '@/modules/contacts/schema';
 import {
   creditContracts,
   creditContractLines,
+  creditGuarantors,
   creditInstallments,
   creditPayments,
   creditPaymentAllocations,
   creditReceipts,
 } from '../schema';
 import { buildSchedule, isIsoDate, type ScheduleLine } from './schedule';
+import { guarantorRequired, loadContractSettings } from './clauses';
 import { CONTRACT_STATES, canTransition, transitionContract } from './transitions';
 
 export type Frequency = 'monthly' | 'weekly';
@@ -316,6 +318,19 @@ export async function activateContract(ctx: Ctx, id: string): Promise<Result<{ i
   });
   if (schedule.some((line) => line.amountCents <= ZERO)) {
     return err('VALIDATION', 'Installment count is larger than the financed amount in cents', { field: 'installmentsCount' });
+  }
+
+  // Company rule: above a threshold, the contract needs at least one guarantor before activation.
+  const threshold = (await loadContractSettings(ctx)).guarantorRequiredAboveCents;
+  if (threshold !== null && guarantorRequired(contract.financedCents, threshold)) {
+    const [guarantor] = await ctx.tx
+      .select({ id: creditGuarantors.id })
+      .from(creditGuarantors)
+      .where(and(eq(creditGuarantors.companyId, ctx.companyId), eq(creditGuarantors.contractId, id)))
+      .limit(1);
+    if (!guarantor) {
+      return err('STATE', `A guarantor is required before activation: financed amount is above ${formatDzd(threshold, 'en')}`, { field: 'guarantor' });
+    }
   }
 
   const number = await nextNumber(ctx, ENTITY, { prefix: 'CR-{YYYY}-', padding: 5 });
