@@ -27,6 +27,7 @@ export default async function EditVendorInvoice({ params }: { params: Promise<{ 
     partnerId: invoice.partnerId,
     date: String(invoice.date),
     dueDate: invoice.dueDate ? String(invoice.dueDate) : '',
+    withholdingTaxId: invoice.withholdingTaxId ?? '',
     lines: lines.map((l) => ({
       key: l.id,
       productId: l.productId ?? '',

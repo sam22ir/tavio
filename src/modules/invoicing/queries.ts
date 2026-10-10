@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray, ne } from 'drizzle-orm';
 import type { Ctx } from '@/core/ctx';
 import { companies } from '@/core/db/schema/tenancy';
 import { partners } from '@/modules/contacts/schema';
@@ -45,12 +45,23 @@ export async function partnerOptionsFor(ctx: Ctx, kind: Kind): Promise<{ id: str
   return rows;
 }
 
+/** Line taxes (TVA etc.). Retenue à la source is set on the bill, so it is excluded here. */
 export async function taxOptionsFor(ctx: Ctx, kind: Kind): Promise<{ id: string; name: string; rate: string }[]> {
   const scopes = kind === 'customers' ? ['sale', 'both'] : ['purchase', 'both'];
   const rows = await ctx.tx
     .select({ id: taxes.id, name: taxes.name, rate: taxes.rate })
     .from(taxes)
-    .where(and(eq(taxes.companyId, ctx.companyId), eq(taxes.active, true), inArray(taxes.scope, scopes)));
+    .where(and(eq(taxes.companyId, ctx.companyId), eq(taxes.active, true), inArray(taxes.scope, scopes), ne(taxes.kind, 'retenue_source')));
+  return rows.map((r) => ({ id: r.id, name: r.name, rate: String(r.rate) }));
+}
+
+/** Retenue à la source options for vendor bills. Empty for customer documents. ⚠ needs accountant verification */
+export async function withholdingTaxOptionsFor(ctx: Ctx, kind: Kind): Promise<{ id: string; name: string; rate: string }[]> {
+  if (kind !== 'vendors') return [];
+  const rows = await ctx.tx
+    .select({ id: taxes.id, name: taxes.name, rate: taxes.rate })
+    .from(taxes)
+    .where(and(eq(taxes.companyId, ctx.companyId), eq(taxes.active, true), eq(taxes.kind, 'retenue_source'), inArray(taxes.scope, ['purchase', 'both'])));
   return rows.map((r) => ({ id: r.id, name: r.name, rate: String(r.rate) }));
 }
 
@@ -98,14 +109,16 @@ export async function partnerIdentity(ctx: Ctx, partnerId: string) {
 
 /** Plain lookup data for the draft line editor. Passed from server pages to the client form as data only. */
 export async function draftLookupsFor(ctx: Ctx, kind: Kind): Promise<DraftLookups> {
-  const [partners, taxes, products] = await Promise.all([
+  const [partners, taxes, withholdingTaxes, products] = await Promise.all([
     partnerOptionsFor(ctx, kind),
     taxOptionsFor(ctx, kind),
+    withholdingTaxOptionsFor(ctx, kind),
     productOptionsFor(ctx),
   ]);
   return {
     partners: partners.map((p) => ({ value: p.id, label: p.name })),
     taxes: taxes.map((x) => ({ value: x.id, label: x.name, rate: x.rate })),
+    withholdingTaxes: withholdingTaxes.map((x) => ({ value: x.id, label: x.name, rate: x.rate })),
     products: products.map((p) => ({ value: p.id, label: p.name, unitPrice: p.unitPriceCents, defaultTaxId: p.defaultTaxId })),
   };
 }

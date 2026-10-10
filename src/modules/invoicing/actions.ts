@@ -33,6 +33,7 @@ const draftInput = z.object({
   partnerId: z.uuid(),
   date: dayString,
   dueDate: dayString,
+  withholdingTaxId: optionalUuid.optional(),
   lines: z.array(draftLineInput).min(1).max(200),
 });
 
@@ -63,7 +64,14 @@ function toNewInvoice(input: z.infer<typeof draftInput>): Result<NewInvoice> {
       taxId: l.taxId,
     });
   }
-  return ok({ type: input.type, partnerId: input.partnerId, date: input.date, dueDate: input.dueDate, lines });
+  return ok({
+    type: input.type,
+    partnerId: input.partnerId,
+    date: input.date,
+    dueDate: input.dueDate,
+    withholdingTaxId: input.withholdingTaxId ?? null,
+    lines,
+  });
 }
 
 export const createDraftAction = defineAction({ perm: WRITE, schema: draftInput, module: MODULE }, (ctx, input) => {

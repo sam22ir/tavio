@@ -7,7 +7,7 @@ import { err, ok, type Result } from '@/core/result';
 import { partners } from '@/modules/contacts/schema';
 import { taxes } from '@/modules/l10n_dz/schema';
 import { invoiceLines, invoices } from '../schema';
-import { computeTotals, type LineInput } from './math';
+import { computeTotals, withholdingOn, type LineInput } from './math';
 
 export interface NewInvoiceLine {
   productId?: string | null;
@@ -25,6 +25,8 @@ export interface NewInvoice {
   origin?: string;           // e.g. sale order or PO number
   sourceEntity?: string;     // e.g. 'sales.order'
   sourceId?: string;
+  /** Vendor documents only: a retenue_source tax withheld on the untaxed base. ⚠ needs accountant verification */
+  withholdingTaxId?: string | null;
   lines: NewInvoiceLine[];
 }
 
@@ -34,6 +36,9 @@ export interface DraftPlan {
   dueDate: string | null;
   untaxedCents: Cents;
   taxCents: Cents;
+  withholdingTaxId: string | null;
+  withholdingRate: string;
+  withholdingCents: Cents;
   lineRows: {
     sequence: number;
     productId: string | null;
@@ -73,17 +78,21 @@ export async function planDraft(ctx: Ctx, input: NewInvoice): Promise<Result<Dra
   const taxIds = [...new Set(input.lines.map((l) => l.taxId).filter((v): v is string => !!v))];
   const taxRows = taxIds.length
     ? await ctx.tx
-        .select({ id: taxes.id, rate: taxes.rate })
+        .select({ id: taxes.id, rate: taxes.rate, kind: taxes.kind })
         .from(taxes)
         .where(and(eq(taxes.companyId, ctx.companyId), inArray(taxes.id, taxIds)))
     : [];
   const rateById = new Map(taxRows.map((t) => [t.id, String(t.rate)]));
+  const kindById = new Map(taxRows.map((t) => [t.id, t.kind]));
 
   const lineInputs: LineInput[] = [];
   for (const [i, l] of input.lines.entries()) {
     if (!l.description.trim()) return err('VALIDATION', 'line description required', { field: `lines.${i}.description` });
     const rate = l.taxId ? rateById.get(l.taxId) : '0';
     if (rate === undefined) return err('NOT_FOUND', 'tax not found', { field: `lines.${i}.taxId` });
+    if (l.taxId && kindById.get(l.taxId) === 'retenue_source') {
+      return err('VALIDATION', 'withholding is set on the bill, not on a line', { field: `lines.${i}.taxId` });
+    }
     lineInputs.push({ quantity: l.quantity, unitPriceCents: l.unitPriceCents, ratePercent: rate ?? '0', discountRate: l.discountRate ?? '0' });
   }
   let totals;
@@ -93,11 +102,27 @@ export async function planDraft(ctx: Ctx, input: NewInvoice): Promise<Result<Dra
     return err('VALIDATION', (e as Error).message, { field: 'lines' });
   }
 
+  let withholding: { taxId: string | null; rate: string; cents: Cents } = { taxId: null, rate: '0', cents: BigInt(0) };
+  if (input.withholdingTaxId) {
+    if (isSales) return err('VALIDATION', 'withholding applies to vendor documents only', { field: 'withholdingTaxId' });
+    const [wt] = await ctx.tx
+      .select({ id: taxes.id, rate: taxes.rate, kind: taxes.kind })
+      .from(taxes)
+      .where(and(eq(taxes.companyId, ctx.companyId), eq(taxes.id, input.withholdingTaxId)));
+    if (!wt) return err('NOT_FOUND', 'tax not found', { field: 'withholdingTaxId' });
+    if (wt.kind !== 'retenue_source') return err('VALIDATION', 'tax is not a withholding', { field: 'withholdingTaxId' });
+    const rate = String(wt.rate);
+    withholding = { taxId: wt.id, rate, cents: withholdingOn(totals.untaxedCents, rate) };
+  }
+
   return ok({
     date: input.date ?? today(),
     dueDate: input.dueDate ?? null,
     untaxedCents: totals.untaxedCents,
     taxCents: totals.taxCents,
+    withholdingTaxId: withholding.taxId,
+    withholdingRate: withholding.rate,
+    withholdingCents: withholding.cents,
     lineRows: input.lines.map((l, i) => ({
       sequence: (i + 1) * 10,
       productId: l.productId ?? null,
@@ -142,6 +167,9 @@ export async function insertDraft(
       taxCents: value.taxCents,
       stampCents: BigInt(0),
       totalCents: value.untaxedCents + value.taxCents,
+      withholdingTaxId: value.withholdingTaxId,
+      withholdingRate: value.withholdingRate,
+      withholdingCents: value.withholdingCents,
       paidCents: BigInt(0),
       paymentState: 'not_paid',
       createdBy: ctx.userId,

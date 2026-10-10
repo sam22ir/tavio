@@ -246,7 +246,7 @@ export default async function ReportsPage({
                 <TableBody>
                   {(side === 'actif' ? data.value.bilan.actif : data.value.bilan.passif).map((l, i) => (
                     <TableRow key={l.key}>
-                      <TableCell>{l.label}</TableCell>
+                      <TableCell>{t(`statements.bilan.${l.key}`)}</TableCell>
                       <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
                       <TableCell className="text-end tabular-nums">
                         {data.value.previous ? fmt((side === 'actif' ? data.value.previous.bilan.actif : data.value.previous.bilan.passif)[i]!.amountCents) : ''}
@@ -278,7 +278,7 @@ export default async function ReportsPage({
                 const prevList = data.value.previous ? [...data.value.previous.tcr.produits, ...data.value.previous.tcr.charges] : [];
                 return (
                   <TableRow key={l.key}>
-                    <TableCell>{l.label}</TableCell>
+                    <TableCell>{t(`statements.tcr.${l.key}`)}</TableCell>
                     <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
                     <TableCell className="text-end tabular-nums">{prevList[i] ? fmt(prevList[i]!.amountCents) : ''}</TableCell>
                   </TableRow>

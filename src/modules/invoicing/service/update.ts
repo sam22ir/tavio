@@ -43,6 +43,9 @@ export async function updateDraftInvoice(ctx: Ctx, id: string, input: NewInvoice
       untaxedCents: value.untaxedCents,
       taxCents: value.taxCents,
       totalCents: value.untaxedCents + value.taxCents,
+      withholdingTaxId: value.withholdingTaxId,
+      withholdingRate: value.withholdingRate,
+      withholdingCents: value.withholdingCents,
       updatedAt: new Date(),
     })
     .where(and(eq(invoices.companyId, ctx.companyId), eq(invoices.id, id), eq(invoices.state, 'draft')));

@@ -20,6 +20,8 @@
   "vat": "VAT",
   "base": "base excl. VAT",
   "stampDuty": "Stamp duty",
+  "withholding": "Withholding tax",
+  "netPayable": "Net payable",
   "totalHt": "Total excl. VAT",
   "totalTtc": "Total incl. VAT",
   "totalInWords": "Amount in words",

@@ -1,6 +1,6 @@
 // Plain (non-client) types, defaults and totals helpers for the draft line editor. Usable from server pages.
 import { formatDzd, type Cents } from '@/core/money';
-import { computeTotals, type LineInput } from '../service/math';
+import { computeTotals, withholdingOn, type LineInput } from '../service/math';
 
 export interface DraftLineDraft {
   key: string;
@@ -17,6 +17,8 @@ export interface DraftFormInitial {
   partnerId: string;
   date: string;
   dueDate: string;
+  /** Vendor bills: the retenue à la source tax, or empty for none. */
+  withholdingTaxId?: string;
   lines: DraftLineDraft[];
 }
 
@@ -24,6 +26,7 @@ export interface DraftLookups {
   partners: { value: string; label: string }[];
   products: { value: string; label: string; unitPrice: string; defaultTaxId: string | null }[];
   taxes: { value: string; label: string; rate: string }[];
+  withholdingTaxes: { value: string; label: string; rate: string }[];
 }
 
 export function newDraftLine(): DraftLineDraft {
@@ -49,10 +52,10 @@ export function dzdTextToCents(text: string): bigint | null {
   return BigInt(m[1] as string) * BigInt(100) + BigInt(frac || '0');
 }
 
-export interface DraftPreview { untaxedCents: Cents; taxCents: Cents; totalCents: Cents }
+export interface DraftPreview { untaxedCents: Cents; taxCents: Cents; totalCents: Cents; withholdingCents: Cents; netPayableCents: Cents }
 
 /** Live totals for the editor. Uses the same math as the server. Invalid lines are skipped. */
-export function previewDraftTotals(lines: DraftLineDraft[], taxRateById: Map<string, string>): DraftPreview {
+export function previewDraftTotals(lines: DraftLineDraft[], taxRateById: Map<string, string>, withholdingRate = '0'): DraftPreview {
   const inputs: LineInput[] = [];
   for (const l of lines) {
     const price = dzdTextToCents(l.unitPrice);
@@ -62,9 +65,11 @@ export function previewDraftTotals(lines: DraftLineDraft[], taxRateById: Map<str
   }
   try {
     const t = computeTotals(inputs);
-    return { untaxedCents: t.untaxedCents, taxCents: t.taxCents, totalCents: t.untaxedCents + t.taxCents };
+    const totalCents = t.untaxedCents + t.taxCents;
+    const withholdingCents = withholdingOn(t.untaxedCents, withholdingRate);
+    return { untaxedCents: t.untaxedCents, taxCents: t.taxCents, totalCents, withholdingCents, netPayableCents: totalCents - withholdingCents };
   } catch {
-    return { untaxedCents: BigInt(0), taxCents: BigInt(0), totalCents: BigInt(0) };
+    return { untaxedCents: BigInt(0), taxCents: BigInt(0), totalCents: BigInt(0), withholdingCents: BigInt(0), netPayableCents: BigInt(0) };
   }
 }
 

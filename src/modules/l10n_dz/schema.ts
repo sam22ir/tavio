@@ -138,6 +138,8 @@ export interface G50Figures {
   deductibleCents: string;
   netDueCents: string;
   stampCents: string;
+  /** Retenue à la source (447) withheld from suppliers this month, shown apart from VAT. Absent on older drafts. ⚠ needs accountant verification */
+  withholdingCents?: string;
   needsAccountantReview: true;
 }
 

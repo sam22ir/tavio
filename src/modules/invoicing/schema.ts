@@ -55,6 +55,11 @@ export const invoices = pgTable(
     totalCents: bigint('total_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     paidCents: bigint('paid_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     paymentState: text('payment_state').notNull().default('not_paid'),
+    // Retenue à la source on a vendor bill: a retenue_source tax, its rate copied at creation, and the amount on the untaxed base.
+    // It reduces what is payable to the supplier; totalCents stays the gross bill. ⚠ needs accountant verification
+    withholdingTaxId: uuid('withholding_tax_id').references(() => taxes.id),
+    withholdingRate: numeric('withholding_rate', { precision: 7, scale: 4 }).notNull().default('0'),
+    withholdingCents: bigint('withholding_cents', { mode: 'bigint' }).notNull().default(sql`0`),
   },
   (t) => [
     index('invoices_company_id_type_state_idx').on(t.companyId, t.type, t.state),
@@ -63,6 +68,7 @@ export const invoices = pgTable(
     check('invoices_state_check', sql`${t.state} in ('draft','posted','cancelled')`),
     check('invoices_payment_state_check', sql`${t.paymentState} in ('not_paid','partial','paid')`),
     check('invoices_totals_check', sql`${t.totalCents} >= 0 and ${t.paidCents} >= 0`),
+    check('invoices_withholding_check', sql`${t.withholdingCents} >= 0`),
   ],
 );
 

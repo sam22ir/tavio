@@ -32,7 +32,9 @@
     "discount": "Discount %",
     "tax": "VAT",
     "noTax": "No VAT",
-    "submit": "Create draft"
+    "submit": "Create draft",
+    "withholding": "Withholding tax",
+    "noWithholding": "No withholding"
   },
   "type": {
     "out_invoice": "Invoice",
@@ -82,7 +84,9 @@
     "payments": "Payments",
     "noPayments": "No payments.",
     "edit": "Edit",
-    "printReceipt": "Receipt"
+    "printReceipt": "Receipt",
+    "withholding": "Withholding tax",
+    "netPayable": "Net payable"
   },
   "error": {
     "VALIDATION": "Invalid data.",
@@ -124,6 +128,8 @@
     "tax": "VAT",
     "total": "Total",
     "save": "Save draft",
-    "editTitle": "Edit draft"
+    "editTitle": "Edit draft",
+    "withholding": "Withholding tax",
+    "netPayable": "Net payable"
   }
 }

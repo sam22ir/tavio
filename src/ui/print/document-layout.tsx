@@ -45,6 +45,8 @@ export interface DocumentTotals {
   taxCents: Cents;
   stampCents?: Cents;
   totalCents: Cents;
+  /** Retenue à la source on a vendor bill. Shown only when > 0. ⚠ needs accountant verification */
+  withholdingCents?: Cents;
   /** Shown only when provided (invoices with payments). */
   paidCents?: Cents;
 }
@@ -54,7 +56,7 @@ export type DocumentLabels = Record<
   | 'seller' | 'buyer' | 'nif' | 'nis' | 'rc' | 'ai' | 'address' | 'phone' | 'email' | 'wilaya'
   | 'number' | 'date' | 'dueDate' | 'description' | 'qty' | 'unit' | 'discount' | 'amount'
   | 'vatRate' | 'vat' | 'base' | 'stampDuty' | 'totalHt' | 'totalTtc' | 'totalInWords'
-  | 'paid' | 'balance' | 'page' | 'legal' | 'verify' | 'rib' | 'ccp',
+  | 'paid' | 'balance' | 'page' | 'legal' | 'verify' | 'rib' | 'ccp' | 'withholding' | 'netPayable',
   string
 >;
 
@@ -148,8 +150,10 @@ export function DocumentLayout(props: DocumentLayoutProps) {
   const showDiscount = lines.some((line) => Number(line.discountRate ?? '0') > 0);
   const vat = groupVatByRate(lines.map((line) => ({ ratePercent: line.ratePercent, baseCents: line.subtotalCents, taxCents: line.taxCents })));
   const stamp = totals.stampCents ?? BigInt(0);
+  const withholding = totals.withholdingCents ?? BigInt(0);
+  const netPayable = totals.totalCents - withholding;
   const hasPayments = totals.paidCents !== undefined && totals.paidCents > BigInt(0);
-  const balance = hasPayments ? totals.totalCents - (totals.paidCents as Cents) : null;
+  const balance = hasPayments ? netPayable - (totals.paidCents as Cents) : null;
   const legal = props.legalText ?? `${l.legal} ${l.verify}`;
 
   return (
@@ -209,6 +213,12 @@ export function DocumentLayout(props: DocumentLayoutProps) {
             <tr><td>{l.stampDuty}</td><td className="n"><Money cents={stamp} locale={locale} /></td></tr>
           ) : null}
           <tr className="grand"><td>{l.totalTtc}</td><td className="n"><Money cents={totals.totalCents} locale={locale} /></td></tr>
+          {withholding > BigInt(0) ? (
+            <>
+              <tr><td>{l.withholding}</td><td className="n"><Money cents={withholding} locale={locale} /></td></tr>
+              <tr className="grand"><td>{l.netPayable}</td><td className="n"><Money cents={netPayable} locale={locale} /></td></tr>
+            </>
+          ) : null}
           {hasPayments ? (
             <>
               <tr><td>{l.paid}</td><td className="n"><Money cents={totals.paidCents as Cents} locale={locale} /></td></tr>
