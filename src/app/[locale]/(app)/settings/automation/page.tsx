@@ -30,10 +30,15 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
         {rules.map((rule) => {
           const cond = (rule.conditions as { field: string; op: string; value: string }[])[0];
           const cfg = rule.actionConfig as Record<string, unknown>;
+          const time = rule.timeConfig as { entity?: string; dateField?: string; delayDays?: number } | null;
           const defaults: RuleDefaults = {
             id: rule.id,
             name: rule.name,
-            triggerEvent: rule.triggerEvent,
+            kind: rule.kind,
+            triggerEvent: rule.triggerEvent ?? undefined,
+            timeEntity: time?.entity,
+            dateField: time?.dateField,
+            delayDays: time?.delayDays,
             condField: cond?.field,
             condOp: cond?.op,
             condValue: cond?.value,
@@ -45,12 +50,17 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
             dueInDays: cfg.dueInDays as number | undefined,
             body: cfg.body as string | undefined,
             url: cfg.url as string | undefined,
+            planId: cfg.planId as string | undefined,
+            ownerField: cfg.ownerField as string | undefined,
+            cancelPrevious: cfg.cancelPrevious as boolean | undefined,
+            updates: cfg.updates ? Object.entries(cfg.updates as Record<string, string>).map(([k, v]) => `${k}=${v}`).join('\n') : undefined,
+            steps: cfg.actions ? JSON.stringify(cfg.actions, null, 2) : undefined,
             active: rule.active,
           };
           return (
             <details key={rule.id} className="rounded-lg border p-4">
               <summary className="cursor-pointer font-medium">
-                {rule.name} · {t(`triggers.${rule.triggerEvent.replaceAll(".", "_")}`)} · {rule.active ? t('status.active') : t('status.inactive')}
+                {rule.name} · {rule.triggerEvent ? t(`triggers.${rule.triggerEvent.replaceAll(".", "_")}`) : t('kinds.time')} · {rule.active ? t('status.active') : t('status.inactive')}
               </summary>
               <div className="mt-4">
                 <RuleForm action={updateRuleForm} defaults={defaults} />

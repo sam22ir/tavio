@@ -26,7 +26,10 @@
     "lostAt": "Lost on",
     "wonAt": "Won on",
     "convertedContractId": "Converted contract",
-    "active": "Active"
+    "active": "Active",
+    "channel": "Channel",
+    "attemptCount": "Attempts",
+    "teamName": "Team"
   },
   "options": {
     "type": {
@@ -50,6 +53,14 @@
     "priority": {
       "0": "Normal",
       "1": "High"
+    },
+    "channel": {
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "showroom": "Showroom",
+      "web": "Web",
+      "referral": "Referral",
+      "other": "Other"
     }
   },
   "lead": {
@@ -83,6 +94,36 @@
     "expected": "Expected revenue",
     "call": "Call",
     "whatsapp": "WhatsApp",
-    "convert": "Convert to credit contract"
+    "convert": "Convert to credit contract",
+    "logAttempt": "Log attempt",
+    "daysInStage": "{count, plural, one {# day in stage} other {# days in stage}}",
+    "stageRequirements": "Requirements for this stage",
+    "teams": "Teams",
+    "teamsTitle": "Sales teams",
+    "newTeam": "New team",
+    "teamName": "Team name",
+    "teamLeader": "Leader",
+    "noLeader": "No leader",
+    "teamMembers": "Members",
+    "saveTeam": "Save team",
+    "teamSaved": "Team saved",
+    "noTeams": "No teams yet.",
+    "allTeams": "All teams",
+    "teamFilter": "Team",
+    "applyFilter": "Apply",
+    "restrictVisibility": "Restrict lead visibility by team",
+    "restrictVisibilityHint": "Off: everyone who can read leads sees all leads. On: users see their own leads, their team leads (with the view-team permission) and the leads of teams they lead. Users with view-all see everything.",
+    "visibilityTitle": "Lead visibility",
+    "visibilityOpen": "All leads are visible to users who can read leads.",
+    "saveSetting": "Save setting",
+    "mourabahaTitle": "Mourabaha template",
+    "mourabahaHint": "Creates the Mourabaha pipeline, exit reasons, activity types and plans, automation rules and required documents. Safe to run again without duplicates.",
+    "applyMourabaha": "Apply Mourabaha template",
+    "mourabahaApplied": "Mourabaha template applied",
+    "mourabahaSkipped": "Skipped steps: {steps}.",
+    "skippedAutomation": "automation rules (module not enabled)",
+    "skippedDocuments": "required documents (missing permission)",
+    "mourabahaFailed": "Applying the Mourabaha template failed.",
+    "pipelineFilter": "Pipeline"
   }
 }

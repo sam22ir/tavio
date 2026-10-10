@@ -61,7 +61,17 @@
       "due": "Échéances",
       "activities": "Activités"
     },
-    "viewAll": "Tout voir →"
+    "viewAll": "Tout voir →",
+    "pipeline": {
+      "title": "Pipeline",
+      "openByStage": "Prospects ouverts par étape",
+      "noStages": "Aucune étape de pipeline pour le moment.",
+      "withoutActivity": "Prospects ouverts sans activité",
+      "avgDays": "Jours moyens dans l'étape",
+      "wonThisMonth": "Gagnés ce mois-ci",
+      "conversion": "Taux de conversion ce mois-ci",
+      "overdueActivities": "Activités en retard"
+    }
   },
   "pillars": {
     "acquisition": "Acquisition",

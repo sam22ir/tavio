@@ -68,6 +68,8 @@ export const stages = pgTable(
     isWon: boolean('is_won').notNull().default(false),
     // collapsed in kanban
     fold: boolean('fold').notNull().default(false),
+    // shown as a hint on the kanban column and the lead form
+    requirements: text('requirements'),
   },
   (t) => [
     index('stages_company_id_pipeline_id_position_idx').on(t.companyId, t.pipelineId, t.position),
@@ -95,6 +97,58 @@ export const lostReasons = pgTable(
   (t) => [
     index('lost_reasons_company_id_active_idx').on(t.companyId, t.active),
     uniqueIndex('lost_reasons_company_id_name_key').on(t.companyId, t.name),
+  ],
+);
+
+// CRM settings (one row per company, created on first save). Tenant table.
+// restrict_lead_visibility: when false, every user with crm.lead.read sees all leads.
+export const crmSettings = pgTable(
+  'crm_settings',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    restrictLeadVisibility: boolean('restrict_lead_visibility').notNull().default(false),
+  },
+  (t) => [uniqueIndex('crm_settings_company_id_key').on(t.companyId)],
+);
+
+// Sales teams. Tenant table. A leader sees every lead of the team.
+export const salesTeams = pgTable(
+  'sales_teams',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    name: text('name').notNull(),
+    // FK → users.id (added by integrator). Null when the team has no leader
+    leaderId: uuid('leader_id'),
+  },
+  (t) => [
+    index('sales_teams_company_id_idx').on(t.companyId),
+    uniqueIndex('sales_teams_company_id_name_key').on(t.companyId, t.name),
+  ],
+);
+
+// Sales team members. Tenant table. A user belongs to at most one team per company.
+export const salesTeamMembers = pgTable(
+  'sales_team_members',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    teamId: uuid('team_id')
+      .notNull()
+      .references(() => salesTeams.id, { onDelete: 'cascade' }),
+    // FK → users.id (added by integrator)
+    userId: uuid('user_id').notNull(),
+  },
+  (t) => [
+    index('sales_team_members_company_id_team_id_idx').on(t.companyId, t.teamId),
+    uniqueIndex('sales_team_members_company_id_user_id_key').on(t.companyId, t.userId),
   ],
 );
 
@@ -149,9 +203,17 @@ export const leads = pgTable(
     // converted_quote_id uuid
     // Archived leads are active = false
     active: boolean('active').notNull().default(true),
+    // when the lead entered its current stage. Set on create and on every stage change
+    stageEnteredAt: timestamp('stage_entered_at', { withTimezone: true }).notNull().defaultNow(),
+    // number of contact attempts logged on the lead
+    attemptCount: integer('attempt_count').notNull().default(0),
+    // how the lead came in: phone, whatsapp, showroom, web, referral, other
+    channel: text('channel'),
     // denormalized pointer for kanban, optional (guess in DATA_MODEL.md)
     // FK → activities.id (added by integrator)
     nextActivityId: uuid('next_activity_id'),
+    // sales team of the lead. Defaults to the team of the salesperson at save time
+    teamId: uuid('team_id').references(() => salesTeams.id, { onDelete: 'set null' }),
   },
   (t) => [
     index('leads_company_id_pipeline_id_stage_id_idx').on(t.companyId, t.pipelineId, t.stageId),
@@ -162,6 +224,7 @@ export const leads = pgTable(
       t.status,
     ),
     index('leads_company_id_partner_id_idx').on(t.companyId, t.partnerId),
+    index('leads_company_id_team_id_idx').on(t.companyId, t.teamId),
     index('leads_company_id_phone_idx').on(t.companyId, t.phone),
     uniqueIndex('leads_company_id_reference_key')
       .on(t.companyId, t.reference)
@@ -183,6 +246,11 @@ export const leads = pgTable(
       sql`${t.status} <> 'lost' or (${t.lostReasonId} is not null and ${t.lostAt} is not null)`,
     ),
     check('leads_won_check', sql`${t.status} <> 'won' or ${t.wonAt} is not null`),
+    check('leads_attempt_count_check', sql`${t.attemptCount} >= 0`),
+    check(
+      'leads_channel_check',
+      sql`${t.channel} is null or ${t.channel} in ('phone', 'whatsapp', 'showroom', 'web', 'referral', 'other')`,
+    ),
   ],
 );
 
@@ -239,6 +307,11 @@ export type LostReason = typeof lostReasons.$inferSelect;
 export type NewLostReason = typeof lostReasons.$inferInsert;
 export type Lead = typeof leads.$inferSelect;
 export type NewLead = typeof leads.$inferInsert;
+export type CrmSettings = typeof crmSettings.$inferSelect;
+export type SalesTeam = typeof salesTeams.$inferSelect;
+export type NewSalesTeam = typeof salesTeams.$inferInsert;
+export type SalesTeamMember = typeof salesTeamMembers.$inferSelect;
+export type NewSalesTeamMember = typeof salesTeamMembers.$inferInsert;
 export type Tag = typeof tags.$inferSelect;
 export type NewTag = typeof tags.$inferInsert;
 export type TagLink = typeof tagLinks.$inferSelect;

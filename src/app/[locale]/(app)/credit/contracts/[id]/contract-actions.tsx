@@ -17,6 +17,8 @@ import {
 } from '@/ui/primitives/dialog';
 import { activateContractById, cancelContractById } from '@/modules/credit_sales/actions/contracts';
 
+const CANCELLABLE = ['draft', 'submitted', 'under_review', 'approved', 'reserved', 'active'];
+
 interface Props {
   contractId: string;
   state: string;
@@ -56,10 +58,10 @@ export function ContractActions({ contractId, state }: Props) {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {state === 'draft' ? (
+      {state === 'draft' || state === 'reserved' ? (
         <Button onClick={activate} disabled={pending}>{t('contract.activate')}</Button>
       ) : null}
-      {state === 'draft' || state === 'active' ? (
+      {CANCELLABLE.includes(state) ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="outline">{t('contract.cancel')}</Button>

@@ -3,6 +3,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getDb } from '@/core/db/client';
 import { drainOutbox } from '@/core/events';
 import { handleAutomationWebhook, handleOutboxRow, AUTOMATION_WEBHOOK_EVENT } from '@/modules/platform/outbox-handler';
+import { runTimedRulesForCompanies } from '@/modules/automation/timed';
 
 
 // Reads CRON_SECRET from the Workers env when available, otherwise from process.env (Node).
@@ -27,5 +28,7 @@ export async function POST(request: Request): Promise<Response> {
     if (row.eventName === AUTOMATION_WEBHOOK_EVENT) await handleAutomationWebhook(row);
     else await handleOutboxRow(row, db);
   });
-  return Response.json({ processed });
+  // Time-based automation rules fire once per record, per company.
+  const timed = await runTimedRulesForCompanies(db);
+  return Response.json({ processed, timed });
 }

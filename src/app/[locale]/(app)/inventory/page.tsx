@@ -28,6 +28,8 @@ export default async function StockPage({ params }: { params: Promise<{ locale: 
                 <tr>
                   <th className="p-3 text-start font-medium">{t('fields.product')}</th>
                   <th className="p-3 text-end font-medium">{t('fields.on_hand')}</th>
+                  <th className="p-3 text-end font-medium">{t('fields.reserved')}</th>
+                  <th className="p-3 text-end font-medium">{t('fields.available')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -35,6 +37,8 @@ export default async function StockPage({ params }: { params: Promise<{ locale: 
                   <tr key={row.productId} className="border-t">
                     <td className="p-3 break-words">{row.productName}</td>
                     <td className="p-3 text-end tabular-nums">{row.onHand}</td>
+                    <td className="p-3 text-end tabular-nums">{row.reserved}</td>
+                    <td className="p-3 text-end tabular-nums">{row.available}</td>
                   </tr>
                 ))}
               </tbody>

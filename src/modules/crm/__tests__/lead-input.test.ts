@@ -32,3 +32,18 @@ describe('leadInput', () => {
     expect('stageId' in r.data).toBe(false);
   });
 });
+
+describe('leadInput channel', () => {
+  it('accepts the six channels and treats a blank channel as absent', () => {
+    for (const channel of ['phone', 'whatsapp', 'showroom', 'web', 'referral', 'other']) {
+      expect(leadInput.safeParse({ name: 'x', channel }).success).toBe(true);
+    }
+    const blank = leadInput.safeParse({ name: 'x', channel: '' });
+    expect(blank.success).toBe(true);
+    if (blank.success) expect(blank.data.channel).toBeUndefined();
+  });
+
+  it('rejects an unknown channel', () => {
+    expect(leadInput.safeParse({ name: 'x', channel: 'facebook' }).success).toBe(false);
+  });
+});

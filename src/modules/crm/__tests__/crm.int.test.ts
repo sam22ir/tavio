@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
+import { eq } from 'drizzle-orm';
+import { leads } from '@/modules/crm/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import type { ListQuery } from '@/core/entities/types';
 import { loadDevEnv } from '@/core/env/load-dev-env';
@@ -16,18 +18,21 @@ import {
   getLead,
   leadsByStage,
   listLeads,
+  logAttempt,
   listLostReasons,
   listStages,
   markLost,
   moveLead,
   reopenLead,
+  setLeadVisibilityRestriction,
   updateLead,
 } from '../service';
 
 loadDevEnv();
 
 // Chatter and credit sales are other modules' stubs in this worktree. Their behaviour is mocked here.
-vi.mock('@/modules/chatter/service', () => ({
+vi.mock('@/modules/chatter/service', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/modules/chatter/service')>()),
   postMessage: vi.fn(async () => ({ ok: true, value: { id: '00000000-0000-4000-8000-000000000001' } })),
 }));
 vi.mock('@/modules/credit_sales/service/contracts', () => ({
@@ -232,3 +237,62 @@ describe('leads', { timeout: 30000 }, () => {
   });
 });
 
+
+describe('lead visibility setting', () => {
+  // The writer owns one lead; the reader is a different user with read-only, and a second user with read and write but no view permission.
+  const writerArgs = args();
+  const readerId = randomUUID();
+  const readOnly: TenantArgs = { userId: readerId, companyId, perms: new Set(['crm.lead.read']), locale: 'en' };
+  const readWriteOwn: TenantArgs = { userId: readerId, companyId, perms: new Set(['crm.lead.read', 'crm.lead.write']), locale: 'en' };
+  let writerLead: string;
+  let ownLead: string;
+
+  beforeAll(async () => {
+    // leads.salesperson_id references users, so the reader needs a row.
+    await getDb().insert(users).values({ id: readerId, name: 'CRM Reader', email: `crm-reader-${readerId}@test.invalid` });
+    const w = await withTenant(writerArgs, (ctx) => createLead(ctx, { name: 'Writer lead', salespersonId: userId }));
+    if (!w.ok) throw new Error(w.error.message);
+    writerLead = w.value.id;
+    const o = await withTenant(writerArgs, (ctx) => createLead(ctx, { name: 'Reader lead', salespersonId: readerId }));
+    if (!o.ok) throw new Error(o.error.message);
+    ownLead = o.value.id;
+  });
+
+  afterAll(async () => {
+    await withTenant(writerArgs, (ctx) => setLeadVisibilityRestriction(ctx, false));
+    // Clear the reader's lead references first. The user row stays when audit_log still references it (audit is append-only).
+    const db = getDb();
+    await db.update(leads).set({ salespersonId: null }).where(eq(leads.salespersonId, readerId));
+    await db.delete(users).where(eq(users.id, readerId)).catch(() => undefined);
+  });
+
+  it('is off by default: a read-only user sees every lead', async () => {
+    const list = await withTenant(readOnly, (ctx) => listLeads(ctx, query()));
+    expect(list.ok && list.value.rows.map((r) => r.id)).toEqual(expect.arrayContaining([writerLead, ownLead]));
+    const one = await withTenant(readOnly, (ctx) => getLead(ctx, writerLead));
+    expect(one.ok).toBe(true);
+  });
+
+  it('when on, a read-only user sees only their own leads', async () => {
+    const on = await withTenant(writerArgs, (ctx) => setLeadVisibilityRestriction(ctx, true));
+    expect(on.ok).toBe(true);
+
+    const list = await withTenant(readOnly, (ctx) => listLeads(ctx, query()));
+    const ids = list.ok ? list.value.rows.map((r) => r.id) : [];
+    expect(ids).toContain(ownLead);
+    expect(ids).not.toContain(writerLead);
+
+    const other = await withTenant(readOnly, (ctx) => getLead(ctx, writerLead));
+    expect(other.ok ? 'ok' : other.error.code).toBe('NOT_FOUND');
+  });
+
+  it('when on, writes outside the scope are NOT_FOUND', async () => {
+    const updated = await withTenant(readWriteOwn, (ctx) => updateLead(ctx, writerLead, { name: 'Hijacked' }));
+    expect(updated.ok ? 'ok' : updated.error.code).toBe('NOT_FOUND');
+    const logged = await withTenant(readWriteOwn, (ctx) => logAttempt(ctx, writerLead));
+    expect(logged.ok ? 'ok' : logged.error.code).toBe('NOT_FOUND');
+
+    const own = await withTenant(readWriteOwn, (ctx) => updateLead(ctx, ownLead, { name: 'Mine' }));
+    expect(own.ok).toBe(true);
+  });
+});

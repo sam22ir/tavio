@@ -7,6 +7,7 @@ import { err, ok, type Result } from '@/core/result';
 import { products } from '@/modules/products/schema';
 import { reorderRules, stockLocations, stockMoves, warehouses } from '../schema';
 import { fromMilli, parsePositiveQty, toMilli } from './quantity';
+import { activeReservedByProduct } from './reservations';
 
 export interface OnHandRow {
   productId: string;
@@ -19,6 +20,10 @@ export interface StockLevelRow {
   productId: string;
   productName: string;
   onHand: string;
+  /** Quantity held by active reservations. */
+  reserved: string;
+  /** On hand minus reserved. */
+  available: string;
 }
 
 export interface LowStockRow {
@@ -97,7 +102,9 @@ export async function stockLevels(ctx: Ctx): Promise<Result<StockLevelRow[]>> {
   const rows = await onHandByLocation(ctx);
   const totals = new Map<string, bigint>();
   for (const r of rows) totals.set(r.productId, (totals.get(r.productId) ?? 0n) + (toMilli(r.quantity) ?? 0n));
-  if (totals.size === 0) return ok([]);
+  const reserved = await activeReservedByProduct(ctx);
+  const listed = new Set([...totals.keys(), ...reserved.keys()]);
+  if (listed.size === 0) return ok([]);
 
   const names = await ctx.tx
     .select({ id: products.id, name: products.name })
@@ -106,8 +113,18 @@ export async function stockLevels(ctx: Ctx): Promise<Result<StockLevelRow[]>> {
     .orderBy(asc(products.name));
   return ok(
     names
-      .filter((p) => totals.has(p.id))
-      .map((p) => ({ productId: p.id, productName: p.name, onHand: fromMilli(totals.get(p.id) ?? 0n) })),
+      .filter((p) => listed.has(p.id))
+      .map((p) => {
+        const onHand = totals.get(p.id) ?? 0n;
+        const held = reserved.get(p.id) ?? 0n;
+        return {
+          productId: p.id,
+          productName: p.name,
+          onHand: fromMilli(onHand),
+          reserved: fromMilli(held),
+          available: fromMilli(onHand - held),
+        };
+      }),
   );
 }
 

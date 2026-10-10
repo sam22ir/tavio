@@ -2,6 +2,7 @@ import { and, asc, count, desc, eq, ilike, or, sql, type SQL } from 'drizzle-orm
 import { z } from 'zod';
 import type { Ctx } from '@/core/ctx';
 import { audit } from '@/core/audit';
+import { emit } from '@/core/events';
 import type { Tx } from '@/core/db/types';
 import type { ListQuery, ListResult } from '@/core/entities/types';
 import { requirePerm } from '@/core/perms';
@@ -13,6 +14,8 @@ import { postMessage } from '@/modules/chatter/service';
 import { activities } from '@/modules/chatter/schema';
 import { leads, lostReasons, stages } from '../schema';
 import { ensureDefaultPipeline } from './pipeline';
+import { LEAD_CHANNELS } from './lead-constants';
+import { leadScope, teamIdForUser } from './teams';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -33,7 +36,10 @@ export const leadInput = z.object({
     blank,
     z.enum(['walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other']).optional(),
   ),
+  channel: z.preprocess(blank, z.enum(LEAD_CHANNELS).optional()),
   stageId: uuid,
+  // Optional. Defaults to the stage's pipeline, or the default pipeline when no stage is given.
+  pipelineId: uuid,
   probability: z.preprocess(blank, z.coerce.number().int().min(0).max(100).optional()),
   expectedRevenueCents: z.preprocess(blank, z.bigint().nonnegative().optional()),
   expectedCloseDate: z.preprocess(blank, z.iso.date().optional()),
@@ -43,7 +49,7 @@ export const leadInput = z.object({
 export type LeadInput = z.input<typeof leadInput>;
 export type LeadData = z.output<typeof leadInput>;
 
-export const leadUpdateInput = leadInput.omit({ stageId: true }).partial();
+export const leadUpdateInput = leadInput.omit({ stageId: true, pipelineId: true }).partial();
 export type LeadUpdateInput = z.input<typeof leadUpdateInput>;
 
 export type LeadRow = {
@@ -66,8 +72,13 @@ export type LeadRow = {
   expectedCloseDate: string | null;
   salespersonId: string | null;
   salespersonName: string | null;
+  teamId: string | null;
+  teamName: string | null;
   priority: number;
   nextActivityDate: string | null;
+  channel: string | null;
+  attemptCount: number;
+  daysInStage: number;
   active: boolean;
   wonAt: Date | null;
   convertedContractId: string | null;
@@ -98,8 +109,14 @@ const leadColumns = {
   salespersonId: leads.salespersonId,
   // users is revoked from tavio_app; the tenant-scoped member_directory view carries the name.
   salespersonName: sql<string | null>`(select md.name from member_directory md where md.company_id = ${leads.companyId} and md.user_id = ${leads.salespersonId})`,
+  teamId: leads.teamId,
+  // sales_teams is tenant-scoped; the join is on the lead's own company.
+  teamName: sql<string | null>`(select st.name from sales_teams st where st.company_id = ${leads.companyId} and st.id = ${leads.teamId})`,
   priority: leads.priority,
   nextActivityDate: activities.dueDate,
+  channel: leads.channel,
+  attemptCount: leads.attemptCount,
+  daysInStage: sql<number>`greatest(0, floor(extract(epoch from (now() - ${leads.stageEnteredAt})) / 86400))::int`,
   active: leads.active,
   wonAt: leads.wonAt,
   convertedContractId: leads.convertedContractId,
@@ -128,8 +145,9 @@ const FILTER_COLUMNS = {
   stageId: leads.stageId,
   salespersonId: leads.salespersonId,
   partnerId: leads.partnerId,
+  teamId: leads.teamId,
 } as const;
-const UUID_FILTERS = new Set<string>(['stageId', 'salespersonId', 'partnerId']);
+const UUID_FILTERS = new Set<string>(['stageId', 'salespersonId', 'partnerId', 'teamId']);
 
 const SORT_COLUMNS = {
   createdAt: leads.createdAt,
@@ -150,6 +168,9 @@ export async function listLeads(ctx: Ctx, q: ListQuery): Promise<Result<ListResu
     eq(leads.companyId, ctx.companyId),
     eq(leads.active, q.filters.active !== 'false'),
   ];
+  const scope = await leadScope(ctx);
+  if (scope) conds.push(scope);
+  if (q.filters.pipelineId) conds.push(eq(leads.pipelineId, q.filters.pipelineId));
 
   if (q.q) {
     const like = `%${escapeLike(q.q)}%`;
@@ -197,10 +218,12 @@ export async function listLeads(ctx: Ctx, q: ListQuery): Promise<Result<ListResu
 export async function leadsByStage(
   ctx: Ctx,
   pipelineId: string,
-): Promise<Result<{ stage: { id: string; name: string; position: number; probability: number; isWon: boolean }; leads: LeadRow[] }[]>> {
+  opts: { teamId?: string } = {},
+): Promise<Result<{ stage: { id: string; name: string; position: number; probability: number; isWon: boolean; requirements: string | null }; leads: LeadRow[] }[]>> {
   const perm = requirePerm(ctx, 'crm.lead.read');
   if (!perm.ok) return perm;
   if (!UUID_RE.test(pipelineId)) return err('VALIDATION', 'Invalid pipeline id');
+  if (opts.teamId !== undefined && !UUID_RE.test(opts.teamId)) return err('VALIDATION', 'Invalid team id');
 
   const stageRows = await ctx.tx
     .select({
@@ -209,17 +232,21 @@ export async function leadsByStage(
       position: stages.position,
       probability: stages.probability,
       isWon: stages.isWon,
+      requirements: stages.requirements,
     })
     .from(stages)
     .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipelineId)))
     .orderBy(asc(stages.position));
 
+  const scope = await leadScope(ctx);
   const leadRows = await leadQuery(ctx.tx)
     .where(
       and(
         eq(leads.companyId, ctx.companyId),
         eq(leads.pipelineId, pipelineId),
         eq(leads.active, true),
+        scope,
+        opts.teamId ? eq(leads.teamId, opts.teamId) : undefined,
       ),
     )
     .orderBy(desc(leads.updatedAt));
@@ -232,21 +259,36 @@ export async function leadsByStage(
   );
 }
 
+/** Number of active leads the user may see, optionally narrowed by extra conditions (for dashboards). */
+export async function scopedLeadCount(ctx: Ctx, extraWhere?: SQL): Promise<Result<number>> {
+  const perm = requirePerm(ctx, 'crm.lead.read');
+  if (!perm.ok) return perm;
+  const scope = await leadScope(ctx);
+  const [row] = await ctx.tx
+    .select({ n: count() })
+    .from(leads)
+    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.active, true), scope, extraWhere));
+  return ok(row?.n ?? 0);
+}
+
 export async function getLead(ctx: Ctx, id: string): Promise<Result<LeadRow>> {
   const perm = requirePerm(ctx, 'crm.lead.read');
   if (!perm.ok) return perm;
   if (!UUID_RE.test(id)) return err('NOT_FOUND', 'Lead not found');
-  const [row] = await leadQuery(ctx.tx).where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id)));
+  const scope = await leadScope(ctx);
+  const [row] = await leadQuery(ctx.tx).where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id), scope));
   if (!row) return err('NOT_FOUND', 'Lead not found');
   return ok(row);
 }
 
 // Locks the lead row for the rest of the transaction.
+// Every lead mutation loads the lead through the visibility scope, so an out-of-scope lead is NOT_FOUND.
 async function lockLead(ctx: Ctx, id: string) {
+  const scope = await leadScope(ctx);
   const [row] = await ctx.tx
     .select()
     .from(leads)
-    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id)))
+    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id), scope))
     .for('update');
   return row;
 }
@@ -277,19 +319,28 @@ export async function createLead(
   if (!parsed.success) return err('VALIDATION', 'Invalid lead', { fields: parsed.error.issues.map((i) => i.path.join('.')) });
   const data = parsed.data;
 
-  const pipeline = await ensureDefaultPipeline(ctx);
-  if (!pipeline.ok) return pipeline;
-
-  // Stage defaults to the first stage of the default pipeline.
-  const [stage] = data.stageId
-    ? [await loadStage(ctx, data.stageId)]
-    : await ctx.tx
-        .select()
-        .from(stages)
-        .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipeline.value.id)))
-        .orderBy(asc(stages.position))
-        .limit(1);
-  if (!stage || stage.pipelineId !== pipeline.value.id) return err('VALIDATION', 'Unknown stage');
+  // With a stage, the lead goes to that stage's pipeline. Without one, it starts at the first stage of
+  // the requested pipeline, or of the default pipeline when none is requested.
+  let stage: Awaited<ReturnType<typeof loadStage>>;
+  if (data.stageId) {
+    stage = await loadStage(ctx, data.stageId);
+  } else {
+    let pipelineId = data.pipelineId;
+    if (!pipelineId) {
+      const pipeline = await ensureDefaultPipeline(ctx);
+      if (!pipeline.ok) return pipeline;
+      pipelineId = pipeline.value.id;
+    }
+    const [first] = await ctx.tx
+      .select()
+      .from(stages)
+      .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipelineId)))
+      .orderBy(asc(stages.position))
+      .limit(1);
+    stage = first;
+  }
+  if (!stage) return err('VALIDATION', 'Unknown stage');
+  if (data.pipelineId && stage.pipelineId !== data.pipelineId) return err('VALIDATION', 'Stage belongs to another pipeline');
 
   if (data.partnerId && !(await partnerExists(ctx, data.partnerId))) {
     return err('NOT_FOUND', 'Partner not found');
@@ -309,13 +360,16 @@ export async function createLead(
       email: data.email,
       wilayaCode: data.wilayaCode,
       source: data.source,
+      channel: data.channel,
       pipelineId: stage.pipelineId,
       stageId: stage.id,
+      stageEnteredAt: new Date(),
       status: 'open',
       probability: data.probability ?? stage.probability,
       expectedRevenueCents: data.expectedRevenueCents,
       expectedCloseDate: data.expectedCloseDate,
       salespersonId: data.salespersonId,
+      teamId: data.salespersonId ? await teamIdForUser(ctx.tx, ctx.companyId, data.salespersonId) : null,
       priority: data.priority ?? 0,
       active: true,
       createdBy: ctx.userId,
@@ -324,6 +378,10 @@ export async function createLead(
   if (!row) return err('INTERNAL', 'Lead insert returned no row');
 
   await audit(ctx, { entity: 'crm.lead', recordId: row.id, action: 'create', after: { reference, name: data.name, stageId: stage.id } });
+  await emit(ctx, {
+    name: 'crm.lead.created',
+    payload: { leadId: row.id, stageId: stage.id, userId: ctx.userId, teamId: null },
+  });
   return ok({ id: row.id, reference: row.reference });
 }
 
@@ -341,9 +399,14 @@ export async function updateLead(ctx: Ctx, id: string, input: LeadUpdateInput): 
   }
 
   // Undefined keys are skipped by drizzle's update set, so only given fields change.
+  // A new salesperson brings their team along. Leads keep their team otherwise.
+  const teamId =
+    data.salespersonId !== undefined
+      ? await teamIdForUser(ctx.tx, ctx.companyId, data.salespersonId)
+      : undefined;
   await ctx.tx
     .update(leads)
-    .set({ ...data, updatedAt: new Date() })
+    .set({ ...data, ...(data.salespersonId !== undefined ? { teamId } : {}), updatedAt: new Date() })
     .where(eq(leads.id, id));
 
   await audit(ctx, {
@@ -380,6 +443,7 @@ export async function moveLead(ctx: Ctx, id: string, stageId: string): Promise<R
   const won = target.isWon;
   const patch = {
     stageId: target.id,
+    stageEnteredAt: now,
     probability: target.probability,
     status: won ? 'won' : 'open',
     wonAt: won ? (lead.wonAt ?? now) : null,
@@ -402,6 +466,14 @@ export async function moveLead(ctx: Ctx, id: string, stageId: string): Promise<R
     body: `Stage: ${previous?.name ?? '?'} -> ${target.name}${won ? ' (won)' : ''}`,
   });
   if (!posted.ok) return posted;
+
+  await emit(ctx, {
+    name: 'crm.lead.stage_changed',
+    payload: { leadId: id, fromStageId: lead.stageId, toStageId: target.id, userId: ctx.userId },
+  });
+  if (won && lead.status !== 'won') {
+    await emit(ctx, { name: 'crm.lead.won', payload: { leadId: id } });
+  }
   return ok({ id });
 }
 
@@ -452,6 +524,7 @@ export async function markLost(
     const noted = await postMessage(ctx, { entity: 'crm.lead', recordId: id, kind: 'note', body: note.trim() });
     if (!noted.ok) return noted;
   }
+  await emit(ctx, { name: 'crm.lead.lost', payload: { leadId: id, lostReasonId } });
   return ok({ id });
 }
 
@@ -488,6 +561,31 @@ export async function reopenLead(ctx: Ctx, id: string): Promise<Result<{ id: str
   const posted = await postMessage(ctx, { entity: 'crm.lead', recordId: id, kind: 'system', body: 'Lead reopened' });
   if (!posted.ok) return posted;
   return ok({ id });
+}
+
+/** Counts one contact attempt on the lead. */
+export async function logAttempt(ctx: Ctx, id: string): Promise<Result<{ id: string; attemptCount: number }>> {
+  const perm = requirePerm(ctx, 'crm.lead.write');
+  if (!perm.ok) return perm;
+
+  const lead = await lockLead(ctx, id);
+  if (!lead) return err('NOT_FOUND', 'Lead not found');
+
+  const [row] = await ctx.tx
+    .update(leads)
+    .set({ attemptCount: sql`${leads.attemptCount} + 1`, updatedAt: new Date() })
+    .where(eq(leads.id, id))
+    .returning({ attemptCount: leads.attemptCount });
+  if (!row) return err('INTERNAL', 'Attempt was not recorded');
+
+  await audit(ctx, {
+    entity: 'crm.lead',
+    recordId: id,
+    action: 'log_attempt',
+    before: { attemptCount: lead.attemptCount },
+    after: { attemptCount: row.attemptCount },
+  });
+  return ok({ id, attemptCount: row.attemptCount });
 }
 
 export type ConvertInput = Omit<DraftContractInput, 'leadId' | 'partnerId'>;
@@ -538,6 +636,10 @@ export async function convertToContract(
           updatedAt: now,
         })
         .where(eq(leads.id, leadId));
+
+      if (lead.status !== 'won') {
+        await emit(spCtx, { name: 'crm.lead.won', payload: { leadId } });
+      }
 
       await audit(spCtx, {
         entity: 'crm.lead',

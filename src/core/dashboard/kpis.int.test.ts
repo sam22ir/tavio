@@ -42,11 +42,21 @@ describe('dashboardKpis', () => {
     const kpis = await withTenant(args.value, (ctx) => dashboardKpis(ctx), db);
     expect(kpis).toEqual({
       dueTodayCents: 0n,
+      dueTodayCount: 0,
       overdueCents: 0n,
       overdueCount: 0,
       collectedThisMonthCents: 0n,
       activeContracts: 0,
       openLeads: 0,
+      overdueActivities: 0,
+      leads: {
+        openByStage: [],
+        avgDaysInStage: 0,
+        openWithoutActivity: 0,
+        wonThisMonth: 0,
+        createdThisMonth: 0,
+        conversionRate: null,
+      },
     });
   });
 });

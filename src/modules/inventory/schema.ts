@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   boolean,
+  date,
   timestamp,
   uniqueIndex,
   uuid,
@@ -146,6 +147,95 @@ export const reorderRules = pgTable(
   ],
 );
 
+// Stock reservations: quantity held for a source document (e.g. an approved credit contract).
+// Active reservations reduce the available quantity. Tenant table.
+export const stockReservations = pgTable(
+  'stock_reservations',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id),
+    locationId: uuid('location_id')
+      .notNull()
+      .references(() => stockLocations.id),
+    quantity: numeric('quantity', { precision: 14, scale: 3 }).notNull(),
+    sourceEntity: text('source_entity').notNull(),
+    sourceId: uuid('source_id').notNull(),
+    state: text('state').notNull().default('active'),
+  },
+  (t) => [
+    index('stock_reservations_company_id_state_product_idx').on(t.companyId, t.state, t.productId),
+    index('stock_reservations_company_id_source_idx').on(t.companyId, t.sourceEntity, t.sourceId),
+    // Idempotency for event handlers: one active reservation per source line.
+    uniqueIndex('stock_reservations_company_id_source_product_active_key')
+      .on(t.companyId, t.sourceEntity, t.sourceId, t.productId)
+      .where(sql`${t.state} = 'active'`),
+    check('stock_reservations_state_check', sql`${t.state} in ('active', 'released', 'consumed')`),
+    check('stock_reservations_quantity_check', sql`${t.quantity} > 0`),
+  ],
+);
+
+// Deliveries (customer dispatch orders). Tenant table. Validating a delivery creates stock moves out.
+export const deliveries = pgTable(
+  'deliveries',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    number: text('number').notNull(),
+    // FK → partners.id (added by integrator)
+    partnerId: uuid('partner_id').notNull(),
+    sourceEntity: text('source_entity'),
+    sourceId: uuid('source_id'),
+    state: text('state').notNull().default('draft'),
+    scheduledDate: date('scheduled_date'),
+    deliveredAt: timestamp('delivered_at', { withTimezone: true }),
+    signedByName: text('signed_by_name'),
+    // FK → files.id (added by integrator)
+    signatureFileId: uuid('signature_file_id'),
+    // FK → files.id (added by integrator)
+    proofFileId: uuid('proof_file_id'),
+    note: text('note'),
+  },
+  (t) => [
+    uniqueIndex('deliveries_company_id_number_key').on(t.companyId, t.number),
+    index('deliveries_company_id_state_idx').on(t.companyId, t.state),
+    index('deliveries_company_id_source_idx').on(t.companyId, t.sourceEntity, t.sourceId),
+    // Idempotency for event handlers: one live delivery per source document.
+    uniqueIndex('deliveries_company_id_source_live_key')
+      .on(t.companyId, t.sourceEntity, t.sourceId)
+      .where(sql`${t.sourceId} is not null and ${t.state} <> 'cancelled'`),
+    check('deliveries_state_check', sql`${t.state} in ('draft', 'ready', 'done', 'cancelled')`),
+    check('deliveries_done_at_check', sql`${t.state} <> 'done' or ${t.deliveredAt} is not null`),
+  ],
+);
+
+export const deliveryLines = pgTable(
+  'delivery_lines',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    deliveryId: uuid('delivery_id')
+      .notNull()
+      .references(() => deliveries.id, { onDelete: 'cascade' }),
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id),
+    quantity: numeric('quantity', { precision: 14, scale: 3 }).notNull(),
+  },
+  (t) => [
+    index('delivery_lines_company_id_delivery_id_idx').on(t.companyId, t.deliveryId),
+    check('delivery_lines_quantity_check', sql`${t.quantity} > 0`),
+  ],
+);
+
 export type Warehouse = typeof warehouses.$inferSelect;
 export type NewWarehouse = typeof warehouses.$inferInsert;
 export type StockLocation = typeof stockLocations.$inferSelect;
@@ -154,3 +244,9 @@ export type StockMove = typeof stockMoves.$inferSelect;
 export type NewStockMove = typeof stockMoves.$inferInsert;
 export type ReorderRule = typeof reorderRules.$inferSelect;
 export type NewReorderRule = typeof reorderRules.$inferInsert;
+export type StockReservation = typeof stockReservations.$inferSelect;
+export type NewStockReservation = typeof stockReservations.$inferInsert;
+export type Delivery = typeof deliveries.$inferSelect;
+export type NewDelivery = typeof deliveries.$inferInsert;
+export type DeliveryLine = typeof deliveryLines.$inferSelect;
+export type NewDeliveryLine = typeof deliveryLines.$inferInsert;

@@ -12,6 +12,7 @@ import {
   unique,
   uniqueIndex,
   uuid,
+  type AnyPgColumn,
 } from 'drizzle-orm/pg-core';
 import { companies } from '@/core/db/schema/tenancy';
 
@@ -73,12 +74,30 @@ export const activityTypes = pgTable(
     // icon key
     icon: text('icon'),
     active: boolean('active').notNull().default(true),
+    // Delay from the trigger date. Replaces default_days (backfilled in the RLS file).
+    delayCount: integer('delay_count').notNull().default(0),
+    delayUnit: text('delay_unit').notNull().default('days'),
+    // default, phonecall, upload_file, meeting
+    category: text('category').notNull().default('default'),
+    // suggest: the UI pre-fills the next activity. trigger: the next activity is created on completion.
+    chainingType: text('chaining_type').notNull().default('suggest'),
+    nextTypeId: uuid('next_type_id').references((): AnyPgColumn => activityTypes.id),
+    // FK users.id (added by integrator). Default assignee for new activities of this type.
+    defaultUserId: uuid('default_user_id'),
+    // When set, completing an activity of this type needs a result.
+    requireResult: boolean('require_result').notNull().default(false),
   },
   (t) => [
     index('activity_types_company_entity_idx').on(t.companyId, t.entity),
     unique('activity_types_company_name_entity_key')
       .on(t.companyId, t.name, t.entity)
       .nullsNotDistinct(),
+    check('activity_types_delay_unit_check', sql`${t.delayUnit} in ('days', 'weeks')`),
+    check(
+      'activity_types_category_check',
+      sql`${t.category} in ('default', 'phonecall', 'upload_file', 'meeting')`,
+    ),
+    check('activity_types_chaining_check', sql`${t.chainingType} in ('suggest', 'trigger')`),
   ],
 );
 
@@ -106,12 +125,90 @@ export const activities = pgTable(
     // FK users.id (added by integrator)
     doneBy: uuid('done_by'),
     doneNote: text('done_note'),
+    // Outcome chosen when completing (for example "reached client"). Required when the type has require_result.
+    result: text('result'),
+    // Set when the activity was created by an activity plan run.
+    planRunId: uuid('plan_run_id').references((): AnyPgColumn => activityPlanRuns.id, {
+      onDelete: 'set null',
+    }),
   },
   (t) => [
     index('activities_open_assignee_due_idx')
       .on(t.companyId, t.assigneeId, t.dueDate)
       .where(sql`${t.doneAt} is null`),
     index('activities_company_entity_record_idx').on(t.companyId, t.entity, t.recordId),
+    index('activities_company_plan_run_idx').on(t.companyId, t.planRunId),
+  ],
+);
+
+// Activity plans: a named sequence of activities launched on a record (Odoo mail.activity.plan).
+export const activityPlans = pgTable(
+  'activity_plans',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    name: text('name').notNull(),
+    // Entity the plan can be launched on, for example crm.lead
+    entity: text('entity').notNull(),
+    active: boolean('active').notNull().default(true),
+  },
+  (t) => [index('activity_plans_company_entity_idx').on(t.companyId, t.entity)],
+);
+
+// One step of a plan. The due date is the run start date plus offset_days.
+export const activityPlanSteps = pgTable(
+  'activity_plan_steps',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    planId: uuid('plan_id')
+      .notNull()
+      .references(() => activityPlans.id, { onDelete: 'cascade' }),
+    sequence: integer('sequence').notNull(),
+    activityTypeId: uuid('activity_type_id')
+      .notNull()
+      .references(() => activityTypes.id),
+    summary: text('summary').notNull(),
+    offsetDays: integer('offset_days').notNull().default(0),
+    // record_owner: the owner passed at launch. fixed: user_id.
+    responsible: text('responsible').notNull().default('record_owner'),
+    // FK users.id (added by integrator). Set only when responsible = fixed.
+    userId: uuid('user_id'),
+  },
+  (t) => [
+    index('activity_plan_steps_company_plan_idx').on(t.companyId, t.planId, t.sequence),
+    check('activity_plan_steps_responsible_check', sql`${t.responsible} in ('record_owner', 'fixed')`),
+    check(
+      'activity_plan_steps_responsible_user_check',
+      sql`(${t.responsible} = 'fixed') = (${t.userId} is not null)`,
+    ),
+  ],
+);
+
+// One launch of a plan on one record. Cancelled runs keep their row with cancelled_at set.
+export const activityPlanRuns = pgTable(
+  'activity_plan_runs',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    planId: uuid('plan_id')
+      .notNull()
+      .references(() => activityPlans.id),
+    entity: text('entity').notNull(),
+    recordId: uuid('record_id').notNull(),
+    startDate: date('start_date', { mode: 'string' }).notNull(),
+    // FK users.id (added by integrator). Used for steps with responsible = record_owner.
+    ownerId: uuid('owner_id'),
+    cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
+  },
+  (t) => [
+    index('activity_plan_runs_company_entity_record_idx').on(t.companyId, t.entity, t.recordId),
   ],
 );
 
@@ -151,5 +248,10 @@ export type ActivityType = typeof activityTypes.$inferSelect;
 export type NewActivityType = typeof activityTypes.$inferInsert;
 export type Activity = typeof activities.$inferSelect;
 export type NewActivity = typeof activities.$inferInsert;
+export type ActivityPlan = typeof activityPlans.$inferSelect;
+export type NewActivityPlan = typeof activityPlans.$inferInsert;
+export type ActivityPlanStep = typeof activityPlanSteps.$inferSelect;
+export type NewActivityPlanStep = typeof activityPlanSteps.$inferInsert;
+export type ActivityPlanRun = typeof activityPlanRuns.$inferSelect;
 export type Follower = typeof followers.$inferSelect;
 export type NewFollower = typeof followers.$inferInsert;

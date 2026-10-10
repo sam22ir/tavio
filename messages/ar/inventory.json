@@ -7,7 +7,8 @@
     "moves": "حركات المخزون",
     "adjustments": "الجرد",
     "low_stock": "مخزون منخفض",
-    "warehouses": "المستودعات"
+    "warehouses": "المستودعات",
+    "deliveries": "التسليمات"
   },
   "fields": {
     "reference": "المرجع",
@@ -27,13 +28,26 @@
     "location": "الموقع",
     "counted": "الكمية المحصاة",
     "on_hand": "المتوفر",
-    "to_order": "المطلوب طلبه"
+    "to_order": "المطلوب طلبه",
+    "number": "الرقم",
+    "lines": "الأسطر",
+    "scheduled_date": "موعد التسليم",
+    "delivered_at": "سُلّمت في",
+    "reserved": "محجوز",
+    "available": "متاح",
+    "partner": "الشريك"
   },
   "options": {
     "state": {
       "draft": "مسودة",
       "done": "مؤكد",
       "cancelled": "ملغى"
+    },
+    "delivery_state": {
+      "draft": "مسودة",
+      "ready": "جاهزة",
+      "done": "مسلَّمة",
+      "cancelled": "ملغاة"
     }
   },
   "common": {
@@ -80,6 +94,27 @@
   "errors": {
     "invalid_quantity": "كمية غير صالحة (موجبة، بثلاث خانات عشرية كحد أقصى).",
     "move_not_draft": "يمكن تأكيد الحركات المسودة فقط.",
-    "move_done": "لا يمكن إلغاء حركة مؤكدة."
+    "move_done": "لا يمكن إلغاء حركة مؤكدة.",
+    "signed_by_required": "أدخل اسم من وقّع الاستلام قبل التحقق من التسليم.",
+    "signed_by_too_long": "الاسم طويل جدا."
+  },
+  "deliveries": {
+    "title": "التسليمات",
+    "validate": "تأكيد التسليم",
+    "cancel": "إلغاء",
+    "signed_by": "وقّعه (الاسم)",
+    "signed_by_hint": "أدخل اسم الشخص الذي استلم التسليم قبل التحقق منه.",
+    "save": "حفظ الاسم",
+    "signature": "التوقيع",
+    "proof": "إثبات التسليم",
+    "upload": "رفع",
+    "uploaded": "تم الرفع",
+    "not_uploaded": "لم يتم الرفع",
+    "view_file": "عرض الملف",
+    "source_contract": "العقد المصدر",
+    "view_contract": "فتح العقد",
+    "lines_title": "البنود",
+    "receipt_title": "الاستلام",
+    "open": "فتح"
   }
 }

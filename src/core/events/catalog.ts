@@ -32,6 +32,17 @@ export interface PosOrderPaid {
   totalCents: string; untaxedCents: string; taxCents: string; lines: QtyLine[];
 }
 export interface StockMoveDone { moveId: string; productId: string; quantity: string; fromLocationId: string; toLocationId: string }
+export interface CrmLeadCreated { leadId: string; stageId: string; userId: string | null; teamId: string | null }
+export interface CrmLeadStageChanged { leadId: string; fromStageId: string; toStageId: string; userId: string | null }
+export interface CrmLeadWon { leadId: string }
+export interface CrmLeadLost { leadId: string; lostReasonId: string }
+export interface ChatterActivityDone {
+  activityId: string; entity: string; recordId: string;
+  activityTypeId: string | null; result: string | null;
+}
+export interface CreditContractStateChanged {
+  contractId: string; partnerId: string; fromState: string; toState: string;
+}
 
 export interface EventCatalog {
   'sales.order.confirmed': SalesOrderConfirmed;
@@ -42,6 +53,12 @@ export interface EventCatalog {
   'inventory.move.done': StockMoveDone;
   'credit_sales.payment.recorded': CreditPaymentRecorded;
   'credit_sales.contract.activated': CreditContractActivated;
+  'crm.lead.created': CrmLeadCreated;
+  'crm.lead.stage_changed': CrmLeadStageChanged;
+  'crm.lead.won': CrmLeadWon;
+  'crm.lead.lost': CrmLeadLost;
+  'chatter.activity.done': ChatterActivityDone;
+  'credit_sales.contract.state_changed': CreditContractStateChanged;
 }
 export type EventName = keyof EventCatalog;
 
@@ -55,6 +72,12 @@ export const EVENT_NAMES = [
   'inventory.move.done',
   'credit_sales.payment.recorded',
   'credit_sales.contract.activated',
+  'crm.lead.created',
+  'crm.lead.stage_changed',
+  'crm.lead.won',
+  'crm.lead.lost',
+  'chatter.activity.done',
+  'credit_sales.contract.state_changed',
 ] as const satisfies readonly EventName[];
 
 type UnlistedEvent = Exclude<EventName, (typeof EVENT_NAMES)[number]>;

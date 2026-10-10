@@ -8,6 +8,8 @@ import { runAutomations } from '@/modules/automation/engine';
 import '@/modules/accounting/events';
 import '@/modules/credit_sales/events';
 import '@/modules/inventory/events';
+import '@/modules/purchases/events';
+import '@/modules/crm/service/access';
 
 // Automation rules listen to every catalog event. Runs in the emitter's transaction, after the module handlers.
 for (const name of EVENT_NAMES satisfies readonly EventName[]) {

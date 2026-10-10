@@ -20,7 +20,9 @@
       "remaining": "المتبقي",
       "partial": "استلام المحدد",
       "all": "استلام الكل"
-    }
+    },
+    "sourceContract": "تم إنشاؤه من العقد",
+    "openContract": "فتح العقد"
   },
   "fields": {
     "number": "الرقم",
@@ -61,5 +63,11 @@
     "posted_immutable": "هذا الطلب مؤكد ولا يمكن تعديله.",
     "unauthenticated": "يرجى تسجيل الدخول مرة أخرى.",
     "module_disabled": "وحدة المشتريات معطلة."
+  },
+  "suppliers": {
+    "title": "الموردون المفضلون",
+    "sequence": "الأولوية",
+    "add": "إضافة أو تعديل مورد",
+    "save": "حفظ"
   }
 }
