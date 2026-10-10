@@ -1,0 +1,35 @@
+{
+  "title": "Related records",
+  "contact": {
+    "leads": "Leads",
+    "orders": "Quotes / orders",
+    "contracts": "Credit contracts",
+    "invoices": "Invoices",
+    "payments": "Payments",
+    "tickets": "Tickets",
+    "deliveries": "Deliveries"
+  },
+  "product": {
+    "orders": "Sale orders",
+    "purchase_orders": "Purchase orders",
+    "moves": "Stock moves"
+  },
+  "project": {
+    "tasks": "Tasks",
+    "timesheets": "Timesheets"
+  },
+  "order": {
+    "deliveries": "Deliveries"
+  },
+  "purchase": {
+    "receipts": "Receipts"
+  },
+  "credit": {
+    "deliveries": "Deliveries",
+    "moves": "Stock moves",
+    "entries": "Journal entries"
+  },
+  "employee": {
+    "leaves": "Leave requests"
+  }
+}

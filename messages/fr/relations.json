@@ -1,0 +1,35 @@
+{
+  "title": "Enregistrements liés",
+  "contact": {
+    "leads": "Prospects",
+    "orders": "Devis / commandes",
+    "contracts": "Contrats de crédit",
+    "invoices": "Factures",
+    "payments": "Paiements",
+    "tickets": "Tickets",
+    "deliveries": "Livraisons"
+  },
+  "product": {
+    "orders": "Commandes de vente",
+    "purchase_orders": "Commandes d'achat",
+    "moves": "Mouvements de stock"
+  },
+  "project": {
+    "tasks": "Tâches",
+    "timesheets": "Feuilles de temps"
+  },
+  "order": {
+    "deliveries": "Livraisons"
+  },
+  "purchase": {
+    "receipts": "Réceptions"
+  },
+  "credit": {
+    "deliveries": "Livraisons",
+    "moves": "Mouvements de stock",
+    "entries": "Écritures comptables"
+  },
+  "employee": {
+    "leaves": "Demandes de congé"
+  }
+}

@@ -14,15 +14,15 @@ export default async function DeliveriesPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; f_sourceId?: string; f_partnerId?: string }>;
 }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('inventory');
   const tViews = await getTranslations('views');
-  const { error: failure } = await searchParams;
-  const result = await withPageCtx((ctx) => listDeliveries(ctx));
+  const { error: failure, f_sourceId, f_partnerId } = await searchParams;
+  const result = await withPageCtx((ctx) => listDeliveries(ctx, { sourceId: f_sourceId, partnerId: f_partnerId }));
   const names = result.ok
     ? await withPageCtx((ctx) => partnerDisplayNames(ctx, result.value.map((row) => row.partnerId)))
     : null;

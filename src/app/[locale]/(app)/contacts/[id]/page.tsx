@@ -13,6 +13,7 @@ import { listCustomFieldDefs } from '@/modules/platform/service/custom-fields';
 import { CustomFieldsEditor, type CustomFieldView } from '@/modules/platform/ui/custom-fields-editor';
 import { Button } from '@/ui/primitives/button';
 import { RecordForm } from '@/ui/views/record-form';
+import { RelatedLinks } from '@/ui/views/related-links';
 import { formatCell } from '@/ui/views/format';
 import { PARTNER_FORM_ENTITY } from '../_lib/form-entity';
 import { PartnerTabs } from '../_lib/partner-tabs';
@@ -113,6 +114,7 @@ export default async function ContactDetailPage({
           ) : null}
         </div>
       </header>
+      <RelatedLinks source="contacts.partner" id={id} />
 
       <PartnerTabs
         infoLabel={t('contacts.partner.tabs.info')}

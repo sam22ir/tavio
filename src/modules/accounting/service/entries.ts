@@ -1,3 +1,4 @@
+import { isUuid } from '@/core/relations/uuid';
 // Journal entries: post (balanced, numbered, immutable), reverse, list and detail.
 import { and, desc, eq, ilike, inArray, or, count, sql } from 'drizzle-orm';
 import type { Ctx } from '@/core/ctx';
@@ -216,9 +217,11 @@ export type EntryRow = {
 
 export async function listEntries(ctx: Ctx, query: ListQuery): Promise<ListResult<EntryRow>> {
   const term = query.q?.trim();
+  const sourceId = query.filters.sourceId;
   const where = and(
     eq(journalEntries.companyId, ctx.companyId),
     term ? or(ilike(journalEntries.number, `%${term}%`), ilike(journalEntries.ref, `%${term}%`)) : undefined,
+    isUuid(sourceId) ? eq(journalEntries.sourceId, sourceId) : undefined,
   );
   const [countRow] = await ctx.tx
     .select({ total: count() })

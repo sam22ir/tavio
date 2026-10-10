@@ -1,3 +1,4 @@
+import { RelatedLinks } from '@/ui/views/related-links';
 import Link from 'next/link';
 import { ErrorToast } from '@/ui/feedback/error-toast';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -65,6 +66,7 @@ export default async function PurchaseOrderDetailPage({
           {order.billed ? <span>· {t('order.billed')}</span> : null}
         </div>
       </header>
+      <RelatedLinks source="purchases.order" id={id} />
 
       <Link href={`/${locale}/purchases/${id}/print`} target="_blank" className="w-fit text-sm font-medium underline">
         {t('order.print')}

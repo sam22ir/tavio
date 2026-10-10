@@ -9,6 +9,7 @@ import { listCategories } from '@/modules/products/service/categories';
 import { uomOptions } from '@/modules/products/service/uoms';
 import { updateProductFormAction } from '@/modules/products/actions';
 import { RecordForm } from '@/ui/views/record-form';
+import { RelatedLinks } from '@/ui/views/related-links';
 import { categoryIdParam, toFormValues } from '../_lib';
 import { AddCategoryForm } from '../_components/add-category-form';
 
@@ -42,6 +43,7 @@ export default async function EditProductPage({
   return (
     <div className="flex flex-col gap-4 p-4">
       <h1 className="text-xl font-semibold">{t('product.edit')}</h1>
+      <RelatedLinks source="products.product" id={id} />
       <AddCategoryForm />
       <RecordForm
         key={selectedCategory ?? 'saved'}

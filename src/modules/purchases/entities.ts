@@ -23,6 +23,7 @@ export const purchaseOrderEntity: EntityDef = {
       ],
     },
     { name: 'orderDate', type: 'date', label: 'purchases.fields.orderDate', list: true, filter: true },
+    { name: 'productId', type: 'text', label: 'purchases.fields.orderDate', readonly: true, filter: true },
     { name: 'totalCents', type: 'money', label: 'purchases.fields.total', list: true },
   ],
 };

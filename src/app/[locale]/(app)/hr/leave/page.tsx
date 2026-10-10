@@ -29,13 +29,14 @@ export default async function LeavePage({
 
   const sp = await searchParams;
   const state = typeof sp.state === 'string' ? sp.state : undefined;
+  const employeeId = typeof sp.f_employeeId === 'string' ? sp.f_employeeId : undefined;
   const t = await getTranslations('hr');
   const tViews = await getTranslations('views');
   const failed = typeof sp.error === 'string';
 
   const data = await withPageCtx(async (ctx) => {
     const [requests, types, people] = await Promise.all([
-      listLeaveRequests(ctx, { state }),
+      listLeaveRequests(ctx, { state, employeeId }),
       listLeaveTypes(ctx),
       employeeOptions(ctx),
     ]);

@@ -1,3 +1,4 @@
+import { RelatedLinks } from '@/ui/views/related-links';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -23,6 +24,7 @@ export default async function SaleOrderPage({ params }: { params: Promise<{ loca
     <div className="flex flex-col gap-4 p-4">
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold">{order.number ? String(order.number) : t('title.new')}</h1>
+      <RelatedLinks source="sales.order" id={id} />
         <p className="text-sm text-muted-foreground">
           {partnerName} · {t(`options.state.${String(order.state)}` as 'options.state.draft')}
         </p>

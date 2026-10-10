@@ -144,6 +144,8 @@ async function loadOrderForUpdate(ctx: Ctx, id: string) {
   return order;
 }
 
+const UUID_FILTER = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function listSaleOrders(ctx: Ctx, q: ListQuery): Promise<Result<ListResult>> {
   const perm = requirePerm(ctx, 'sales.order.read');
   if (!perm.ok) return perm;
@@ -157,6 +159,10 @@ export async function listSaleOrders(ctx: Ctx, q: ListQuery): Promise<Result<Lis
   if (q.filters.state) conds.push(eq(saleOrders.state, q.filters.state));
   if (q.filters.invoiced === 'true') conds.push(eq(saleOrders.invoiced, true));
   if (q.filters.invoiced === 'false') conds.push(eq(saleOrders.invoiced, false));
+  if (q.filters.partnerId && UUID_FILTER.test(q.filters.partnerId)) conds.push(eq(saleOrders.partnerId, q.filters.partnerId));
+  if (q.filters.productId && UUID_FILTER.test(q.filters.productId)) {
+    conds.push(inArray(saleOrders.id, ctx.tx.select({ id: saleOrderLines.orderId }).from(saleOrderLines).where(eq(saleOrderLines.productId, q.filters.productId))));
+  }
   const where = and(...conds);
 
   const sortCol: SQL = (q.sort && ALLOWED_SORT[q.sort]) || sql`${saleOrders.orderDate}`;
