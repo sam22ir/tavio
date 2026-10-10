@@ -32,13 +32,15 @@ const PLAN_CODE_BY_STAGE: Readonly<Record<string, string>> = {
 const LEAD_ENTITY = 'crm.lead';
 const CANCEL_ACTION = { entity: LEAD_ENTITY, recordIdField: 'leadId' } as const;
 
+export type MourabahaSkippedStep = 'automation' | 'documents';
+
 export interface MourabahaTemplateResult {
   pipelineId: string;
   stages: number;
   plans: number;
   rules: number;
-  /** Steps that were skipped, with the reason. Empty when everything was applied. */
-  skipped: string[];
+  /** Steps that were skipped because of a missing permission or a disabled module. */
+  skipped: MourabahaSkippedStep[];
 }
 
 /**
@@ -130,12 +132,12 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
     planIds.set(p.code, saved.value.id);
   }
 
-  const skipped: string[] = [];
+  const skipped: MourabahaSkippedStep[] = [];
 
   // Document requirements. Skipped (not failed) when the user lacks the credit_sales permission.
   const docs = await listDocumentRequirements(ctx);
   if (!docs.ok && docs.error.code === 'FORBIDDEN') {
-    skipped.push('documents: missing credit_sales.contract.read permission');
+    skipped.push('documents');
   } else if (!docs.ok) {
     return docs;
   } else {
@@ -144,7 +146,7 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
       if (found?.required && found.active) continue;
       const saved = await saveDocumentRequirement(ctx, { id: found?.id, name, required: true, active: true });
       if (!saved.ok && saved.error.code === 'FORBIDDEN') {
-        skipped.push('documents: missing credit_sales.contract.write permission');
+        skipped.push('documents');
         break;
       }
       if (!saved.ok) return saved;
@@ -159,7 +161,7 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
     .where(and(eq(companyModules.companyId, ctx.companyId), eq(companyModules.moduleId, 'automation')))
     .limit(1);
   if (!automationRow?.enabled) {
-    skipped.push('automation: module not enabled for this company, rules not created');
+    skipped.push('automation');
   } else {
     const rules = await applyRules(ctx, stageIds, planIds);
     if (!rules.ok) return rules;

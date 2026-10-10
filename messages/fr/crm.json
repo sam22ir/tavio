@@ -119,6 +119,10 @@
     "mourabahaTitle": "Modèle Mourabaha",
     "mourabahaHint": "Crée le pipeline Mourabaha, les motifs de sortie, les types et plans d'activité, les règles d'automatisation et les documents requis. Relançable sans doublons.",
     "applyMourabaha": "Appliquer le modèle Mourabaha",
-    "mourabahaApplied": "Modèle Mourabaha appliqué"
+    "mourabahaApplied": "Modèle Mourabaha appliqué",
+    "mourabahaSkipped": "Étapes ignorées : {steps}.",
+    "skippedAutomation": "règles d'automatisation (module non activé)",
+    "skippedDocuments": "documents requis (permission manquante)",
+    "mourabahaFailed": "Échec de l'application du modèle Mourabaha."
   }
 }
