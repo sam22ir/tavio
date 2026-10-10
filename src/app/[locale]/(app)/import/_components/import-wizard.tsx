@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   autoMapColumns, decodeText, missingRequired, parseCsv, toCsv,
   type ImportField, type ImportMapping, type IoColumn,
 } from '@/core/io';
 import { buttonVariants } from '@/ui/primitives/button';
 import { cn } from '@/ui/lib/cn';
-import { importBatch, previewImport, type BatchError, type PreviewRow } from '../_lib/actions';
+import { importBatch, importWhole, previewImport, type BatchError, type PreviewRow } from '../_lib/actions';
 
 const BATCH_ROWS = 200;
 const MAX_ROWS = 10000;
@@ -21,6 +21,9 @@ interface Props {
   fields: ImportField[];
   duplicateRule: string;
   backHref: string;
+  /** Whole-file targets are written in one request, see importWhole. */
+  wholeFile: boolean;
+  templateHref: string;
 }
 
 interface Totals {
@@ -29,8 +32,10 @@ interface Totals {
   errors: BatchError[];
 }
 
-export function ImportWizard({ entityName, fields, duplicateRule, backHref }: Props) {
+export function ImportWizard({ entityName, fields, duplicateRule, backHref, wholeFile, templateHref }: Props) {
   const t = useTranslations('io.import');
+  const locale = useLocale();
+  const ioLocale = locale === 'ar' || locale === 'en' ? locale : 'fr';
   const [stage, setStage] = useState<Stage>('pick');
   const [error, setError] = useState<string | null>(null);
   const [headers, setHeaders] = useState<string[]>([]);
@@ -90,9 +95,10 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref }: Pr
       mapping,
       rows: rows.slice(0, 20),
       total: rows.length,
+      locale: ioLocale,
     });
     if (!result.ok) {
-      setError(t('failed'));
+      setError(t(result.messageKey));
       return;
     }
     setPreview(result.value.rows);
@@ -105,11 +111,26 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref }: Pr
     const total = rows.length;
     const acc: Totals = { created: 0, skipped: 0, errors: [] };
     setProgress({ done: 0, total });
+    if (wholeFile) {
+      const result = await importWhole({ entity: entityName, mapping, rows, locale: ioLocale });
+      if (!result.ok) {
+        setError(t(result.messageKey, result.params ?? {}));
+        setTotals(acc);
+        setStage('preview');
+        return;
+      }
+      acc.created = result.value.created;
+      acc.errors = result.value.errors;
+      setProgress({ done: total, total });
+      setTotals(acc);
+      setStage('done');
+      return;
+    }
     for (let offset = 0; offset < total; offset += BATCH_ROWS) {
       const batch = rows.slice(offset, offset + BATCH_ROWS);
-      const result = await importBatch({ entity: entityName, mapping, rows: batch, offset });
+      const result = await importBatch({ entity: entityName, mapping, rows: batch, offset, locale: ioLocale });
       if (!result.ok) {
-        setError(t('failed'));
+        setError(t(result.messageKey, result.params ?? {}));
         setTotals(acc);
         setStage('done');
         return;
@@ -166,6 +187,9 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref }: Pr
               className="file:me-3 file:rounded-md file:border file:px-3 file:py-2"
             />
           </label>
+          <a href={templateHref} className={cn(buttonVariants({ variant: 'ghost' }), 'w-fit')} download>
+            {t('template')}
+          </a>
         </div>
       )}
 

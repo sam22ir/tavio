@@ -6,6 +6,7 @@ import type { Ctx } from '@/core/ctx';
 import { parseListQuery } from '@/core/entities/list-query';
 import type { ListQuery, Row } from '@/core/entities/types';
 import { toCsv, toXlsx, type CsvSeparator, type IoRow } from '@/core/io';
+import { requirePerm } from '@/core/perms';
 import { routing } from '@/i18n/routing';
 import { entityIoColumns, isExportableEntity } from '@/ui/views/io-columns';
 import { EXPORT_SOURCES, MAX_EXPORT_ROWS, type ExportSource } from '../_lib/sources';
@@ -22,6 +23,8 @@ type FetchOutcome =
 
 /** Walks the filtered list page by page. Refuses before reading anything above the cap. */
 async function fetchAll(ctx: Ctx, source: ExportSource, query: ListQuery): Promise<FetchOutcome> {
+  const perm = requirePerm(ctx, source.readPerm);
+  if (!perm.ok) return { kind: 'error', code: 'FORBIDDEN' };
   const first = await source.list(ctx, { ...query, page: 1, pageSize: PAGE_SIZE });
   if (!first.ok) return { kind: 'error', code: first.error.code };
   if (first.value.total > MAX_EXPORT_ROWS) return { kind: 'too_large' };

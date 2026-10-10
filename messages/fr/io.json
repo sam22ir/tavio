@@ -43,6 +43,28 @@
     "status_duplicate": "Doublon",
     "failed": "L'import a échoué.",
     "error_column": "erreur",
-    "uom_default": "Unité de mesure par défaut : la première de la liste."
+    "uom_default": "Unité de mesure par défaut : la première de la liste.",
+    "template": "Modèle CSV",
+    "dup_key_none": "— (pas de détection)",
+    "opening_unbalanced": "Les soldes d'ouverture ne sont pas équilibrés (écart : {difference} DZD). Rien n'a été importé.",
+    "f": {
+      "productCode": "Code produit (SKU)",
+      "warehouseCode": "Code dépôt",
+      "quantity": "Quantité",
+      "unitCost": "Coût unitaire (DZD)",
+      "code": "Code compte",
+      "label": "Libellé",
+      "parent": "Compte parent",
+      "type": "Type",
+      "accountCode": "Code compte",
+      "partner": "Partenaire (nom, téléphone ou NIF)",
+      "debit": "Débit (DZD)",
+      "credit": "Crédit (DZD)",
+      "orderRef": "Réf. devis",
+      "customer": "Client (nom, téléphone ou NIF)",
+      "unitPrice": "Prix unitaire (DZD)",
+      "discount": "Remise (%)",
+      "date": "Date"
+    }
   }
 }

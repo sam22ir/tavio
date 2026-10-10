@@ -12,9 +12,11 @@ import { and, eq, sql } from 'drizzle-orm';
 import { invoiceLines as invoiceLineRows, invoices } from '@/modules/invoicing/schema';
 import { products } from '@/modules/products/schema';
 import { creditContracts, creditPayments } from '@/modules/credit_sales/schema';
+import { stockMoves } from '@/modules/inventory/schema';
+import { OPENING_STOCK_SOURCE } from '@/modules/inventory/service/adjustments';
 import { postEntry } from './service/entries';
 import { ensureDefaults } from './service/chart';
-import { creditContractLines, creditPaymentLines, invoiceLines, paymentLines, posLines, stockMoveLines } from './service/posting';
+import { creditContractLines, creditPaymentLines, invoiceLines, openingStockLines, paymentLines, posLines, stockMoveLines } from './service/posting';
 
 // Side-effect module: imported from src/modules/accounting/index.ts so the handlers are registered.
 // Handlers run in the emitter's transaction. A failed post throws so the emitter's transaction rolls back.
@@ -138,7 +140,14 @@ on('credit_sales.contract.activated', async (ctx, event) => {
 // Perpetual inventory: every valued move is booked at its CMUP value in the OD journal (no stock journal exists).
 on('inventory.move.posted', async (ctx, event) => {
   const p = event.payload as InventoryMovePosted;
-  const lines = stockMoveLines({ kind: p.kind, valueCents: bigOrZero(p.valueCents), reference: p.reference });
+  const [move] = await ctx.tx
+    .select({ sourceEntity: stockMoves.sourceEntity })
+    .from(stockMoves)
+    .where(and(eq(stockMoves.companyId, ctx.companyId), eq(stockMoves.id, p.moveId)));
+  const valueCents = bigOrZero(p.valueCents);
+  const lines = move?.sourceEntity === OPENING_STOCK_SOURCE
+    ? openingStockLines({ valueCents, reference: p.reference })
+    : stockMoveLines({ kind: p.kind, valueCents, reference: p.reference });
   if (lines.length === 0) return;
   await ensureDefaults(ctx);
   await mustPost(ctx, {

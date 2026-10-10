@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -8,6 +9,8 @@ import { accountEntity } from '@/modules/accounting/entities';
 import { listAccounts, ensureDefaults } from '@/modules/accounting/service/chart';
 import { AccountForm } from '@/modules/accounting/ui/account-form';
 import { DataList } from '@/ui/views/data-list';
+import { buttonVariants } from '@/ui/primitives/button';
+import { cn } from '@/ui/lib/cn';
 
 export default async function AccountsPage({
   params,
@@ -26,6 +29,7 @@ export default async function AccountsPage({
     return listAccounts(ctx, query);
   });
   const t = await getTranslations('accounting');
+  const ioT = await getTranslations('io.import');
   const currentLocale = await getLocale();
 
   return (
@@ -41,6 +45,11 @@ export default async function AccountsPage({
         result={result}
         query={query}
         basePath={`/${currentLocale}/accounting/accounts`}
+        actions={
+          <Link href={`/${currentLocale}/import/accounting.chart_account`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+            {ioT('button')}
+          </Link>
+        }
       />
     </main>
   );

@@ -1,4 +1,5 @@
 import type { ZodType } from 'zod';
+import { issueErrorMap, type IoLocale } from './issues';
 
 // Pure import logic: header matching, column mapping and row validation. No database access here.
 
@@ -60,9 +61,9 @@ export interface RowIssue {
 
 export type RowResult<T> = { ok: true; value: T } | { ok: false; issues: RowIssue[] };
 
-/** Validates a raw row with the entity's zod input schema and returns localized-neutral issues (field + English message). */
-export function validateRow<T>(schema: ZodType<T>, raw: Record<string, unknown>): RowResult<T> {
-  const parsed = schema.safeParse(raw);
+/** Validates a raw row with the entity's zod input schema. Issue messages are localized through issues.ts. */
+export function validateRow<T>(schema: ZodType<T>, raw: Record<string, unknown>, locale: IoLocale = 'fr'): RowResult<T> {
+  const parsed = schema.safeParse(raw, { error: issueErrorMap(locale) });
   if (parsed.success) return { ok: true, value: parsed.data };
   return {
     ok: false,

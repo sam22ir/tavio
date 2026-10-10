@@ -6,7 +6,7 @@ import { routing } from '@/i18n/routing';
 import { buttonVariants } from '@/ui/primitives/button';
 import { cn } from '@/ui/lib/cn';
 import { ImportWizard } from '../_components/import-wizard';
-import { importFieldsFor, isImportEntity, IMPORT_TARGETS } from '../_lib/targets';
+import { importFieldsFor, isImportEntity, IMPORT_TARGETS, type ImportEntityName } from '../_lib/targets';
 
 export default async function ImportPage({
   params,
@@ -35,15 +35,21 @@ export default async function ImportPage({
         fields={importFieldsFor(target, lang)}
         duplicateRule={t('dup_rule', { key: t(target.duplicateKeyLabel.replace('io.import.', '')) })}
         backHref={`/${locale}/${entityListPath(entity)}`}
+        wholeFile={!!target.wholeFile}
+        templateHref={`/${locale}/import/${entity}/template`}
       />
     </main>
   );
 }
 
-function entityListPath(entity: 'contacts.partner' | 'products.product' | 'crm.lead'): string {
+function entityListPath(entity: ImportEntityName): string {
   switch (entity) {
     case 'contacts.partner': return 'contacts';
     case 'products.product': return 'products';
     case 'crm.lead': return 'crm/list';
+    case 'inventory.opening_stock': return 'inventory/adjustments';
+    case 'accounting.chart_account': return 'accounting/accounts';
+    case 'accounting.opening_balance': return 'accounting/entries';
+    case 'sales.quote': return 'sales';
   }
 }
