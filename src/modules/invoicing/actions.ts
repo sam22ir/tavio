@@ -24,6 +24,7 @@ const draftLineInput = z.object({
   description: z.string().trim().min(1).max(300),
   quantity: z.string().regex(/^\d+(\.\d{1,3})?$/),
   unitPrice: z.string().min(1),
+  discount: z.string().trim().max(10).optional(),
   taxId: optionalUuid,
 });
 
@@ -53,7 +54,14 @@ function toNewInvoice(input: z.infer<typeof draftInput>): Result<NewInvoice> {
   for (const [i, l] of input.lines.entries()) {
     const price = parseDzd(l.unitPrice);
     if (price === null) return err('VALIDATION', 'invalid amount', { field: `lines.${i}.unitPrice` });
-    lines.push({ productId: l.productId, description: l.description, quantity: l.quantity, unitPriceCents: price, taxId: l.taxId });
+    lines.push({
+      productId: l.productId,
+      description: l.description,
+      quantity: l.quantity,
+      unitPriceCents: price,
+      discountRate: l.discount ?? '0',
+      taxId: l.taxId,
+    });
   }
   return ok({ type: input.type, partnerId: input.partnerId, date: input.date, dueDate: input.dueDate, lines });
 }

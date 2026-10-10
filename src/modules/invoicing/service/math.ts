@@ -1,10 +1,11 @@
-import { applyRate, roundHalfUp, type Cents } from '@/core/money';
+import { applyRate, lineSubtotal, parseDiscountRate, type Cents } from '@/core/money';
 import { DZ_STAMP_DUTY_TIERS } from '@/modules/l10n_dz';
 
 export interface LineInput {
   quantity: string;        // decimal string, up to 3 places
   unitPriceCents: Cents;
   ratePercent: string;     // "19", "9.0000"
+  discountRate?: string;   // percent 0..100, "" or omitted = 0 (same as sales lines)
 }
 
 export interface LineTotals { subtotalCents: Cents; taxCents: Cents }
@@ -20,13 +21,28 @@ export function parseQtyMilli(quantity: string): bigint | null {
   return milli > BigInt(0) ? milli : null;
 }
 
-/** Line subtotal = quantity * unit price, rounded half-up to the centime. Tax = applyRate(subtotal). */
+/**
+ * Line subtotal = quantity * unit price * (1 - discount), rounded half-up to the centime (shared with sales).
+ * Tax = applyRate(subtotal), so the discount applies before VAT.
+ */
 export function computeLine(line: LineInput): LineTotals {
   const qty = parseQtyMilli(line.quantity);
   if (qty === null) throw new RangeError(`invalid quantity "${line.quantity}"`);
   if (line.unitPriceCents < BigInt(0)) throw new RangeError('negative unit price');
-  const subtotalCents = roundHalfUp(qty * line.unitPriceCents, BigInt(1000));
+  const disc = parseDiscountRate(line.discountRate ?? '0');
+  if (disc === null) throw new RangeError(`invalid discount "${line.discountRate}"`);
+  const subtotalCents = lineSubtotal(qty, line.unitPriceCents, disc);
   return { subtotalCents, taxCents: applyRate(subtotalCents, line.ratePercent) };
+}
+
+/** True when a line discount rate (percent text) is above zero. Used to show the discount column only when needed. */
+export function hasLineDiscount(discountRate: string): boolean {
+  return (parseDiscountRate(discountRate || '0') ?? BigInt(0)) > BigInt(0);
+}
+
+/** Percent text without trailing zeros: "10.0000" -> "10", "12.5000" -> "12.5". */
+export function formatPercent(rate: string): string {
+  return rate.includes('.') ? rate.replace(/0+$/, '').replace(/\.$/, '') : rate;
 }
 
 export interface DocTotals {

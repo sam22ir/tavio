@@ -8,6 +8,7 @@ export interface DraftLineDraft {
   description: string;
   quantity: string;
   unitPrice: string;   // DZD text, e.g. "1500.50"
+  discount: string;    // percent text, e.g. "10"; empty = 0
   taxId: string;
 }
 
@@ -26,7 +27,7 @@ export interface DraftLookups {
 }
 
 export function newDraftLine(): DraftLineDraft {
-  return { key: crypto.randomUUID(), productId: '', description: '', quantity: '1', unitPrice: '', taxId: '' };
+  return { key: crypto.randomUUID(), productId: '', description: '', quantity: '1', unitPrice: '', discount: '', taxId: '' };
 }
 
 export function emptyDraftForm(today: string): DraftFormInitial {
@@ -57,7 +58,7 @@ export function previewDraftTotals(lines: DraftLineDraft[], taxRateById: Map<str
     const price = dzdTextToCents(l.unitPrice);
     if (price === null) continue;
     const rate = l.taxId ? (taxRateById.get(l.taxId) ?? '0') : '0';
-    inputs.push({ quantity: l.quantity, unitPriceCents: price, ratePercent: rate });
+    inputs.push({ quantity: l.quantity, unitPriceCents: price, ratePercent: rate, discountRate: l.discount || '0' });
   }
   try {
     const t = computeTotals(inputs);
