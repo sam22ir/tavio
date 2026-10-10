@@ -123,6 +123,7 @@
     "mourabahaSkipped": "Étapes ignorées : {steps}.",
     "skippedAutomation": "règles d'automatisation (module non activé)",
     "skippedDocuments": "documents requis (permission manquante)",
-    "mourabahaFailed": "Échec de l'application du modèle Mourabaha."
+    "mourabahaFailed": "Échec de l'application du modèle Mourabaha.",
+    "pipelineFilter": "Pipeline"
   }
 }

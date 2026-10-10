@@ -30,6 +30,8 @@ const PLAN_CODE_BY_STAGE: Readonly<Record<string, string>> = {
 };
 
 const LEAD_ENTITY = 'crm.lead';
+// Temporary stage positions for the re-run move. Above any real position (stages use 0 to 12).
+const TEMP_POSITION_BASE = 5000;
 const CANCEL_ACTION = { entity: LEAD_ENTITY, recordIdField: 'leadId' } as const;
 
 export type MourabahaSkippedStep = 'automation' | 'documents';
@@ -55,12 +57,34 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
   if (!pipeline.ok) return pipeline;
   const pipelineId = pipeline.value.id;
 
-  // Stages, in kanban order (item 8). Each is matched by name so a re-run updates instead of duplicating.
+  // Mourabaha becomes the company default so the kanban and new-lead form show it.
+  const asDefault = await crm.setDefaultPipeline(ctx, pipelineId);
+  if (!asDefault.ok) return asDefault;
+
+  // Stages, in kanban order (item 8). Matched by name so a re-run updates instead of duplicating.
+  // Pass 1 moves matched stages to temporary positions, so a re-run never collides with itself.
   const existingStages = await crm.listStages(ctx, pipelineId);
   if (!existingStages.ok) return existingStages;
+  const matched = MOURABAHA_STAGES.map((tpl) => existingStages.value.find((s) => s.name === tpl.name));
+  for (const [index, found] of matched.entries()) {
+    if (!found) continue;
+    const tpl = MOURABAHA_STAGES[index];
+    if (!tpl) continue;
+    const moved = await crm.saveStage(ctx, {
+      pipelineId,
+      id: found.id,
+      name: tpl.name,
+      position: TEMP_POSITION_BASE + index,
+      probability: tpl.probability,
+      isWon: tpl.isWon,
+      fold: tpl.fold,
+      requirements: tpl.requirements,
+    });
+    if (!moved.ok) return moved;
+  }
   const stageIds = new Map<string, string>();
   for (const [position, tpl] of MOURABAHA_STAGES.entries()) {
-    const found = existingStages.value.find((s) => s.name === tpl.name);
+    const found = matched[position];
     const saved = await crm.saveStage(ctx, {
       pipelineId,
       id: found?.id,
@@ -134,21 +158,19 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
 
   const skipped: MourabahaSkippedStep[] = [];
 
-  // Document requirements. Skipped (not failed) when the user lacks the credit_sales permission.
-  const docs = await listDocumentRequirements(ctx);
-  if (!docs.ok && docs.error.code === 'FORBIDDEN') {
+  // Document requirements: all or nothing. The credit_sales read and write permissions are checked
+  // before anything is written; without them the whole step is skipped and reported.
+  const canReadDocs = requirePerm(ctx, 'credit_sales.contract.read').ok;
+  const canWriteDocs = requirePerm(ctx, 'credit_sales.contract.write').ok;
+  if (!canReadDocs || !canWriteDocs) {
     skipped.push('documents');
-  } else if (!docs.ok) {
-    return docs;
   } else {
+    const docs = await listDocumentRequirements(ctx);
+    if (!docs.ok) return docs;
     for (const name of MOURABAHA_DOCUMENT_REQUIREMENTS) {
       const found = docs.value.find((d) => d.name === name);
       if (found?.required && found.active) continue;
       const saved = await saveDocumentRequirement(ctx, { id: found?.id, name, required: true, active: true });
-      if (!saved.ok && saved.error.code === 'FORBIDDEN') {
-        skipped.push('documents');
-        break;
-      }
       if (!saved.ok) return saved;
     }
   }

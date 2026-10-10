@@ -86,13 +86,17 @@ export async function listStages(ctx: Ctx, pipelineId: string): Promise<Result<S
   return ok(rows);
 }
 
+function isUniqueViolation(e: unknown): boolean {
+  return typeof e === 'object' && e !== null && 'code' in e && e.code === '23505';
+}
+
 export const pipelineNameInput = z.string().trim().min(1).max(120);
 
 export const stageInput = z.object({
   pipelineId: z.uuid(),
   id: z.uuid().optional(),
   name: z.string().trim().min(1).max(120),
-  position: z.number().int().min(0).max(1000),
+  position: z.number().int().min(0).max(10000),
   probability: z.number().int().min(0).max(100),
   isWon: z.boolean(),
   fold: z.boolean(),
@@ -177,24 +181,59 @@ export async function saveStage(ctx: Ctx, input: StageSaveInput): Promise<Result
     requirements: v.requirements ?? null,
   };
 
-  if (v.id) {
-    const [before] = await ctx.tx
-      .select()
-      .from(stages)
-      .where(and(eq(stages.id, v.id), eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, v.pipelineId)))
-      .limit(1);
-    if (!before) return err('NOT_FOUND', 'Stage not found');
-    await ctx.tx.update(stages).set(values).where(eq(stages.id, v.id));
-    await audit(ctx, { entity: 'crm.stage', recordId: v.id, action: 'update', before, after: values });
-    return ok({ id: v.id });
-  }
+  // A savepoint keeps the outer transaction usable after a unique violation (position or name clash).
+  try {
+    if (v.id) {
+      const stageId = v.id;
+      return await ctx.tx.transaction(async (sp) => {
+        const [before] = await sp
+          .select()
+          .from(stages)
+          .where(and(eq(stages.id, stageId), eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, v.pipelineId)))
+          .limit(1);
+        if (!before) return err('NOT_FOUND', 'Stage not found');
+        await sp.update(stages).set(values).where(eq(stages.id, stageId));
+        await audit({ ...ctx, tx: sp }, { entity: 'crm.stage', recordId: stageId, action: 'update', before, after: values });
+        return ok({ id: stageId });
+      });
+    }
 
-  const [inserted] = await ctx.tx
-    .insert(stages)
-    .values({ companyId: ctx.companyId, pipelineId: v.pipelineId, ...values, createdBy: ctx.userId })
-    .onConflictDoNothing()
-    .returning({ id: stages.id });
-  if (!inserted) return err('CONFLICT', 'A stage with this name or position already exists');
-  await audit(ctx, { entity: 'crm.stage', recordId: inserted.id, action: 'create', after: values });
-  return ok({ id: inserted.id });
+    return await ctx.tx.transaction(async (sp) => {
+      const [inserted] = await sp
+        .insert(stages)
+        .values({ companyId: ctx.companyId, pipelineId: v.pipelineId, ...values, createdBy: ctx.userId })
+        .returning({ id: stages.id });
+      if (!inserted) return err('CONFLICT', 'Stage could not be created');
+      await audit({ ...ctx, tx: sp }, { entity: 'crm.stage', recordId: inserted.id, action: 'create', after: values });
+      return ok({ id: inserted.id });
+    });
+  } catch (e) {
+    if (isUniqueViolation(e)) return err('CONFLICT', 'A stage with this name or position already exists');
+    throw e;
+  }
+}
+
+/** Makes one pipeline the company default and demotes the previous default, in the caller's transaction. */
+export async function setDefaultPipeline(ctx: Ctx, pipelineId: string): Promise<Result<{ id: string }>> {
+  const perm = requirePerm(ctx, 'crm.lead.write');
+  if (!perm.ok) return perm;
+  const [target] = await ctx.tx
+    .select({ id: pipelines.id, isDefault: pipelines.isDefault })
+    .from(pipelines)
+    .where(and(eq(pipelines.id, pipelineId), eq(pipelines.companyId, ctx.companyId)))
+    .limit(1);
+  if (!target) return err('NOT_FOUND', 'Pipeline not found');
+  if (target.isDefault) return ok({ id: pipelineId });
+
+  // Demote first: the partial unique index allows one default per company.
+  await ctx.tx
+    .update(pipelines)
+    .set({ isDefault: false, updatedAt: new Date() })
+    .where(and(eq(pipelines.companyId, ctx.companyId), eq(pipelines.isDefault, true)));
+  await ctx.tx
+    .update(pipelines)
+    .set({ isDefault: true, updatedAt: new Date() })
+    .where(and(eq(pipelines.id, pipelineId), eq(pipelines.companyId, ctx.companyId)));
+  await audit(ctx, { entity: 'crm.pipeline', recordId: pipelineId, action: 'update', after: { isDefault: true } });
+  return ok({ id: pipelineId });
 }

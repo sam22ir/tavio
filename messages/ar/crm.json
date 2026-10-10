@@ -123,6 +123,7 @@
     "mourabahaSkipped": "الخطوات المتجاوزة: {steps}.",
     "skippedAutomation": "قواعد الأتمتة (الوحدة غير مفعلة)",
     "skippedDocuments": "الوثائق المطلوبة (صلاحية مفقودة)",
-    "mourabahaFailed": "فشل تطبيق قالب المرابحة."
+    "mourabahaFailed": "فشل تطبيق قالب المرابحة.",
+    "pipelineFilter": "المسار"
   }
 }

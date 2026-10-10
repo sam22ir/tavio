@@ -123,6 +123,7 @@
     "mourabahaSkipped": "Skipped steps: {steps}.",
     "skippedAutomation": "automation rules (module not enabled)",
     "skippedDocuments": "required documents (missing permission)",
-    "mourabahaFailed": "Applying the Mourabaha template failed."
+    "mourabahaFailed": "Applying the Mourabaha template failed.",
+    "pipelineFilter": "Pipeline"
   }
 }
