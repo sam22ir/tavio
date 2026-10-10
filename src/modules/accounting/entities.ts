@@ -33,6 +33,7 @@ export const entryEntity: EntityDef = {
   fields: [
     { name: 'number', type: 'text', label: 'accounting.fields.number', list: true, search: true },
     { name: 'date', type: 'date', label: 'accounting.fields.date', list: true, filter: true },
+    { name: 'sourceId', type: 'text', label: 'accounting.fields.number', readonly: true, filter: true },
     { name: 'journalLabel', type: 'text', label: 'accounting.fields.journal', list: true },
     { name: 'ref', type: 'text', label: 'accounting.fields.ref', list: true, search: true },
     {

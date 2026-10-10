@@ -1,3 +1,4 @@
+import { isUuid } from '@/core/relations/uuid';
 import { alias } from 'drizzle-orm/pg-core';
 import { and, desc, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
@@ -405,13 +406,18 @@ function toMoveRow(row: {
   };
 }
 
-export async function listMoves(ctx: Ctx, opts: { state?: MoveState; limit?: number } = {}): Promise<Result<MoveRow[]>> {
+export async function listMoves(
+  ctx: Ctx,
+  opts: { state?: MoveState; limit?: number; productId?: string; sourceId?: string } = {},
+): Promise<Result<MoveRow[]>> {
   const perm = requirePerm(ctx, 'inventory.move.read');
   if (!perm.ok) return perm;
   const { from, to, columns } = moveSelect();
   const where = and(
     eq(stockMoves.companyId, ctx.companyId),
     opts.state ? eq(stockMoves.state, opts.state) : undefined,
+    isUuid(opts.productId) ? eq(stockMoves.productId, opts.productId) : undefined,
+    isUuid(opts.sourceId) ? eq(stockMoves.sourceId, opts.sourceId) : undefined,
   );
   const rows = await ctx.tx
     .select(columns)

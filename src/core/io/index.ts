@@ -6,3 +6,4 @@ export {
   autoMapColumns, mapRecord, validateRow, missingRequired, normalizeHeader, parseBooleanText,
   type ImportField, type ImportMapping, type RowIssue, type RowResult,
 } from './import';
+export { issueText, issueErrorMap, commitMessageText, CUSTOM_MESSAGES, type IoLocale, type IssueLike } from './issues';

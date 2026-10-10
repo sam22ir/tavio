@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd } from '@/core/money';
-import { buttonVariants } from '@/ui/primitives/button';
+import { Button, buttonVariants } from '@/ui/primitives/button';
 import { cn } from '@/ui/lib/cn';
 import { RecordForm } from '@/ui/views/record-form';
 import { Chatter } from '@/modules/chatter/ui/chatter';
@@ -16,9 +16,11 @@ import {
   reopenLeadAction,
   logAttemptAction,
   updateLeadFormAction,
+  createQuoteForm,
 } from '@/modules/crm/actions';
 import { leadFormEntity } from '@/modules/crm/ui/form-entity';
 import { LeadStatusActions } from '@/modules/crm/ui/lead-status-actions';
+import { RelatedLinks } from '@/ui/views/related-links';
 
 // Digits only: 0XXXXXXXXX becomes 213XXXXXXXXX. Returns null when the number looks invalid.
 function waNumber(phone: string): string | null {
@@ -37,6 +39,7 @@ export default async function LeadPage({
   setRequestLocale(locale);
 
   const t = await getTranslations('crm.ui');
+  const tRel = await getTranslations('relations');
   const loc = (await getLocale()) as Locale;
 
   const data = await withPageCtx(async (ctx) => {
@@ -74,6 +77,12 @@ export default async function LeadPage({
           {t('back')}
         </Link>
         <h1 className="text-xl font-semibold break-words">{String(lead.name)}</h1>
+        <RelatedLinks source="crm.lead" id={id} />
+        {lead.partnerId ? (
+          <Link href={`/${locale}/contacts/${lead.partnerId}`} className="text-sm text-primary underline-offset-4 hover:underline">
+            {tRel('lead.contact')}
+          </Link>
+        ) : null}
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-3">
           <dt className="text-muted-foreground">{t('stage')}</dt>
           <dd>{stageName ?? '—'}</dd>
@@ -98,6 +107,12 @@ export default async function LeadPage({
           logAttempt={logAttemptAction}
         />
         <div className="flex flex-wrap gap-2">
+          <form action={createQuoteForm}>
+            <input type="hidden" name="id" value={id} />
+            <Button type="submit" size="sm" className="min-h-11">
+              {t('newQuote')}
+            </Button>
+          </form>
           {phone ? (
             <a href={`tel:${phone}`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
               {t('call')}

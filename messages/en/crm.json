@@ -43,7 +43,8 @@
       "instagram": "Instagram",
       "whatsapp": "WhatsApp",
       "referral": "Referral",
-      "other": "Other"
+      "other": "Other",
+      "website": "Website"
     },
     "status": {
       "open": "Open",
@@ -124,6 +125,7 @@
     "skippedAutomation": "automation rules (module not enabled)",
     "skippedDocuments": "required documents (missing permission)",
     "mourabahaFailed": "Applying the Mourabaha template failed.",
-    "pipelineFilter": "Pipeline"
+    "pipelineFilter": "Pipeline",
+    "newQuote": "New quote"
   }
 }

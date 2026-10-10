@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ilike, ne, or, type AnyColumn, type SQL } from 'drizzle-orm';
+import { and, asc, count, desc, eq, ilike, ne, or, sql, type AnyColumn, type SQL } from 'drizzle-orm';
 import { z } from 'zod';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
@@ -388,4 +388,28 @@ export async function partnerDedupeKeys(ctx: Ctx): Promise<Set<string>> {
     if (r.nif) keys.add(`nif:${r.nif}`);
   }
   return keys;
+}
+
+/**
+ * Partner for CSV imports (opening balances, quotes). Matches the NIF exactly, the phone after normalizing,
+ * or the display name ignoring case. Returns 'ambiguous' when a name matches more than one partner.
+ */
+export async function findPartnerForImport(
+  ctx: Ctx,
+  input: { name?: string; phone?: string; nif?: string },
+): Promise<{ id: string; displayName: string } | 'ambiguous' | null> {
+  const phone = input.phone ? normalizePhone(input.phone) : null;
+  const conditions: SQL[] = [];
+  if (input.nif) conditions.push(eq(partners.nif, input.nif));
+  if (phone) conditions.push(eq(partners.phone, phone));
+  if (input.name) conditions.push(sql`lower(${partners.displayName}) = lower(${input.name.trim()})`);
+  if (conditions.length === 0) return null;
+  const rows = await ctx.tx
+    .select({ id: partners.id, displayName: partners.displayName })
+    .from(partners)
+    .where(and(eq(partners.companyId, ctx.companyId), or(...conditions)))
+    .limit(3);
+  if (rows.length === 0) return null;
+  if (rows.length > 1) return 'ambiguous';
+  return rows[0] ?? null;
 }

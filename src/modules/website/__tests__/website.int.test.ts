@@ -144,3 +144,38 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('website (integration)', () => {
     if (!refused.ok) expect(refused.error.details?.reason).toBe('RATE_LIMITED');
   });
 });
+
+describe.skipIf(!process.env.TAVIO_W5_DB)('auto sale order setting (integration)', () => {
+  const companyC = randomUUID();
+  const perms = new Set(['website.settings.read', 'website.settings.write']);
+  const ownerId = randomUUID();
+  const argsC = (): TenantArgs => ({ userId: ownerId, companyId: companyC, perms, locale: 'en' });
+
+  beforeAll(async () => {
+    await getDb().insert(users).values({ id: ownerId, name: 'Website owner', email: `owner-${ownerId}@test.invalid` });
+    await getDb().insert(companies).values({ id: companyC, legalName: 'Website C', displayName: 'Website C' });
+  });
+
+  afterAll(async () => {
+    try {
+      await getDb().delete(websiteSettings).where(eq(websiteSettings.companyId, companyC));
+      await getDb().delete(companies).where(eq(companies.id, companyC));
+    } catch {
+      // Random ids: leftovers are harmless.
+    }
+  });
+
+  it('is off by default and saves on when checked', async () => {
+    const base = { slug: `auto-${randomUUID().slice(0, 8)}`, enabled: 'on', title: 'Shop', showPrices: 'on' };
+    const first = await withTenant(argsC(), (ctx) => saveSettings(ctx, settingsInput.parse(base)));
+    expect(first.ok).toBe(true);
+    const off = await withTenant(argsC(), (ctx) => getSettings(ctx));
+    expect(off.ok && off.value?.autoCreateSaleOrder).toBe(false);
+
+    const on = settingsInput.parse({ ...base, autoCreateSaleOrder: 'on' });
+    expect(on.autoCreateSaleOrder).toBe(true);
+    await withTenant(argsC(), (ctx) => saveSettings(ctx, on));
+    const saved = await withTenant(argsC(), (ctx) => getSettings(ctx));
+    expect(saved.ok && saved.value?.autoCreateSaleOrder).toBe(true);
+  });
+});

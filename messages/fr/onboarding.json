@@ -53,7 +53,7 @@
     "subtitle": "Comment voulez-vous commencer ?",
     "invitesSummary": "{count} invitation(s) traitée(s).",
     "sampleTitle": "Explorer avec des données d'exemple",
-    "sampleHint": "Produits, clients, ventes, factures et contrats fictifs. Vous pourrez les effacer à tout moment.",
+    "sampleHint": "Crée une société de démonstration séparée, avec produits, clients, ventes, factures et contrats fictifs. Votre société reste vide.",
     "sampleCta": "Explorer",
     "emptyTitle": "Commencer à vide",
     "emptyHint": "Votre espace reste vierge. Vous ajouterez vos propres données.",
@@ -70,12 +70,14 @@
     "sampleFailed": "Impossible de charger les données d'exemple. Réessayez."
   },
   "banner": {
-    "active": "Données d'exemple actives",
-    "clear": "Effacer",
-    "confirm": "Supprimer toutes les données d'exemple ?",
+    "demoActive": "Société de démonstration : vos vraies données sont dans « {company} »",
+    "demoOnly": "Société de démonstration",
+    "switchToReal": "Passer à ma société",
+    "archive": "Archiver la démo",
+    "archiveConfirm": "Archiver la société de démonstration ? Aucune donnée n'est supprimée.",
     "confirmAction": "Confirmer",
     "cancel": "Annuler",
-    "failed": "Impossible d'effacer les données d'exemple."
+    "failed": "Opération impossible. Réessayez."
   },
   "checklist": {
     "title": "Premiers pas",
@@ -85,5 +87,8 @@
     "sale": "Faire une première vente ou un contrat",
     "team": "Inviter un collaborateur",
     "hide": "Masquer"
+  },
+  "demo": {
+    "companyName": "Démo – Électroménager El Baraka"
   }
 }

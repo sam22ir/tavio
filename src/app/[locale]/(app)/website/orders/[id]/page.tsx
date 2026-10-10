@@ -6,7 +6,9 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd } from '@/core/money';
 import { routing } from '@/i18n/routing';
 import { cancelWebOrderForm, convertWebOrderForm } from '@/modules/website/actions';
-import { getWebOrder } from '@/modules/website/service/orders';
+import { getLinkedSale, getWebOrder } from '@/modules/website/service/orders';
+import { buttonVariants } from '@/ui/primitives/button';
+import { cn } from '@/ui/lib/cn';
 import { Chatter } from '@/modules/chatter/ui/chatter';
 import { Button } from '@/ui/primitives/button';
 import { ErrorToast } from '@/ui/feedback/error-toast';
@@ -38,6 +40,9 @@ export default async function WebOrderDetailPage({
   }
   const order = result.value;
   const isNew = order.state === 'new';
+  const saleOrderId = order.saleOrderId;
+  const linked = saleOrderId ? await withPageCtx((ctx) => getLinkedSale(ctx, saleOrderId)) : null;
+  const sale = linked?.ok ? linked.value : null;
 
   return (
     <main className="flex flex-col gap-6">
@@ -98,6 +103,41 @@ export default async function WebOrderDetailPage({
           </tfoot>
         </table>
       </div>
+
+      <section aria-labelledby="order-sales" className="flex flex-col gap-3">
+        <h2 id="order-sales" className="text-base font-semibold">{t('orders.linked.title')}</h2>
+        {sale ? (
+          <div className="flex flex-col gap-3 rounded-md border p-4 text-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-col">
+                <span className="text-xs text-muted-foreground">{t('orders.linked.sale')}</span>
+                <span className="break-words">{sale.number ?? t('orders.linked.draft')} · {t(`orders.linked.state.${sale.state}`)}</span>
+              </div>
+              <Link href={`/${currentLocale}/sales/${sale.id}`} className={cn(buttonVariants({ variant: 'outline' }), 'min-h-11')}>
+                {t('orders.linked.open_sale')}
+              </Link>
+            </div>
+            {sale.invoices.length === 0 ? (
+              <p className="text-muted-foreground">{t('orders.linked.no_invoice')}</p>
+            ) : (
+              <ul className="flex flex-col gap-2">
+                {sale.invoices.map((inv) => (
+                  <li key={inv.id} className="flex flex-wrap items-center justify-between gap-3 border-t pt-2">
+                    <span className="break-words">
+                      {t('orders.linked.invoice')} {inv.number ?? '—'} · {formatDzd(BigInt(inv.paidCents), currentLocale)} / {formatDzd(BigInt(inv.totalCents), currentLocale)} · {t(`orders.linked.payment.${inv.paymentState}`)}
+                    </span>
+                    <Link href={`/${currentLocale}/invoicing/customers/${inv.id}`} className="inline-flex min-h-11 items-center hover:underline">
+                      {t('orders.linked.open_invoice')}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">{t('orders.linked.none')}</p>
+        )}
+      </section>
 
       <section aria-labelledby="order-activity" className="flex flex-col gap-3">
         <h2 id="order-activity" className="text-base font-semibold">{t('orders.activity')}</h2>

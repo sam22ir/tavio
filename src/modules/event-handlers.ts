@@ -7,6 +7,7 @@ import type { Ctx } from '@/core/ctx';
 import { runAutomations } from '@/modules/automation/engine';
 import '@/modules/accounting/events';
 import '@/modules/credit_sales/events';
+import '@/modules/crm/events';
 import '@/modules/inventory/events';
 import '@/modules/purchases/events';
 import '@/modules/crm/service/access';

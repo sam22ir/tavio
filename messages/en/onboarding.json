@@ -53,7 +53,7 @@
     "subtitle": "How would you like to start?",
     "invitesSummary": "{count} invitation(s) processed.",
     "sampleTitle": "Explore with sample data",
-    "sampleHint": "Fictional products, customers, sales, invoices and contracts. You can clear them at any time.",
+    "sampleHint": "Creates a separate demo company with fictional products, customers, sales, invoices and contracts. Your company stays empty.",
     "sampleCta": "Explore",
     "emptyTitle": "Start empty",
     "emptyHint": "Your workspace stays blank. You will add your own data.",
@@ -70,12 +70,14 @@
     "sampleFailed": "Could not load sample data. Try again."
   },
   "banner": {
-    "active": "Sample data active",
-    "clear": "Clear",
-    "confirm": "Delete all sample data?",
+    "demoActive": "Demo company: your real data is in “{company}”",
+    "demoOnly": "Demo company",
+    "switchToReal": "Switch to my company",
+    "archive": "Archive the demo",
+    "archiveConfirm": "Archive the demo company? No data is deleted.",
     "confirmAction": "Confirm",
     "cancel": "Cancel",
-    "failed": "Could not clear the sample data."
+    "failed": "Action failed. Try again."
   },
   "checklist": {
     "title": "Getting started",
@@ -85,5 +87,8 @@
     "sale": "Make a first sale or contract",
     "team": "Invite a teammate",
     "hide": "Hide"
+  },
+  "demo": {
+    "companyName": "Demo – Électroménager El Baraka"
   }
 }

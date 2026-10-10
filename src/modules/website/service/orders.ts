@@ -1,9 +1,11 @@
-import { and, count, desc, eq, ilike, or, type SQL } from 'drizzle-orm';
+import { and, asc, count, desc, eq, ilike, or, type SQL } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import type { ListQuery, ListResult } from '@/core/entities/types';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
+import { invoices } from '@/modules/invoicing/schema';
+import { saleOrders } from '@/modules/sales/schema';
 import { webOrders, type WebOrder } from '../schema';
 import { nextOrderState, type OrderStateAction, type WebOrderState } from './rules';
 
@@ -116,4 +118,65 @@ export async function transitionWebOrder(
     after: { state: next },
   });
   return ok({ state: next });
+}
+
+export interface LinkedSaleInvoice {
+  id: string;
+  number: string | null;
+  totalCents: string;
+  paidCents: string;
+  paymentState: string;
+}
+
+export interface LinkedSale {
+  id: string;
+  number: string | null;
+  state: string;
+  totalCents: string;
+  invoices: LinkedSaleInvoice[];
+}
+
+/** The sale order a web order was converted to, with its customer invoices and their payment state. */
+export async function getLinkedSale(ctx: Ctx, saleOrderId: string): Promise<Result<LinkedSale | null>> {
+  const perm = requirePerm(ctx, 'sales.order.read');
+  if (!perm.ok) return perm;
+
+  const [order] = await ctx.tx
+    .select({ id: saleOrders.id, number: saleOrders.number, state: saleOrders.state, totalCents: saleOrders.totalCents })
+    .from(saleOrders)
+    .where(and(eq(saleOrders.companyId, ctx.companyId), eq(saleOrders.id, saleOrderId)))
+    .limit(1);
+  if (!order) return ok(null);
+
+  const invoiceRows = await ctx.tx
+    .select({
+      id: invoices.id,
+      number: invoices.number,
+      totalCents: invoices.totalCents,
+      paidCents: invoices.paidCents,
+      paymentState: invoices.paymentState,
+    })
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.companyId, ctx.companyId),
+        eq(invoices.sourceEntity, 'sales.order'),
+        eq(invoices.sourceId, saleOrderId),
+      ),
+    )
+    .orderBy(asc(invoices.createdAt));
+
+  return ok({
+    id: order.id,
+    number: order.number,
+    state: order.state,
+    totalCents: order.totalCents.toString(),
+    invoices: invoiceRows.map((r) => ({
+      id: r.id,
+      number: r.number,
+      totalCents: r.totalCents.toString(),
+      paidCents: r.paidCents.toString(),
+      paymentState: r.paymentState,
+    })),
+  });
 }

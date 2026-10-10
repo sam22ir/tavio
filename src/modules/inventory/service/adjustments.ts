@@ -11,10 +11,17 @@ import { fromMilli, parseCountedQty, toMilli } from './quantity';
 import { ensureDefaultWarehouse } from './warehouses';
 import { postMove } from './moves';
 
+/** Source tag of the moves created by opening-stock imports. Accounting books them against 101. */
+export const OPENING_STOCK_SOURCE = 'inventory.opening';
+
 export interface AdjustmentInput {
   productId: string;
   locationId: string;
   countedQty: string;
+  /** Unit cost in centimes for a gain. It enters the CMUP average. Required for opening stock. */
+  unitCostCents?: bigint;
+  /** Marks the move as opening stock, so accounting books Dr 30 / Cr 101 instead of the gain account. */
+  opening?: boolean;
 }
 
 /**
@@ -61,6 +68,8 @@ export async function createAdjustment(
       quantity,
       fromLocationId: difference > 0n ? lossLocation.inventoryLossLocationId : location.id,
       toLocationId: difference > 0n ? location.id : lossLocation.inventoryLossLocationId,
+      unitCostCents: difference > 0n && input.unitCostCents !== undefined ? input.unitCostCents : null,
+      sourceEntity: input.opening ? OPENING_STOCK_SOURCE : null,
       state: 'draft',
     })
     .returning({ id: stockMoves.id, reference: stockMoves.reference });

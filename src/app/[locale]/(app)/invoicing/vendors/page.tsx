@@ -6,11 +6,15 @@ import { routing } from '@/i18n/routing';
 import { listInvoices } from '@/modules/invoicing/queries';
 import { InvoiceList } from '@/modules/invoicing/ui/views';
 
-export default async function VendorsPage({ params }: { params: Promise<{ locale: string }> }) {
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export default async function VendorsPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const rows = await withPageCtx((ctx) => listInvoices(ctx, 'vendors'));
+  const { f_refundOfId } = await searchParams;
+  const refundOfId = typeof f_refundOfId === 'string' && UUID.test(f_refundOfId) ? f_refundOfId : undefined;
+  const rows = await withPageCtx((ctx) => listInvoices(ctx, 'vendors', refundOfId));
   const t = await getTranslations('invoicing');
   const current = await getLocale();
   return (

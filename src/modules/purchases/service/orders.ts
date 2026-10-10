@@ -430,6 +430,8 @@ export async function getOrder(ctx: Ctx, id: string): Promise<Result<OrderDetail
 }
 
 /** Paginated list with search on number and supplier name, optional state filter. */
+const UUID_FILTER = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function listOrders(ctx: Ctx, query: ListQuery): Promise<Result<ListResult<OrderListRow>>> {
   const perm = requirePerm(ctx, 'purchases.order.read');
   if (!perm.ok) return perm;
@@ -442,6 +444,10 @@ export async function listOrders(ctx: Ctx, query: ListQuery): Promise<Result<Lis
   }
   const state = query.filters['state'];
   if (state) conditions.push(eq(purchaseOrders.state, state));
+  const productFilter = query.filters['productId'];
+  if (productFilter && UUID_FILTER.test(productFilter)) {
+    conditions.push(inArray(purchaseOrders.id, ctx.tx.select({ id: purchaseOrderLines.orderId }).from(purchaseOrderLines).where(eq(purchaseOrderLines.productId, productFilter))));
+  }
 
   const where = and(...conditions);
   const [counted] = await ctx.tx

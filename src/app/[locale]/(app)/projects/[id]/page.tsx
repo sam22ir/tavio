@@ -14,6 +14,7 @@ import { Chatter } from '@/modules/chatter/ui/chatter';
 import { Button } from '@/ui/primitives/button';
 import { LinkedKanban } from '@/ui/views/linked-kanban';
 import { RecordForm } from '@/ui/views/record-form';
+import { RelatedLinks } from '@/ui/views/related-links';
 
 interface Board {
   project: Project;
@@ -78,6 +79,7 @@ export default async function ProjectDetailPage({
             ))}
         </div>
       </header>
+      <RelatedLinks source="projects.project" id={id} />
 
       <section aria-labelledby="project-tasks" className="flex flex-col gap-3">
         <h2 id="project-tasks" className="text-base font-semibold">{t('project.tasks')}</h2>

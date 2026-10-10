@@ -3,21 +3,46 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { clearSampleData } from './actions';
+import { switchCompany } from '@/ui/shell/actions';
+import { archiveDemoCompanyAction } from './actions';
 
-/** Shows that sample data is loaded, with a two-step clear. Renders nothing when `active` is false. */
-export function SampleDataBanner({ active }: { active: boolean }) {
+/**
+ * Shown only inside a demo company: says where the real data is, switches back to it, and archives the demo.
+ * Renders nothing when `demo` is false.
+ */
+export function SampleDataBanner({
+  demo,
+  demoCompanyId,
+  realCompany,
+}: {
+  demo: boolean;
+  demoCompanyId: string;
+  realCompany: { id: string; name: string } | null;
+}) {
   const t = useTranslations('onboarding');
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [failed, setFailed] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  if (!active) return null;
+  if (!demo) return null;
 
-  function confirm(): void {
+  function switchToReal(): void {
+    if (!realCompany) return;
+    const target = realCompany.id;
     startTransition(async () => {
-      const res = await clearSampleData();
+      const res = await switchCompany(target);
+      if (!res.ok) {
+        setFailed(true);
+        return;
+      }
+      router.refresh();
+    });
+  }
+
+  function archive(): void {
+    startTransition(async () => {
+      const res = await archiveDemoCompanyAction(demoCompanyId);
       if (!res.ok) {
         setFailed(true);
         return;
@@ -32,22 +57,29 @@ export function SampleDataBanner({ active }: { active: boolean }) {
       role="status"
       className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900"
     >
-      <span>{t('banner.active')}</span>
-      {confirming ? (
-        <span className="flex flex-wrap items-center gap-3">
-          <span>{t('banner.confirm')}</span>
-          <button type="button" onClick={confirm} disabled={pending} className="font-medium text-red-800 hover:underline disabled:opacity-50">
-            {t('banner.confirmAction')}
+      <span>{realCompany ? t('banner.demoActive', { company: realCompany.name }) : t('banner.demoOnly')}</span>
+      <span className="flex flex-wrap items-center gap-3">
+        {realCompany && (
+          <button type="button" onClick={switchToReal} disabled={pending} className="font-medium hover:underline disabled:opacity-50">
+            {t('banner.switchToReal')}
           </button>
-          <button type="button" onClick={() => setConfirming(false)} disabled={pending} className="font-medium hover:underline">
-            {t('banner.cancel')}
+        )}
+        {confirming ? (
+          <span className="flex flex-wrap items-center gap-3">
+            <span>{t('banner.archiveConfirm')}</span>
+            <button type="button" onClick={archive} disabled={pending} className="font-medium text-red-800 hover:underline disabled:opacity-50">
+              {t('banner.confirmAction')}
+            </button>
+            <button type="button" onClick={() => setConfirming(false)} disabled={pending} className="font-medium hover:underline">
+              {t('banner.cancel')}
+            </button>
+          </span>
+        ) : (
+          <button type="button" onClick={() => setConfirming(true)} className="font-medium hover:underline">
+            {t('banner.archive')}
           </button>
-        </span>
-      ) : (
-        <button type="button" onClick={() => setConfirming(true)} className="font-medium hover:underline">
-          {t('banner.clear')}
-        </button>
-      )}
+        )}
+      </span>
       {failed && (
         <span role="alert" className="w-full text-red-800">
           {t('banner.failed')}

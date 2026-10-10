@@ -24,6 +24,7 @@ export default async function SalesPage({
 
   const query = parseListQuery(await searchParams, saleOrderEntity);
   const t = await getTranslations('sales');
+  const ioT = await getTranslations('io.import');
   const result = await withPageCtx((ctx) => listSaleOrders(ctx, query));
   if (!result.ok) throw new Error(result.error.code);
 
@@ -37,9 +38,14 @@ export default async function SalesPage({
         basePath={`/${locale}/sales`}
         rowHref={(r) => `/${locale}/sales/${r.id}`}
         actions={
-          <Link href={`/${locale}/sales/new`} className={cn(buttonVariants({ size: 'sm' }), 'min-h-11')}>
-            {t('actions.new')}
-          </Link>
+          <>
+            <Link href={`/${locale}/import/sales.quote`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'min-h-11')}>
+              {ioT('button')}
+            </Link>
+            <Link href={`/${locale}/sales/new`} className={cn(buttonVariants({ size: 'sm' }), 'min-h-11')}>
+              {t('actions.new')}
+            </Link>
+          </>
         }
       />
     </div>

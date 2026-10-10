@@ -38,8 +38,11 @@ export const saleOrders = pgTable(
     totalCents: bigint('total_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     // True once an invoice has been created from this order (W5-B createInvoice)
     invoiced: boolean('invoiced').notNull().default(false),
+    // CRM lead this quotation was made from (crm_leads.id, FK added by integrator). Null for direct quotes.
+    leadId: uuid('lead_id'),
   },
   (t) => [
+    index('sale_orders_company_id_lead_id_idx').on(t.companyId, t.leadId),
     index('sale_orders_company_id_state_idx').on(t.companyId, t.state),
     index('sale_orders_company_id_partner_id_idx').on(t.companyId, t.partnerId),
     index('sale_orders_company_id_order_date_idx').on(t.companyId, t.orderDate),

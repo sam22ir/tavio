@@ -11,6 +11,7 @@ export const websiteSettingsEntity: EntityDef = {
     { name: 'about', type: 'textarea', label: 'website.fields.about' },
     { name: 'phoneWhatsapp', type: 'phone', label: 'website.fields.phoneWhatsapp' },
     { name: 'showPrices', type: 'boolean', label: 'website.fields.showPrices' },
+    { name: 'autoCreateSaleOrder', type: 'boolean', label: 'website.fields.autoCreateSaleOrder' },
   ],
 };
 

@@ -22,6 +22,7 @@ export const settingsInput = z.object({
   about: z.preprocess(emptyToUndefined, z.string().max(2000).optional()),
   phoneWhatsapp: z.preprocess(emptyToUndefined, z.string().max(30).optional()),
   showPrices: flag,
+  autoCreateSaleOrder: flag,
 });
 
 export type SettingsInput = z.infer<typeof settingsInput>;
@@ -73,6 +74,7 @@ export async function saveSettings(ctx: Ctx, input: SettingsInput): Promise<Resu
     about: input.about ?? null,
     phoneWhatsapp,
     showPrices: input.showPrices,
+    autoCreateSaleOrder: input.autoCreateSaleOrder,
     updatedAt: new Date(),
   };
 

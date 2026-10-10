@@ -8,7 +8,11 @@ type Locale = 'fr' | 'ar' | 'en';
  * Entities whose lists can be exported. DataList shows the Exporter button only for these,
  * and the export route has a source for each one (typed in export/_lib/sources.ts).
  */
-export const EXPORTABLE_ENTITY_NAMES = ['contacts.partner', 'products.product', 'crm.lead'] as const;
+export const EXPORTABLE_ENTITY_NAMES = [
+  'contacts.partner', 'products.product', 'crm.lead', 'website.web_order', 'hr.employee', 'sales.order',
+  'accounting.account', 'accounting.entry', 'purchases.order', 'marketing.campaign', 'credit_sales.payment',
+  'credit_sales.contract', 'projects.project', 'helpdesk.ticket',
+] as const;
 export type ExportableEntityName = (typeof EXPORTABLE_ENTITY_NAMES)[number];
 
 export function isExportableEntity(name: string): name is ExportableEntityName {

@@ -13,6 +13,7 @@ export const saleOrderEntity: EntityDef = {
       label: 'sales.fields.partnerId',
       list: true,
       search: false,
+      filter: true,
       relation: { entity: 'contacts.partner', labelField: 'displayName' },
     },
     {
@@ -35,6 +36,8 @@ export const saleOrderEntity: EntityDef = {
     { name: 'taxCents', type: 'money', label: 'sales.fields.taxCents', readonly: true },
     { name: 'totalCents', type: 'money', label: 'sales.fields.totalCents', list: true, readonly: true },
     { name: 'invoiced', type: 'boolean', label: 'sales.fields.invoiced', list: true, filter: true },
+    { name: 'productId', type: 'text', label: 'sales.fields.partnerId', readonly: true, filter: true },
+    { name: 'leadId', type: 'text', label: 'sales.fields.partnerId', readonly: true, filter: true },
     { name: 'note', type: 'textarea', label: 'sales.fields.note' },
   ],
 };

@@ -19,7 +19,8 @@
     "wilayaCode": "Wilaya",
     "totalCents": "Total (DZD)",
     "state": "Statut",
-    "address": "Adresse"
+    "address": "Adresse",
+    "autoCreateSaleOrder": "Créer automatiquement la commande"
   },
   "options": {
     "state": {
@@ -45,6 +46,28 @@
       "product": "Produit",
       "quantity": "Qté",
       "subtotal": "Sous-total"
+    },
+    "linked": {
+      "title": "Commande de vente et facturation",
+      "none": "Aucune commande de vente liée. Les commandes sont converties manuellement ou automatiquement selon le réglage du site.",
+      "sale": "Commande de vente",
+      "draft": "Brouillon",
+      "state": {
+        "draft": "Brouillon",
+        "sent": "Envoyé",
+        "confirmed": "Confirmée",
+        "cancelled": "Annulée",
+        "done": "Terminée"
+      },
+      "open_sale": "Ouvrir la commande",
+      "no_invoice": "Aucune facture pour cette commande.",
+      "invoice": "Facture",
+      "open_invoice": "Ouvrir la facture",
+      "payment": {
+        "not_paid": "Non payée",
+        "partial": "Partiellement payée",
+        "paid": "Payée"
+      }
     }
   },
   "shop": {
@@ -54,7 +77,8 @@
     "no_products": "Aucun produit disponible pour le moment.",
     "add_to_cart": "Ajouter au panier",
     "added": "Ajouté au panier.",
-    "view_cart": "Voir le panier"
+    "view_cart": "Voir le panier",
+    "contact": "Contact"
   },
   "cart": {
     "title": "Panier",
@@ -86,6 +110,23 @@
       "rate_limited": "Trop de commandes ont été passées avec ce numéro. Réessayez plus tard ou contactez la boutique.",
       "invalid": "Vérifiez les informations saisies, en particulier le téléphone et la wilaya.",
       "generic": "La commande n'a pas pu être enregistrée. Réessayez."
+    }
+  },
+  "contact": {
+    "title": "Nous contacter",
+    "done": "Merci, votre message a bien été reçu. Nous vous répondrons rapidement.",
+    "submit": "Envoyer le message",
+    "fields": {
+      "name": "Nom complet",
+      "phone": "Numéro de téléphone",
+      "email": "E-mail (facultatif)",
+      "wilayaCode": "Code wilaya (01 à 58)",
+      "message": "Message"
+    },
+    "errors": {
+      "rate_limited": "Trop de messages ont été envoyés avec ce numéro. Réessayez plus tard.",
+      "invalid": "Vérifiez les informations saisies, en particulier le téléphone et la wilaya.",
+      "generic": "Le message n'a pas pu être envoyé. Réessayez."
     }
   }
 }

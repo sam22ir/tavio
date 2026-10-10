@@ -1,3 +1,4 @@
+import { isUuid } from '@/core/relations/uuid';
 import { and, desc, eq, type SQL } from 'drizzle-orm';
 import { z } from 'zod';
 import { audit } from '@/core/audit';
@@ -129,13 +130,17 @@ export async function decideLeave(ctx: Ctx, id: string, decision: 'approved' | '
   return moveLeave(ctx, id, decision, decision === 'approved' ? 'approve' : 'refuse');
 }
 
-export async function listLeaveRequests(ctx: Ctx, filter: { state?: string } = {}): Promise<Result<LeaveRow[]>> {
+export async function listLeaveRequests(
+  ctx: Ctx,
+  filter: { state?: string; employeeId?: string } = {},
+): Promise<Result<LeaveRow[]>> {
   const perm = requirePerm(ctx, 'hr.leave.read');
   if (!perm.ok) return perm;
   const conditions: SQL[] = [eq(leaveRequests.companyId, ctx.companyId)];
   if (filter.state && ['draft', 'submitted', 'approved', 'refused'].includes(filter.state)) {
     conditions.push(eq(leaveRequests.state, filter.state));
   }
+  if (isUuid(filter.employeeId)) conditions.push(eq(leaveRequests.employeeId, filter.employeeId));
   const rows = await ctx.tx
     .select({
       r: leaveRequests,

@@ -37,6 +37,8 @@ export const websiteSettings = pgTable(
     // E.164
     phoneWhatsapp: text('phone_whatsapp'),
     showPrices: boolean('show_prices').notNull().default(true),
+    // When on, each new web order is converted to a draft sale order at checkout.
+    autoCreateSaleOrder: boolean('auto_create_sale_order').notNull().default(false),
   },
   (t) => [
     uniqueIndex('website_settings_company_id_key').on(t.companyId),

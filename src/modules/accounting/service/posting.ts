@@ -206,6 +206,18 @@ export const INVENTORY_ACCOUNTS = {
   costOfGoodsSold: '600',
 } as const;
 
+/** Counter account of opening stock (Capital souscrit, 101). SCF mapping to verify with the accountant. */
+export const OPENING_STOCK_COUNTER_ACCOUNT = '101';
+
+/** Opening stock: Dr 30 / Cr 101, labelled to verify. Zero value produces no lines. */
+export function openingStockLines(input: { valueCents: bigint; reference: string }): DraftLine[] {
+  const label = `${input.reference} - à vérifier`;
+  return [
+    ...line(INVENTORY_ACCOUNTS.stock, 'debit', input.valueCents, null, label),
+    ...line(OPENING_STOCK_COUNTER_ACCOUNT, 'credit', input.valueCents, null, label),
+  ];
+}
+
 /**
  * Journal lines for a valued stock move. Receipt: Dr 30 / Cr 380. Delivery: Dr 600 / Cr 30.
  * Return: reverse of delivery (Dr 30 / Cr 600). Loss: Dr 600 / Cr 30. Gain: Dr 30 / Cr 600.

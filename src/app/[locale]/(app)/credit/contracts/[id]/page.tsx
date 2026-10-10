@@ -1,3 +1,4 @@
+import { RelatedLinks } from '@/ui/views/related-links';
 import Link from 'next/link';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
@@ -81,6 +82,7 @@ export default async function ContractDetailPage({
           </Button>
         </div>
       </header>
+      <RelatedLinks source="credit_sales.contract" id={id} />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Card>

@@ -29,6 +29,7 @@ export default async function EntriesPage({
     return listEntries(ctx, query);
   });
   const t = await getTranslations('accounting');
+  const ioT = await getTranslations('io.import');
   const currentLocale = await getLocale();
 
   return (
@@ -41,9 +42,14 @@ export default async function EntriesPage({
         basePath={`/${currentLocale}/accounting/entries`}
         rowHref={(row) => `/${currentLocale}/accounting/entries/${row.id}`}
         actions={
-          <Link href={`/${currentLocale}/accounting/entries/new`} className={cn(buttonVariants())}>
-            {t('entries.new')}
-          </Link>
+          <>
+            <Link href={`/${currentLocale}/import/accounting.opening_balance`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+              {ioT('button')}
+            </Link>
+            <Link href={`/${currentLocale}/accounting/entries/new`} className={cn(buttonVariants())}>
+              {t('entries.new')}
+            </Link>
+          </>
         }
       />
     </main>
