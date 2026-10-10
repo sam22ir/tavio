@@ -28,11 +28,22 @@
     "dueInDays": "Due in (days)",
     "body": "Note text. Use {field} for payload values",
     "url": "Webhook URL (https)",
-    "active": "Active"
+    "active": "Active",
+    "kind": "Rule type",
+    "whenDate": "Date to watch",
+    "delayDays": "Days after the date",
+    "planId": "Activity plan id",
+    "ownerField": "Payload field holding the owner id (optional)",
+    "cancelPrevious": "Cancel earlier plan runs on the record first",
+    "updates": "Fields to set, one per line: field=value",
+    "steps": "Steps (JSON list of {action, config})"
   },
   "hints": {
     "condition": "Leave the field empty to run on every event. Amounts are compared as numbers.",
-    "body": "Example: Payment of {totalCents} cents recorded."
+    "body": "Example: Payment of {totalCents} cents recorded.",
+    "time": "Runs once per record, the first day the date plus the delay has passed. Use the record column name, for example stage_entered_at.",
+    "updates": "Allowed fields: lead channel, expected_close_date, probability, status (not lost or won). Contract: bo_owner_id, decision_reason, next_action, bank_name, bank_reference, central_risk_result. Contract state cannot be set here.",
+    "steps": "Each step: {\"action\": \"post_note\", \"config\": {...}}. Up to 10 steps, no nested multi."
   },
   "triggers": {
     "sales_order_confirmed": "Sales order confirmed",
@@ -41,7 +52,14 @@
     "purchases_order_received": "Purchase order received",
     "pos_order_paid": "POS order paid",
     "inventory_move_done": "Stock move done",
-    "credit_sales_payment_recorded": "Instalment payment recorded"
+    "credit_sales_payment_recorded": "Instalment payment recorded",
+    "credit_sales_contract_activated": "Credit contract activated",
+    "crm_lead_created": "Lead created",
+    "crm_lead_stage_changed": "Lead stage changed",
+    "crm_lead_won": "Lead won",
+    "crm_lead_lost": "Lead lost",
+    "chatter_activity_done": "Activity done",
+    "credit_sales_contract_state_changed": "Credit contract state changed"
   },
   "ops": {
     "eq": "equals",
@@ -54,11 +72,25 @@
   "actions": {
     "create_activity": "Create activity",
     "post_note": "Post note",
-    "webhook": "Call webhook"
+    "webhook": "Call webhook",
+    "update_record": "Update record fields",
+    "launch_activity_plan": "Launch activity plan",
+    "cancel_activity_plans": "Cancel activity plans",
+    "multi": "Several actions in order"
   },
   "errors": {
     "invalid": "The rule is not valid. Check the fields.",
-    "actionConfig": "The action settings are incomplete."
+    "actionConfig": "The action settings are incomplete.",
+    "timeConfig": "Choose a record type and a date field allowed for it."
   },
-  "forbidden": "You do not have access to automation."
+  "forbidden": "You do not have access to automation.",
+  "kinds": {
+    "event": "When an event happens",
+    "time": "When a date is reached"
+  },
+  "timeEntities": {
+    "lead": "Lead",
+    "activity": "Activity",
+    "credit_contract": "Credit contract"
+  }
 }

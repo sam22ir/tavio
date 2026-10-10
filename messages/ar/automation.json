@@ -28,20 +28,38 @@
     "dueInDays": "الاستحقاق (بالأيام)",
     "body": "نص الملاحظة. استخدم {حقل} لقيم الحدث",
     "url": "رابط الـ webhook (https)",
-    "active": "مفعّلة"
+    "active": "مفعّلة",
+    "kind": "نوع القاعدة",
+    "whenDate": "التاريخ المراقب",
+    "delayDays": "أيام بعد التاريخ",
+    "planId": "معرف خطة الأنشطة",
+    "ownerField": "حقل الحمولة الذي يحمل معرف المسؤول (اختياري)",
+    "cancelPrevious": "إلغاء تشغيلات الخطة السابقة للسجل أولاً",
+    "updates": "الحقول المراد تعيينها، واحد في كل سطر: حقل=قيمة",
+    "steps": "الخطوات (قائمة JSON من {action, config})"
   },
   "hints": {
     "condition": "اترك الحقل فارغاً للتنفيذ عند كل حدث. تُقارن المبالغ كأرقام.",
-    "body": "مثال: تم تسجيل دفعة بقيمة {totalCents} سنتيم."
+    "body": "مثال: تم تسجيل دفعة بقيمة {totalCents} سنتيم.",
+    "time": "تعمل مرة واحدة لكل سجل، في أول يوم يتجاوز فيه التاريخ زائد التأخير. استخدم اسم عمود السجل، مثل stage_entered_at.",
+    "updates": "الحقول المسموحة: channel وexpected_close_date وprobability وstatus (ليس lost ولا won) للعميل. وللعقد: bo_owner_id وdecision_reason وnext_action وbank_name وbank_reference وcentral_risk_result. لا يمكن تغيير حالة العقد هنا.",
+    "steps": "كل خطوة: {\"action\": \"post_note\", \"config\": {...}}. حتى 10 خطوات، دون multi متداخل."
   },
   "triggers": {
-    "sales_order_confirmed": "تأكيد طلب بيع",
-    "invoicing_invoice_posted": "ترحيل فاتورة",
-    "invoicing_payment_registered": "تسجيل دفعة",
-    "purchases_order_received": "استلام طلب شراء",
+    "sales_order_confirmed": "تأكيد أمر البيع",
+    "invoicing_invoice_posted": "ترحيل الفاتورة",
+    "invoicing_payment_registered": "تسجيل الدفعة",
+    "purchases_order_received": "استلام أمر الشراء",
     "pos_order_paid": "دفع طلب نقطة البيع",
-    "inventory_move_done": "إتمام حركة مخزون",
-    "credit_sales_payment_recorded": "تسجيل دفعة قسط"
+    "inventory_move_done": "اكتمال حركة المخزون",
+    "credit_sales_payment_recorded": "تسجيل دفعة قسط",
+    "credit_sales_contract_activated": "تفعيل عقد الائتمان",
+    "crm_lead_created": "إنشاء عميل محتمل",
+    "crm_lead_stage_changed": "تغيير مرحلة العميل المحتمل",
+    "crm_lead_won": "ربح العميل المحتمل",
+    "crm_lead_lost": "خسارة العميل المحتمل",
+    "chatter_activity_done": "إنجاز النشاط",
+    "credit_sales_contract_state_changed": "تغيير حالة عقد الائتمان"
   },
   "ops": {
     "eq": "يساوي",
@@ -54,11 +72,25 @@
   "actions": {
     "create_activity": "إنشاء نشاط",
     "post_note": "نشر ملاحظة",
-    "webhook": "استدعاء webhook"
+    "webhook": "استدعاء webhook",
+    "update_record": "تحديث حقول السجل",
+    "launch_activity_plan": "تشغيل خطة أنشطة",
+    "cancel_activity_plans": "إلغاء خطط الأنشطة",
+    "multi": "عدة إجراءات بالترتيب"
   },
   "errors": {
     "invalid": "القاعدة غير صالحة. تحقق من الحقول.",
-    "actionConfig": "إعدادات الإجراء غير مكتملة."
+    "actionConfig": "إعدادات الإجراء غير مكتملة.",
+    "timeConfig": "اختر نوع السجل وحقل تاريخ مسموحاً له."
   },
-  "forbidden": "ليس لديك صلاحية الوصول إلى الأتمتة."
+  "forbidden": "ليس لديك صلاحية الوصول إلى الأتمتة.",
+  "kinds": {
+    "event": "عند حدوث حدث",
+    "time": "عند الوصول إلى تاريخ"
+  },
+  "timeEntities": {
+    "lead": "العميل المحتمل",
+    "activity": "النشاط",
+    "credit_contract": "عقد الائتمان"
+  }
 }

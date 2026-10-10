@@ -28,20 +28,38 @@
     "dueInDays": "Échéance (jours)",
     "body": "Texte de la note. Utilisez {champ} pour les valeurs",
     "url": "URL du webhook (https)",
-    "active": "Active"
+    "active": "Active",
+    "kind": "Type de règle",
+    "whenDate": "Date à surveiller",
+    "delayDays": "Jours après la date",
+    "planId": "Identifiant du plan d'activités",
+    "ownerField": "Champ de la charge contenant le responsable (optionnel)",
+    "cancelPrevious": "Annuler d'abord les plans précédents du dossier",
+    "updates": "Champs à modifier, un par ligne : champ=valeur",
+    "steps": "Étapes (liste JSON de {action, config})"
   },
   "hints": {
     "condition": "Laissez le champ vide pour exécuter sur chaque événement. Les montants sont comparés comme des nombres.",
-    "body": "Exemple : paiement de {totalCents} centimes enregistré."
+    "body": "Exemple : paiement de {totalCents} centimes enregistré.",
+    "time": "Exécutée une fois par dossier, le premier jour où la date plus le délai est passée. Utilisez le nom de colonne, par exemple stage_entered_at.",
+    "updates": "Champs autorisés : prospect channel, expected_close_date, probability, status (pas lost ni won). Contrat : bo_owner_id, decision_reason, next_action, bank_name, bank_reference, central_risk_result. L'état du contrat ne se modifie pas ici.",
+    "steps": "Chaque étape : {\"action\": \"post_note\", \"config\": {...}}. 10 étapes au maximum, pas de multi imbriqué."
   },
   "triggers": {
-    "sales_order_confirmed": "Commande de vente confirmée",
-    "invoicing_invoice_posted": "Facture validée",
+    "sales_order_confirmed": "Commande client confirmée",
+    "invoicing_invoice_posted": "Facture comptabilisée",
     "invoicing_payment_registered": "Paiement enregistré",
     "purchases_order_received": "Commande d'achat reçue",
-    "pos_order_paid": "Vente caisse payée",
+    "pos_order_paid": "Commande PDV payée",
     "inventory_move_done": "Mouvement de stock effectué",
-    "credit_sales_payment_recorded": "Paiement d'échéance enregistré"
+    "credit_sales_payment_recorded": "Échéance payée",
+    "credit_sales_contract_activated": "Contrat de crédit activé",
+    "crm_lead_created": "Prospect créé",
+    "crm_lead_stage_changed": "Étape du prospect modifiée",
+    "crm_lead_won": "Prospect gagné",
+    "crm_lead_lost": "Prospect perdu",
+    "chatter_activity_done": "Activité terminée",
+    "credit_sales_contract_state_changed": "État du contrat de crédit modifié"
   },
   "ops": {
     "eq": "égal à",
@@ -54,11 +72,25 @@
   "actions": {
     "create_activity": "Créer une activité",
     "post_note": "Publier une note",
-    "webhook": "Appeler un webhook"
+    "webhook": "Appeler un webhook",
+    "update_record": "Modifier des champs du dossier",
+    "launch_activity_plan": "Lancer un plan d'activités",
+    "cancel_activity_plans": "Annuler les plans d'activités",
+    "multi": "Plusieurs actions dans l'ordre"
   },
   "errors": {
     "invalid": "La règle n'est pas valide. Vérifiez les champs.",
-    "actionConfig": "Les paramètres de l'action sont incomplets."
+    "actionConfig": "Les paramètres de l'action sont incomplets.",
+    "timeConfig": "Choisissez un type d'enregistrement et un champ de date autorisé."
   },
-  "forbidden": "Vous n'avez pas accès à l'automatisation."
+  "forbidden": "Vous n'avez pas accès à l'automatisation.",
+  "kinds": {
+    "event": "Quand un événement se produit",
+    "time": "Quand une date est atteinte"
+  },
+  "timeEntities": {
+    "lead": "Prospect",
+    "activity": "Activité",
+    "credit_contract": "Contrat de crédit"
+  }
 }
