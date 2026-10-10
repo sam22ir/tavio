@@ -8,23 +8,56 @@ import * as crm from '@/modules/crm/service';
 import { createLeadFormAction } from '@/modules/crm/actions';
 import { leadFormEntity } from '@/modules/crm/ui/form-entity';
 
-export default async function NewLeadPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function NewLeadPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
+  const sp = await searchParams;
+  const requested = typeof sp.pipeline === 'string' ? sp.pipeline : undefined;
   const t = await getTranslations('crm.ui');
+  // The pipeline picked here decides the stage options; the lead is created in the stage's pipeline.
   const pipeline = await withPageCtx(async (ctx) => {
-    const p = await crm.ensureDefaultPipeline(ctx);
-    if (!p.ok) return null;
-    const s = await crm.listStages(ctx, p.value.id);
-    return s.ok ? { stages: s.value.map((x) => ({ id: x.id, name: x.name })) } : null;
+    const pipelines = await crm.listPipelines(ctx);
+    if (!pipelines.ok) return null;
+    const selected =
+      pipelines.value.find((p) => p.id === requested) ??
+      pipelines.value.find((p) => p.isDefault) ??
+      pipelines.value[0];
+    if (!selected) return null;
+    const s = await crm.listStages(ctx, selected.id);
+    if (!s.ok) return null;
+    return {
+      pipelines: pipelines.value,
+      pipelineId: selected.id,
+      stages: s.value.map((x) => ({ id: x.id, name: x.name })),
+    };
   });
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
       <h1 className="text-xl font-semibold">{t('newTitle')}</h1>
       {pipeline ? (
+        <>
+          <form method="get" className="flex items-center gap-2 text-sm">
+            <label htmlFor="pipeline-select">{t('pipelineFilter')}</label>
+            <select id="pipeline-select" name="pipeline" defaultValue={pipeline.pipelineId} className="h-9 rounded-md border bg-background px-3">
+              {pipeline.pipelines.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <button type="submit" className="h-9 rounded-md border px-3">
+              {t('applyFilter')}
+            </button>
+          </form>
         <RecordForm
           entity={leadFormEntity}
           action={createLeadFormAction}
@@ -33,6 +66,7 @@ export default async function NewLeadPage({ params }: { params: Promise<{ locale
             stageId: pipeline.stages.map((s) => ({ value: s.id, label: s.name })),
           }}
         />
+        </>
       ) : (
         <p role="alert" className="rounded-md border p-4 text-sm text-destructive">
           {t('loadError')}

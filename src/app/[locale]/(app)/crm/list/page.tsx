@@ -27,10 +27,22 @@ export default async function CrmListPage({
   const teamParam = typeof sp.teamId === 'string' ? sp.teamId : '';
   if (teamParam) query.filters = { ...query.filters, teamId: teamParam };
   const t = await getTranslations('crm.ui');
+  const requested = typeof sp.pipeline === 'string' ? sp.pipeline : undefined;
   const data = await withPageCtx(async (ctx) => {
-    const [result, teams] = await Promise.all([crm.listLeads(ctx, query), crm.listTeams(ctx)]);
-    return { result, teams: teams.ok ? teams.value : [] };
+    const pipelines = await crm.listPipelines(ctx);
+    if (!pipelines.ok) return null;
+    const selected =
+      pipelines.value.find((p) => p.id === requested) ??
+      pipelines.value.find((p) => p.isDefault) ??
+      pipelines.value[0];
+    if (!selected) return null;
+    const [result, teams] = await Promise.all([
+      crm.listLeads(ctx, { ...query, filters: { ...query.filters, pipelineId: selected.id } }),
+      crm.listTeams(ctx),
+    ]);
+    return { result, teams: teams.ok ? teams.value : [], pipelines: pipelines.value, pipelineId: selected.id };
   });
+  if (!data) return <p role="alert" className="rounded-md border p-4 text-sm text-destructive">{t('loadError')}</p>;
   const result = data.result;
 
   return (
@@ -54,6 +66,14 @@ export default async function CrmListPage({
       </div>
 
       <form method="get" className="flex items-center gap-2 text-sm">
+        <label htmlFor="pipeline-filter">{t('pipelineFilter')}</label>
+        <select id="pipeline-filter" name="pipeline" defaultValue={data.pipelineId} className="h-9 rounded-md border bg-background px-3">
+          {data.pipelines.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
         <label htmlFor="team-filter">{t('teamFilter')}</label>
         <select id="team-filter" name="teamId" defaultValue={teamParam} className="h-9 rounded-md border bg-background px-3">
           <option value="">{t('allTeams')}</option>

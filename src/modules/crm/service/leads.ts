@@ -38,6 +38,8 @@ export const leadInput = z.object({
   ),
   channel: z.preprocess(blank, z.enum(LEAD_CHANNELS).optional()),
   stageId: uuid,
+  // Optional. Defaults to the stage's pipeline, or the default pipeline when no stage is given.
+  pipelineId: uuid,
   probability: z.preprocess(blank, z.coerce.number().int().min(0).max(100).optional()),
   expectedRevenueCents: z.preprocess(blank, z.bigint().nonnegative().optional()),
   expectedCloseDate: z.preprocess(blank, z.iso.date().optional()),
@@ -47,7 +49,7 @@ export const leadInput = z.object({
 export type LeadInput = z.input<typeof leadInput>;
 export type LeadData = z.output<typeof leadInput>;
 
-export const leadUpdateInput = leadInput.omit({ stageId: true }).partial();
+export const leadUpdateInput = leadInput.omit({ stageId: true, pipelineId: true }).partial();
 export type LeadUpdateInput = z.input<typeof leadUpdateInput>;
 
 export type LeadRow = {
@@ -168,6 +170,7 @@ export async function listLeads(ctx: Ctx, q: ListQuery): Promise<Result<ListResu
   ];
   const scope = await leadScope(ctx);
   if (scope) conds.push(scope);
+  if (q.filters.pipelineId) conds.push(eq(leads.pipelineId, q.filters.pipelineId));
 
   if (q.q) {
     const like = `%${escapeLike(q.q)}%`;
@@ -316,19 +319,28 @@ export async function createLead(
   if (!parsed.success) return err('VALIDATION', 'Invalid lead', { fields: parsed.error.issues.map((i) => i.path.join('.')) });
   const data = parsed.data;
 
-  const pipeline = await ensureDefaultPipeline(ctx);
-  if (!pipeline.ok) return pipeline;
-
-  // Stage defaults to the first stage of the default pipeline.
-  const [stage] = data.stageId
-    ? [await loadStage(ctx, data.stageId)]
-    : await ctx.tx
-        .select()
-        .from(stages)
-        .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipeline.value.id)))
-        .orderBy(asc(stages.position))
-        .limit(1);
-  if (!stage || stage.pipelineId !== pipeline.value.id) return err('VALIDATION', 'Unknown stage');
+  // With a stage, the lead goes to that stage's pipeline. Without one, it starts at the first stage of
+  // the requested pipeline, or of the default pipeline when none is requested.
+  let stage: Awaited<ReturnType<typeof loadStage>>;
+  if (data.stageId) {
+    stage = await loadStage(ctx, data.stageId);
+  } else {
+    let pipelineId = data.pipelineId;
+    if (!pipelineId) {
+      const pipeline = await ensureDefaultPipeline(ctx);
+      if (!pipeline.ok) return pipeline;
+      pipelineId = pipeline.value.id;
+    }
+    const [first] = await ctx.tx
+      .select()
+      .from(stages)
+      .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipelineId)))
+      .orderBy(asc(stages.position))
+      .limit(1);
+    stage = first;
+  }
+  if (!stage) return err('VALIDATION', 'Unknown stage');
+  if (data.pipelineId && stage.pipelineId !== data.pipelineId) return err('VALIDATION', 'Stage belongs to another pipeline');
 
   if (data.partnerId && !(await partnerExists(ctx, data.partnerId))) {
     return err('NOT_FOUND', 'Partner not found');
