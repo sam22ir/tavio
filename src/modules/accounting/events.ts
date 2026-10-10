@@ -8,8 +8,9 @@ import type {
   InventoryMovePosted,
   PosOrderPaid,
 } from '@/core/events/catalog';
-import { and, eq } from 'drizzle-orm';
-import { invoices } from '@/modules/invoicing/schema';
+import { and, eq, sql } from 'drizzle-orm';
+import { invoiceLines as invoiceLineRows, invoices } from '@/modules/invoicing/schema';
+import { products } from '@/modules/products/schema';
 import { creditContracts, creditPayments } from '@/modules/credit_sales/schema';
 import { postEntry } from './service/entries';
 import { ensureDefaults } from './service/chart';
@@ -31,6 +32,23 @@ async function mustPost(ctx: Ctx, input: Parameters<typeof postEntry>[1]): Promi
 on('invoicing.invoice.posted', async (ctx, event) => {
   const p = event.payload as InvoicePosted;
   const isSale = p.type === 'out_invoice' || p.type === 'out_refund';
+  // Vendor bills: the stock-tracked goods part goes to 380 so it nets against the receipt (perpetual inventory).
+  let stockedUntaxedCents = 0n;
+  if (!isSale) {
+    const [row] = await ctx.tx
+      .select({ total: sql<string>`coalesce(sum(${invoiceLineRows.subtotalCents}), 0)` })
+      .from(invoiceLineRows)
+      .innerJoin(products, eq(products.id, invoiceLineRows.productId))
+      .where(
+        and(
+          eq(invoiceLineRows.invoiceId, p.invoiceId),
+          eq(invoiceLineRows.companyId, ctx.companyId),
+          eq(products.kind, 'goods'),
+          eq(products.trackStock, true),
+        ),
+      );
+    stockedUntaxedCents = BigInt(row?.total ?? '0');
+  }
   await mustPost(ctx, {
     journalCode: isSale ? 'VT' : 'AC',
     date: p.date,
@@ -45,6 +63,7 @@ on('invoicing.invoice.posted', async (ctx, event) => {
       taxCents: bigOrZero(p.taxCents),
       stampCents: bigOrZero(p.stampCents),
       totalCents: bigOrZero(p.totalCents),
+      stockedUntaxedCents,
     }),
   });
 });

@@ -58,16 +58,22 @@ export interface InvoiceForPosting {
   taxCents: bigint;
   stampCents: bigint;
   totalCents: bigint;
+  /**
+   * Purchases only: the untaxed part of the bill for stock-tracked goods. With perpetual inventory it is
+   * debited to 380 (cleared by the receipt's Dr 30 / Cr 380), and the rest stays on 600. Defaults to 0.
+   */
+  stockedUntaxedCents?: bigint;
 }
 
 /**
  * Sale: Dr 411 total / Cr 700 untaxed / Cr 4457 VAT / Cr 445 stamp.
- * Purchase: Cr 401 total / Dr 600 untaxed / Dr 4456 VAT / Dr 445 stamp.
+ * Purchase: Cr 401 total / Dr 380 stocked goods / Dr 600 rest of untaxed / Dr 4456 VAT / Dr 445 stamp.
  * Refunds (out_refund, in_refund) invert every line.
  * ⚠ Needs accountant verification: stamp duty (445) side and account choice.
  */
 export function invoiceLines(inv: InvoiceForPosting): DraftLine[] {
   const isSale = inv.type === 'out_invoice' || inv.type === 'out_refund';
+  const stocked = isSale ? 0n : (inv.stockedUntaxedCents ?? 0n);
   const lines = isSale
     ? [
         ...line('411', 'debit', inv.totalCents, inv.partnerId, inv.number),
@@ -77,7 +83,8 @@ export function invoiceLines(inv: InvoiceForPosting): DraftLine[] {
       ]
     : [
         ...line('401', 'credit', inv.totalCents, inv.partnerId, inv.number),
-        ...line('600', 'debit', inv.untaxedCents, null, inv.number),
+        ...line(INVENTORY_ACCOUNTS.stockedPurchases, 'debit', stocked, null, inv.number),
+        ...line('600', 'debit', inv.untaxedCents - stocked, null, inv.number),
         ...line('4456', 'debit', inv.taxCents, null, inv.number),
         ...line('445', 'debit', inv.stampCents, null, inv.number),
       ];
