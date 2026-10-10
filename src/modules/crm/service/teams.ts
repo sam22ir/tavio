@@ -14,7 +14,8 @@ export type LeadScopeMode = 'all' | 'team' | 'own';
  * and everyone else sees only their own leads. Team leaders see their team's leads in every mode.
  */
 export function leadScopeMode(perms: ReadonlySet<string>): LeadScopeMode {
-  if (perms.has('crm.leads.view_all')) return 'all';
+  // '*' is held by the owner and admin roles (default-roles.ts), so they see every lead.
+  if (perms.has('*') || perms.has('crm.leads.view_all')) return 'all';
   if (perms.has('crm.leads.view_team')) return 'team';
   return 'own';
 }
@@ -40,6 +41,7 @@ export async function leadScope(ctx: Ctx): Promise<SQL | undefined> {
 
   const conds: SQL[] = [
     eq(leads.salespersonId, ctx.userId),
+    eq(leads.createdBy, ctx.userId),
     inArray(
       leads.teamId,
       ctx.tx
@@ -180,6 +182,7 @@ export async function saveTeam(ctx: Ctx, input: SaveTeamInput): Promise<Result<{
   if (sameName && sameName.id !== data.id) return err('CONFLICT', 'A team with this name already exists');
 
   let teamId = data.id;
+  let previousMemberIds: string[] = [];
   if (teamId) {
     const [before] = await ctx.tx
       .select({ name: salesTeams.name, leaderId: salesTeams.leaderId })
@@ -187,6 +190,12 @@ export async function saveTeam(ctx: Ctx, input: SaveTeamInput): Promise<Result<{
       .where(and(eq(salesTeams.companyId, ctx.companyId), eq(salesTeams.id, teamId)))
       .for('update');
     if (!before) return err('NOT_FOUND', 'Team not found');
+    previousMemberIds = (
+      await ctx.tx
+        .select({ userId: salesTeamMembers.userId })
+        .from(salesTeamMembers)
+        .where(and(eq(salesTeamMembers.companyId, ctx.companyId), eq(salesTeamMembers.teamId, teamId)))
+    ).map((m) => m.userId);
     await ctx.tx
       .update(salesTeams)
       .set({ name: data.name, leaderId: data.leaderId ?? null, updatedAt: new Date() })
@@ -229,8 +238,39 @@ export async function saveTeam(ctx: Ctx, input: SaveTeamInput): Promise<Result<{
       );
     await ctx.tx
       .insert(salesTeamMembers)
-      .values(userIds.map((userId) => ({ companyId: ctx.companyId, teamId: teamId!, userId, createdBy: ctx.userId })))
+      .values(userIds.map((userId) => ({ companyId: ctx.companyId, teamId: savedTeamId, userId, createdBy: ctx.userId })))
       .onConflictDoNothing();
+  }
+
+  const savedTeamId: string = teamId;
+  // Leads follow their salesperson's team. Open leads of newly added members move here.
+  // Leads of removed members that pointed at this team move to the team they now belong to, or to none.
+  const added = userIds.filter((u) => !previousMemberIds.includes(u));
+  const removed = previousMemberIds.filter((u) => !userIds.includes(u));
+  if (added.length) {
+    await ctx.tx
+      .update(leads)
+      .set({ teamId: savedTeamId, updatedAt: new Date() })
+      .where(
+        and(
+          eq(leads.companyId, ctx.companyId),
+          eq(leads.status, 'open'),
+          inArray(leads.salespersonId, added),
+        ),
+      );
+  }
+  for (const userId of removed) {
+    const newTeamId = await teamIdForUser(ctx.tx, ctx.companyId, userId);
+    await ctx.tx
+      .update(leads)
+      .set({ teamId: newTeamId, updatedAt: new Date() })
+      .where(
+        and(
+          eq(leads.companyId, ctx.companyId),
+          eq(leads.teamId, savedTeamId),
+          eq(leads.salespersonId, userId),
+        ),
+      );
   }
   return ok({ id: teamId });
 }

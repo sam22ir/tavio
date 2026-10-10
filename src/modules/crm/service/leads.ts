@@ -256,6 +256,18 @@ export async function leadsByStage(
   );
 }
 
+/** Number of active leads the user may see, optionally narrowed by extra conditions (for dashboards). */
+export async function scopedLeadCount(ctx: Ctx, extraWhere?: SQL): Promise<Result<number>> {
+  const perm = requirePerm(ctx, 'crm.lead.read');
+  if (!perm.ok) return perm;
+  const scope = await leadScope(ctx);
+  const [row] = await ctx.tx
+    .select({ n: count() })
+    .from(leads)
+    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.active, true), scope, extraWhere));
+  return ok(row?.n ?? 0);
+}
+
 export async function getLead(ctx: Ctx, id: string): Promise<Result<LeadRow>> {
   const perm = requirePerm(ctx, 'crm.lead.read');
   if (!perm.ok) return perm;

@@ -10,6 +10,10 @@ describe('leadScopeMode', () => {
     expect(leadScopeMode(new Set(['crm.lead.read', 'crm.leads.view_team']))).toBe('team');
   });
 
+  it('treats the owner and admin wildcard as view_all', () => {
+    expect(leadScopeMode(new Set(['*']))).toBe('all');
+  });
+
   it('sees every lead with view_all, even when view_team is also held', () => {
     expect(leadScopeMode(new Set(['crm.leads.view_team', 'crm.leads.view_all']))).toBe('all');
     expect(leadScopeMode(new Set(['crm.leads.view_all']))).toBe('all');

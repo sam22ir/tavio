@@ -30,3 +30,11 @@ CREATE POLICY tenant_isolation ON crm_settings FOR ALL
   WITH CHECK (company_id = nullif(current_setting('app.company_id', true), '')::uuid);
 --> statement-breakpoint
 GRANT SELECT, INSERT, UPDATE, DELETE ON crm_settings TO tavio_app;
+--> statement-breakpoint
+-- Backfill: leads without a team take the team of their salesperson, when that salesperson is a member.
+UPDATE leads l
+SET team_id = m.team_id
+FROM sales_team_members m
+WHERE l.team_id IS NULL
+  AND m.company_id = l.company_id
+  AND m.user_id = l.salesperson_id;
