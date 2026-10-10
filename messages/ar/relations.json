@@ -31,5 +31,15 @@
   },
   "employee": {
     "leaves": "طلبات الإجازة"
+  },
+  "lead": {
+    "orders": "العروض / الطلبات",
+    "contact": "جهة الاتصال"
+  },
+  "invoice": {
+    "payments": "المدفوعات",
+    "refunds": "الإلغاءات / المرتجعات",
+    "saleOrder": "طلب البيع",
+    "purchaseOrder": "طلب الشراء"
   }
 }

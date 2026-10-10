@@ -37,6 +37,7 @@ export const saleOrderEntity: EntityDef = {
     { name: 'totalCents', type: 'money', label: 'sales.fields.totalCents', list: true, readonly: true },
     { name: 'invoiced', type: 'boolean', label: 'sales.fields.invoiced', list: true, filter: true },
     { name: 'productId', type: 'text', label: 'sales.fields.partnerId', readonly: true, filter: true },
+    { name: 'leadId', type: 'text', label: 'sales.fields.partnerId', readonly: true, filter: true },
     { name: 'note', type: 'textarea', label: 'sales.fields.note' },
   ],
 };

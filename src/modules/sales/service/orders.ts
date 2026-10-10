@@ -160,6 +160,7 @@ export async function listSaleOrders(ctx: Ctx, q: ListQuery): Promise<Result<Lis
   if (q.filters.invoiced === 'true') conds.push(eq(saleOrders.invoiced, true));
   if (q.filters.invoiced === 'false') conds.push(eq(saleOrders.invoiced, false));
   if (q.filters.partnerId && UUID_FILTER.test(q.filters.partnerId)) conds.push(eq(saleOrders.partnerId, q.filters.partnerId));
+  if (q.filters.leadId && UUID_FILTER.test(q.filters.leadId)) conds.push(eq(saleOrders.leadId, q.filters.leadId));
   if (q.filters.productId && UUID_FILTER.test(q.filters.productId)) {
     conds.push(inArray(saleOrders.id, ctx.tx.select({ id: saleOrderLines.orderId }).from(saleOrderLines).where(eq(saleOrderLines.productId, q.filters.productId))));
   }

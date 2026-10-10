@@ -31,5 +31,15 @@
   },
   "employee": {
     "leaves": "Demandes de congé"
+  },
+  "lead": {
+    "orders": "Devis / commandes",
+    "contact": "Contact"
+  },
+  "invoice": {
+    "payments": "Paiements",
+    "refunds": "Avoirs",
+    "saleOrder": "Commande de vente",
+    "purchaseOrder": "Commande d'achat"
   }
 }

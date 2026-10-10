@@ -14,7 +14,7 @@ const TYPES: Record<Kind, string[]> = {
   vendors: ['in_invoice', 'in_refund'],
 };
 
-export async function listInvoices(ctx: Ctx, kind: Kind): Promise<ListRow[]> {
+export async function listInvoices(ctx: Ctx, kind: Kind, refundOfId?: string): Promise<ListRow[]> {
   const rows = await ctx.tx
     .select({
       id: invoices.id,
@@ -28,7 +28,11 @@ export async function listInvoices(ctx: Ctx, kind: Kind): Promise<ListRow[]> {
     })
     .from(invoices)
     .innerJoin(partners, eq(partners.id, invoices.partnerId))
-    .where(and(eq(invoices.companyId, ctx.companyId), inArray(invoices.type, TYPES[kind])))
+    .where(and(
+      eq(invoices.companyId, ctx.companyId),
+      inArray(invoices.type, TYPES[kind]),
+      refundOfId ? eq(invoices.refundOfId, refundOfId) : undefined,
+    ))
     .orderBy(desc(invoices.date), desc(invoices.createdAt))
     .limit(200);
   return rows.map((r) => ({ ...r, date: String(r.date) }));

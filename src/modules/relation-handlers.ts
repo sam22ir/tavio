@@ -7,3 +7,5 @@ import '@/modules/sales/relations';
 import '@/modules/purchases/relations';
 import '@/modules/credit_sales/relations';
 import '@/modules/hr/relations';
+import '@/modules/crm/relations';
+import '@/modules/invoicing/relations';

@@ -31,5 +31,15 @@
   },
   "employee": {
     "leaves": "Leave requests"
+  },
+  "lead": {
+    "orders": "Quotes / orders",
+    "contact": "Contact"
+  },
+  "invoice": {
+    "payments": "Payments",
+    "refunds": "Refunds",
+    "saleOrder": "Sale order",
+    "purchaseOrder": "Purchase order"
   }
 }

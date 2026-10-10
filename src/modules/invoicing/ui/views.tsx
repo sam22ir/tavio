@@ -140,7 +140,7 @@ export function InvoiceDetail({
         </form>
       ) : null}
 
-      <section className="flex flex-col gap-2">
+      <section id="payments" className="flex flex-col gap-2">
         <h2 className="font-medium">{t('detail.payments')}</h2>
         {payments.length === 0 ? <p className="text-sm text-muted-foreground">{t('detail.noPayments')}</p> : (
           <ul className="text-sm">

@@ -6,6 +6,8 @@ import { routing } from '@/i18n/routing';
 import { loadInvoice } from '@/modules/invoicing/service/invoices';
 import { paymentsOf, partnerNameOf } from '@/modules/invoicing/queries';
 import { InvoiceDetail } from '@/modules/invoicing/ui/views';
+import { InvoiceOriginLink } from '@/modules/invoicing/ui/origin-link';
+import { RelatedLinks } from '@/ui/views/related-links';
 
 export default async function VendorInvoicePage({
   params, searchParams,
@@ -24,6 +26,8 @@ export default async function VendorInvoicePage({
   const t = await getTranslations('invoicing');
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
+      <RelatedLinks source="invoicing.invoice" id={id} />
+      <InvoiceOriginLink locale={locale} sourceEntity={data.invoice.sourceEntity} sourceId={data.invoice.sourceId} />
       <InvoiceDetail
         invoice={data.invoice} lines={data.lines} payments={data.payments} kind="vendors" locale={locale}
         t={(k) => t(k as never)} error={error} partnerName={data.partnerName}
