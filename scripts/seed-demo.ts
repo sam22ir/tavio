@@ -18,6 +18,7 @@ import { loadDevEnv } from '../src/core/env/load-dev-env';
 import { createCompany, listMyCompanies, loadTenantArgs } from '../src/core/tenancy/service';
 import { ensureCompanySetup, must, seedCompanyData } from '../src/core/demo/sample-data';
 import { repairDemoStock } from '../src/core/demo/repair-stock';
+import { repairDemoAccounting } from '../src/core/demo/repair-accounting';
 import { partners } from '../src/modules/contacts/schema';
 import { products } from '../src/modules/products/schema';
 import { creditContracts, creditPayments } from '../src/modules/credit_sales/schema';
@@ -199,9 +200,30 @@ async function repairExistingCompany(companyId: string, db: Db): Promise<void> {
   console.log(`${companyId}: repaired ${JSON.stringify(report)}`);
 }
 
+// Posts missing accounting entries of existing documents (see src/core/demo/repair-accounting.ts). Idempotent.
+async function repairAccountingForCompany(companyId: string, db: Db): Promise<void> {
+  const userId = await findOwnerId(companyId, db);
+  const tenant = must(await loadTenantArgs(userId, companyId, 'fr'), 'load tenant');
+  const report = await repairDemoAccounting(tenant, db);
+  console.log(`${companyId}: accounting ${JSON.stringify(report)}`);
+}
+
 async function main(): Promise<void> {
   const db = getDb();
   const argv = process.argv.slice(2);
+  if (argv.includes('--repair-accounting')) {
+    const targets = parseCompanyArgs(argv);
+    if (targets.length === 0) throw new Error('--repair-accounting needs --company=<ids>');
+    for (const companyId of targets) {
+      try {
+        await repairAccountingForCompany(companyId, db);
+      } catch (e: unknown) {
+        console.error(`repair-accounting failed for ${companyId}`, e instanceof Error ? e.message.slice(0, 200) : 'unknown');
+        process.exitCode = 1;
+      }
+    }
+    return;
+  }
   if (argv.includes('--repair-stock')) {
     const named = await db.select({ id: companies.id }).from(companies).where(eq(companies.legalName, COMPANY_NAME));
     const targets = parseCompanyArgs(argv);
