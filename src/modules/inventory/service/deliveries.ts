@@ -10,7 +10,7 @@ import { products } from '@/modules/products/schema';
 import { deliveries, deliveryLines, type Delivery } from '../schema';
 import { closeReservations, aggregateLines, type ReservableLine } from './reservations';
 import { fromMilli } from './quantity';
-import { moveLines } from './moves';
+import { moveLines, stockTrackedLines } from './moves';
 import { ensureDefaultWarehouse } from './warehouses';
 
 export const DELIVERY_SOURCE_ENTITY = 'inventory.delivery';
@@ -159,8 +159,9 @@ export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Re
     .where(and(eq(deliveryLines.deliveryId, delivery.id), eq(deliveryLines.companyId, ctx.companyId)));
 
   const wh = await ensureDefaultWarehouse(ctx);
+  // Only stock-tracked goods move; a service line on the delivery is documentary.
   const posted = await moveLines(ctx, {
-    lines,
+    lines: await stockTrackedLines(ctx, lines),
     sourceEntity: DELIVERY_SOURCE_ENTITY,
     sourceId: delivery.id,
     reference: delivery.number,

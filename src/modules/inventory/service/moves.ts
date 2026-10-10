@@ -1,5 +1,5 @@
 import { alias } from 'drizzle-orm/pg-core';
-import { and, desc, eq, isNotNull, ne, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { emit } from '@/core/events';
@@ -230,6 +230,25 @@ export async function findMoveBySource(
  * product, and skips products that already have a move for this source). Posts the moves when
  * `post` is true. Idempotent, so event redelivery creates nothing new.
  */
+/** Keeps only lines of stock-tracked goods. Services and non-stock products never reserve or move stock. */
+export async function stockTrackedLines<L extends { productId: string | null }>(ctx: Ctx, lines: readonly L[]): Promise<L[]> {
+  const ids = [...new Set(lines.map((l) => l.productId).filter((id): id is string => id !== null))];
+  if (ids.length === 0) return [];
+  const rows = await ctx.tx
+    .select({ id: products.id })
+    .from(products)
+    .where(
+      and(
+        eq(products.companyId, ctx.companyId),
+        eq(products.kind, 'goods'),
+        eq(products.trackStock, true),
+        inArray(products.id, ids),
+      ),
+    );
+  const tracked = new Set(rows.map((r) => r.id));
+  return lines.filter((l) => l.productId !== null && tracked.has(l.productId));
+}
+
 export async function moveLines(
   ctx: Ctx,
   input: {

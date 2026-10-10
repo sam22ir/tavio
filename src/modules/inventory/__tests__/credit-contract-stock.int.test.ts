@@ -93,7 +93,7 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('credit contract deliveries move stock
       const [res] = await ctx.tx.select().from(stockReservations).where(eq(stockReservations.sourceId, sourceId));
       expect(res?.state).toBe('consumed');
       const levels = await stockLevels(ctx);
-      expect(levels.ok && levels.value.find((r) => r.productId === goodsId)?.available).toBe('6');
+      expect(levels.ok && Number(levels.value.find((r) => r.productId === goodsId)?.available)).toBe(6);
     });
   });
 

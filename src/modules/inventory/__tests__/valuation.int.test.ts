@@ -1,10 +1,11 @@
 import { randomUUID } from 'node:crypto';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { afterAll, describe, expect, it } from 'vitest';
 import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import { loadDevEnv } from '@/core/env/load-dev-env';
+import { deleteTestCompanies } from '@/testing/db-cleanup';
 import { emit } from '@/core/events';
 import { OWNER_PERMS } from '@/core/perms';
 import { journalEntries, journalLines, accounts } from '@/modules/accounting/schema';
@@ -43,7 +44,7 @@ async function fixture(): Promise<{ args: TenantArgs; productId: string }> {
 
 describe.skipIf(!process.env.TAVIO_W5_DB)('stock valuation (database)', () => {
   afterAll(async () => {
-    for (const id of createdCompanies) await db.delete(companies).where(eq(companies.id, id));
+    await deleteTestCompanies(db, createdCompanies);
   });
 
   it('averages receipts at purchase cost and books the delivery at the average', async () => {
@@ -64,6 +65,7 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('stock valuation (database)', () => {
     const [p] = await db.select({ avg: products.avgCostCents }).from(products).where(eq(products.id, productId));
     expect(p?.avg).toBe(BigInt(150));
 
+    let moveId = '';
     await withTenant(args, async (ctx) => {
       const wh = await ensureDefaultWarehouse(ctx);
       const moved = await createMove(ctx, {
@@ -73,6 +75,7 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('stock valuation (database)', () => {
         toLocationId: wh.customerLocationId,
       });
       if (!moved.ok) throw new Error(moved.error.message);
+      moveId = moved.value.moveId;
       const posted = await validateMove(ctx, moved.value.moveId);
       if (!posted.ok) throw new Error(posted.error.message);
     });
@@ -81,7 +84,13 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('stock valuation (database)', () => {
       .select({ id: journalEntries.id })
       .from(journalEntries)
       .innerJoin(journalLines, eq(journalLines.entryId, journalEntries.id))
-      .where(eq(journalEntries.companyId, args.companyId))
+      .where(
+        and(
+          eq(journalEntries.companyId, args.companyId),
+          eq(journalEntries.sourceEntity, 'inventory.move'),
+          eq(journalEntries.sourceId, moveId),
+        ),
+      )
       .limit(1);
     expect(entry).toBeDefined();
     const lines = await db
