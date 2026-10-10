@@ -4,6 +4,7 @@ import type { Ctx } from '@/core/ctx';
 import { err, ok, type Result } from '@/core/result';
 import { activities, activityPlanRuns, activityPlanSteps, activityPlans } from '../schema';
 import { assertMembers, createActivity } from './index';
+import { assertEntityAccess } from './access';
 import { addDays } from './timing';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -21,6 +22,8 @@ export async function launchPlan(
   ownerId: string | null,
 ): Promise<Result<{ runId: string; activityIds: string[] }>> {
   if (!DATE_RE.test(startDate)) return err('VALIDATION', 'Start date must be YYYY-MM-DD');
+  const access = await assertEntityAccess(ctx, entity, recordId);
+  if (!access.ok) return access;
   const [plan] = await ctx.tx
     .select()
     .from(activityPlans)
@@ -94,6 +97,8 @@ export async function cancelPlanRuns(
   recordId: string,
   opts: { exceptRunId?: string } = {},
 ): Promise<Result<{ cancelledRuns: number; deletedActivities: number }>> {
+  const access = await assertEntityAccess(ctx, entity, recordId);
+  if (!access.ok) return access;
   const conditions = [
     eq(activityPlanRuns.entity, entity),
     eq(activityPlanRuns.recordId, recordId),

@@ -28,7 +28,8 @@
     "convertedContractId": "العقد المحوَّل",
     "active": "نشط",
     "channel": "القناة",
-    "attemptCount": "المحاولات"
+    "attemptCount": "المحاولات",
+    "teamName": "الفريق"
   },
   "options": {
     "type": {
@@ -96,6 +97,24 @@
     "convert": "تحويل إلى عقد بيع بالتقسيط",
     "logAttempt": "تسجيل محاولة",
     "daysInStage": "{count, plural, one {يوم واحد في المرحلة} two {يومان في المرحلة} few {# أيام في المرحلة} many {# يومًا في المرحلة} other {# يوم في المرحلة}}",
-    "stageRequirements": "متطلبات هذه المرحلة"
+    "stageRequirements": "متطلبات هذه المرحلة",
+    "teams": "الفرق",
+    "teamsTitle": "فرق المبيعات",
+    "newTeam": "فريق جديد",
+    "teamName": "اسم الفريق",
+    "teamLeader": "المسؤول",
+    "noLeader": "بدون مسؤول",
+    "teamMembers": "الأعضاء",
+    "saveTeam": "حفظ الفريق",
+    "teamSaved": "تم حفظ الفريق",
+    "noTeams": "لا توجد فرق بعد.",
+    "allTeams": "كل الفرق",
+    "teamFilter": "الفريق",
+    "applyFilter": "تطبيق",
+    "restrictVisibility": "تقييد رؤية العملاء المحتملين حسب الفريق",
+    "restrictVisibilityHint": "إيقاف: يرى كل من يمكنه قراءة العملاء المحتملين كل العملاء. تشغيل: يرى المستخدم عملاءه الخاصين وعملاء فريقه (بصلاحية رؤية الفريق) وعملاء الفرق التي يقودها. من لديه صلاحية رؤية الكل يرى كل شيء.",
+    "visibilityTitle": "رؤية العملاء المحتملين",
+    "visibilityOpen": "كل العملاء المحتملين مرئيون لمن يمكنه قراءتهم.",
+    "saveSetting": "حفظ الإعداد"
   }
 }

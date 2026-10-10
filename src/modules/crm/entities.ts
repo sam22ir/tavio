@@ -43,6 +43,7 @@ export const leadEntity: EntityDef = {
         { value: 'other', label: 'crm.options.channel.other' },
       ],
     },
+    { name: 'teamName', type: 'text', label: 'crm.fields.teamName', readonly: true, list: true },
     { name: 'contactName', type: 'text', label: 'crm.fields.contactName', search: true },
     { name: 'phone', type: 'phone', label: 'crm.fields.phone', search: true },
     { name: 'email', type: 'email', label: 'crm.fields.email', search: true },
