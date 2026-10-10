@@ -1,0 +1,2 @@
+ALTER TABLE "invoice_lines" ADD COLUMN "discount_rate" numeric(7, 4) DEFAULT '0' NOT NULL;--> statement-breakpoint
+ALTER TABLE "invoice_lines" ADD CONSTRAINT "invoice_lines_discount_check" CHECK ("invoice_lines"."discount_rate" >= 0 and "invoice_lines"."discount_rate" <= 100);

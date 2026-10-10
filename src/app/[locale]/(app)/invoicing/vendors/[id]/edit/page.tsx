@@ -7,6 +7,7 @@ import { draftLookupsFor } from '@/modules/invoicing/queries';
 import { loadInvoice } from '@/modules/invoicing/service/invoices';
 import { DraftForm } from '@/modules/invoicing/ui/draft-form';
 import { centsToDzdText, type DraftFormInitial } from '@/modules/invoicing/ui/draft-form-defaults';
+import { formatPercent } from '@/modules/invoicing/service/math';
 
 export default async function EditVendorInvoice({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
@@ -32,6 +33,7 @@ export default async function EditVendorInvoice({ params }: { params: Promise<{ 
       description: l.description,
       quantity: String(l.quantity),
       unitPrice: centsToDzdText(l.unitPriceCents),
+      discount: formatPercent(String(l.discountRate)),
       taxId: l.taxId ?? '',
     })),
   };

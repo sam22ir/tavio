@@ -29,6 +29,7 @@
     "description": "Description",
     "quantity": "Quantity",
     "unitPrice": "Unit price (DA)",
+    "discount": "Discount %",
     "tax": "VAT",
     "noTax": "No VAT",
     "submit": "Create draft"
@@ -104,6 +105,7 @@
     "description": "Description",
     "qty": "Qty",
     "unit": "Unit price",
+    "discount": "Discount %",
     "amount": "Amount",
     "vatRate": "VAT rate",
     "vat": "VAT",

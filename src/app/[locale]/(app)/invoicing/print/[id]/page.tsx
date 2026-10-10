@@ -19,7 +19,7 @@ export default async function InvoicePrintPage({ params }: { params: Promise<{ l
     if (!seller || !buyer) return null;
     const t = await getTranslations('invoicing');
     const labels = Object.fromEntries(
-      ['title', 'seller', 'buyer', 'nif', 'nis', 'rc', 'ai', 'address', 'number', 'date', 'description', 'qty', 'unit', 'amount', 'vatRate', 'vat', 'stampDuty', 'totalInWords', 'print'].map(
+      ['title', 'seller', 'buyer', 'nif', 'nis', 'rc', 'ai', 'address', 'number', 'date', 'description', 'qty', 'unit', 'discount', 'amount', 'vatRate', 'vat', 'stampDuty', 'totalInWords', 'print'].map(
         (k) => [k, t(`print.${k}`)],
       ),
     ) as unknown as PrintLabels;
@@ -37,6 +37,7 @@ export default async function InvoicePrintPage({ params }: { params: Promise<{ l
         description: l.description,
         quantity: String(l.quantity),
         unitPriceCents: l.unitPriceCents,
+        discountRate: String(l.discountRate),
         subtotalCents: l.subtotalCents,
         ratePercent: rateOf(String(l.taxRate)),
       })),
