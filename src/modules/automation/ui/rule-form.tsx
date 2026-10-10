@@ -8,7 +8,7 @@ import type { FormState } from '@/core/entities/types';
 import { ACTION_NAMES } from '../config';
 import { OPS } from '../conditions';
 import { TIME_ENTITIES, UPDATE_ENTITIES } from '../fields';
-import { TRIGGER_EVENTS } from '../engine';
+import { TRIGGER_EVENTS } from '../config';
 
 export interface RuleDefaults {
   id?: string;

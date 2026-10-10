@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { eq, inArray } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { getDb } from '@/core/db/client';
-import { companies, users } from '@/core/db/schema';
+import { companies, memberships, roles, users } from '@/core/db/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import { loadDevEnv } from '@/core/env/load-dev-env';
 import { activities, activityTypes } from '../schema';
@@ -38,10 +38,25 @@ beforeAll(async () => {
   await db.insert(activityTypes).values(
     ACTIVITY_TYPE_SEED.map((s) => ({ companyId, name: s.key, defaultDays: s.defaultDays, icon: s.icon })),
   );
+  // Plan launches require the owner to be an active member of the company (assertMembers).
+  const [ownerRole] = await db
+    .insert(roles)
+    .values({ companyId, key: 'owner', name: 'Owner', isSystem: true })
+    .returning({ id: roles.id });
+  await db.insert(memberships).values({
+    companyId,
+    userId,
+    roleId: ownerRole!.id,
+    status: 'active',
+    joinedAt: new Date(),
+    createdBy: userId,
+  });
 });
 
 afterAll(async () => {
   // Chatter rows are tenant data; the test rows are removed with their company where cascades allow.
+  await db.delete(memberships).where(inArray(memberships.companyId, [companyId, otherCompanyId])).catch(() => undefined);
+  await db.delete(roles).where(inArray(roles.companyId, [companyId, otherCompanyId])).catch(() => undefined);
   await db.delete(companies).where(inArray(companies.id, [companyId, otherCompanyId])).catch(() => undefined);
   await db.delete(users).where(eq(users.id, userId)).catch(() => undefined);
 });

@@ -4,7 +4,6 @@ import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import type { DomainEvent } from '@/core/events';
 import { outbox } from '@/core/db/schema';
-import { EVENT_NAMES, type EventName } from '@/core/events/catalog';
 import { assertMembers, ensureActivity, postMessage, todayIso } from '@/modules/chatter/service';
 import { cancelPlanRuns, launchPlan } from '@/modules/chatter/service/plans';
 import { actionConfigSchemas, type ActionName } from './config';
@@ -13,7 +12,7 @@ import { checkUpdateValue, RECORD_ENTITIES, UPDATABLE_FIELDS, type UpdateEntity 
 import { automationRules } from './schema';
 
 // Every catalog event can trigger a rule. Time rules are handled by runTimedRules.
-export const TRIGGER_EVENTS = EVENT_NAMES satisfies readonly EventName[];
+export { TRIGGER_EVENTS } from './config';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
