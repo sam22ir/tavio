@@ -39,5 +39,24 @@
   "salesOrder": "Bon de commande client",
   "purchaseOrder": "Bon de commande fournisseur",
   "receipt": "Reçu de paiement",
-  "validUntil": "Valide jusqu'au"
+  "validUntil": "Valide jusqu'au",
+  "rib": "RIB",
+  "ccp": "CCP",
+  "receiptTitle": "Reçu de paiement",
+  "payer": "Payé par",
+  "paymentDate": "Date du paiement",
+  "method": "Mode de paiement",
+  "amountPaid": "Montant reçu",
+  "remaining": "Reste à payer",
+  "reference": "Référence",
+  "receivedFrom": "Reçu de",
+  "receiptWords": "Somme reçue en lettres",
+  "methods": {
+    "cash": "Espèces",
+    "ccp": "CCP",
+    "transfer": "Virement",
+    "cib": "CIB",
+    "edahabia": "Edahabia",
+    "cheque": "Chèque"
+  }
 }

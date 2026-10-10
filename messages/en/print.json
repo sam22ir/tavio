@@ -39,5 +39,24 @@
   "salesOrder": "Sales order",
   "purchaseOrder": "Purchase order",
   "receipt": "Payment receipt",
-  "validUntil": "Valid until"
+  "validUntil": "Valid until",
+  "rib": "Bank account (RIB)",
+  "ccp": "CCP account",
+  "receiptTitle": "Payment receipt",
+  "payer": "Paid by",
+  "paymentDate": "Payment date",
+  "method": "Payment method",
+  "amountPaid": "Amount received",
+  "remaining": "Balance due",
+  "reference": "Reference",
+  "receivedFrom": "Received from",
+  "receiptWords": "Amount received in words",
+  "methods": {
+    "cash": "Cash",
+    "ccp": "CCP",
+    "transfer": "Bank transfer",
+    "cib": "CIB",
+    "edahabia": "Edahabia",
+    "cheque": "Cheque"
+  }
 }

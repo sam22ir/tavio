@@ -5,6 +5,7 @@ import { partners } from '@/modules/contacts/schema';
 import { products } from '@/modules/products/schema';
 import { taxes } from '@/modules/l10n_dz/schema';
 import { invoices, invoicePayments } from './schema';
+import { fileUrl } from '@/core/files/service';
 import type { DraftLookups } from './ui/draft-form-defaults';
 import type { Kind, ListRow } from './ui/views';
 
@@ -113,8 +114,11 @@ export async function draftLookupsFor(ctx: Ctx, kind: Kind): Promise<DraftLookup
 export async function companyIdentityOf(ctx: Ctx) {
   const [c] = await ctx.tx.select().from(companies).where(eq(companies.id, ctx.companyId));
   if (!c) return null;
+  const logo = c.logoFileId ? await fileUrl(ctx, c.logoFileId) : null;
   return {
     legalName: c.legalName,
+    rib: c.rib,
+    ccp: c.ccp,
     address: c.address,
     wilaya: c.wilayaCode,
     phone: c.phone,
@@ -123,6 +127,27 @@ export async function companyIdentityOf(ctx: Ctx) {
     nis: c.nis,
     rc: c.rc,
     ai: c.ai,
-    logoUrl: null,
+    logoUrl: logo && logo.ok ? logo.value : null,
+  };
+}
+
+/** One payment with its invoice and payer, for the receipt print. Null when not found in this company. */
+export async function paymentReceiptOf(ctx: Ctx, paymentId: string) {
+  const [row] = await ctx.tx
+    .select({ payment: invoicePayments, invoice: invoices, partnerName: partners.displayName })
+    .from(invoicePayments)
+    .innerJoin(invoices, eq(invoices.id, invoicePayments.invoiceId))
+    .innerJoin(partners, eq(partners.id, invoices.partnerId))
+    .where(and(eq(invoicePayments.companyId, ctx.companyId), eq(invoicePayments.id, paymentId)));
+  if (!row) return null;
+  const paidToDate = await ctx.tx
+    .select({ amountCents: invoicePayments.amountCents })
+    .from(invoicePayments)
+    .where(and(eq(invoicePayments.companyId, ctx.companyId), eq(invoicePayments.invoiceId, row.invoice.id)));
+  return {
+    payment: row.payment,
+    invoice: row.invoice,
+    partnerName: row.partnerName,
+    paidToDateCents: paidToDate.reduce((acc, r) => acc + r.amountCents, BigInt(0)),
   };
 }

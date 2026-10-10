@@ -81,7 +81,8 @@
     },
     "payments": "الدفعات",
     "noPayments": "لا توجد دفعات.",
-    "edit": "تعديل"
+    "edit": "تعديل",
+    "printReceipt": "وصل"
   },
   "error": {
     "VALIDATION": "بيانات غير صالحة.",

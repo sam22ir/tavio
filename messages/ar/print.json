@@ -39,5 +39,24 @@
   "salesOrder": "طلب بيع",
   "purchaseOrder": "طلب شراء",
   "receipt": "وصل دفع",
-  "validUntil": "صالح حتى"
+  "validUntil": "صالح حتى",
+  "rib": "الحساب البنكي (RIB)",
+  "ccp": "حساب CCP",
+  "receiptTitle": "وصل دفع",
+  "payer": "دفع من طرف",
+  "paymentDate": "تاريخ الدفع",
+  "method": "طريقة الدفع",
+  "amountPaid": "المبلغ المستلم",
+  "remaining": "المتبقي",
+  "reference": "المرجع",
+  "receivedFrom": "استلمنا من",
+  "receiptWords": "المبلغ المستلم بالحروف",
+  "methods": {
+    "cash": "نقدا",
+    "ccp": "CCP",
+    "transfer": "تحويل",
+    "cib": "CIB",
+    "edahabia": "الذهبية",
+    "cheque": "شيك"
+  }
 }

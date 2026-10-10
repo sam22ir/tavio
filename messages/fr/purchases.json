@@ -22,7 +22,8 @@
       "all": "Tout réceptionner"
     },
     "sourceContract": "Créé depuis le contrat",
-    "openContract": "Ouvrir le contrat"
+    "openContract": "Ouvrir le contrat",
+    "print": "Imprimer"
   },
   "fields": {
     "number": "Numéro",

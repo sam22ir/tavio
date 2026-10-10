@@ -22,7 +22,8 @@
       "all": "Receive all"
     },
     "sourceContract": "Created from contract",
-    "openContract": "Open the contract"
+    "openContract": "Open the contract",
+    "print": "Print"
   },
   "fields": {
     "number": "Number",

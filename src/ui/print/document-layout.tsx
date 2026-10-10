@@ -16,6 +16,8 @@ export interface CompanyIdentity {
   nis: string | null;
   rc: string | null;
   ai: string | null;
+  rib?: string | null;
+  ccp?: string | null;
   logoUrl?: string | null;
 }
 
@@ -52,7 +54,7 @@ export type DocumentLabels = Record<
   | 'seller' | 'buyer' | 'nif' | 'nis' | 'rc' | 'ai' | 'address' | 'phone' | 'email' | 'wilaya'
   | 'number' | 'date' | 'dueDate' | 'description' | 'qty' | 'unit' | 'discount' | 'amount'
   | 'vatRate' | 'vat' | 'base' | 'stampDuty' | 'totalHt' | 'totalTtc' | 'totalInWords'
-  | 'paid' | 'balance' | 'page' | 'legal' | 'verify',
+  | 'paid' | 'balance' | 'page' | 'legal' | 'verify' | 'rib' | 'ccp',
   string
 >;
 
@@ -97,6 +99,45 @@ function IdLines({ party, labels }: { party: PartyIdentity | CompanyIdentity; la
   );
 }
 
+/** Company identity block plus document title, number and dates. Shared by documents and receipts. */
+export function DocumentHeader(props: {
+  company: CompanyIdentity;
+  title: string;
+  number: string;
+  date: string;
+  dueDate?: string | null;
+  labels: DocumentLabels;
+  locale: PrintLocale;
+}) {
+  const { company, labels: l } = props;
+  return (
+    <header className="head row">
+      <div className="company">
+        {company.logoUrl ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={company.logoUrl} alt="" style={{ maxHeight: '18mm', marginBlockEnd: '4px' }} />
+          </>
+        ) : null}
+        <div className="name">{company.legalName}</div>
+        {company.address ? <div>{company.address}</div> : null}
+        {company.wilaya ? <div>{l.wilaya}: {company.wilaya}</div> : null}
+        {company.phone ? <div>{l.phone}: <bdi>{company.phone}</bdi></div> : null}
+        {company.email ? <div>{l.email}: <bdi>{company.email}</bdi></div> : null}
+        <IdLines party={company} labels={l} />
+        {company.rib ? <div>{l.rib}: <bdi>{company.rib}</bdi></div> : null}
+        {company.ccp ? <div>{l.ccp}: <bdi>{company.ccp}</bdi></div> : null}
+      </div>
+      <div style={{ textAlign: 'end' }}>
+        <h1>{props.title}</h1>
+        <div>{l.number}: <bdi>{props.number}</bdi></div>
+        <div>{l.date}: <bdi>{props.date}</bdi></div>
+        {props.dueDate ? <div>{l.dueDate}: <bdi>{props.dueDate}</bdi></div> : null}
+      </div>
+    </header>
+  );
+}
+
 /**
  * Shared A4 legal document (quote, order, invoice, credit note, receipt).
  * Server-renderable. Print CSS is inlined so the page prints correctly without app chrome.
@@ -115,23 +156,7 @@ export function DocumentLayout(props: DocumentLayoutProps) {
     <div lang={locale} dir={dir} className="doc">
       <style dangerouslySetInnerHTML={{ __html: DOCUMENT_PRINT_CSS }} />
 
-      <header className="head row">
-        <div className="company">
-          {company.logoUrl ? <img src={company.logoUrl} alt="" style={{ maxHeight: '18mm', marginBlockEnd: '4px' }} /> : null}
-          <div className="name">{company.legalName}</div>
-          {company.address ? <div>{company.address}</div> : null}
-          {company.wilaya ? <div>{l.wilaya}: {company.wilaya}</div> : null}
-          {company.phone ? <div>{l.phone}: <bdi>{company.phone}</bdi></div> : null}
-          {company.email ? <div>{l.email}: <bdi>{company.email}</bdi></div> : null}
-          <IdLines party={company} labels={l} />
-        </div>
-        <div style={{ textAlign: 'end' }}>
-          <h1>{props.title}</h1>
-          <div>{l.number}: <bdi>{props.number}</bdi></div>
-          <div>{l.date}: <bdi>{props.date}</bdi></div>
-          {props.dueDate ? <div>{l.dueDate}: <bdi>{props.dueDate}</bdi></div> : null}
-        </div>
-      </header>
+      <DocumentHeader company={company} title={props.title} number={props.number} date={props.date} dueDate={props.dueDate} labels={l} locale={locale} />
 
       <section className="parties">
         <div className="party">
@@ -142,6 +167,7 @@ export function DocumentLayout(props: DocumentLayoutProps) {
         </div>
       </section>
 
+      {lines.length > 0 ? (
       <table>
         <thead>
           <tr>
@@ -166,6 +192,7 @@ export function DocumentLayout(props: DocumentLayoutProps) {
           ))}
         </tbody>
       </table>
+      ) : null}
 
       <table className="totals">
         <tbody>
