@@ -7,6 +7,7 @@ import { nextNumber } from '@/core/sequences';
 import { err, ok, type Result } from '@/core/result';
 import { invoiceLines, invoicePayments, invoices, type Invoice, type InvoiceLine } from '../schema';
 import { insertDraft, today, type NewInvoice } from './create';
+import { assertPeriodOpen, getL10nSettings, loadStampTiers } from '@/modules/l10n_dz';
 import { paymentStateFor, stampDutyCents } from './math';
 
 export const PAYMENT_METHODS = ['cash', 'ccp', 'transfer', 'cib', 'edahabia', 'cheque'] as const;
@@ -42,6 +43,8 @@ export async function postInvoice(ctx: Ctx, id: string): Promise<Result<{ number
   if (invoice.state === 'posted') return err('POSTED_IMMUTABLE', 'invoice is already posted');
   if (invoice.state !== 'draft') return err('STATE', 'only drafts can be posted');
   if (lines.length === 0) return err('VALIDATION', 'invoice has no lines');
+  const open = await assertPeriodOpen(ctx, invoice.date);
+  if (!open.ok) return open;
 
   const numbering = NUMBERING[invoice.type]!;
   const number = await nextNumber(ctx, numbering.code, { prefix: numbering.prefix, padding: 5 });
@@ -88,6 +91,8 @@ export async function cancelInvoice(ctx: Ctx, id: string): Promise<Result<{ id: 
   const { invoice } = loaded.value;
   if (invoice.state === 'posted') return err('POSTED_IMMUTABLE', 'posted invoices cannot be cancelled; create a refund');
   if (invoice.state !== 'draft') return err('STATE', 'only drafts can be cancelled');
+  const open = await assertPeriodOpen(ctx, invoice.date);
+  if (!open.ok) return open;
   await ctx.tx
     .update(invoices)
     .set({ state: 'cancelled', updatedAt: new Date() })
@@ -148,9 +153,11 @@ export async function registerPayment(ctx: Ctx, invoiceId: string, input: Paymen
 
   let stamp = invoice.stampCents;
   let total = invoice.totalCents;
-  const applyStamp = invoice.type === 'out_invoice' && input.method === 'cash' && stamp === BigInt(0);
+  const settings = await getL10nSettings(ctx);
+  const applyStamp =
+    invoice.type === 'out_invoice' && settings.stampMethods.includes(input.method) && stamp === BigInt(0);
   if (applyStamp) {
-    stamp = stampDutyCents(input.amountCents);
+    stamp = stampDutyCents(input.amountCents, await loadStampTiers(ctx));
     total += stamp;
   }
   const residual = total - invoice.paidCents;

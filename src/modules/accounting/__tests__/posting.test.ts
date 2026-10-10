@@ -4,7 +4,6 @@ import {
   checkBalanced,
   creditContractLines,
   creditPaymentLines,
-  g50Summary,
   invertLines,
   invoiceLines,
   stockMoveLines,
@@ -188,21 +187,6 @@ describe('posLines', () => {
       ['4457', 'C'],
     ]);
     expect(checkBalanced(lines).ok).toBe(true);
-  });
-});
-
-describe('g50Summary', () => {
-  it('nets collected minus deductible and is always marked for review', () => {
-    expect(g50Summary(C(19000), C(4500))).toEqual({
-      collectedCents: C(19000),
-      deductibleCents: C(4500),
-      netDueCents: C(14500),
-      needsAccountantReview: true,
-    });
-  });
-
-  it('can return a credit position', () => {
-    expect(g50Summary(C(100), C(300)).netDueCents).toBe(C(-200));
   });
 });
 

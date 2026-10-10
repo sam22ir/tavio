@@ -188,16 +188,6 @@ export function posLines(p: PosPaidForPosting): DraftLine[] {
   ];
 }
 
-/** G50 monthly VAT draft. Collected = credit − debit on 4457. Deductible = debit − credit on 4456. ⚠ Draft only. */
-export function g50Summary(collectedCents: bigint, deductibleCents: bigint) {
-  return {
-    collectedCents,
-    deductibleCents,
-    netDueCents: collectedCents - deductibleCents,
-    needsAccountantReview: true as const,
-  };
-}
-
 /**
  * Account codes for perpetual inventory postings.
  * SCF mapping to verify with the accountant.

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { computeOrderTotals } from '@/modules/sales/service/totals';
-import { computeLine, computeTotals, formatPercent, hasLineDiscount, paymentStateFor, parseQtyMilli, stampDutyCents } from '../service/math';
+import { computeLine, computeTotals, formatPercent, hasLineDiscount, paymentStateFor, parseQtyMilli, stampDutyCents as stampWithTiers } from '../service/math';
+import { stampTiersFromSeed } from '@/modules/l10n_dz/data';
+
+const stampDutyCents = (amountCents: bigint) => stampWithTiers(amountCents, stampTiersFromSeed());
 
 const c = (n: number) => BigInt(n);
 

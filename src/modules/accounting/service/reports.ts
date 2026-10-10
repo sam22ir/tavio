@@ -4,7 +4,6 @@ import type { Ctx } from '@/core/ctx';
 import { err, ok, type Result } from '@/core/result';
 import { partners } from '@/modules/contacts/schema';
 import { accounts, journalEntries, journalLines } from '../schema';
-import { g50Summary } from './posting';
 
 export interface DateRange { from?: string; to?: string }
 
@@ -122,15 +121,5 @@ export async function partnerBalances(ctx: Ctx, accountCode: '411' | '401', rang
   });
 }
 
-/** G50 monthly VAT draft: collected (4457, credit − debit) minus deductible (4456, debit − credit). ⚠ Draft only. */
-export async function g50Draft(ctx: Ctx, year: number, month: number) {
-  const from = `${year}-${String(month).padStart(2, '0')}-01`;
-  const last = new Date(Date.UTC(year, month, 0)).getUTCDate();
-  const to = `${year}-${String(month).padStart(2, '0')}-${String(last).padStart(2, '0')}`;
-  const totals = await accountTotals(ctx, { from, to });
-  const collected = totals.find((t) => t.code === '4457');
-  const deductible = totals.find((t) => t.code === '4456');
-  const collectedCents = (collected?.creditCents ?? BigInt(0)) - (collected?.debitCents ?? BigInt(0));
-  const deductibleCents = (deductible?.debitCents ?? BigInt(0)) - (deductible?.creditCents ?? BigInt(0));
-  return { period: { from, to }, ...g50Summary(collectedCents, deductibleCents) };
-}
+// G50 moved to l10n_dz (service/g50.ts). Re-exported so existing callers keep working.
+export { g50Draft } from '@/modules/l10n_dz/service/g50';
