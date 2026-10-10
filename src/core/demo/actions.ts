@@ -1,11 +1,14 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getLocale } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import type { Locale } from '@/core/ctx';
+import { requireUser } from '@/core/auth/session';
 import { err, ok, type Result } from '@/core/result';
+import { getActiveCompanyId, setActiveCompanyId } from '@/core/tenancy/active';
 import { tenantForUser } from '@/core/tenancy/tenant-access';
-import { clearSampleRecords, seedSampleData } from './sample-data';
+import { archiveDemoCompany, homeCompanyOf } from '@/core/tenancy/service';
+import { createSampleCompany } from './demo-company';
 
 function refresh(): void {
   try {
@@ -20,29 +23,41 @@ async function currentLocale(): Promise<Locale> {
   return l === 'ar' || l === 'en' ? l : 'fr';
 }
 
-/** Loads the sample company data into the given company (owner or admin only). */
-export async function seedSampleDataAction(companyId: string): Promise<Result<{ recorded: number }>> {
-  const tenant = await tenantForUser({ locale: await currentLocale(), companyId, needManage: true });
+/**
+ * Creates a demo company for the user, seeds it with sample data and makes it the active company.
+ * The company given (the user's real one) stays empty. Owner or admin only.
+ */
+export async function seedSampleDataAction(companyId: string): Promise<Result<{ companyId: string }>> {
+  const locale = await currentLocale();
+  const tenant = await tenantForUser({ locale, companyId, needManage: true });
   if (!tenant.ok) return tenant;
   try {
-    const result = await seedSampleData(tenant.value);
+    const t = await getTranslations({ locale, namespace: 'onboarding' });
+    const created = await createSampleCompany({
+      userId: tenant.value.userId,
+      sourceCompanyId: companyId,
+      legalName: t('demo.companyName'),
+      locale,
+    });
+    if (!created.ok) return created;
+    await setActiveCompanyId(created.value.companyId);
     refresh();
-    return ok(result);
+    return ok({ companyId: created.value.companyId });
   } catch {
     return err('INTERNAL', 'sample data could not be loaded');
   }
 }
 
-/** Removes every recorded sample row of the active company. Owner or admin only. */
-export async function clearSampleData(): Promise<Result<{ deleted: number }>> {
-  const tenant = await tenantForUser({ locale: await currentLocale(), needManage: true });
-  if (!tenant.ok) return tenant;
-  try {
-    const deleted = await clearSampleRecords(tenant.value);
-    refresh();
-    return ok({ deleted });
-  } catch {
-    // The transaction rolled back: some sample row is referenced by data created since.
-    return err('CONFLICT', 'sample rows are still referenced');
+/** Archives a demo company of the user (owner only). No data is deleted. Switches back to the user's real company. */
+export async function archiveDemoCompanyAction(companyId: string): Promise<Result<{ companyId: string }>> {
+  const user = await requireUser();
+  if (!user.ok) return user;
+  const archived = await archiveDemoCompany(user.value.userId, companyId);
+  if (!archived.ok) return archived;
+  if ((await getActiveCompanyId()) === companyId) {
+    const home = await homeCompanyOf(user.value.userId);
+    if (home) await setActiveCompanyId(home.id);
   }
+  refresh();
+  return ok({ companyId });
 }

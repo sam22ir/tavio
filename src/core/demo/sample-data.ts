@@ -1,15 +1,15 @@
-// Sample data for a company: the same demo rows scripts/seed-demo.ts uses, written through the module
-// services, with every created row recorded in sample_records so clearSampleData can remove them.
+// Sample data for a demo company: the same demo rows scripts/seed-demo.ts uses, written through the module
+// services. Demo companies are archived, never cleared: posted documents are immutable in the database.
 // No loadDevEnv or fixtures here: safe to import from a server action.
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { getDb } from '@/core/db/client';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
-import type { Db, Tx } from '@/core/db/types';
+import type { Db } from '@/core/db/types';
 import type { Ctx } from '@/core/ctx';
 // Registers the cross-module event handlers (inventory moves on receipt). Without it, a receipt posts no stock.
 import '@/modules/event-handlers';
 import type { Result } from '@/core/result';
-import { companyModules, sampleRecords as sampleRecordsTable } from '@/core/db/schema';
+import { companyModules } from '@/core/db/schema';
 import { DEFAULT_MODULES } from '@/core/tenancy/default-roles';
 import { MODULE_VERSION } from '@/core/tenancy/service';
 import { loadAlgerianDefaults, taxOptions } from '@/modules/l10n_dz/service/taxes';
@@ -36,6 +36,7 @@ import {
 } from '@/modules/credit_sales/service/contracts';
 import { recordPayment, type PaymentMethod } from '@/modules/credit_sales/service/payments';
 import { creditContracts } from '@/modules/credit_sales/schema';
+import { deliverDemoGoods } from './deliver-goods';
 import { ensureActivity, postMessage } from '@/modules/chatter/service';
 import { activityTypes } from '@/modules/chatter/schema';
 import { ACTIVITY_TYPE_SEED } from '@/modules/chatter/entities';
@@ -542,158 +543,15 @@ export async function seedCompanyData(tenant: TenantArgs, db: Db, state: { step:
   state.step = 'contracts';
   const contracts = await run((ctx) => seedContracts(ctx, partnerIds, productIds));
 
+  state.step = 'deliveries';
+  await run((ctx) => deliverDemoGoods(ctx));
+
   state.step = 'chatter';
   if (contracts.created > 0) await run((ctx) => seedChatter(ctx, contracts.contractIds));
 }
 
-// ---------------------------------------------------------------------------
-// Recording: every row the seeder creates is listed in sample_records. Rows are found by diffing the
-// company's ids in each tenant table before and after the run, so no service has to report its ids.
-
-// Company setup rows: never sample data, never removed by a clear.
-const NEVER_RECORDED = new Set([
-  'company_modules',
-  'activity_types',
-  'roles',
-  'role_permissions',
-  'memberships',
-  'invitations',
-  'sample_records',
-]);
-
-function chunks<T>(items: readonly T[], size: number): T[][] {
-  const out: T[][] = [];
-  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
-  return out;
-}
-
-// Tenant tables: public tables with both company_id and id.
-async function tenantTables(tx: Tx): Promise<string[]> {
-  const res = await tx.execute<{ table_name: string }>(sql`
-    select c.table_name from information_schema.columns c
-    where c.table_schema = 'public' and c.column_name = 'company_id'
-      and exists (
-        select 1 from information_schema.columns i
-        where i.table_schema = 'public' and i.table_name = c.table_name and i.column_name = 'id'
-      )`);
-  return res.rows.map((r) => r.table_name).filter((t) => !NEVER_RECORDED.has(t));
-}
-
-async function idsByTable(tx: Tx, companyId: string): Promise<Map<string, Set<string>>> {
-  const out = new Map<string, Set<string>>();
-  for (const table of await tenantTables(tx)) {
-    const res = await tx.execute<{ id: string }>(
-      sql`select id::text as id from ${sql.identifier(table)} where company_id = ${companyId}`,
-    );
-    out.set(table, new Set(res.rows.map((r) => r.id)));
-  }
-  return out;
-}
-
-async function recordNewRows(tenant: TenantArgs, db: Db, before: Map<string, Set<string>>): Promise<number> {
-  return withTenant(
-    tenant,
-    async (ctx) => {
-      const now = await idsByTable(ctx.tx, tenant.companyId);
-      const fresh: { companyId: string; tableName: string; recordId: string }[] = [];
-      for (const [table, ids] of now) {
-        const prior = before.get(table) ?? new Set<string>();
-        for (const id of ids) {
-          if (!prior.has(id)) fresh.push({ companyId: tenant.companyId, tableName: table, recordId: id });
-        }
-      }
-      for (const part of chunks(fresh, 500)) {
-        await ctx.tx.insert(sampleRecordsTable).values(part).onConflictDoNothing();
-      }
-      return fresh.length;
-    },
-    db,
-  );
-}
-
-/** Seeds the sample company data and records every row it created. Recording also runs after a failure. */
-export async function seedSampleData(tenant: TenantArgs, db: Db = getDb()): Promise<{ recorded: number }> {
-  const before = await withTenant(tenant, (ctx) => idsByTable(ctx.tx, tenant.companyId), db);
-  try {
-    await withTenant(tenant, (ctx) => ensureCompanySetup(ctx), db);
-    await seedCompanyData(tenant, db, { step: 'sample' });
-  } finally {
-    await recordNewRows(tenant, db, before);
-  }
-  return { recorded: await countRecorded(tenant, db) };
-}
-
-async function countRecorded(tenant: TenantArgs, db: Db): Promise<number> {
-  return withTenant(
-    tenant,
-    async (ctx) => {
-      const rows = await ctx.tx
-        .select({ id: sampleRecordsTable.recordId })
-        .from(sampleRecordsTable)
-        .where(eq(sampleRecordsTable.companyId, tenant.companyId));
-      return rows.length;
-    },
-    db,
-  );
-}
-
-/** True when the company has at least one recorded sample row. */
-export async function hasSampleData(tenant: TenantArgs, db: Db = getDb()): Promise<boolean> {
-  return (await countRecorded(tenant, db)) > 0;
-}
-
-// Orders tables so that referencing tables come first (reverse dependency), using the FK catalog.
-async function childFirst(tx: Tx, tables: string[]): Promise<string[]> {
-  const res = await tx.execute<{ child: string; parent: string }>(sql`
-    select cc.relname as child, pc.relname as parent
-    from pg_constraint k
-    join pg_class cc on cc.oid = k.conrelid
-    join pg_class pc on pc.oid = k.confrelid
-    where k.contype = 'f'`);
-  const edges = res.rows.filter(
-    (e) => e.child !== e.parent && tables.includes(e.child) && tables.includes(e.parent),
-  );
-  const remaining = new Set(tables);
-  const order: string[] = [];
-  while (remaining.size > 0) {
-    const pick =
-      [...remaining].find((t) => !edges.some((e) => e.parent === t && remaining.has(e.child))) ??
-      [...remaining][0];
-    if (!pick) break;
-    order.push(pick);
-    remaining.delete(pick);
-  }
-  return order;
-}
-
-/** Deletes every recorded sample row for the company, children first, in one transaction. Returns the count. */
-export async function clearSampleRecords(tenant: TenantArgs, db: Db = getDb()): Promise<number> {
-  return withTenant(
-    tenant,
-    async (ctx) => {
-      const rows = await ctx.tx
-        .select({ tableName: sampleRecordsTable.tableName, recordId: sampleRecordsTable.recordId })
-        .from(sampleRecordsTable)
-        .where(eq(sampleRecordsTable.companyId, tenant.companyId));
-      const byTable = new Map<string, string[]>();
-      for (const r of rows) {
-        const list = byTable.get(r.tableName) ?? [];
-        list.push(r.recordId);
-        byTable.set(r.tableName, list);
-      }
-      for (const table of await childFirst(ctx.tx, [...byTable.keys()])) {
-        for (const part of chunks(byTable.get(table) ?? [], 500)) {
-          await ctx.tx.execute(
-            sql`delete from ${sql.identifier(table)} where id in (${sql.join(
-              part.map((id) => sql`${id}`),
-              sql`, `,
-            )})`,
-          );
-        }
-      }
-      await ctx.tx.delete(sampleRecordsTable).where(eq(sampleRecordsTable.companyId, tenant.companyId));
-      return rows.length;
-    },
-    db,
-  );
+/** Seeds the sample data into a company (normally a demo company created for the purpose). Nothing is recorded or deleted. */
+export async function seedSampleData(tenant: TenantArgs, db: Db = getDb()): Promise<void> {
+  await withTenant(tenant, (ctx) => ensureCompanySetup(ctx), db);
+  await seedCompanyData(tenant, db, { step: 'sample' });
 }
