@@ -21,6 +21,7 @@ export const manifest = defineModule({
     { label: 'accounting.menu.accounts', href: '/accounting/accounts', perm: 'accounting.account.read', order: 54 },
     { label: 'accounting.menu.journals', href: '/accounting/journals', perm: 'accounting.journal.read', order: 54 },
     { label: 'accounting.menu.reports', href: '/accounting/reports', perm: 'accounting.report.read', order: 54 },
+    { label: 'accounting.menu.fiscalYears', href: '/settings/fiscal-years', perm: 'accounting.entry.write', order: 55 },
   ],
   entities: [accountEntity, entryEntity],
 });

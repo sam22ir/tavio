@@ -16,5 +16,6 @@
     "timezone": "Time zone",
     "currency": "Currency",
     "notFound": "Company not found."
-  }
+  },
+  "fiscalYearsLink": "Fiscal years"
 }

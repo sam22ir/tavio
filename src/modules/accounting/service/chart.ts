@@ -83,6 +83,7 @@ const CHART_ROWS: readonly Row[] = [
   ['4457', 'TVA collectée', 'liability'],
   ['4458', 'TVA à régulariser ou en attente', 'asset'],
   ['445', 'Taxes (droit de timbre)', 'liability'],
+  ['447', 'Autres impôts, taxes et versements assimilés', 'liability'],
   ['455', 'Associés, compte courant', 'liability'],
   ['461', 'Débiteurs divers', 'asset'],
   ['467', 'Autres comptes débiteurs ou créditeurs', 'asset'],
@@ -363,4 +364,22 @@ export async function updateJournal(ctx: Ctx, journalId: string, patch: { name: 
     .where(eq(journals.id, j.id));
   await audit(ctx, { entity: 'accounting.journal', recordId: j.id, action: 'update', after: patch });
   return ok({ id: j.id });
+}
+
+/** One account of the company, or null. */
+export async function getAccountById(ctx: Ctx, accountId: string): Promise<Account | null> {
+  const [row] = await ctx.tx
+    .select()
+    .from(accounts)
+    .where(and(eq(accounts.companyId, ctx.companyId), eq(accounts.id, accountId)));
+  return row ?? null;
+}
+
+/** One journal of the company, or null. */
+export async function getJournalById(ctx: Ctx, journalId: string): Promise<Journal | null> {
+  const [row] = await ctx.tx
+    .select()
+    .from(journals)
+    .where(and(eq(journals.companyId, ctx.companyId), eq(journals.id, journalId)));
+  return row ?? null;
 }

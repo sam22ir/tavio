@@ -6,7 +6,8 @@
     "entries": "Écritures",
     "accounts": "Plan comptable",
     "journals": "Journaux",
-    "reports": "États"
+    "reports": "États",
+    "fiscalYears": "Exercices"
   },
   "fields": {
     "date": "Date",
@@ -22,7 +23,8 @@
     "accountClass": "Classe",
     "number": "Numéro",
     "state": "État",
-    "partner": "Tiers"
+    "partner": "Tiers",
+    "reconcilable": "Lettrable"
   },
   "options": {
     "type": {
@@ -41,29 +43,49 @@
       "purchase": "Achat",
       "cash": "Caisse",
       "bank": "Banque",
-      "general": "Opérations diverses"
+      "general": "Opérations diverses",
+      "misc": "Divers"
     }
   },
   "form": {
     "pickAccount": "Choisir un compte",
     "addLine": "Ajouter une ligne",
     "removeLine": "Supprimer la ligne",
-    "post": "Comptabiliser"
+    "post": "Comptabiliser",
+    "save": "Enregistrer",
+    "create": "Créer",
+    "archive": "Archiver",
+    "archiveConfirm": "Archiver ce compte ? Impossible s’il a des écritures.",
+    "archiveYes": "Oui, archiver",
+    "cancel": "Annuler",
+    "created": "Compte créé.",
+    "saved": "Modifications enregistrées.",
+    "posted": "Écriture comptabilisée.",
+    "totals": "Total débit : {debit} · Total crédit : {credit}",
+    "balancedOk": "Équilibrée",
+    "notBalanced": "Non équilibrée",
+    "saveDraft": "Enregistrer le brouillon",
+    "deleteDraft": "Supprimer le brouillon"
   },
   "accounts": {
     "title": "Plan comptable (SCF)",
-    "verifyNote": "⚠ Les comptes sont à valider par un expert-comptable."
+    "verifyNote": "⚠ Les comptes sont à valider par un expert-comptable.",
+    "new": "Nouveau compte",
+    "archived": "Ce compte est archivé."
   },
   "journals": {
-    "title": "Journaux"
+    "title": "Journaux",
+    "new": "Nouveau journal",
+    "codeFixed": "Le code du journal ne peut plus être modifié."
   },
   "entries": {
     "title": "Écritures comptables",
     "new": "Nouvelle écriture",
-    "newTitle": "Nouvelle écriture manuelle"
+    "newTitle": "Nouvelle écriture manuelle",
+    "draftTitle": "Écriture (brouillon)"
   },
   "detail": {
-    "reverse": "Extourner",
+    "reverse": "Contrepasser",
     "total": "Total"
   },
   "reports": {
@@ -111,7 +133,9 @@
       "31-60": "31–60 j",
       "61-90": "61–90 j",
       "90+": "Plus de 90 j"
-    }
+    },
+    "exportXlsx": "Exporter XLSX",
+    "exportCsv": "Exporter CSV"
   },
   "errors": {
     "generic": "Une erreur est survenue. Réessayez.",

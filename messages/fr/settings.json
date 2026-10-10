@@ -16,5 +16,6 @@
     "timezone": "Fuseau horaire",
     "currency": "Devise",
     "notFound": "Entreprise introuvable."
-  }
+  },
+  "fiscalYearsLink": "Exercices"
 }

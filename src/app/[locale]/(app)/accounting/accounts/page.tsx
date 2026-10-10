@@ -6,6 +6,7 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { parseListQuery } from '@/core/entities/list-query';
 import { accountEntity } from '@/modules/accounting/entities';
 import { listAccounts, ensureDefaults } from '@/modules/accounting/service/chart';
+import { AccountForm } from '@/modules/accounting/ui/account-form';
 import { DataList } from '@/ui/views/data-list';
 
 export default async function AccountsPage({
@@ -31,6 +32,10 @@ export default async function AccountsPage({
     <main className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('accounts.title')}</h1>
       <p role="note" className="text-sm text-muted-foreground">{t('accounts.verifyNote')}</p>
+      <section className="flex flex-col gap-3">
+        <h2 className="font-medium">{t('accounts.new')}</h2>
+        <AccountForm locale={currentLocale} />
+      </section>
       <DataList
         entity={accountEntity}
         result={result}

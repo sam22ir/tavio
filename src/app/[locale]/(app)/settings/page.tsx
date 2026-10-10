@@ -66,6 +66,9 @@ export default async function SettingsPage({
       <Link href={`/${locale}/settings/team`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
         {tt('settings_link')}
       </Link>
+      <Link href={`/${locale}/settings/fiscal-years`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+        {t('fiscalYearsLink')}
+      </Link>
       <div className="rounded-lg border p-4">
         <h2 className="mb-4 font-medium">{tc('title')}</h2>
         {company ? (

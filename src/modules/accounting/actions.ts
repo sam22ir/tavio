@@ -8,7 +8,7 @@ import { parseDzd } from '@/core/money';
 import { err } from '@/core/result';
 import type { FormState } from '@/core/entities/types';
 import { postEntry, reverseEntry } from './service/entries';
-import { archiveAccount, createAccount, createJournal, updateJournal } from './service/chart';
+import { archiveAccount, createAccount, createJournal, updateAccount, updateJournal } from './service/chart';
 import { closeFiscalYear, createFiscalYear } from './service/fiscal';
 import { setLockDate } from './service/period';
 import { createDraftEntry, deleteDraftEntry, postDraftEntry, updateDraftEntry } from './service/drafts';
@@ -179,6 +179,15 @@ const archiveAccountAction = defineAction(
   (ctx, { id }) => archiveAccount(ctx, id),
 );
 
+const updateAccountAction = defineAction(
+  { perm: ACCOUNTING_CONFIG, schema: accountSchema.partial({ code: true }).extend({ id: z.uuid() }), module: MODULE },
+  (ctx, input) => updateAccount(ctx, input.id, { name: input.name, type: input.type, reconcilable: input.reconcilable ?? false }),
+);
+
+export async function updateAccountForm(prev: FormState, formData: FormData): Promise<FormState> {
+  return toFormAction(updateAccountAction, { schema: accountSchema.partial({ code: true }).extend({ id: z.uuid() }) })(prev, formData);
+}
+
 const createJournalAction = defineAction(
   { perm: JOURNAL_WRITE, schema: journalSchema, module: MODULE },
   (ctx, input) => createJournal(ctx, input),
@@ -229,7 +238,11 @@ const deleteDraftAction = defineAction(
 
 /** Saves a manual entry as a draft (creates or updates). */
 export async function saveDraftForm(prev: FormState, formData: FormData): Promise<FormState> {
-  return toFormAction(draftAction, { schema: draftSchema })(prev, formData);
+  const locale = await getLocale();
+  return toFormAction(draftAction, {
+    schema: draftSchema,
+    redirectTo: ({ id }) => `/${locale}/accounting/entries/${id}`,
+  })(prev, formData);
 }
 
 /** Posts a draft after the balance and period checks. */

@@ -69,11 +69,21 @@ export default async function ReportsPage({
   });
 
   const exportHref = `/${currentLocale}/accounting/reports/export?from=${yearStart}&to=${asOf}`;
+  const singleKind = ({ trial: 'balance', ledger: 'ledger', bilan: 'bilan', tcr: 'tcr', aging: 'aging' } as Record<string, string>)[report];
+  const singleHref = singleKind
+    ? `/${currentLocale}/accounting/reports/export?report=${singleKind}&from=${yearStart}&to=${asOf}${singleKind === 'ledger' && account ? `&account=${account}` : ''}`
+    : null;
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('reports.title')}</h1>
       <a href={exportHref} className="w-fit rounded-md border px-3 py-1.5 text-sm">{t('reports.export')}</a>
+      {singleHref ? (
+        <div className="flex flex-wrap gap-2 text-sm">
+          <a href={`${singleHref}&format=xlsx`} className="rounded-md border px-3 py-1.5">{t('reports.exportXlsx')}</a>
+          <a href={`${singleHref}&format=csv&sep=;`} className="rounded-md border px-3 py-1.5">{t('reports.exportCsv')}</a>
+        </div>
+      ) : null}
       <nav className="flex flex-wrap gap-2">
         {REPORTS.map((r) => (
           <Link key={r} href={`${base}?report=${r}`} className={`rounded-md border px-3 py-1.5 text-sm ${r === report ? 'bg-muted font-medium' : ''}`}>
