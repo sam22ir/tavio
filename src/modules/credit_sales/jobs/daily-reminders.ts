@@ -7,6 +7,7 @@ import { loadTenantArgs } from '@/core/tenancy/service';
 import { ensureActivity } from '@/modules/chatter/service';
 import { creditContracts } from '../schema';
 import { listDueSoon, listOverdue, type OverdueRow } from '../service/payments';
+import { installmentActivityTitle } from '../service/reminders';
 
 export interface DailyRemindersResult {
   companies: number;
@@ -115,7 +116,7 @@ async function remindCompany(
       entity: 'credit_sales.contract',
       recordId: row.contractId,
       typeKey: 'payment_reminder',
-      summary: `Installment ${row.seq} of ${row.contractNumber} due ${row.dueDate}`,
+      summary: installmentActivityTitle(ctx.locale, { seq: row.seq, contractNumber: row.contractNumber, dueDate: row.dueDate }),
       dueDate: row.dueDate,
       assigneeId,
     });

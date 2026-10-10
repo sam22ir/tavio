@@ -6,6 +6,8 @@ import { getDb } from '@/core/db/client';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import type { Db, Tx } from '@/core/db/types';
 import type { Ctx } from '@/core/ctx';
+// Registers the cross-module event handlers (inventory moves on receipt). Without it, a receipt posts no stock.
+import '@/modules/event-handlers';
 import type { Result } from '@/core/result';
 import { companyModules, sampleRecords as sampleRecordsTable } from '@/core/db/schema';
 import { DEFAULT_MODULES } from '@/core/tenancy/default-roles';
@@ -184,6 +186,8 @@ async function seedPartners(ctx: Ctx): Promise<{ partnerIds: Map<string, string>
   }
   return { partnerIds, supplierId };
 }
+
+export const DEMO_PRODUCT_NAMES: readonly string[] = PRODUCTS.map((p) => p.name);
 
 async function seedProducts(ctx: Ctx): Promise<string[]> {
   const [unit] = await ctx.tx.select({ id: uoms.id }).from(uoms).where(eq(uoms.code, 'unit'));
