@@ -1,0 +1,19 @@
+{
+  "title": "Enregistrements liés",
+  "contact": {
+    "leads": "Prospects",
+    "orders": "Devis / commandes",
+    "contracts": "Contrats de crédit",
+    "invoices": "Factures",
+    "payments": "Paiements",
+    "tickets": "Tickets"
+  },
+  "product": {
+    "orders": "Commandes de vente",
+    "purchase_orders": "Commandes d'achat"
+  },
+  "project": {
+    "tasks": "Tâches",
+    "timesheets": "Feuilles de temps"
+  }
+}

@@ -9,7 +9,7 @@ export const ticketEntity: EntityDef = {
   fields: [
     { name: 'number', type: 'text', label: 'helpdesk.fields.number', readonly: true, list: true, search: true },
     { name: 'subject', type: 'text', label: 'helpdesk.fields.subject', required: true, list: true, search: true },
-    { name: 'partnerId', type: 'relation', label: 'helpdesk.fields.partner', list: true, relation: { entity: 'contacts.partner', labelField: 'displayName' } },
+    { name: 'partnerId', type: 'relation', label: 'helpdesk.fields.partner', list: true, filter: true, relation: { entity: 'contacts.partner', labelField: 'displayName' } },
     { name: 'teamId', type: 'relation', label: 'helpdesk.fields.team', list: true, relation: { entity: 'helpdesk.team', labelField: 'name' } },
     {
       name: 'channel',

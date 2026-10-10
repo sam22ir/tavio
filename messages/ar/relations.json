@@ -1,0 +1,19 @@
+{
+  "title": "السجلات المرتبطة",
+  "contact": {
+    "leads": "العملاء المحتملون",
+    "orders": "العروض / الطلبات",
+    "contracts": "عقود الائتمان",
+    "invoices": "الفواتير",
+    "payments": "المدفوعات",
+    "tickets": "التذاكر"
+  },
+  "product": {
+    "orders": "طلبات البيع",
+    "purchase_orders": "طلبات الشراء"
+  },
+  "project": {
+    "tasks": "المهام",
+    "timesheets": "سجلات الوقت"
+  }
+}

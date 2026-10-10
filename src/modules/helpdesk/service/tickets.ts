@@ -84,6 +84,8 @@ function escapeLike(term: string): string {
   return term.replace(/[\\%_]/g, (c) => `\\${c}`);
 }
 
+const UUID_FILTER = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 function listWhere(ctx: Ctx, query: ListQuery): SQL | undefined {
   const conditions: SQL[] = [eq(tickets.companyId, ctx.companyId)];
   const term = query.q?.trim();
@@ -98,6 +100,8 @@ function listWhere(ctx: Ctx, query: ListQuery): SQL | undefined {
   if (channel && (TICKET_CHANNELS as readonly string[]).includes(channel)) conditions.push(eq(tickets.channel, channel));
   const priority = query.filters.priority;
   if (priority && (TICKET_PRIORITIES as readonly string[]).includes(priority)) conditions.push(eq(tickets.priority, priority));
+  const partner = query.filters.partnerId;
+  if (partner && UUID_FILTER.test(partner)) conditions.push(eq(tickets.partnerId, partner));
   return and(...conditions);
 }
 

@@ -1,0 +1,19 @@
+{
+  "title": "Related records",
+  "contact": {
+    "leads": "Leads",
+    "orders": "Quotes / orders",
+    "contracts": "Credit contracts",
+    "invoices": "Invoices",
+    "payments": "Payments",
+    "tickets": "Tickets"
+  },
+  "product": {
+    "orders": "Sale orders",
+    "purchase_orders": "Purchase orders"
+  },
+  "project": {
+    "tasks": "Tasks",
+    "timesheets": "Timesheets"
+  }
+}
