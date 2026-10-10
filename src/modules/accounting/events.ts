@@ -5,13 +5,15 @@ import type {
   CreditPaymentRecorded,
   InvoicePaymentRegistered,
   InvoicePosted,
+  InventoryMovePosted,
   PosOrderPaid,
 } from '@/core/events/catalog';
 import { and, eq } from 'drizzle-orm';
 import { invoices } from '@/modules/invoicing/schema';
 import { creditContracts, creditPayments } from '@/modules/credit_sales/schema';
 import { postEntry } from './service/entries';
-import { creditContractLines, creditPaymentLines, invoiceLines, paymentLines, posLines } from './service/posting';
+import { ensureDefaults } from './service/chart';
+import { creditContractLines, creditPaymentLines, invoiceLines, paymentLines, posLines, stockMoveLines } from './service/posting';
 
 // Side-effect module: imported from src/modules/accounting/index.ts so the handlers are registered.
 // Handlers run in the emitter's transaction. A failed post throws so the emitter's transaction rolls back.
@@ -109,6 +111,22 @@ on('credit_sales.contract.activated', async (ctx, event) => {
       cashPriceCents: bigOrZero(p.cashPriceCents),
       markupCents: bigOrZero(p.markupCents),
     }),
+  });
+});
+
+// Perpetual inventory: every valued move is booked at its CMUP value in the OD journal (no stock journal exists).
+on('inventory.move.posted', async (ctx, event) => {
+  const p = event.payload as InventoryMovePosted;
+  const lines = stockMoveLines({ kind: p.kind, valueCents: bigOrZero(p.valueCents), reference: p.reference });
+  if (lines.length === 0) return;
+  await ensureDefaults(ctx);
+  await mustPost(ctx, {
+    journalCode: 'OD',
+    date: p.date,
+    ref: p.reference,
+    sourceEntity: 'inventory.move',
+    sourceId: p.moveId,
+    lines,
   });
 });
 

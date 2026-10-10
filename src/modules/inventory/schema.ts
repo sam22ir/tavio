@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import {
+  bigint,
   check,
   index,
   numeric,
@@ -102,6 +103,10 @@ export const stockMoves = pgTable(
     sourceEntity: text('source_entity'),
     sourceId: uuid('source_id'),
     doneAt: timestamp('done_at', { withTimezone: true }),
+    // Valuation (CMUP). Set when the move is posted; null on old rows and drafts. Receipts store the
+    // purchase unit cost on the draft; the other kinds are priced at posting.
+    unitCostCents: bigint('unit_cost_cents', { mode: 'bigint' }),
+    valueCents: bigint('value_cents', { mode: 'bigint' }),
   },
   (t) => [
     index('stock_moves_company_id_state_idx').on(t.companyId, t.state),

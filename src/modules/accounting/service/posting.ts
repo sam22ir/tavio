@@ -1,4 +1,5 @@
 // Pure posting rules: balance check and event-to-lines mapping. No DB access, so these are unit tested.
+import type { StockMoveKind } from '@/core/events/catalog';
 import { err, ok, type Result } from '@/core/result';
 
 export type Side = 'debit' | 'credit';
@@ -188,4 +189,41 @@ export function g50Summary(collectedCents: bigint, deductibleCents: bigint) {
     netDueCents: collectedCents - deductibleCents,
     needsAccountantReview: true as const,
   };
+}
+
+/**
+ * Account codes for perpetual inventory postings.
+ * SCF mapping to verify with the accountant.
+ */
+export const INVENTORY_ACCOUNTS = {
+  /** Stocks de marchandises, valued at weighted average cost. */
+  stock: '30',
+  /** Achats de marchandises stockés: goods received, the purchase side before the vendor bill. */
+  stockedPurchases: '380',
+  /** Achats de marchandises vendues (coût des marchandises vendues). Also used for stock losses and gains. */
+  costOfGoodsSold: '600',
+} as const;
+
+/**
+ * Journal lines for a valued stock move. Receipt: Dr 30 / Cr 380. Delivery: Dr 600 / Cr 30.
+ * Return: reverse of delivery (Dr 30 / Cr 600). Loss: Dr 600 / Cr 30. Gain: Dr 30 / Cr 600.
+ * Transfers between internal locations have no accounting effect. Zero value produces no lines.
+ * SCF mapping to verify with the accountant.
+ */
+export function stockMoveLines(input: { kind: StockMoveKind; valueCents: bigint; reference: string }): DraftLine[] {
+  const { stock, stockedPurchases, costOfGoodsSold } = INVENTORY_ACCOUNTS;
+  const v = input.valueCents;
+  const ref = input.reference;
+  switch (input.kind) {
+    case 'receipt':
+      return [...line(stock, 'debit', v, null, ref), ...line(stockedPurchases, 'credit', v, null, ref)];
+    case 'delivery':
+    case 'loss':
+      return [...line(costOfGoodsSold, 'debit', v, null, ref), ...line(stock, 'credit', v, null, ref)];
+    case 'return':
+    case 'gain':
+      return [...line(stock, 'debit', v, null, ref), ...line(costOfGoodsSold, 'credit', v, null, ref)];
+    case 'transfer':
+      return [];
+  }
 }

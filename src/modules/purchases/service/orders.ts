@@ -291,7 +291,7 @@ export async function receiveOrder(
   }
   if (toAdd.size === 0) return err('CONFLICT', 'nothing left to receive');
 
-  const received: { productId: string | null; quantity: string }[] = [];
+  const received: { productId: string | null; quantity: string; unitCostCents: string }[] = [];
   for (const [lineId, qty] of toAdd) {
     const row = byId.get(lineId);
     if (!row) continue;
@@ -300,7 +300,7 @@ export async function receiveOrder(
       .update(purchaseOrderLines)
       .set({ receivedQty: formatQty(total), updatedAt: sql`now()` })
       .where(eq(purchaseOrderLines.id, lineId));
-    received.push({ productId: row.productId, quantity: formatQty(qty) });
+    received.push({ productId: row.productId, quantity: formatQty(qty), unitCostCents: row.unitPriceCents.toString() });
   }
 
   const complete = rows.every((r) => {

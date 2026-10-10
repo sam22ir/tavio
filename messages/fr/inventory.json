@@ -8,7 +8,8 @@
     "adjustments": "Inventaire",
     "low_stock": "Stock bas",
     "warehouses": "Entrepôts",
-    "deliveries": "Livraisons"
+    "deliveries": "Livraisons",
+    "valuation": "Valorisation"
   },
   "fields": {
     "reference": "Référence",
@@ -116,5 +117,14 @@
     "lines_title": "Lignes",
     "receipt_title": "Réception",
     "open": "Ouvrir"
+  },
+  "valuation": {
+    "title": "Valorisation du stock",
+    "help": "Quantité, coût moyen pondéré (CMUP) et valeur par produit. Le coût moyen est calculé sur tous les entrepôts.",
+    "all_warehouses": "Tous les entrepôts",
+    "filter": "Filtrer",
+    "avg_cost": "Coût moyen (CMUP)",
+    "value": "Valeur",
+    "total": "Valeur totale"
   }
 }
