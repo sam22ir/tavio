@@ -5,12 +5,14 @@ import { partners } from '@/modules/contacts/schema';
 import {
   creditContractLines,
   creditContracts,
+  creditGuarantors,
   creditInstallments,
   creditPaymentAllocations,
   creditPayments,
   creditReceipts,
 } from '../schema';
-import type { CompanyPrint, PartnerPrint } from './shared';
+import { clauseParagraphs, loadContractSettings, renderClauseTemplate, templateFor } from '../service/clauses';
+import { formatDate, labels, money, type CompanyPrint, type PartnerPrint } from './shared';
 import type { ReceiptPrintInput } from './receipt-html';
 import type { ContractPrintInput } from './contract-html';
 
@@ -118,8 +120,11 @@ export async function loadContractPrint(
       totalCents: creditContracts.totalCents,
       downPaymentCents: creditContracts.downPaymentCents,
       financedCents: creditContracts.financedCents,
+      confirmedAt: creditContracts.confirmedAt,
+      createdAt: creditContracts.createdAt,
       partnerName: partners.displayName,
       partnerPhone: partners.phone,
+      partnerAddress: partners.address,
     })
     .from(creditContracts)
     .leftJoin(partners, eq(partners.id, creditContracts.partnerId))
@@ -148,13 +153,46 @@ export async function loadContractPrint(
     .where(eq(creditInstallments.contractId, contractId))
     .orderBy(asc(creditInstallments.seq));
 
+  const guarantors = await ctx.tx
+    .select({ fullName: creditGuarantors.fullName, phone: creditGuarantors.phone })
+    .from(creditGuarantors)
+    .where(eq(creditGuarantors.contractId, contractId))
+    .orderBy(asc(creditGuarantors.createdAt));
+
+  const settings = await loadContractSettings(ctx);
+  const company = await loadCompanyPrint(ctx);
+  const frequency = c.frequency === 'weekly' ? 'weekly' : 'monthly';
+  const t = labels(ctx.locale);
+  const first = schedule[0];
+  const contractDate = c.confirmedAt ?? c.createdAt;
+  const rendered = renderClauseTemplate(templateFor(ctx.locale, settings), {
+    client_nom: c.partnerName,
+    // Partners store only a hash of the national ID, so the NIN stays a blank line on the print.
+    client_nin: null,
+    client_adresse: c.partnerAddress,
+    societe_nom: company.legalName,
+    societe_nif: company.nif,
+    montant_comptant: money(c.cashPriceCents, ctx.locale),
+    apport: money(c.downPaymentCents, ctx.locale),
+    montant_finance: money(c.financedCents, ctx.locale),
+    majoration: money(c.markupCents, ctx.locale),
+    nombre_echeances: String(c.installmentsCount),
+    montant_echeance: first ? money(first.amountCents, ctx.locale) : null,
+    date_premiere_echeance: formatDate(first?.dueDate ?? c.startDate, ctx.locale),
+    frequence: frequency === 'weekly' ? t.weekly : t.monthly,
+    penalite_retard: settings.latePenaltyRate,
+    garant_nom: guarantors.map((g) => g.fullName).join(', ') || null,
+    date_contrat: formatDate(contractDate, ctx.locale),
+    ville: settings.city,
+  });
+
   return {
     locale: ctx.locale,
     reference: c.reference,
     startDate: c.startDate,
-    frequency: c.frequency === 'weekly' ? 'weekly' : 'monthly',
+    frequency,
     installmentsCount: c.installmentsCount,
-    company: await loadCompanyPrint(ctx),
+    company,
     partner: { name: c.partnerName ?? '—', phone: c.partnerPhone ?? null } satisfies PartnerPrint,
     lines,
     cashPriceCents: c.cashPriceCents,
@@ -163,5 +201,7 @@ export async function loadContractPrint(
     downPaymentCents: c.downPaymentCents,
     financedCents: c.financedCents,
     schedule: schedule.map((s) => ({ seq: s.seq, dueDate: s.dueDate, amountCents: s.amountCents })),
+    clauses: clauseParagraphs(rendered),
+    guarantors,
   };
 }

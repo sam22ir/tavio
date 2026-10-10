@@ -1,5 +1,5 @@
 import type { Locale } from '@/core/ctx';
-import { type CompanyPrint, type PartnerPrint, dirFor, escapeHtml, formatDate, labels, money } from './shared';
+import { type CompanyPrint, type PartnerPrint, dirFor, escapeHtml, formatDate, isClauseTitle, labels, money } from './shared';
 import { FONT_LINK, PRINT_CSS } from './print-styles';
 
 export interface ContractLinePrint {
@@ -13,6 +13,11 @@ export interface ScheduleLinePrint {
   seq: number;
   dueDate: string; // YYYY-MM-DD
   amountCents: bigint;
+}
+
+export interface GuarantorPrint {
+  fullName: string;
+  phone: string | null;
 }
 
 export interface ContractPrintInput {
@@ -30,6 +35,9 @@ export interface ContractPrintInput {
   downPaymentCents: bigint;
   financedCents: bigint;
   schedule: ScheduleLinePrint[];
+  /** Clause text already rendered with the company template (see renderClauseTemplate), one entry per line. */
+  clauses: string[];
+  guarantors: GuarantorPrint[];
 }
 
 /** Pure: returns a full A4 contract document with lines, schedule, terms placeholder and signature boxes. */
@@ -60,6 +68,18 @@ export function buildContractHtml(input: ContractPrintInput): string {
       </tr>`,
     )
     .join('');
+
+  const clauseLines = input.clauses
+    .map((line) => {
+      if (line.trim() === '') return '<div class="gap"></div>';
+      const cls = isClauseTitle(line) ? ' class="clause-title"' : '';
+      return `<p${cls}>${e(line)}</p>`;
+    })
+    .join('');
+
+  const guarantorNames = input.guarantors.length === 0
+    ? ''
+    : input.guarantors.map((g) => `<span class="sig-name">${e(g.fullName)}${g.phone ? ` · ${e(g.phone)}` : ''}</span>`).join('');
 
   return `<!doctype html>
 <html lang="${input.locale}" dir="${dirFor(input.locale)}">
@@ -119,11 +139,12 @@ ${FONT_LINK}
 
   <h2>${e(t.terms)}</h2>
   <!-- ⚠ needs accountant/lawyer verification -->
-  <div class="box">${e(t.termsPlaceholder)}</div>
+  <div class="box clauses">${clauseLines}</div>
 
   <div class="sig">
     <div>${e(t.sellerSignature)}</div>
     <div>${e(t.buyerSignature)}</div>
+    <div>${e(t.guarantorSignature)}${guarantorNames}</div>
   </div>
 </div>
 </body>

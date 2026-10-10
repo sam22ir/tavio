@@ -1,7 +1,7 @@
 import type { ContractPrintInput } from './contract-html';
 import type { ReceiptPrintInput } from './receipt-html';
 import { PRINT_CSS } from './print-styles';
-import { dirFor, formatDate, labels, methodLabel, money } from './shared';
+import { dirFor, formatDate, isClauseTitle, labels, methodLabel, money } from './shared';
 
 // React rendering of the same content as the HTML builders. Used by the print pages.
 
@@ -127,11 +127,25 @@ export function ContractView({ input }: { input: ContractPrintInput }) {
 
       <h2 className="mt-4 font-semibold">{t.terms}</h2>
       {/* ⚠ needs accountant/lawyer verification */}
-      <div className="box border border-neutral-500 p-2">{t.termsPlaceholder}</div>
+      <div className="box clauses border border-neutral-500 p-2 text-sm">
+        {input.clauses.map((line, i) =>
+          line.trim() === '' ? (
+            <div key={i} className="h-2" />
+          ) : (
+            <p key={i} className={isClauseTitle(line) ? 'font-semibold' : undefined}>{line}</p>
+          ),
+        )}
+      </div>
 
       <div className="sig mt-10 flex justify-between gap-6">
         <div className="flex-1 border-t border-black pt-1 text-center">{t.sellerSignature}</div>
         <div className="flex-1 border-t border-black pt-1 text-center">{t.buyerSignature}</div>
+        <div className="flex-1 border-t border-black pt-1 text-center">
+          {t.guarantorSignature}
+          {input.guarantors.map((g, i) => (
+            <span key={i} className="block text-xs">{g.fullName}</span>
+          ))}
+        </div>
       </div>
     </div>
   );

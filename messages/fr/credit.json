@@ -6,7 +6,8 @@
     "contracts": "Contrats",
     "payments": "Paiements",
     "overdue": "Échéances en retard",
-    "requirements": "Documents requis"
+    "requirements": "Documents requis",
+    "clauses": "Clauses des contrats"
   },
   "fields": {
     "reference": "Référence",
@@ -253,5 +254,41 @@
     "active": "Actif",
     "save": "Enregistrer",
     "saved": "Document enregistré"
+  },
+  "clauses": {
+    "title": "Clauses des contrats",
+    "intro": "Modèle de contrat de vente à tempérament. Laissez un champ vide pour utiliser le modèle par défaut. Les variables non renseignées apparaissent en ligne vide à l’impression.",
+    "fr": "Clauses en français",
+    "ar": "Clauses en arabe",
+    "variables": "Variables disponibles",
+    "defaultHint": "Vide : le modèle par défaut est utilisé. Le modèle par défaut doit être validé par un juriste.",
+    "city": "Ville (lieu du contrat)",
+    "latePenalty": "Pénalité de retard (% par mois)",
+    "guarantorThreshold": "Garant obligatoire au-dessus de (DZD)",
+    "guarantorThresholdHelp": "Au-dessus de ce montant financé, un garant est exigé avant l’activation du contrat. Vide : pas d’exigence.",
+    "save": "Enregistrer",
+    "saved": "Clauses enregistrées",
+    "errors": {
+      "threshold": "Montant du garant invalide"
+    }
+  },
+  "guarantors": {
+    "title": "Garants",
+    "add": "Ajouter un garant",
+    "edit": "Modifier",
+    "remove": "Retirer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "empty": "Aucun garant pour ce contrat.",
+    "locked": "Les garants ne peuvent être modifiés qu’en brouillon ou approuvé.",
+    "fullName": "Nom complet",
+    "nin": "NIN",
+    "phone": "Téléphone",
+    "relation": "Lien avec le client",
+    "address": "Adresse",
+    "idDocument": "Pièce d’identité (JPEG, PNG, WebP ou PDF, 10 Mo max)",
+    "idDocumentAttached": "Pièce d’identité jointe",
+    "saved": "Garant enregistré",
+    "removed": "Garant retiré"
   }
 }

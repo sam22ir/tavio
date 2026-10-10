@@ -59,6 +59,8 @@ describe('buildContractHtml', () => {
       { seq: 1, dueDate: '2026-11-01', amountCents: BigInt(25000) },
       { seq: 2, dueDate: '2026-12-01', amountCents: BigInt(25000) },
     ],
+    clauses: ['Article 1 - Objet', '', 'Le vendeur conserve la propriété.'],
+    guarantors: [{ fullName: 'Garant Ali', phone: '0550000001' }],
   };
 
   it('renders lines, schedule, amounts and signature boxes in ar RTL', () => {
@@ -69,5 +71,14 @@ describe('buildContractHtml', () => {
     expect(html).toContain(formatDzd(BigInt(25000), 'ar'));
     expect(html).toContain('dir="rtl"');
     expect(html.match(/class="sig"/g)?.length).toBe(1);
+  });
+
+  it('prints the clause paragraphs and a guarantor signature block', () => {
+    const html = buildContractHtml({ ...input, locale: 'fr' });
+    expect(html).not.toContain('[Clauses du contrat');
+    expect(html).toContain('<p class="clause-title">Article 1 - Objet</p>');
+    expect(html).toContain('Le vendeur conserve la propriété.');
+    expect(html).toContain('Le garant');
+    expect(html).toContain('Garant Ali');
   });
 });
