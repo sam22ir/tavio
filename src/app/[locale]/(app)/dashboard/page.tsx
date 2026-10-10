@@ -14,7 +14,7 @@ import { AppTiles } from '@/ui/shell/app-tiles';
 import { myOpenActivities } from '@/modules/chatter/service';
 import { MyActivities } from '@/modules/chatter/ui/my-activities';
 import { parseActivityFilter } from '@/modules/chatter/ui/activity-filter';
-import { hasSampleData } from '@/core/demo/sample-data';
+import { companyIsDemo, homeCompanyOf } from '@/core/tenancy/service';
 import { SampleDataBanner } from '@/core/demo/sample-data-banner';
 import { GettingStartedChecklist } from '@/core/demo/getting-started-checklist';
 import { tenantForUser } from '@/core/tenancy/tenant-access';
@@ -41,7 +41,8 @@ export default async function DashboardPage({
   const crmOn = modules.has('crm');
 
   const tenant = await tenantForUser({ locale, companyId: shell.active.id });
-  const sampleActive = tenant.ok ? await hasSampleData(tenant.value) : false;
+  const demo = await companyIsDemo(shell.active.id);
+  const home = demo && tenant.ok ? await homeCompanyOf(tenant.value.userId) : null;
 
   const { name, kpis, due, activities } = await withPageCtx(async (ctx) => {
     // users is not readable by the app role; member_directory is the tenant-scoped view of members.
@@ -73,7 +74,11 @@ export default async function DashboardPage({
         <p className="text-sm text-muted-foreground">{dateLabel}</p>
       </header>
 
-      <SampleDataBanner active={sampleActive} />
+      <SampleDataBanner
+        demo={demo}
+        demoCompanyId={shell.active.id}
+        realCompany={home ? { id: home.id, name: home.name } : null}
+      />
 
       <section className="app-panel flex flex-col gap-5 p-5">
         <h2 className="text-lg font-semibold">{t('today')}</h2>
@@ -163,7 +168,7 @@ export default async function DashboardPage({
         ) : null}
       </section>
 
-      <GettingStartedChecklist locale={locale} />
+      {!demo && <GettingStartedChecklist locale={locale} />}
 
       <section className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">{t('applications')}</h2>

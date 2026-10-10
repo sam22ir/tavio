@@ -3,11 +3,11 @@ import { eq } from 'drizzle-orm';
 import { afterAll, describe, expect, it } from 'vitest';
 import { loadDevEnv } from '@/core/env/load-dev-env';
 import { getDb } from '@/core/db/client';
-import { users, sampleRecords } from '@/core/db/schema';
+import { users } from '@/core/db/schema';
 import { withTenant } from '@/core/db/tenant';
 import { deleteTestCompanies } from '@/testing/db-cleanup';
-import { createCompany, loadTenantArgs } from '@/core/tenancy/service';
-import { clearSampleRecords, seedSampleData } from '../sample-data';
+import { archiveDemoCompany, companyIsDemo, createCompany, homeCompanyOf, listMyCompanies, loadTenantArgs } from '@/core/tenancy/service';
+import { createSampleCompany } from '../demo-company';
 import { stockMoves, deliveries } from '@/modules/inventory/schema';
 import { trialBalance } from '@/modules/accounting/service/reports';
 import { bilanAt } from '@/modules/accounting/service/statements';
@@ -21,46 +21,47 @@ const createdCompanies: string[] = [];
 afterAll(async () => {
   await deleteTestCompanies(db, createdCompanies);
   await db.delete(users).where(eq(users.id, userId));
-}, 60_000);
+});
 
-describe('sample data delivers sold goods (database)', () => {
-  it('seeds outgoing moves and COGS, balances, and clears every sample row', async () => {
-    await db.insert(users).values({ id: userId, name: 'Sample Data', email: `sample-${userId}@test.invalid` });
-    const created = await createCompany(userId, { legalName: 'Sample Check SARL' }, db);
-    if (!created.ok) throw new Error(created.error.message);
-    const companyId = created.value.companyId;
-    createdCompanies.push(companyId);
-    const tenant = await loadTenantArgs(userId, companyId, 'fr', db);
-    if (!tenant.ok) throw new Error(tenant.error.message);
+describe.skipIf(!process.env.TAVIO_W5_DB)('demo company with sample data (database)', () => {
+  it('creates a demo company next to the real one, seeds it, then archives it', async () => {
+    await db.insert(users).values({ id: userId, name: 'Demo Owner', email: `demo-${userId}@test.invalid` });
+    const real = await createCompany(userId, { legalName: 'Real Check SARL' }, db);
+    if (!real.ok) throw new Error(real.error.message);
+    const realId = real.value.companyId;
+    createdCompanies.push(realId);
 
-    const { recorded } = await seedSampleData(tenant.value, db);
-    expect(recorded).toBeGreaterThan(0);
+    const demo = await createSampleCompany({ userId, sourceCompanyId: realId, legalName: 'Demo Check', locale: 'fr' }, db);
+    if (!demo.ok) throw new Error(demo.error.message);
+    const demoId = demo.value.companyId;
+    createdCompanies.push(demoId);
+    expect(await companyIsDemo(demoId, db)).toBe(true);
+    expect(await companyIsDemo(realId, db)).toBe(false);
 
-    const moves = await db.select({ id: stockMoves.id }).from(stockMoves).where(eq(stockMoves.companyId, companyId));
-    const dels = await db.select({ id: deliveries.id }).from(deliveries).where(eq(deliveries.companyId, companyId));
+    const moves = await db.select({ id: stockMoves.id }).from(stockMoves).where(eq(stockMoves.companyId, demoId));
+    const dels = await db.select({ id: deliveries.id }).from(deliveries).where(eq(deliveries.companyId, demoId));
     expect(moves.length).toBeGreaterThanOrEqual(25);
     expect(dels.length).toBeGreaterThan(0);
 
+    const tenant = await loadTenantArgs(userId, demoId, 'fr', db);
+    if (!tenant.ok) throw new Error(tenant.error.message);
     await withTenant(
       tenant.value,
       async (ctx) => {
         const tb = await trialBalance(ctx, {});
         expect(tb.balanced).toBe(true);
-        const cogs = tb.rows.find((r) => r.code === '600');
-        expect(cogs && cogs.debitCents > BigInt(0)).toBe(true);
-        const bilan = await bilanAt(ctx, new Date().toISOString().slice(0, 10));
-        expect(bilan.balanced).toBe(true);
+        expect(tb.rows.find((r) => r.code === '600')?.debitCents).toBeGreaterThan(BigInt(0));
+        expect((await bilanAt(ctx, new Date().toISOString().slice(0, 10))).balanced).toBe(true);
       },
       db,
     );
 
-    const removed = await clearSampleRecords(tenant.value, db);
-    expect(removed).toBe(recorded);
-    const left = await db.select({ id: sampleRecords.recordId }).from(sampleRecords).where(eq(sampleRecords.companyId, companyId));
-    expect(left).toHaveLength(0);
-    const movesAfter = await db.select({ id: stockMoves.id }).from(stockMoves).where(eq(stockMoves.companyId, companyId));
-    const delsAfter = await db.select({ id: deliveries.id }).from(deliveries).where(eq(deliveries.companyId, companyId));
-    expect(movesAfter).toHaveLength(0);
-    expect(delsAfter).toHaveLength(0);
+    expect((await homeCompanyOf(userId, db))?.id).toBe(realId);
+    expect((await listMyCompanies(userId, db)).map((c) => c.id)).toContain(demoId);
+
+    const archived = await archiveDemoCompany(userId, demoId, db);
+    expect(archived.ok).toBe(true);
+    expect((await listMyCompanies(userId, db)).map((c) => c.id)).not.toContain(demoId);
+    expect((await archiveDemoCompany(userId, realId, db)).ok).toBe(false);
   }, 900_000);
 }, 60_000);

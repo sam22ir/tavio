@@ -53,6 +53,10 @@ export const companies = pgTable(
     status: text('status').notNull().default('active'),
     // Onboarding choice: 'commerce' | 'wholesale' | 'services' | 'other'. Null until chosen.
     businessType: text('business_type'),
+    // Demo companies hold sample data in their own company, next to the user's real one. Default false.
+    isDemo: boolean('is_demo').default(false),
+    // Set when a demo company is archived. Archived companies are hidden; no data is deleted. Null when active.
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
   },
   (t) => [
     index('companies_status_idx').on(t.status),

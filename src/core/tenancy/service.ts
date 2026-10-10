@@ -1,5 +1,5 @@
 // Tenancy service. Runs as the owner connection (getDb(), no withTenant) and always filters by userId.
-import { and, desc, eq, gte } from 'drizzle-orm';
+import { and, desc, eq, gte, isNull } from 'drizzle-orm';
 import { getDb } from '@/core/db/client';
 import {
   companies,
@@ -16,19 +16,85 @@ import { DEFAULT_MODULES, DEFAULT_ROLES } from './default-roles';
 import { activityTypes } from '@/modules/chatter/schema';
 import { ACTIVITY_TYPE_SEED } from '@/modules/chatter/entities';
 
-export interface CompanySummary { id: string; name: string; roleKey: string }
-export interface NewCompanyInput { legalName: string; phone?: string; address?: string; wilayaCode?: string }
+export interface CompanySummary { id: string; name: string; roleKey: string; isDemo: boolean }
+export interface NewCompanyInput {
+  legalName: string;
+  phone?: string;
+  address?: string;
+  wilayaCode?: string;
+  businessType?: string;
+  isDemo?: boolean;
+}
+
+/** Archived companies are hidden from every company list. */
+export function visibleCompanyRows<T extends { archivedAt: Date | null }>(rows: readonly T[]): T[] {
+  return rows.filter((r) => r.archivedAt === null);
+}
+
+/**
+ * Why a company cannot be archived by this user, or null when it can. Only demo companies, only their owner,
+ * and an archived company is already gone for the user.
+ */
+export function archiveRefusal(
+  company: { isDemo: boolean | null; archivedAt: Date | null } | undefined,
+  roleKey: string | null,
+): 'NOT_FOUND' | 'FORBIDDEN' | null {
+  if (!company || company.archivedAt !== null) return 'NOT_FOUND';
+  if (!company.isDemo) return 'FORBIDDEN';
+  if (roleKey !== 'owner') return 'FORBIDDEN';
+  return null;
+}
 
 export const MODULE_VERSION = '0.1.0';
 
 export async function listMyCompanies(userId: string, db: Db = getDb()): Promise<CompanySummary[]> {
   const rows = await db
-    .select({ id: companies.id, name: companies.displayName, roleKey: roles.key })
+    .select({
+      id: companies.id,
+      name: companies.displayName,
+      roleKey: roles.key,
+      isDemo: companies.isDemo,
+      archivedAt: companies.archivedAt,
+    })
     .from(memberships)
     .innerJoin(companies, eq(companies.id, memberships.companyId))
     .innerJoin(roles, eq(roles.id, memberships.roleId))
     .where(and(eq(memberships.userId, userId), eq(memberships.status, 'active')));
-  return rows;
+  return visibleCompanyRows(rows).map((r) => ({ id: r.id, name: r.name, roleKey: r.roleKey, isDemo: r.isDemo ?? false }));
+}
+
+/** The user's first visible company that is not a demo: where their real data lives. */
+export async function homeCompanyOf(userId: string, db: Db = getDb()): Promise<CompanySummary | null> {
+  const mine = await listMyCompanies(userId, db);
+  return mine.find((c) => !c.isDemo) ?? null;
+}
+
+/** Whether a company is a demo company. False when unknown. */
+export async function companyIsDemo(companyId: string, db: Db = getDb()): Promise<boolean> {
+  const [row] = await db.select({ isDemo: companies.isDemo }).from(companies).where(eq(companies.id, companyId));
+  return row?.isDemo ?? false;
+}
+
+/** Archives a demo company. Owner only. No data is deleted; the company is hidden from the user's lists. */
+export async function archiveDemoCompany(
+  userId: string,
+  companyId: string,
+  db: Db = getDb(),
+): Promise<Result<{ companyId: string }>> {
+  const [company] = await db
+    .select({ isDemo: companies.isDemo, archivedAt: companies.archivedAt })
+    .from(companies)
+    .where(eq(companies.id, companyId));
+  const [membership] = await db
+    .select({ roleKey: roles.key })
+    .from(memberships)
+    .innerJoin(roles, eq(roles.id, memberships.roleId))
+    .where(and(eq(memberships.userId, userId), eq(memberships.companyId, companyId), eq(memberships.status, 'active')));
+  const refusal = archiveRefusal(company, membership?.roleKey ?? null);
+  if (refusal === 'NOT_FOUND') return err('NOT_FOUND', 'demo company not found');
+  if (refusal === 'FORBIDDEN') return err('FORBIDDEN', 'only the owner of a demo company can archive it');
+  await db.update(companies).set({ archivedAt: new Date() }).where(and(eq(companies.id, companyId), isNull(companies.archivedAt)));
+  return ok({ companyId });
 }
 
 export async function createCompany(
@@ -48,6 +114,8 @@ export async function createCompany(
           phone: input.phone,
           address: input.address,
           wilayaCode: input.wilayaCode,
+          businessType: input.businessType,
+          isDemo: input.isDemo ?? false,
           createdBy: userId,
         })
         .returning({ id: companies.id });
@@ -156,11 +224,13 @@ export async function loadTenantArgs(
   const [membership] = await db
     .select({ roleId: memberships.roleId })
     .from(memberships)
+    .innerJoin(companies, eq(companies.id, memberships.companyId))
     .where(
       and(
         eq(memberships.userId, userId),
         eq(memberships.companyId, companyId),
         eq(memberships.status, 'active'),
+        isNull(companies.archivedAt),
       ),
     );
   if (!membership) return err('FORBIDDEN', 'no active membership in this company');
