@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { Ctx } from '@/core/ctx';
 import { audit } from '@/core/audit';
 import type { Tx } from '@/core/db/types';
-import { requirePerm } from '@/core/perms';
+import { can, requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { crmSettings, leads, salesTeamMembers, salesTeams } from '../schema';
 
@@ -14,9 +14,9 @@ export type LeadScopeMode = 'all' | 'team' | 'own';
  * and everyone else sees only their own leads. Team leaders see their team's leads in every mode.
  */
 export function leadScopeMode(perms: ReadonlySet<string>): LeadScopeMode {
-  // '*' is held by the owner and admin roles (default-roles.ts), so they see every lead.
-  if (perms.has('*') || perms.has('crm.leads.view_all')) return 'all';
-  if (perms.has('crm.leads.view_team')) return 'team';
+  // Uses the permission matcher, so '*' (owner, admin) and wildcards such as 'crm.*' count.
+  if (can(perms, 'crm.leads.view_all')) return 'all';
+  if (can(perms, 'crm.leads.view_team')) return 'team';
   return 'own';
 }
 

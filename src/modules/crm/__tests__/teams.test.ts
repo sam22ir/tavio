@@ -14,6 +14,11 @@ describe('leadScopeMode', () => {
     expect(leadScopeMode(new Set(['*']))).toBe('all');
   });
 
+  it('matches wildcards such as crm.* through the permission matcher', () => {
+    expect(leadScopeMode(new Set(['crm.*']))).toBe('all');
+    expect(leadScopeMode(new Set(['crm.lead.*']))).toBe('own');
+  });
+
   it('sees every lead with view_all, even when view_team is also held', () => {
     expect(leadScopeMode(new Set(['crm.leads.view_team', 'crm.leads.view_all']))).toBe('all');
     expect(leadScopeMode(new Set(['crm.leads.view_all']))).toBe('all');
