@@ -36,7 +36,8 @@ export const EMPTY_LEAD_KPIS: LeadKpis = {
   conversionRate: null,
 };
 
-const MONTH_START = sql`date_trunc('month', now())`;
+/** Start of the current month in Algeria time, as a timestamptz. */
+const MONTH_START = sql`date_trunc('month', now() at time zone 'Africa/Algiers') at time zone 'Africa/Algiers'`;
 
 /** Open lead with no open activity on it. Correlated to the outer leads row. */
 function withoutOpenActivity() {

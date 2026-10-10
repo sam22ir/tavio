@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
-import { withPageCtx } from '@/core/actions/page-ctx';
-import { myOpenActivities, todayIso } from '../service';
+import type { OpenActivity } from '../service';
+import { todayIso } from '../service';
 import { entityPath } from './entity-path';
 import {
   ACTIVITY_FILTERS,
@@ -13,20 +13,21 @@ import {
 
 export { parseActivityFilter, type ActivityFilter } from './activity-filter';
 
-// Server component: the current user's open activities, overdue first. `filter` narrows the list by
-// due date; the filter links point to `basePath?activities=<filter>`.
+// Server component. `rows` are the current user's open activities (the caller loads them), overdue
+// first. `filter` narrows the list by due date; the filter links point to `basePath?activities=<filter>`.
 export async function MyActivities({
+  rows,
   limit = 10,
   filter = 'all',
   basePath,
 }: {
+  rows: OpenActivity[];
   limit?: number;
   filter?: ActivityFilter;
   basePath: string;
 }) {
   const t = await getTranslations('chatter.activity');
   const tt = await getTranslations('chatter.type');
-  const rows = await withPageCtx((ctx) => myOpenActivities(ctx, 100));
   const today = todayIso();
 
   const counts: Record<ActivityFilter, number> = {

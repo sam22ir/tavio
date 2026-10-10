@@ -123,7 +123,7 @@ export default async function DashboardPage({
           ) : null}
 
           <div className="min-w-0">
-            <MyActivities limit={5} filter={activityFilter} basePath={`/${locale}/dashboard`} />
+            <MyActivities rows={activities} limit={5} filter={activityFilter} basePath={`/${locale}/dashboard`} />
           </div>
         </div>
       </section>
