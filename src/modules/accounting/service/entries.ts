@@ -9,6 +9,7 @@ import { partners } from '@/modules/contacts/schema';
 import { accounts, journalEntries, journalLines, journals } from '../schema';
 import { ensureDefaults } from './chart';
 import { checkBalanced, invertLines, type DraftLine } from './posting';
+import { assertPeriodOpen } from './period';
 
 const ALGIERS_DATE = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'Africa/Algiers',
@@ -30,12 +31,13 @@ export interface PostEntryInput {
 async function accountIdsFor(ctx: Ctx, codes: string[]) {
   const unique = [...new Set(codes)];
   const rows = await ctx.tx
-    .select({ id: accounts.id, code: accounts.code })
+    .select({ id: accounts.id, code: accounts.code, archived: accounts.archived })
     .from(accounts)
     .where(and(eq(accounts.companyId, ctx.companyId), inArray(accounts.code, unique)));
   const byCode = new Map(rows.map((r) => [r.code, r.id]));
   const missing = unique.filter((c) => !byCode.has(c));
-  return { byCode, missing };
+  const archived = rows.filter((r) => r.archived).map((r) => r.code);
+  return { byCode, missing, archived };
 }
 
 /**
@@ -70,8 +72,12 @@ export async function postEntry(
     .where(and(eq(journals.companyId, ctx.companyId), eq(journals.code, input.journalCode)));
   if (!journal) return err('NOT_FOUND', 'JOURNAL_NOT_FOUND');
 
-  const { byCode, missing } = await accountIdsFor(ctx, input.lines.map((l) => l.accountCode));
+  const period = await assertPeriodOpen(ctx, input.date);
+  if (!period.ok) return period;
+
+  const { byCode, missing, archived } = await accountIdsFor(ctx, input.lines.map((l) => l.accountCode));
   if (missing.length > 0) return err('NOT_FOUND', 'ACCOUNT_NOT_FOUND', { codes: missing });
+  if (archived.length > 0) return err('CONFLICT', 'ACCOUNT_ARCHIVED', { codes: archived });
 
   const number = await nextNumber(ctx, `accounting.entry.${journal.code}`, {
     prefix: `${journal.code}/{YYYY}/`,

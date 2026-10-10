@@ -72,7 +72,10 @@
       "trial": "Trial balance",
       "ledger": "General ledger",
       "partners": "Partner balances",
-      "g50": "G50 (VAT) ⚠"
+      "g50": "G50 (VAT) ⚠",
+      "bilan": "Balance sheet",
+      "tcr": "Income statement",
+      "aging": "Receivables aging"
     },
     "year": "Year",
     "month": "Month",
@@ -90,6 +93,24 @@
       "deductible": "VAT deductible (4456)",
       "net": "VAT due",
       "verify": "⚠ Calculation draft only: verify with a chartered accountant before filing."
+    },
+    "export": "Accounting export (ZIP)",
+    "bilan": {
+      "actif": "Assets",
+      "passif": "Liabilities",
+      "current": "This year",
+      "previous": "Previous year",
+      "balanced": "Balance sheet balanced: assets = liabilities.",
+      "notBalanced": "Balance sheet not balanced: check the entries."
+    },
+    "tcr": {
+      "result": "Net result"
+    },
+    "aging": {
+      "0-30": "0–30 days",
+      "31-60": "31–60 days",
+      "61-90": "61–90 days",
+      "90+": "Over 90 days"
     }
   },
   "errors": {
@@ -111,5 +132,56 @@
     "STATE": "Action not allowed in this state.",
     "CONFLICT": "Conflict: the action was already done.",
     "INTERNAL": "Internal error."
+  },
+  "fiscalYears": {
+    "title": "Fiscal years",
+    "list": "Fiscal years",
+    "empty": "No fiscal year yet. Create the first one below.",
+    "state": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "close": "Close",
+    "closeConfirm": "Close this fiscal year? The result and opening entries will be generated.",
+    "closeYes": "Yes, close",
+    "closeNo": "Cancel",
+    "closed": "Fiscal year closed.",
+    "create": "New fiscal year",
+    "name": "Name",
+    "start": "Start",
+    "end": "End",
+    "createSubmit": "Create",
+    "created": "Fiscal year created.",
+    "lock": "Lock date",
+    "lockHelp": "No entry can be posted on or before this date.",
+    "lockDate": "Lock up to",
+    "lockSubmit": "Save",
+    "errors": {
+      "generic": "Action not possible. Check the dates and the fiscal year states."
+    }
+  },
+  "export": {
+    "entryDate": "Date",
+    "entryNumber": "Entry no.",
+    "journal": "Journal",
+    "state": "State",
+    "ref": "Reference",
+    "account": "Account",
+    "accountName": "Account name",
+    "partner": "Partner",
+    "label": "Label",
+    "debit": "Debit",
+    "credit": "Credit",
+    "balance": "Balance",
+    "opening": "Opening balance",
+    "closing": "Closing balance",
+    "movement": "Movement",
+    "line": "Line",
+    "amount": "Amount",
+    "section": "Section",
+    "bilanActif": "Assets",
+    "bilanPassif": "Liabilities",
+    "tcrProduits": "Income",
+    "tcrCharges": "Expenses"
   }
 }
