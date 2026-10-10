@@ -8,7 +8,6 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  "placement": { "mode": "smart" },
   "triggers": { "crons": ["*/5 * * * *", "0 6 * * *"] },
   "hyperdrive": [
     {
