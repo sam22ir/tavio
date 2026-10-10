@@ -1,9 +1,13 @@
+import { and, eq } from 'drizzle-orm';
 import type { Ctx } from '@/core/ctx';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import * as chatter from '@/modules/chatter/service';
-import { createRule, listRules, updateRule, type RuleInput } from '@/modules/automation/service/rules';
+import type { RuleInput } from '@/modules/automation/service/rules';
+import { companyModules } from '@/core/db/schema/tenancy';
+import { audit } from '@/core/audit';
 import { listDocumentRequirements, saveDocumentRequirement } from '@/modules/credit_sales/service/documents';
+import { lostReasons } from '../schema';
 import * as crm from '../service';
 import {
   MOURABAHA_ACTIVITY_TYPES,
@@ -33,6 +37,8 @@ export interface MourabahaTemplateResult {
   stages: number;
   plans: number;
   rules: number;
+  /** Steps that were skipped, with the reason. Empty when everything was applied. */
+  skipped: string[];
 }
 
 /**
@@ -67,10 +73,19 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
     stageIds.set(tpl.name, saved.value.id);
   }
 
-  const lostReasons = await crm.listLostReasons(ctx);
-  if (!lostReasons.ok) return lostReasons;
+  // Includes inactive reasons: a match is reactivated rather than duplicated.
+  const existingReasons = await ctx.tx
+    .select({ id: lostReasons.id, name: lostReasons.name, active: lostReasons.active })
+    .from(lostReasons)
+    .where(eq(lostReasons.companyId, ctx.companyId));
   for (const name of MOURABAHA_LOST_REASONS) {
-    if (lostReasons.value.some((r) => r.name === name)) continue;
+    const found = existingReasons.find((r) => r.name === name);
+    if (found?.active) continue;
+    if (found) {
+      await ctx.tx.update(lostReasons).set({ active: true }).where(eq(lostReasons.id, found.id));
+      await audit(ctx, { entity: 'crm.lost_reason', recordId: found.id, action: 'update', before: { active: false }, after: { active: true } });
+      continue;
+    }
     const created = await crm.createLostReason(ctx, { name });
     if (!created.ok) return created;
   }
@@ -115,16 +130,52 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
     planIds.set(p.code, saved.value.id);
   }
 
+  const skipped: string[] = [];
+
+  // Document requirements. Skipped (not failed) when the user lacks the credit_sales permission.
   const docs = await listDocumentRequirements(ctx);
-  if (!docs.ok) return docs;
-  for (const name of MOURABAHA_DOCUMENT_REQUIREMENTS) {
-    const found = docs.value.find((d) => d.name === name);
-    if (found?.required && found.active) continue;
-    const saved = await saveDocumentRequirement(ctx, { id: found?.id, name, required: true, active: true });
-    if (!saved.ok) return saved;
+  if (!docs.ok && docs.error.code === 'FORBIDDEN') {
+    skipped.push('documents: missing credit_sales.contract.read permission');
+  } else if (!docs.ok) {
+    return docs;
+  } else {
+    for (const name of MOURABAHA_DOCUMENT_REQUIREMENTS) {
+      const found = docs.value.find((d) => d.name === name);
+      if (found?.required && found.active) continue;
+      const saved = await saveDocumentRequirement(ctx, { id: found?.id, name, required: true, active: true });
+      if (!saved.ok && saved.error.code === 'FORBIDDEN') {
+        skipped.push('documents: missing credit_sales.contract.write permission');
+        break;
+      }
+      if (!saved.ok) return saved;
+    }
   }
 
-  // Automation rules. Conditions are ANDed, so each stage gets its own rule on toStageId.
+  // Automation rules run only when the automation module is enabled for the company.
+  // Loaded dynamically so CRM does not depend on automation.
+  const [automationRow] = await ctx.tx
+    .select({ enabled: companyModules.enabled })
+    .from(companyModules)
+    .where(and(eq(companyModules.companyId, ctx.companyId), eq(companyModules.moduleId, 'automation')))
+    .limit(1);
+  if (!automationRow?.enabled) {
+    skipped.push('automation: module not enabled for this company, rules not created');
+  } else {
+    const rules = await applyRules(ctx, stageIds, planIds);
+    if (!rules.ok) return rules;
+    return ok({ pipelineId, stages: MOURABAHA_STAGES.length, plans: MOURABAHA_PLANS.length, rules: rules.value, skipped });
+  }
+
+  return ok({ pipelineId, stages: MOURABAHA_STAGES.length, plans: MOURABAHA_PLANS.length, rules: 0, skipped });
+}
+
+async function applyRules(
+  ctx: Ctx,
+  stageIds: ReadonlyMap<string, string>,
+  planIds: ReadonlyMap<string, string>,
+): Promise<Result<number>> {
+  const { createRule, listRules, updateRule } = await import('@/modules/automation/service/rules');
+  // Conditions are ANDed, so each stage gets its own rule on toStageId.
   const existingRules = await listRules(ctx);
   const upsertRule = async (name: string, raw: RuleInput): Promise<Result<{ id: string }>> => {
     const found = existingRules.find((r) => r.name === name);
@@ -177,5 +228,5 @@ export async function applyMourabahaTemplate(ctx: Ctx): Promise<Result<Mourabaha
   if (!savedAnswered.ok) return savedAnswered;
   rules += 1;
 
-  return ok({ pipelineId, stages: MOURABAHA_STAGES.length, plans: MOURABAHA_PLANS.length, rules });
+  return ok(rules);
 }
