@@ -45,6 +45,8 @@ Order: 14-A, 14-B and 14-C run in parallel, then 14-D, then 14-E. **Output:** mo
 
 ## Wave 15: Algerian legal and printing
 
+**Status (2026-10-10): done and deployed.** 15-0, 15-A, 15-B, 15-C, 15-D, 15-E plus withholding tax on vendor bills, an editable company identity form, translated SCF statements, and demo stock + accounting repairs. Migrations 0016–0017. Everything tax, account or layout related is flagged for the accountant; the contract clauses for a lawyer. Known gap: freshly seeded sample data has no delivery/sales stock moves (only the repair adds them).
+
 | Task | What | Size |
 |---|---|---|
 | **15-0 Import/export engine** (shared, first) | One small library for CSV + XLSX that is light enough for Workers CPU (checked with a CPU test). Export: any DataList gets "Exporter" (Export) with the current filters, up to 10k rows, with a background job above that. Import: upload → column mapping → preview with errors → confirm, for contacts, products and leads first. Every page in Wave 15 and Wave 16 reuses it. | M |
