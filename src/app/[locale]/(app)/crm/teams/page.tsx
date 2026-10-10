@@ -10,6 +10,7 @@ import * as crm from '@/modules/crm/service';
 import { saveTeamFormAction, setLeadVisibilityAction } from '@/modules/crm/actions';
 import { Button } from '@/ui/primitives/button';
 import { TeamForm } from '@/modules/crm/ui/team-form';
+import { applyMourabahaAction } from '@/modules/crm/templates/actions';
 
 export default async function CrmTeamsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -64,6 +65,17 @@ export default async function CrmTeamsPage({ params }: { params: Promise<{ local
               <p className="text-sm">{data.restricted ? t('restrictVisibility') : t('visibilityOpen')}</p>
             )}
           </section>
+          {data.canManage ? (
+            <section className="flex flex-col gap-2 rounded-md border p-4">
+              <h2 className="text-base font-semibold">{t('mourabahaTitle')}</h2>
+              <p className="text-sm text-muted-foreground">{t('mourabahaHint')}</p>
+              <form action={applyMourabahaAction}>
+                <Button type="submit" size="sm" variant="outline">
+                  {t('applyMourabaha')}
+                </Button>
+              </form>
+            </section>
+          ) : null}
           {data.teams.length === 0 ? <p className="text-sm text-muted-foreground">{t('noTeams')}</p> : null}
           {data.canManage
             ? data.teams.map((team) => (
