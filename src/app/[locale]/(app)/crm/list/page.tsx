@@ -27,6 +27,7 @@ export default async function CrmListPage({
   const teamParam = typeof sp.teamId === 'string' ? sp.teamId : '';
   if (teamParam) query.filters = { ...query.filters, teamId: teamParam };
   const t = await getTranslations('crm.ui');
+  const ioT = await getTranslations('io.import');
   const requested = typeof sp.pipeline === 'string' ? sp.pipeline : undefined;
   const data = await withPageCtx(async (ctx) => {
     const pipelines = await crm.listPipelines(ctx);
@@ -95,6 +96,11 @@ export default async function CrmListPage({
           query={query}
           basePath={`/${locale}/crm/list`}
           rowHref={(r) => `/${locale}/crm/${r.id}`}
+          actions={
+            <Link href={`/${locale}/import/crm.lead`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+              {ioT('button')}
+            </Link>
+          }
         />
       ) : (
         <p role="alert" className="rounded-md border p-4 text-sm text-destructive">

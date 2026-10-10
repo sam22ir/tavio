@@ -7,6 +7,8 @@ import { cn } from '@/ui/lib/cn';
 import { SearchBar } from './search-bar';
 import { Pagination } from './pagination';
 import { formatCell } from './format';
+import { isExportableEntity } from './io-columns';
+import { buttonVariants } from '@/ui/primitives/button';
 
 interface DataListProps {
   entity: EntityDef;
@@ -37,6 +39,7 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
   const labelField = entity.fields.find((f) => f.name === entity.labelField);
   const secondary = listFields.filter((f) => f.name !== entity.labelField).slice(0, 2);
   const isEmpty = result.rows.length === 0;
+  const exportable = isExportableEntity(entity.name);
 
   const titleFor = (row: Row) => {
     const value = labelField ? formatCell(labelField, cellValue(labelField, row), locale) : String(row.id);
@@ -53,7 +56,12 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
     <section className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <SearchBar entity={entity} query={query} />
-        {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+        {actions || exportable ? (
+          <div className="flex items-center gap-2">
+            {actions}
+            {exportable ? <ExportMenu entityName={entity.name} query={query} locale={locale} /> : null}
+          </div>
+        ) : null}
       </div>
 
       {isEmpty ? (
@@ -129,5 +137,32 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
 
       <Pagination basePath={basePath} query={query} total={result.total} />
     </section>
+  );
+}
+
+/** Export dropdown. Plain links, so it works without client JS. Keeps the current filters, search and sort. */
+async function ExportMenu({ entityName, query, locale }: { entityName: string; query: ListQuery; locale: Locale }) {
+  const t = await getTranslations('io.export');
+  const base = `/${locale}/export/${entityName}`;
+  const qs = toSearchParams(query).toString();
+  const href = (extra: string) => `${base}?${qs ? `${qs}&` : ''}${extra}`;
+  const items = [
+    { href: href('format=csv&sep=,'), label: t('csv') },
+    { href: href('format=csv&sep=;'), label: t('csv_semicolon') },
+    { href: href('format=xlsx'), label: t('xlsx') },
+  ];
+  return (
+    <details className="relative">
+      <summary className={cn(buttonVariants({ variant: 'outline' }), 'cursor-pointer list-none')}>{t('button')}</summary>
+      <ul className="absolute end-0 z-10 mt-1 min-w-56 rounded-md border bg-background p-1 shadow-md">
+        {items.map((item) => (
+          <li key={item.label}>
+            <a href={item.href} className="block rounded-sm px-3 py-2 text-sm hover:bg-muted">
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }

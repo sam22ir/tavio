@@ -313,3 +313,14 @@ export async function productOptions(
     })),
   );
 }
+
+/** SKUs already stored for this company, as `sku:<value>` keys for CSV import deduplication. */
+export async function productSkuKeys(ctx: Ctx): Promise<Set<string>> {
+  const rows = await ctx.tx
+    .select({ sku: products.sku })
+    .from(products)
+    .where(eq(products.companyId, ctx.companyId));
+  const keys = new Set<string>();
+  for (const r of rows) if (r.sku) keys.add(`sku:${r.sku}`);
+  return keys;
+}

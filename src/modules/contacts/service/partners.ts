@@ -375,3 +375,17 @@ export async function partnerOptions(
   return ok(rows.map((r) => ({ value: r.id, label: r.displayName })));
 }
 
+
+/** Duplicate keys already stored for this company, for CSV import: `phone:<E.164>` and `nif:<NIF>`. */
+export async function partnerDedupeKeys(ctx: Ctx): Promise<Set<string>> {
+  const rows = await ctx.tx
+    .select({ phone: partners.phone, nif: partners.nif })
+    .from(partners)
+    .where(eq(partners.companyId, ctx.companyId));
+  const keys = new Set<string>();
+  for (const r of rows) {
+    if (r.phone) keys.add(`phone:${r.phone}`);
+    if (r.nif) keys.add(`nif:${r.nif}`);
+  }
+  return keys;
+}
