@@ -2,7 +2,7 @@
 import { and, eq } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
-import { requirePerm } from '@/core/perms';
+import { requirePerm, can } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { memberships } from '@/core/db/schema';
 import { creditContracts } from '../schema';
@@ -114,7 +114,7 @@ export async function acknowledgeBoReceipt(ctx: Ctx, id: string): Promise<Result
   if (!loaded.ok) return loaded;
   const contract = loaded.value;
   const isBoOwner = contract.boOwnerId !== null && contract.boOwnerId === ctx.userId;
-  if (!isBoOwner && !ctx.perms.has('credit_sales.contract.activate')) {
+  if (!isBoOwner && !can(ctx.perms, 'credit_sales.contract.activate')) {
     return err('FORBIDDEN', 'Only the BO owner can acknowledge receipt');
   }
   if (!contract.sentToBoAt) return err('STATE', 'Contract was not sent to BO');

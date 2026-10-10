@@ -1,4 +1,5 @@
 import type { Ctx } from '@/core/ctx';
+import { can } from '@/core/perms';
 
 // Smart-button registry. Each module declares its related-record links once, with a count and a
 // list href pre-filtered to the record. The permission gates both the count and the link.
@@ -40,7 +41,7 @@ export function createRelationRegistry(): RelationRegistry {
   }
 
   function relationsFor(source: string, perms: ReadonlySet<string>): RelationDef[] {
-    return [...byId.values()].filter((r) => r.source === source && perms.has(r.perm));
+    return [...byId.values()].filter((r) => r.source === source && can(perms, r.perm));
   }
 
   // All counts for one record run in parallel, inside the caller's single transaction.

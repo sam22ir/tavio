@@ -1,3 +1,4 @@
+import { can } from '@/core/perms';
 import Link from 'next/link';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
@@ -51,7 +52,7 @@ export default async function CrmTeamsPage({
       teams: teams.value,
       members: members.value,
       restricted: restriction.value.restricted,
-      canManage: ctx.perms.has('crm.lead.write'),
+      canManage: can(ctx.perms, 'crm.lead.write'),
     };
   });
 

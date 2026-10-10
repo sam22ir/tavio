@@ -56,4 +56,12 @@ describe('relation registry', () => {
       ['tickets', 0],
     ]);
   });
+
+  it('honours wildcard permissions (owners hold "*", roles may hold "module.*")', () => {
+    const reg = createRelationRegistry();
+    reg.register(def({ id: 'sales' }));
+    reg.register(def({ id: 'leave', perm: 'hr.leave.read' }));
+    expect(reg.relationsFor('contacts.partner', new Set(['*'])).map((r) => r.id)).toEqual(['sales', 'leave']);
+    expect(reg.relationsFor('contacts.partner', new Set(['hr.*'])).map((r) => r.id)).toEqual(['leave']);
+  });
 });
