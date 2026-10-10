@@ -38,7 +38,15 @@
     "resultPlaceholder": "النتيجة (اختيارية)",
     "resultPlaceholderRequired": "النتيجة (مطلوبة)",
     "result": "النتيجة",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "filters": {
+      "label": "تصفية الأنشطة",
+      "all": "الكل",
+      "today": "اليوم",
+      "overdue": "متأخرة",
+      "planned": "مخططة"
+    },
+    "dueToday": "مستحقة اليوم"
   },
   "type": {
     "call": "مكالمة",
