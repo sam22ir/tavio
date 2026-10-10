@@ -112,6 +112,15 @@
       "amount": "المبلغ",
       "paid": "المدفوع",
       "status": "الحالة"
+    },
+    "delivery": {
+      "title": "التسليمات",
+      "status": {
+        "to_deliver": "للتسليم",
+        "partial": "سُلّم جزئيا",
+        "delivered": "سُلّم"
+      },
+      "none": "لا توجد تسليمات"
     }
   },
   "payment": {

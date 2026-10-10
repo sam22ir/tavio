@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { on } from '@/core/events';
 import type {
   CreditContractStateChanged,
@@ -8,12 +8,32 @@ import type {
 } from '@/core/events/catalog';
 import type { Ctx } from '@/core/ctx';
 import { creditContractLines } from '@/modules/credit_sales/schema';
+import { products } from '@/modules/products/schema';
 import { ensureDefaultWarehouse } from './service/warehouses';
 import { moveLines } from './service/moves';
 import { closeReservations, releasesContractReservations, reserveLines } from './service/reservations';
-import { cancelOpenDeliveriesForSource, createDraftDelivery } from './service/deliveries';
+import { cancelOpenDeliveriesForSource, createDraftDelivery, returnDoneDeliveriesForSource } from './service/deliveries';
 
 const CONTRACT_ENTITY = 'credit_sales.contract';
+
+/** Keeps only lines of stock-tracked goods. Services and non-stock products never reserve or move stock. */
+async function stockTrackedLines<L extends { productId: string | null }>(ctx: Ctx, lines: readonly L[]): Promise<L[]> {
+  const ids = [...new Set(lines.map((l) => l.productId).filter((id): id is string => id !== null))];
+  if (ids.length === 0) return [];
+  const rows = await ctx.tx
+    .select({ id: products.id })
+    .from(products)
+    .where(
+      and(
+        eq(products.companyId, ctx.companyId),
+        eq(products.kind, 'goods'),
+        eq(products.trackStock, true),
+        inArray(products.id, ids),
+      ),
+    );
+  const tracked = new Set(rows.map((r) => r.id));
+  return lines.filter((l) => l.productId !== null && tracked.has(l.productId));
+}
 
 // Side-effect module: imported from src/modules/inventory/index.ts so the handlers are registered.
 // Handlers check by source id and product before creating anything, so redelivery is safe.
@@ -73,6 +93,9 @@ on('credit_sales.contract.state_changed', async (ctx: Ctx, event) => {
     if (!released.ok) throw new Error(released.error.message);
   }
   if (p.toState === 'cancelled') {
+    // Goods already validated go back into stock (customer to internal); open deliveries are cancelled.
+    const returned = await returnDoneDeliveriesForSource(ctx, { sourceEntity: CONTRACT_ENTITY, sourceId: p.contractId });
+    if (!returned.ok) throw new Error(returned.error.message);
     const cancelled = await cancelOpenDeliveriesForSource(ctx, { sourceEntity: CONTRACT_ENTITY, sourceId: p.contractId });
     if (!cancelled.ok) throw new Error(cancelled.error.message);
     return;
@@ -80,10 +103,13 @@ on('credit_sales.contract.state_changed', async (ctx: Ctx, event) => {
   if (p.toState === 'refused') return;
   if (p.toState !== 'approved' && p.toState !== 'active') return;
 
-  const lines = await ctx.tx
-    .select({ productId: creditContractLines.productId, quantity: creditContractLines.quantity })
-    .from(creditContractLines)
-    .where(and(eq(creditContractLines.companyId, ctx.companyId), eq(creditContractLines.contractId, p.contractId)));
+  const lines = await stockTrackedLines(
+    ctx,
+    await ctx.tx
+      .select({ productId: creditContractLines.productId, quantity: creditContractLines.quantity })
+      .from(creditContractLines)
+      .where(and(eq(creditContractLines.companyId, ctx.companyId), eq(creditContractLines.contractId, p.contractId))),
+  );
 
   if (p.toState === 'approved') {
     const wh = await ensureDefaultWarehouse(ctx);
