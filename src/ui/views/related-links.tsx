@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { Briefcase, Clock, CreditCard, FileText, Handshake, LifeBuoy, ListChecks, Receipt, ShoppingCart, type LucideIcon } from 'lucide-react';
+import { BookOpen, Briefcase, CalendarDays, Clock, CreditCard, FileText, Handshake, LifeBuoy, ListChecks, Package, Receipt, ShoppingCart, Truck, type LucideIcon } from 'lucide-react';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { relations } from '@/core/relations';
 import '@/modules/relation-handlers';
 
 // Icon names used by relation definitions (see RelationDef.icon).
 const ICONS: Record<string, LucideIcon> = {
-  Briefcase, Clock, CreditCard, FileText, Handshake, LifeBuoy, ListChecks, Receipt, ShoppingCart,
+  BookOpen, Briefcase, CalendarDays, Clock, CreditCard, FileText, Handshake, LifeBuoy, ListChecks, Package, Receipt, ShoppingCart, Truck,
 };
 
 /**

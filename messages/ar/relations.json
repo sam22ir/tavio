@@ -6,14 +6,30 @@
     "contracts": "عقود الائتمان",
     "invoices": "الفواتير",
     "payments": "المدفوعات",
-    "tickets": "التذاكر"
+    "tickets": "التذاكر",
+    "deliveries": "عمليات التسليم"
   },
   "product": {
     "orders": "طلبات البيع",
-    "purchase_orders": "طلبات الشراء"
+    "purchase_orders": "طلبات الشراء",
+    "moves": "حركات المخزون"
   },
   "project": {
     "tasks": "المهام",
     "timesheets": "سجلات الوقت"
+  },
+  "order": {
+    "deliveries": "عمليات التسليم"
+  },
+  "purchase": {
+    "receipts": "عمليات الاستلام"
+  },
+  "credit": {
+    "deliveries": "عمليات التسليم",
+    "moves": "حركات المخزون",
+    "entries": "القيود المحاسبية"
+  },
+  "employee": {
+    "leaves": "طلبات الإجازة"
   }
 }

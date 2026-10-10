@@ -2,6 +2,7 @@
 import { and, count, eq, inArray } from 'drizzle-orm';
 import { relations } from '@/core/relations';
 import { leads } from '@/modules/crm/schema';
+import { deliveries } from '@/modules/inventory/schema';
 import { creditContracts } from '@/modules/credit_sales/schema';
 import { invoicePayments, invoices } from '@/modules/invoicing/schema';
 import { saleOrders } from '@/modules/sales/schema';
@@ -87,4 +88,16 @@ relations.register({
     countOf(ctx.tx.select({ value: count() }).from(tickets)
       .where(and(eq(tickets.companyId, ctx.companyId), eq(tickets.partnerId, id)))),
   href: (locale, id) => `/${locale}/helpdesk/list?f_partnerId=${id}`,
+});
+
+relations.register({
+  id: 'contacts.partner->inventory.delivery',
+  source: 'contacts.partner',
+  labelKey: 'relations.contact.deliveries',
+  icon: 'Truck',
+  perm: 'inventory.delivery.read',
+  count: (ctx, id) =>
+    countOf(ctx.tx.select({ value: count() }).from(deliveries)
+      .where(and(eq(deliveries.companyId, ctx.companyId), eq(deliveries.partnerId, id)))),
+  href: (locale, id) => `/${locale}/inventory/deliveries?f_partnerId=${id}`,
 });

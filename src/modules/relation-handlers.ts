@@ -3,3 +3,7 @@
 import '@/modules/contacts/relations';
 import '@/modules/products/relations';
 import '@/modules/projects/relations';
+import '@/modules/sales/relations';
+import '@/modules/purchases/relations';
+import '@/modules/credit_sales/relations';
+import '@/modules/hr/relations';

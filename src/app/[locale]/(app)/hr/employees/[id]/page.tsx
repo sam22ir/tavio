@@ -1,3 +1,4 @@
+import { RelatedLinks } from '@/ui/views/related-links';
 import Link from 'next/link';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
@@ -66,6 +67,7 @@ export default async function EmployeeDetailPage({
           </Button>
         </form>
       </header>
+      <RelatedLinks source="hr.employee" id={id} />
 
       <section aria-labelledby="employee-edit" className="flex flex-col gap-3">
         <h2 id="employee-edit" className="text-base font-semibold">

@@ -1,3 +1,4 @@
+import { isUuid } from '@/core/relations/uuid';
 import { and, desc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
@@ -376,7 +377,10 @@ export async function sourceDeliveryStatus(
 }
 
 /** Deliveries of the company, newest first, with their line count. */
-export async function listDeliveries(ctx: Ctx, opts: { limit?: number } = {}): Promise<Result<DeliveryRow[]>> {
+export async function listDeliveries(
+  ctx: Ctx,
+  opts: { limit?: number; sourceId?: string; partnerId?: string } = {},
+): Promise<Result<DeliveryRow[]>> {
   const perm = requirePerm(ctx, 'inventory.delivery.read');
   if (!perm.ok) return perm;
   const rows = await ctx.tx
@@ -392,7 +396,11 @@ export async function listDeliveries(ctx: Ctx, opts: { limit?: number } = {}): P
       lineCount: sql<number>`(select count(*)::int from ${deliveryLines} where ${deliveryLines.deliveryId} = ${deliveries.id})`,
     })
     .from(deliveries)
-    .where(eq(deliveries.companyId, ctx.companyId))
+    .where(and(
+      eq(deliveries.companyId, ctx.companyId),
+      isUuid(opts.sourceId) ? eq(deliveries.sourceId, opts.sourceId) : undefined,
+      isUuid(opts.partnerId) ? eq(deliveries.partnerId, opts.partnerId) : undefined,
+    ))
     .orderBy(desc(deliveries.createdAt))
     .limit(opts.limit ?? 100);
   return ok(

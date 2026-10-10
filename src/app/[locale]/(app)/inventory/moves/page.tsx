@@ -9,13 +9,22 @@ import { listMoves } from '@/modules/inventory/service/moves';
 import { Button, buttonVariants } from '@/ui/primitives/button';
 import { cn } from '@/ui/lib/cn';
 
-export default async function MovesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function MovesPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ f_productId?: string; f_sourceId?: string }>;
+}) {
   const { locale } = await params;
+  const { f_productId, f_sourceId } = await searchParams;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('inventory');
   const currentLocale = await getLocale();
-  const result = await withPageCtx((ctx) => listMoves(ctx));
+  const result = await withPageCtx((ctx) =>
+    listMoves(ctx, { productId: f_productId, sourceId: f_sourceId }),
+  );
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
