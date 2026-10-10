@@ -10,8 +10,8 @@ import type { Ctx } from '@/core/ctx';
 import { creditContractLines } from '@/modules/credit_sales/schema';
 import { ensureDefaultWarehouse } from './service/warehouses';
 import { moveLines } from './service/moves';
-import { closeReservations, reserveLines } from './service/reservations';
-import { createDraftDelivery } from './service/deliveries';
+import { closeReservations, releasesContractReservations, reserveLines } from './service/reservations';
+import { cancelOpenDeliveriesForSource, createDraftDelivery } from './service/deliveries';
 
 const CONTRACT_ENTITY = 'credit_sales.contract';
 
@@ -64,14 +64,20 @@ on('pos.order.paid', async (ctx: Ctx, event) => {
 });
 
 // Credit contract workflow. Approved reserves the contract lines, active creates a draft delivery,
-// refused releases the reservations. Each step is idempotent: the services check by source before writing.
+// refused or cancelled releases the reservations, cancelled also cancels the open deliveries.
+// Each step is idempotent: the services check by source before writing.
 on('credit_sales.contract.state_changed', async (ctx: Ctx, event) => {
   const p = event.payload as CreditContractStateChanged;
-  if (p.toState === 'refused') {
+  if (releasesContractReservations(p.toState)) {
     const released = await closeReservations(ctx, { sourceEntity: CONTRACT_ENTITY, sourceId: p.contractId, state: 'released' });
     if (!released.ok) throw new Error(released.error.message);
+  }
+  if (p.toState === 'cancelled') {
+    const cancelled = await cancelOpenDeliveriesForSource(ctx, { sourceEntity: CONTRACT_ENTITY, sourceId: p.contractId });
+    if (!cancelled.ok) throw new Error(cancelled.error.message);
     return;
   }
+  if (p.toState === 'refused') return;
   if (p.toState !== 'approved' && p.toState !== 'active') return;
 
   const lines = await ctx.tx

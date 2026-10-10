@@ -1,4 +1,4 @@
-import { and, desc, eq, ne, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { fileUrl, uploadFile } from '@/core/files/service';
@@ -193,23 +193,31 @@ export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Re
   return ok({ moves: posted.value.created });
 }
 
-/** Cancels a delivery that has not been validated yet. */
-export async function cancelDelivery(ctx: Ctx, deliveryId: string): Promise<Result<void>> {
-  const perm = requirePerm(ctx, 'inventory.delivery.cancel');
-  if (!perm.ok) return perm;
+/** Open deliveries can still be cancelled, signed for or validated. */
+export function isOpenDeliveryState(state: string): boolean {
+  return state === 'draft' || state === 'ready';
+}
 
-  const [delivery] = await ctx.tx
-    .select({ id: deliveries.id, state: deliveries.state })
-    .from(deliveries)
-    .where(and(eq(deliveries.id, deliveryId), eq(deliveries.companyId, ctx.companyId)))
-    .for('update');
-  if (!delivery) return err('NOT_FOUND', 'Delivery not found');
-  if (delivery.state !== 'draft' && delivery.state !== 'ready') return err('CONFLICT', 'Only open deliveries can be cancelled');
-
+/**
+ * Sets one open delivery to cancelled and, when it comes from a source document (e.g. a credit
+ * contract), releases that source's active reservations. Caller checks state and permissions.
+ */
+async function cancelDeliveryRow(
+  ctx: Ctx,
+  delivery: { id: string; state: Delivery['state']; sourceEntity: string | null; sourceId: string | null },
+): Promise<Result<void>> {
   await ctx.tx
     .update(deliveries)
     .set({ state: 'cancelled', updatedAt: sql`now()` })
     .where(eq(deliveries.id, delivery.id));
+  if (delivery.sourceEntity && delivery.sourceId) {
+    const released = await closeReservations(ctx, {
+      sourceEntity: delivery.sourceEntity,
+      sourceId: delivery.sourceId,
+      state: 'released',
+    });
+    if (!released.ok) return released;
+  }
   await audit(ctx, {
     entity: 'inventory.delivery',
     recordId: delivery.id,
@@ -218,6 +226,60 @@ export async function cancelDelivery(ctx: Ctx, deliveryId: string): Promise<Resu
     after: { state: 'cancelled' },
   });
   return ok(undefined);
+}
+
+/** Cancels a delivery that has not been validated yet. Releases its reservations when contract-sourced. */
+export async function cancelDelivery(ctx: Ctx, deliveryId: string): Promise<Result<void>> {
+  const perm = requirePerm(ctx, 'inventory.delivery.cancel');
+  if (!perm.ok) return perm;
+
+  const [delivery] = await ctx.tx
+    .select({
+      id: deliveries.id,
+      state: deliveries.state,
+      sourceEntity: deliveries.sourceEntity,
+      sourceId: deliveries.sourceId,
+    })
+    .from(deliveries)
+    .where(and(eq(deliveries.id, deliveryId), eq(deliveries.companyId, ctx.companyId)))
+    .for('update');
+  if (!delivery) return err('NOT_FOUND', 'Delivery not found');
+  if (!isOpenDeliveryState(delivery.state)) return err('CONFLICT', 'Only open deliveries can be cancelled');
+
+  return cancelDeliveryRow(ctx, { ...delivery, state: delivery.state as Delivery['state'] });
+}
+
+/**
+ * Cancels every open delivery (draft or ready) sourced from a document, e.g. a credit contract
+ * that was cancelled. Releases each cancelled delivery's reservations.
+ * No permission check: called from event handlers.
+ */
+export async function cancelOpenDeliveriesForSource(
+  ctx: Ctx,
+  input: { sourceEntity: string; sourceId: string },
+): Promise<Result<{ cancelled: number }>> {
+  const rows = await ctx.tx
+    .select({
+      id: deliveries.id,
+      state: deliveries.state,
+      sourceEntity: deliveries.sourceEntity,
+      sourceId: deliveries.sourceId,
+    })
+    .from(deliveries)
+    .where(
+      and(
+        eq(deliveries.companyId, ctx.companyId),
+        eq(deliveries.sourceEntity, input.sourceEntity),
+        eq(deliveries.sourceId, input.sourceId),
+        inArray(deliveries.state, ['draft', 'ready']),
+      ),
+    )
+    .for('update');
+  for (const row of rows) {
+    const done = await cancelDeliveryRow(ctx, { ...row, state: row.state as Delivery['state'] });
+    if (!done.ok) return done;
+  }
+  return ok({ cancelled: rows.length });
 }
 
 /** Deliveries of the company, newest first, with their line count. */

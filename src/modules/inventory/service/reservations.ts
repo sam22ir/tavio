@@ -68,6 +68,14 @@ export async function reserveLines(
   return ok({ created });
 }
 
+/** Contract states that give back the stock reserved for the contract. */
+export const CONTRACT_RELEASING_STATES: readonly string[] = ['refused', 'cancelled'];
+
+/** Pure rule: true when a contract moving to this state must release its reservations. */
+export function releasesContractReservations(toState: string): boolean {
+  return CONTRACT_RELEASING_STATES.includes(toState);
+}
+
 /** Moves the active reservations of a source to a new state (released or consumed). Idempotent. */
 export async function closeReservations(
   ctx: Ctx,
