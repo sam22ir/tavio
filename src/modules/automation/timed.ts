@@ -10,7 +10,7 @@ import { RECORD_ENTITIES, timeConfigSchema, type TimeConfig } from './fields';
 import { executeAction, runInSavepoint } from './engine';
 import { automationRuleRuns, automationRules, type AutomationRule } from './schema';
 
-// Records checked per rule per run. Records that do not match the conditions are re-checked the next day.
+// Records fetched per page while scanning a rule. The scan pages until no due records remain.
 export const DUE_LIMIT = 200;
 
 export interface TimedRulesResult {
@@ -48,37 +48,63 @@ async function runTimeRule(ctx: Ctx, rule: AutomationRule): Promise<TimedRulesRe
     return result;
   }
   const action = rule.action as ActionName;
-  const rows = await dueRecords(ctx, rule.id, timeConfig.data);
+  let after: DueCursor | null = null;
 
-  for (const row of rows) {
-    const recordId = String(row.id);
-    const payload = { ...row, id: recordId };
-    if (!matchesConditions(payload, conditions.data)) continue;
-    // Mark the record first, so a failing action is not retried every day.
-    await ctx.tx.insert(automationRuleRuns).values({ companyId: ctx.companyId, ruleId: rule.id, recordId }).onConflictDoNothing();
-    const ok = await runInSavepoint(ctx, (sub) =>
-      executeAction(sub, { name: `time.${timeConfig.data.entity}`, payload }, action, rule.actionConfig),
-    );
-    if (ok) result.fired += 1;
-    else result.failed += 1;
+  // Keyset pagination over oldest-due-first records. Records that do not match the conditions stay
+  // unmarked and are re-checked next run; paging past them means they cannot starve later matches.
+  for (;;) {
+    const rows: DueRow[] = await dueRecords(ctx, rule.id, timeConfig.data, after);
+    for (const row of rows) {
+      const { due_on: dueOn, ...record } = row;
+      after = { dueOn, id: String(record.id) };
+      const recordId = String(record.id);
+      const payload = { ...record, id: recordId };
+      if (!matchesConditions(payload, conditions.data)) continue;
+      // The run row is written inside the same savepoint as the action: a failing action rolls back
+      // the mark, so the record is retried on the next run.
+      const ok = await runInSavepoint(ctx, async (sub) => {
+        const done = await executeAction(sub, { name: `time.${timeConfig.data.entity}`, payload }, action, rule.actionConfig);
+        if (!done) throw new Error('automation action did not take effect');
+        await sub.tx.insert(automationRuleRuns).values({ companyId: ctx.companyId, ruleId: rule.id, recordId }).onConflictDoNothing();
+        return true;
+      });
+      if (ok) result.fired += 1;
+      else result.failed += 1;
+    }
+    if (rows.length < DUE_LIMIT) break;
   }
   return result;
 }
 
-/** Records of the rule's table whose date field plus delay is today or earlier, and that the rule has not fired on. */
-async function dueRecords(ctx: Ctx, ruleId: string, cfg: TimeConfig): Promise<Record<string, unknown>[]> {
+interface DueCursor {
+  dueOn: string;
+  id: string;
+}
+
+type DueRow = Record<string, unknown> & { due_on: string };
+
+/**
+ * Records of the rule's table whose date field plus delay is today or earlier, that the rule has not
+ * already fired on, ordered oldest due first. The cursor (dueOn, id) resumes after the last row seen.
+ */
+async function dueRecords(ctx: Ctx, ruleId: string, cfg: TimeConfig, after: DueCursor | null): Promise<DueRow[]> {
   const spec = RECORD_ENTITIES[cfg.entity];
+  const dueOn = sql`((t.${sql.identifier(cfg.dateField)})::date + ${cfg.delayDays}::int)`;
+  const cursor = after
+    ? sql`and (${dueOn} > ${after.dueOn}::date or (${dueOn} = ${after.dueOn}::date and t.id > ${after.id}::uuid))`
+    : sql``;
   const res = await ctx.tx.execute(sql`
-    select t.* from ${sql.identifier(spec.table)} as t
+    select t.*, (${dueOn})::text as due_on from ${sql.identifier(spec.table)} as t
     where t.company_id = ${ctx.companyId}::uuid
-      and (${sql.identifier('t')}.${sql.identifier(cfg.dateField)})::date + ${cfg.delayDays}::int <= current_date
+      and ${dueOn} <= current_date
       and not exists (
         select 1 from automation_rule_runs r
         where r.company_id = t.company_id and r.rule_id = ${ruleId}::uuid and r.record_id = t.id
       )
-    order by t.id
+      ${cursor}
+    order by due_on asc, t.id asc
     limit ${DUE_LIMIT}`);
-  return res.rows as Record<string, unknown>[];
+  return res.rows as DueRow[];
 }
 
 export interface TimedRunsSummary {
