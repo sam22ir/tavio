@@ -2,6 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getDb } from '@/core/db/client';
 import { companies, users } from '@/core/db/schema';
+import { eq } from 'drizzle-orm';
+import { leads } from '@/modules/crm/schema';
 import { withTenant, type TenantArgs } from '@/core/db/tenant';
 import type { ListQuery } from '@/core/entities/types';
 import { loadDevEnv } from '@/core/env/load-dev-env';
@@ -29,7 +31,8 @@ import {
 loadDevEnv();
 
 // Chatter and credit sales are other modules' stubs in this worktree. Their behaviour is mocked here.
-vi.mock('@/modules/chatter/service', () => ({
+vi.mock('@/modules/chatter/service', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/modules/chatter/service')>()),
   postMessage: vi.fn(async () => ({ ok: true, value: { id: '00000000-0000-4000-8000-000000000001' } })),
 }));
 vi.mock('@/modules/credit_sales/service/contracts', () => ({
@@ -245,6 +248,8 @@ describe('lead visibility setting', () => {
   let ownLead: string;
 
   beforeAll(async () => {
+    // leads.salesperson_id references users, so the reader needs a row.
+    await getDb().insert(users).values({ id: readerId, name: 'CRM Reader', email: `crm-reader-${readerId}@test.invalid` });
     const w = await withTenant(writerArgs, (ctx) => createLead(ctx, { name: 'Writer lead', salespersonId: userId }));
     if (!w.ok) throw new Error(w.error.message);
     writerLead = w.value.id;
@@ -255,6 +260,10 @@ describe('lead visibility setting', () => {
 
   afterAll(async () => {
     await withTenant(writerArgs, (ctx) => setLeadVisibilityRestriction(ctx, false));
+    // Clear the reader's lead references first. The user row stays when audit_log still references it (audit is append-only).
+    const db = getDb();
+    await db.update(leads).set({ salespersonId: null }).where(eq(leads.salespersonId, readerId));
+    await db.delete(users).where(eq(users.id, readerId)).catch(() => undefined);
   });
 
   it('is off by default: a read-only user sees every lead', async () => {

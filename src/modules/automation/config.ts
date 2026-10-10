@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EVENT_NAMES, type EventName } from '@/core/events/catalog';
 import { checkUpdateValue, UPDATE_ENTITIES, type UpdateEntity } from './fields';
 
 // Per-action configuration. Validated when a rule is saved and again before it runs.
@@ -77,3 +78,6 @@ export const actionConfigSchemas = {
 
 export type ActionName = keyof typeof actionConfigSchemas;
 export const ACTION_NAMES = Object.keys(actionConfigSchemas) as ActionName[];
+
+// Client-safe: rule forms import this, so it must not pull in the engine (server-only).
+export const TRIGGER_EVENTS = EVENT_NAMES satisfies readonly EventName[];
