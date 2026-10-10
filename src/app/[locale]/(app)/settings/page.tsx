@@ -8,38 +8,8 @@ import { withTenant } from '@/core/db/tenant';
 import { companies } from '@/core/db/schema';
 import { routing } from '@/i18n/routing';
 import { loadShell } from '@/ui/shell/load-shell';
-
-const FIELDS = [
-  'legalName',
-  'displayName',
-  'nif',
-  'nis',
-  'rc',
-  'ai',
-  'phone',
-  'email',
-  'address',
-  'wilayaCode',
-  'defaultLocale',
-  'timezone',
-  'currencyCode',
-] as const;
-
-const LABEL_KEY: Record<(typeof FIELDS)[number], string> = {
-  legalName: 'legalName',
-  displayName: 'displayName',
-  nif: 'nif',
-  nis: 'nis',
-  rc: 'rc',
-  ai: 'ai',
-  phone: 'phone',
-  email: 'email',
-  address: 'address',
-  wilayaCode: 'wilayaCode',
-  defaultLocale: 'defaultLocale',
-  timezone: 'timezone',
-  currencyCode: 'currency',
-};
+import { fileUrl } from '@/core/files/service';
+import { CompanyForm } from './company-form';
 
 export default async function SettingsPage({
   params,
@@ -59,6 +29,9 @@ export default async function SettingsPage({
     ctx.tx.select().from(companies).where(eq(companies.id, ctx.companyId)).limit(1),
   );
   const company = rows[0];
+  const logoUrl = company?.logoFileId
+    ? await withTenant(shell.tenant, (ctx) => fileUrl(ctx, company.logoFileId as string)).then((r) => (r.ok ? r.value : null))
+    : null;
 
   return (
     <section className="flex flex-col gap-6">
@@ -69,14 +42,23 @@ export default async function SettingsPage({
       <div className="rounded-lg border p-4">
         <h2 className="mb-4 font-medium">{tc('title')}</h2>
         {company ? (
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {FIELDS.map((field) => (
-              <div key={field} className="flex flex-col gap-1">
-                <dt className="text-xs text-muted-foreground">{tc(LABEL_KEY[field])}</dt>
-                <dd className="text-sm">{String(company[field] ?? '—')}</dd>
-              </div>
-            ))}
-          </dl>
+          <CompanyForm
+            values={{
+              legalName: company.legalName,
+              displayName: company.displayName,
+              address: company.address ?? '',
+              wilayaCode: company.wilayaCode ?? '',
+              phone: company.phone ?? '',
+              email: company.email ?? '',
+              nif: company.nif ?? '',
+              nis: company.nis ?? '',
+              rc: company.rc ?? '',
+              ai: company.ai ?? '',
+              rib: company.rib ?? '',
+              ccp: company.ccp ?? '',
+              logoUrl: logoUrl,
+            }}
+          />
         ) : (
           <p className="text-sm text-muted-foreground">{tc('notFound')}</p>
         )}
