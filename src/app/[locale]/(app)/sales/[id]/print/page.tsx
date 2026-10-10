@@ -3,89 +3,63 @@ import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
-import { formatDzd } from '@/core/money';
 import { getSaleOrder } from '@/modules/sales/service/orders';
 import { PrintButton } from '@/modules/sales/ui/print-button';
+import { companyIdentityOf, partnerIdentity } from '@/modules/invoicing/queries';
+import { DocumentLayout } from '@/ui/print/document-layout';
+import { documentLabels } from '@/ui/print/labels';
 
-// Printable quotation. Plain HTML with print styles; the browser prints it to PDF.
+// Printable quotation / sales order on the shared legal layout. The browser prints it to PDF.
 export default async function SaleOrderPrintPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  const t = await getTranslations('sales');
-  const result = await withPageCtx((ctx) => getSaleOrder(ctx, id));
-  if (!result.ok) notFound();
-  const { order, lines, partnerName } = result.value;
-  const money = (v: unknown) => formatDzd(BigInt(String(v ?? '0')), locale as 'fr' | 'ar' | 'en');
+  const data = await withPageCtx(async (ctx) => {
+    const result = await getSaleOrder(ctx, id);
+    if (!result.ok) return null;
+    const [company, buyer] = await Promise.all([
+      companyIdentityOf(ctx),
+      partnerIdentity(ctx, String(result.value.order.partnerId)),
+    ]);
+    if (!company || !buyer) return null;
+    return { ...result.value, company, buyer };
+  });
+  if (!data) notFound();
+  const { order, lines, company, buyer } = data;
+  const t = await getTranslations('print');
+  const isOrder = String(order.state ?? '') === 'confirmed';
 
   return (
-    <article className="mx-auto max-w-3xl bg-white p-6 text-sm text-black print:p-0">
-      <header className="flex flex-wrap justify-between gap-4 border-b pb-4">
-        <div>
-          <h1 className="text-lg font-semibold">{t('title.print')}</h1>
-          <p>{order.number ? String(order.number) : '—'}</p>
-        </div>
-        <div className="text-end">
-          <p>
-            {t('print.date')}: {String(order.orderDate)}
-          </p>
-          {order.validityDate ? (
-            <p>
-              {t('print.validUntil')}: {String(order.validityDate)}
-            </p>
-          ) : null}
-        </div>
-      </header>
-
-      <section className="py-4">
-        <p className="font-medium">{partnerName}</p>
-      </section>
-
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[28rem]">
-          <thead>
-            <tr className="border-b text-start">
-              <th className="py-2 text-start">{t('print.description')}</th>
-              <th className="py-2 text-end">{t('print.quantity')}</th>
-              <th className="py-2 text-end">{t('print.unitPrice')}</th>
-              <th className="py-2 text-end">{t('print.total')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lines.map((l) => (
-              <tr key={String(l.id)} className="border-b">
-                <td className="py-2">{String(l.description)}</td>
-                <td className="py-2 text-end">{String(l.quantity)}</td>
-                <td className="py-2 text-end">{money(l.unitPriceCents)}</td>
-                <td className="py-2 text-end">{money(l.subtotalCents)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <>
+      <DocumentLayout
+        locale={locale as 'fr' | 'ar' | 'en'}
+        labels={documentLabels((k) => t(k))}
+        title={t(isOrder ? 'salesOrder' : 'quote')}
+        number={order.number ? String(order.number) : ''}
+        date={String(order.orderDate)}
+        dueDate={order.validityDate ? String(order.validityDate) : null}
+        company={company}
+        party={buyer}
+        partyRole="buyer"
+        lines={lines.map((l) => ({
+          description: String(l.description),
+          quantity: String(l.quantity),
+          unitPriceCents: BigInt(String(l.unitPriceCents ?? 0)),
+          discountRate: String(l.discountRate ?? '0'),
+          ratePercent: String(Number(l.taxRate ?? 0)),
+          subtotalCents: BigInt(String(l.subtotalCents ?? 0)),
+          taxCents: BigInt(String(l.taxCents ?? 0)),
+        }))}
+        totals={{
+          untaxedCents: BigInt(String(order.untaxedCents ?? 0)),
+          taxCents: BigInt(String(order.taxCents ?? 0)),
+          totalCents: BigInt(String(order.totalCents ?? 0)),
+        }}
+      />
+      <div className="no-print mx-auto max-w-[210mm] p-3">
+        <PrintButton />
       </div>
-
-      <dl className="ms-auto mt-4 grid max-w-xs gap-1">
-        <div className="flex justify-between">
-          <dt>{t('print.untaxed')}</dt>
-          <dd>{money(order.untaxedCents)}</dd>
-        </div>
-        <div className="flex justify-between">
-          <dt>{t('print.vat')}</dt>
-          <dd>{money(order.taxCents)}</dd>
-        </div>
-        <div className="flex justify-between font-semibold">
-          <dt>{t('print.grandTotal')}</dt>
-          <dd>{money(order.totalCents)}</dd>
-        </div>
-      </dl>
-
-      <footer className="mt-8 text-xs text-neutral-600">
-        <p>{t('print.footer')}</p>
-        <div className="mt-4">
-          <PrintButton />
-        </div>
-      </footer>
-    </article>
+    </>
   );
 }

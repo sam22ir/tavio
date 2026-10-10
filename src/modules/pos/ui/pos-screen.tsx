@@ -6,6 +6,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { formatDzd, parseDzd, type Cents } from '@/core/money';
 import { Button } from '@/ui/primitives/button';
+import { TicketLayout } from '@/ui/print/ticket-layout';
+import { ticketLabels } from '@/ui/print/labels';
+import type { CompanyIdentity } from '@/ui/print/document-layout';
 import { Input } from '@/ui/primitives/input';
 import { payOrderAct, type WirePaidOrder } from '../actions';
 import { changeDue, lineAmounts, orderTotals } from '../service/totals';
@@ -26,6 +29,7 @@ interface Receipt {
   totalCents: Cents;
   changeCents: Cents | null;
   lines: { name: string; count: number; lineCents: Cents }[];
+  vatLines: { ratePercent: string; baseCents: Cents; taxCents: Cents }[];
 }
 
 const MILLI_PER_UNIT = BigInt(1000);
@@ -50,11 +54,14 @@ function errorKey(message: string): 'insufficient' | 'invalid' | 'closed' | 'alr
 export function PosScreen({
   sessionId,
   products,
+  company,
 }: {
   sessionId: string;
   products: PosProduct[];
+  company: CompanyIdentity;
 }) {
   const t = useTranslations('pos');
+  const tPrint = useTranslations('print');
   const router = useRouter();
   const locale = useLocale() as 'fr' | 'ar' | 'en';
   const [search, setSearch] = useState('');
@@ -125,6 +132,11 @@ export function PosScreen({
         totalCents: BigInt(done.totalCents),
         changeCents: done.changeCents === null ? null : BigInt(done.changeCents),
         lines: snapshot.map((l) => ({ name: l.name, count: l.count, lineCents: l.lineCents })),
+        vatLines: snapshot.map((l) => ({
+          ratePercent: String(Number(byId.get(l.id)?.taxRate ?? 0)),
+          baseCents: l.subtotalCents,
+          taxCents: l.taxCents,
+        })),
       });
       setCart({});
       setTendered('');
@@ -257,31 +269,19 @@ export function PosScreen({
             <Button type="button" variant="ghost" className="min-h-11" onClick={() => setReceipt(null)}>
               {t('sale.newSale')}
             </Button>
-            <div className="pos-ticket w-full max-w-[80mm] bg-white p-2 font-mono text-[12px] text-black">
-              <p className="text-center font-bold">{t('sale.ticketTitle')}</p>
-              <p>
-                {t('sale.ticketNumber')}: {receipt.number}
-              </p>
-              <ul>
-                {receipt.lines.map((l) => (
-                  <li key={l.name} className="flex justify-between gap-2">
-                    <span>
-                      {l.count} x {l.name}
-                    </span>
-                    <span className="tabular-nums">{money(l.lineCents)}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="flex justify-between font-bold">
-                <span>{t('sale.total')}</span>
-                <span className="tabular-nums">{money(receipt.totalCents)}</span>
-              </p>
-              <p>{t(`sale.payWith.${receipt.method}`)}</p>
-              {receipt.changeCents !== null ? (
-                <p>
-                  {t('sale.change')}: <span className="tabular-nums">{money(receipt.changeCents)}</span>
-                </p>
-              ) : null}
+            <div className="pos-ticket">
+              <TicketLayout
+                locale={locale}
+                labels={ticketLabels((k) => tPrint(k))}
+                company={company}
+                number={receipt.number}
+                date={new Date().toISOString().slice(0, 10)}
+                lines={receipt.lines.map((l) => ({ name: l.name, count: l.count, lineCents: l.lineCents }))}
+                vatLines={receipt.vatLines}
+                totalCents={receipt.totalCents}
+                paymentLabel={t(`sale.payWith.${receipt.method}`)}
+                changeCents={receipt.changeCents}
+              />
             </div>
           </div>
         ) : null}

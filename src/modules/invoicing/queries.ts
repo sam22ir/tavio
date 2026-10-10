@@ -108,3 +108,21 @@ export async function draftLookupsFor(ctx: Ctx, kind: Kind): Promise<DraftLookup
     products: products.map((p) => ({ value: p.id, label: p.name, unitPrice: p.unitPriceCents, defaultTaxId: p.defaultTaxId })),
   };
 }
+
+/** Full legal identity of the selling company, for printed documents. */
+export async function companyIdentityOf(ctx: Ctx) {
+  const [c] = await ctx.tx.select().from(companies).where(eq(companies.id, ctx.companyId));
+  if (!c) return null;
+  return {
+    legalName: c.legalName,
+    address: c.address,
+    wilaya: c.wilayaCode,
+    phone: c.phone,
+    email: c.email,
+    nif: c.nif,
+    nis: c.nis,
+    rc: c.rc,
+    ai: c.ai,
+    logoUrl: null,
+  };
+}
