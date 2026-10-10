@@ -43,7 +43,8 @@
       "instagram": "إنستغرام",
       "whatsapp": "واتساب",
       "referral": "توصية",
-      "other": "أخرى"
+      "other": "أخرى",
+      "website": "الموقع الإلكتروني"
     },
     "status": {
       "open": "مفتوح",
@@ -124,6 +125,7 @@
     "skippedAutomation": "قواعد الأتمتة (الوحدة غير مفعلة)",
     "skippedDocuments": "الوثائق المطلوبة (صلاحية مفقودة)",
     "mourabahaFailed": "فشل تطبيق قالب المرابحة.",
-    "pipelineFilter": "المسار"
+    "pipelineFilter": "المسار",
+    "newQuote": "عرض سعر جديد"
   }
 }

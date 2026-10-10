@@ -10,6 +10,8 @@ import { createSaleOrder, type SaleLineInput } from '@/modules/sales/service/ord
 import { webOrders } from '../schema';
 import { nextOrderState, type WebOrderState } from './rules';
 import type { WebOrderLine } from './orders';
+import type { Tx } from '@/core/db/types';
+import { ownerCtx } from './system-ctx';
 
 // Integrator wiring: this is the only place where a web order reaches the sales service.
 // It runs on the tenant ctx, so every write follows the sales permissions and events.
@@ -130,4 +132,33 @@ async function findOrCreatePartner(
   });
   if (!created.ok) return err(created.error.code, created.error.message, created.error.details);
   return ok(created.value.id);
+}
+
+const AUTO_CONVERT_PERMS = [
+  'website.order.write',
+  'sales.order.read',
+  'sales.order.write',
+  'contacts.partner.read',
+  'contacts.partner.write',
+] as const;
+
+/**
+ * Checkout path when the "create the order automatically" setting is on. Runs inside the checkout
+ * transaction, in a savepoint, so a failed conversion keeps the web order as "new" and does not
+ * fail the checkout. Failures are logged as metadata only.
+ */
+export async function autoConvertWebOrder(tx: Tx, companyId: string, webOrderId: string): Promise<void> {
+  const ctx = await ownerCtx(tx, companyId, 'fr', AUTO_CONVERT_PERMS);
+  if (!ctx) {
+    console.error('auto convert skipped', { reason: 'NO_OWNER' });
+    return;
+  }
+  try {
+    await tx.transaction(async (sp) => {
+      const r = await convertWebOrderToSale({ ...ctx, tx: sp }, webOrderId);
+      if (!r.ok) throw new Error(`convert failed: ${r.error.code}`);
+    });
+  } catch (e) {
+    console.error('auto convert failed', { name: e instanceof Error ? e.name : 'unknown' });
+  }
 }

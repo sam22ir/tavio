@@ -60,6 +60,7 @@ export const leadEntity: EntityDef = {
         { value: 'instagram', label: 'crm.options.source.instagram' },
         { value: 'whatsapp', label: 'crm.options.source.whatsapp' },
         { value: 'referral', label: 'crm.options.source.referral' },
+        { value: 'website', label: 'crm.options.source.website' },
         { value: 'other', label: 'crm.options.source.other' },
       ],
     },

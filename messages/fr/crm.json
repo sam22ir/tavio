@@ -43,7 +43,8 @@
       "instagram": "Instagram",
       "whatsapp": "WhatsApp",
       "referral": "Recommandation",
-      "other": "Autre"
+      "other": "Autre",
+      "website": "Site web"
     },
     "status": {
       "open": "Ouvert",
@@ -124,6 +125,7 @@
     "skippedAutomation": "règles d'automatisation (module non activé)",
     "skippedDocuments": "documents requis (permission manquante)",
     "mourabahaFailed": "Échec de l'application du modèle Mourabaha.",
-    "pipelineFilter": "Pipeline"
+    "pipelineFilter": "Pipeline",
+    "newQuote": "Nouveau devis"
   }
 }

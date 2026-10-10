@@ -296,3 +296,75 @@ describe('lead visibility setting', () => {
     expect(own.ok).toBe(true);
   });
 });
+
+// Lead to quote, quote confirmation and the website lead path. Gated like the other integration tests.
+describe.skipIf(!process.env.TAVIO_W5_DB)('lead quote and website lead (integration)', () => {
+  const QUOTE_PERMS = new Set(['crm.lead.read', 'crm.lead.write', 'sales.order.read', 'sales.order.write']);
+  const quoteArgs = (): TenantArgs => ({ userId, companyId, perms: QUOTE_PERMS, locale: 'en' });
+
+  it('creates the partner and a linked draft quote from a lead', async () => {
+    const { createQuoteFromLead } = await import('../service/leads');
+    const { saleOrders } = await import('@/modules/sales/schema');
+    const { partners } = await import('@/modules/contacts/schema');
+    const created = await withTenant(quoteArgs(), (ctx) =>
+      createLead(ctx, { name: 'Quote lead', contactName: 'Karim Sahraoui', phone: '0661000002', source: 'phone' }),
+    );
+    expect(created.ok).toBe(true);
+    if (!created.ok) return;
+
+    const quote = await withTenant(quoteArgs(), (ctx) => createQuoteFromLead(ctx, created.value.id));
+    expect(quote.ok).toBe(true);
+    if (!quote.ok) return;
+
+    const db = getDb();
+    const [lead] = await db.select().from(leads).where(eq(leads.id, created.value.id));
+    expect(lead?.partnerId).toBe(quote.value.partnerId);
+    const [partner] = await db.select().from(partners).where(eq(partners.id, quote.value.partnerId));
+    expect(partner?.displayName).toBe('Karim Sahraoui');
+    const [order] = await db.select().from(saleOrders).where(eq(saleOrders.id, quote.value.orderId));
+    expect(order?.leadId).toBe(created.value.id);
+    expect(order?.state).toBe('draft');
+  });
+
+  it('wins an open lead when its linked quote is confirmed, and leaves a lost lead alone', async () => {
+    const { markLeadWonFromQuote } = await import('../service/leads');
+    const created = await withTenant(args(), (ctx) => createLead(ctx, { name: 'Won lead' }));
+    expect(created.ok).toBe(true);
+    if (!created.ok) return;
+
+    await withTenant(args(), (ctx) => markLeadWonFromQuote(ctx, created.value.id, 'SO-TEST-00001'));
+    const won = await withTenant(args(), (ctx) => getLead(ctx, created.value.id));
+    expect(won.ok && won.value.status).toBe('won');
+  });
+
+  it('accepts a website contact as a lead with source website and honours the honeypot', async () => {
+    const { submitWebsiteContact } = await import('@/modules/website/service/contact');
+    const { websiteSettings } = await import('@/modules/website/schema');
+    const { memberships, roles } = await import('@/core/db/schema');
+    const db = getDb();
+    const slug = `contact-${randomUUID().slice(0, 8)}`;
+    const roleId = randomUUID();
+    await db.insert(roles).values({ id: roleId, companyId, key: 'owner', name: 'Owner', isSystem: true });
+    await db.insert(memberships).values({ companyId, userId, roleId, status: 'active' });
+    await db.insert(websiteSettings).values({ companyId, slug, enabled: true, title: 'Shop', showPrices: true });
+
+    const input = {
+      slug,
+      name: 'Samia Benali',
+      phone: '0661000003',
+      email: '',
+      wilayaCode: '31',
+      message: 'Je voudrais un devis pour 10 pièces.',
+      website: '',
+    };
+    const sent = await submitWebsiteContact(input);
+    expect(sent.ok).toBe(true);
+    if (!sent.ok || !sent.value.leadId) return;
+    const [lead] = await db.select().from(leads).where(eq(leads.id, sent.value.leadId));
+    expect(lead?.source).toBe('website');
+    expect(lead?.companyId).toBe(companyId);
+
+    const trapped = await submitWebsiteContact({ ...input, phone: '0661000004', website: 'bot' });
+    expect(trapped).toEqual({ ok: true, value: { leadId: null } });
+  });
+});

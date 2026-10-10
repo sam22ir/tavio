@@ -175,7 +175,7 @@ export const leads = pgTable(
     phone: text('phone'),
     email: text('email'),
     wilayaCode: text('wilaya_code'),
-    // walk_in, phone, facebook, instagram, whatsapp, referral, other
+    // walk_in, phone, facebook, instagram, whatsapp, referral, other, website
     source: text('source'),
     pipelineId: uuid('pipeline_id')
       .notNull()
@@ -233,7 +233,7 @@ export const leads = pgTable(
     check('leads_status_check', sql`${t.status} in ('open', 'won', 'lost')`),
     check(
       'leads_source_check',
-      sql`${t.source} is null or ${t.source} in ('walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other')`,
+      sql`${t.source} is null or ${t.source} in ('walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other', 'website')`,
     ),
     check('leads_probability_check', sql`${t.probability} between 0 and 100`),
     check(
