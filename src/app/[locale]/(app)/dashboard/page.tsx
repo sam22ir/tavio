@@ -11,7 +11,9 @@ import { enabledModules } from '@/core/tenancy/service';
 import { formatDzd } from '@/core/money';
 import { loadShell } from '@/ui/shell/load-shell';
 import { AppTiles } from '@/ui/shell/app-tiles';
-import { myOpenActivities, todayIso } from '@/modules/chatter/service';
+import { myOpenActivities } from '@/modules/chatter/service';
+import { MyActivities } from '@/modules/chatter/ui/my-activities';
+import { parseActivityFilter } from '@/modules/chatter/ui/activity-filter';
 import { hasSampleData } from '@/core/demo/sample-data';
 import { SampleDataBanner } from '@/core/demo/sample-data-banner';
 import { GettingStartedChecklist } from '@/core/demo/getting-started-checklist';
@@ -19,21 +21,24 @@ import { tenantForUser } from '@/core/tenancy/tenant-access';
 
 export default async function DashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ activities?: string | string[] }>;
 }) {
   const { locale: rawLocale } = await params;
+  const { activities: rawFilter } = await searchParams;
   if (!hasLocale(routing.locales, rawLocale)) notFound();
   setRequestLocale(rawLocale);
   const locale = rawLocale as Locale;
 
   const shell = await loadShell(locale);
   const t = await getTranslations('shell.dashboard');
-  const tActivity = await getTranslations('chatter.activity');
   const tPillar = await getTranslations('shell.pillars');
   const tAll = await getTranslations();
   const modules = new Set(await enabledModules(shell.active.id));
   const creditOn = modules.has('credit_sales');
+  const crmOn = modules.has('crm');
 
   const tenant = await tenantForUser({ locale, companyId: shell.active.id });
   const sampleActive = tenant.ok ? await hasSampleData(tenant.value) : false;
@@ -59,8 +64,7 @@ export default async function DashboardPage({
     year: 'numeric',
   }).format(new Date());
   const money = (c: bigint) => formatDzd(c, locale);
-  const today = todayIso();
-  const topActivities = activities.slice(0, 5);
+  const activityFilter = parseActivityFilter(typeof rawFilter === 'string' ? rawFilter : undefined);
 
   return (
     <section className="flex flex-col gap-6">
@@ -118,27 +122,45 @@ export default async function DashboardPage({
             </div>
           ) : null}
 
-          <div className="flex min-w-0 flex-col gap-1">
-            <h3 className="text-sm font-semibold">{t('lists.activities')}</h3>
-            {topActivities.length === 0 ? (
-              <p className="py-2 text-sm text-muted-foreground">{tActivity('noActivities')}</p>
+          <div className="min-w-0">
+            <MyActivities limit={5} filter={activityFilter} basePath={`/${locale}/dashboard`} />
+          </div>
+        </div>
+      </section>
+
+      <section className="app-panel flex flex-col gap-5 p-5">
+        <h2 className="text-lg font-semibold">{t('pipeline.title')}</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <KpiTile label={t('pipeline.overdueActivities')} value={String(kpis.overdueActivities)} danger={kpis.overdueActivities > 0} />
+          {crmOn ? (
+            <>
+              <KpiTile label={t('pipeline.withoutActivity')} value={String(kpis.leads.openWithoutActivity)} danger={kpis.leads.openWithoutActivity > 0} />
+              <KpiTile label={t('pipeline.avgDays')} value={kpis.leads.avgDaysInStage.toFixed(1)} />
+              <KpiTile label={t('pipeline.wonThisMonth')} value={String(kpis.leads.wonThisMonth)} />
+              <KpiTile
+                label={t('pipeline.conversion')}
+                value={kpis.leads.conversionRate === null ? '—' : `${Math.round(kpis.leads.conversionRate * 100)}%`}
+              />
+            </>
+          ) : null}
+        </div>
+        {crmOn ? (
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-semibold">{t('pipeline.openByStage')}</h3>
+            {kpis.leads.openByStage.length === 0 ? (
+              <p className="py-2 text-sm text-muted-foreground">{t('pipeline.noStages')}</p>
             ) : (
               <ul className="flex flex-col divide-y">
-                {topActivities.map((a) => {
-                  const overdue = a.dueDate < today;
-                  return (
-                    <li key={a.id} className="flex items-center justify-between gap-3 py-2 text-sm">
-                      <span className="min-w-0 truncate">{a.summary}</span>
-                      <span className={`shrink-0 text-xs tabular-nums ${overdue ? 'font-medium text-destructive' : 'text-muted-foreground'}`}>
-                        {a.dueDate}
-                      </span>
-                    </li>
-                  );
-                })}
+                {kpis.leads.openByStage.map((s) => (
+                  <li key={s.stageId} className="flex items-center justify-between gap-3 py-2 text-sm">
+                    <span className="min-w-0 truncate">{s.name}</span>
+                    <span className="shrink-0 font-semibold tabular-nums">{s.count}</span>
+                  </li>
+                ))}
               </ul>
             )}
           </div>
-        </div>
+        ) : null}
       </section>
 
       <GettingStartedChecklist locale={locale} />
@@ -156,6 +178,15 @@ export default async function DashboardPage({
         )}
       </section>
     </section>
+  );
+}
+
+function KpiTile({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
+  return (
+    <div className="flex flex-col gap-1 rounded-lg border p-4">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className={`text-2xl font-semibold tabular-nums ${danger ? 'text-destructive' : ''}`}>{value}</span>
+    </div>
   );
 }
 

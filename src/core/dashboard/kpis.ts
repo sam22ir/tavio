@@ -3,7 +3,7 @@ import type { Ctx } from '@/core/ctx';
 import { companyModules } from '@/core/db/schema';
 import { creditContracts, creditInstallments, creditPayments } from '@/modules/credit_sales/schema';
 import { leads } from '@/modules/crm/schema';
-import { myOpenActivities, todayIso } from '@/modules/chatter/service';
+import { countOpenActivities } from '@/modules/chatter/service';
 import { scopedLeadCount } from '@/modules/crm/service';
 import { EMPTY_LEAD_KPIS, leadKpis, type LeadKpis } from './lead-kpis';
 
@@ -15,7 +15,7 @@ export interface DashboardKpis {
   collectedThisMonthCents: bigint;
   activeContracts: number;
   openLeads: number;
-  /** Open activities of the current user whose due date has passed. Counts the first 100 open activities. */
+  /** Open activities of the current user whose due date has passed. */
   overdueActivities: number;
   leads: LeadKpis;
 }
@@ -49,8 +49,7 @@ export async function dashboardKpis(ctx: Ctx): Promise<DashboardKpis> {
   const modules = await enabledModuleIds(ctx);
   const kpis: DashboardKpis = { ...ZERO_KPIS };
 
-  const openOverdue = (await myOpenActivities(ctx, 100)).filter((a) => a.dueDate < todayIso());
-  kpis.overdueActivities = openOverdue.length;
+  kpis.overdueActivities = await countOpenActivities(ctx, { overdue: true });
 
   if (modules.has('credit_sales')) {
     const [inst] = await ctx.tx

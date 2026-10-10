@@ -61,7 +61,17 @@
       "due": "Due installments",
       "activities": "Activities"
     },
-    "viewAll": "View all →"
+    "viewAll": "View all →",
+    "pipeline": {
+      "title": "Pipeline",
+      "openByStage": "Open leads by stage",
+      "noStages": "No pipeline stages yet.",
+      "withoutActivity": "Open leads without activity",
+      "avgDays": "Average days in stage",
+      "wonThisMonth": "Won this month",
+      "conversion": "Conversion rate this month",
+      "overdueActivities": "Overdue activities"
+    }
   },
   "pillars": {
     "acquisition": "Acquisition",

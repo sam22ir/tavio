@@ -3,14 +3,15 @@ import Link from 'next/link';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { myOpenActivities, todayIso } from '../service';
 import { entityPath } from './entity-path';
+import {
+  ACTIVITY_FILTERS,
+  DEADLINE_CLASS,
+  deadlineTone,
+  matchesActivityFilter,
+  type ActivityFilter,
+} from './activity-filter';
 
-export const ACTIVITY_FILTERS = ['all', 'today', 'overdue', 'planned'] as const;
-export type ActivityFilter = (typeof ACTIVITY_FILTERS)[number];
-
-/** Anything else falls back to 'all'. */
-export function parseActivityFilter(raw: string | undefined): ActivityFilter {
-  return (ACTIVITY_FILTERS as readonly string[]).includes(raw ?? '') ? (raw as ActivityFilter) : 'all';
-}
+export { parseActivityFilter, type ActivityFilter } from './activity-filter';
 
 // Server component: the current user's open activities, overdue first. `filter` narrows the list by
 // due date; the filter links point to `basePath?activities=<filter>`.
@@ -28,18 +29,16 @@ export async function MyActivities({
   const rows = await withPageCtx((ctx) => myOpenActivities(ctx, 100));
   const today = todayIso();
 
-  const counts = {
+  const counts: Record<ActivityFilter, number> = {
     all: rows.length,
-    today: rows.filter((r) => r.dueDate === today).length,
-    overdue: rows.filter((r) => r.dueDate < today).length,
-    planned: rows.filter((r) => r.dueDate > today).length,
+    today: rows.filter((r) => matchesActivityFilter('today', r.dueDate, today)).length,
+    overdue: rows.filter((r) => matchesActivityFilter('overdue', r.dueDate, today)).length,
+    planned: rows.filter((r) => matchesActivityFilter('planned', r.dueDate, today)).length,
   };
-  const matches = (dueDate: string): boolean =>
-    filter === 'today' ? dueDate === today : filter === 'overdue' ? dueDate < today : filter === 'planned' ? dueDate > today : true;
 
   // Overdue first; the query already orders by due date, so a stable sort keeps that order within each group.
   const sorted = rows
-    .filter((r) => matches(r.dueDate))
+    .filter((r) => matchesActivityFilter(filter, r.dueDate, today))
     .sort((a, b) => Number(b.dueDate < today) - Number(a.dueDate < today))
     .slice(0, limit);
 
@@ -67,20 +66,14 @@ export async function MyActivities({
       ) : (
         <ul className="flex flex-col gap-2">
           {sorted.map((r) => {
-            const overdue = r.dueDate < today;
-            const isToday = r.dueDate === today;
-            const deadlineClass = overdue
-              ? 'font-medium text-red-600 dark:text-red-400'
-              : isToday
-                ? 'font-medium text-amber-600 dark:text-amber-400'
-                : 'text-emerald-600 dark:text-emerald-400';
+            const tone = deadlineTone(r.dueDate, today);
             const href = entityPath(r.entity, r.recordId);
             const body = (
               <>
                 <span className="text-sm font-medium">{r.summary}</span>
                 <span className="text-xs text-muted-foreground">{tt(r.typeName)}</span>
-                <span className={`text-xs ${deadlineClass}`}>
-                  {overdue ? t('overdue') + ' · ' : isToday ? t('dueToday') + ' · ' : ''}
+                <span className={`text-xs ${DEADLINE_CLASS[tone]}`}>
+                  {tone === 'overdue' ? t('overdue') + ' · ' : tone === 'today' ? t('dueToday') + ' · ' : ''}
                   {t('dueOn', { date: r.dueDate })}
                 </span>
               </>
