@@ -44,7 +44,7 @@ export default async function PurchaseOrderDetailPage({
       </main>
     );
   }
-  const { order, partnerName, lines } = result.value;
+  const { order, partnerName, lines, bills } = result.value;
   const anyReceived = lines.some((l) => (parseQty(l.receivedQty) ?? BigInt(0)) > BigInt(0));
   const dateFmt = new Intl.DateTimeFormat(currentLocale, { dateStyle: 'medium', timeZone: 'Africa/Algiers' });
 
@@ -84,7 +84,7 @@ export default async function PurchaseOrderDetailPage({
             <Button type="submit" className="min-h-11">{t('order.actions.confirm')}</Button>
           </form>
         ) : null}
-        {canBill(order.state, order.billed) ? (
+        {canBill(order.state, lines) ? (
           <form action={createBillForm}>
             <input type="hidden" name="id" value={id} />
             <Button type="submit" variant="outline" className="min-h-11">{t('order.actions.bill')}</Button>
@@ -105,6 +105,7 @@ export default async function PurchaseOrderDetailPage({
               <th className="p-3 text-start">{t('fields.description')}</th>
               <th className="p-3 text-end">{t('fields.quantity')}</th>
               <th className="p-3 text-end">{t('fields.received')}</th>
+              <th className="p-3 text-end">{t('fields.billed')}</th>
               <th className="p-3 text-end">{t('fields.unitPrice')}</th>
               <th className="p-3 text-end">{t('fields.total')}</th>
             </tr>
@@ -115,6 +116,7 @@ export default async function PurchaseOrderDetailPage({
                 <td className="p-3">{l.description}</td>
                 <td className="p-3 text-end tabular-nums">{l.quantity}</td>
                 <td className="p-3 text-end tabular-nums">{l.receivedQty}</td>
+                <td className="p-3 text-end tabular-nums">{l.billedQty}</td>
                 <td className="p-3 text-end tabular-nums">{formatDzd(l.unitPriceCents, currentLocale)}</td>
                 <td className="p-3 text-end tabular-nums">{formatDzd(l.subtotalCents + l.taxCents, currentLocale)}</td>
               </tr>
@@ -131,6 +133,40 @@ export default async function PurchaseOrderDetailPage({
         <dt className="font-medium">{t('fields.total')}</dt>
         <dd className="text-end font-medium tabular-nums">{formatDzd(order.totalCents, currentLocale)}</dd>
       </dl>
+
+      <section className="flex flex-col gap-3 rounded-md border p-4">
+        <h2 className="text-base font-medium">{t('bills.title')}</h2>
+        {bills.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t('bills.empty')}</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[28rem] text-sm">
+              <thead className="text-start text-muted-foreground">
+                <tr>
+                  <th className="p-2 text-start">{t('bills.number')}</th>
+                  <th className="p-2 text-start">{t('bills.date')}</th>
+                  <th className="p-2 text-start">{t('bills.state')}</th>
+                  <th className="p-2 text-end">{t('bills.amount')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bills.map((b) => (
+                  <tr key={b.id} className="border-t">
+                    <td className="p-2">
+                      <Link href={`/${currentLocale}/invoicing/vendors/${b.id}`} className="text-primary hover:underline">
+                        {b.number ?? t('bills.draftNumber')}
+                      </Link>
+                    </td>
+                    <td className="p-2 tabular-nums">{dateFmt.format(new Date(`${b.date}T00:00:00Z`))}</td>
+                    <td className="p-2">{t(`bills.states.${b.state}`)}</td>
+                    <td className="p-2 text-end tabular-nums">{formatDzd(b.totalCents, currentLocale)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
       {canReceive(order.state) ? (
         <section className="flex flex-col gap-3 rounded-md border p-4">

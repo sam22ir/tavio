@@ -38,7 +38,8 @@
     "unitPrice": "Unit price (DZD)",
     "tax": "Tax",
     "untaxed": "Untaxed",
-    "total": "Total"
+    "total": "Total",
+    "billed": "Billed"
   },
   "form": {
     "choose": "Choose a supplier",
@@ -69,5 +70,19 @@
     "sequence": "Priority",
     "add": "Add or update a supplier",
     "save": "Save"
+  },
+  "bills": {
+    "title": "Vendor bills",
+    "empty": "No vendor bill yet.",
+    "number": "Number",
+    "date": "Date",
+    "state": "Status",
+    "amount": "Amount (DZD)",
+    "draftNumber": "Draft",
+    "states": {
+      "draft": "Draft",
+      "posted": "Posted",
+      "cancelled": "Cancelled"
+    }
   }
 }
