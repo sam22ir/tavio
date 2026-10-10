@@ -63,6 +63,8 @@ on('invoicing.invoice.posted', async (ctx, event) => {
       taxCents: bigOrZero(p.taxCents),
       stampCents: bigOrZero(p.stampCents),
       totalCents: bigOrZero(p.totalCents),
+      withholdingCents: bigOrZero(p.withholdingCents ?? '0'),
+      withholdingAccountCode: p.withholdingAccountCode,
       stockedUntaxedCents,
     }),
   });

@@ -320,5 +320,45 @@
       "balance": "Solde invalide.",
       "amount": "Montant invalide."
     }
+  },
+  "statements": {
+    "bilan": {
+      "ACT_INC": "actif",
+      "ACT_CORP": "actif",
+      "ACT_FIN": "actif",
+      "ACT_AMORT": "actif",
+      "ACT_STOCK": "actif",
+      "ACT_CREANCES": "actif",
+      "ACT_TRESO": "actif",
+      "ACT_OTHER": "actif",
+      "PAS_CAP": "passif",
+      "PAS_RESULT": "passif",
+      "PAS_DETTES_FIN": "passif",
+      "PAS_FOURN": "passif",
+      "PAS_FISC": "passif",
+      "PAS_AUTRES": "passif",
+      "PAS_OTHER": "passif"
+    },
+    "tcr": {
+      "TCR_VENTES": "Ventes et produits annexes",
+      "TCR_VAR_STOCK_PROD": "Variation des stocks de produits",
+      "TCR_PROD_IMMO": "Production immobilisée",
+      "TCR_SUBV": "Subventions d’exploitation",
+      "TCR_AUTRES_PROD_OP": "Autres produits opérationnels",
+      "TCR_PROD_FIN": "Produits financiers",
+      "TCR_REPRISES": "Reprises sur pertes de valeur et provisions",
+      "TCR_PROD_EXC": "Produits exceptionnels",
+      "TCR_TRANSFERTS": "Transferts de charges",
+      "TCR_ACHATS": "Achats consommés",
+      "TCR_VAR_STOCK": "Variation des stocks (charges)",
+      "TCR_SERV_EXT": "Services extérieurs et autres consommations",
+      "TCR_IMPOTS": "Impôts, taxes et versements assimilés",
+      "TCR_PERSONNEL": "Charges de personnel",
+      "TCR_AUTRES_CHARGES_OP": "Autres charges opérationnelles",
+      "TCR_CHARGES_FIN": "Charges financières",
+      "TCR_CHARGES_EXC": "Charges exceptionnelles",
+      "TCR_DOTATIONS": "Dotations aux amortissements et provisions",
+      "TCR_IMPOTS_RES": "Impôts sur le résultat"
+    }
   }
 }

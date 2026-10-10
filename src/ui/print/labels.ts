@@ -7,7 +7,7 @@ export type PrintTranslator = (key: string) => string;
 const DOC_KEYS = [
   'seller', 'buyer', 'nif', 'nis', 'rc', 'ai', 'address', 'phone', 'email', 'wilaya', 'number', 'date', 'dueDate',
   'description', 'qty', 'unit', 'discount', 'vatRate', 'vat', 'base', 'stampDuty', 'totalHt', 'totalTtc',
-  'totalInWords', 'paid', 'balance', 'page', 'legal', 'verify',
+  'totalInWords', 'paid', 'balance', 'page', 'legal', 'verify', 'withholding', 'netPayable',
 ] as const;
 
 export function documentLabels(t: PrintTranslator): DocumentLabels {

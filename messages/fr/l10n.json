@@ -120,6 +120,7 @@
     "print_deductible": "TVA déductible",
     "print_net": "TVA à payer",
     "print_stamp": "Timbre fiscal (445)",
+    "print_withholding": "Retenue à la source (447), à vérifier",
     "print_accounts": "Calculé à partir des écritures validées : 4457 (collectée), 4456 (déductible), 445 (timbre).",
     "print_verify": "Montants indicatifs. Vérifiez-les avant toute déclaration."
   }

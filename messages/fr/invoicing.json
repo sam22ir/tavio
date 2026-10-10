@@ -32,7 +32,9 @@
     "discount": "Remise %",
     "tax": "TVA",
     "noTax": "Sans TVA",
-    "submit": "Créer le brouillon"
+    "submit": "Créer le brouillon",
+    "withholding": "Retenue à la source",
+    "noWithholding": "Aucune retenue"
   },
   "type": {
     "out_invoice": "Facture",
@@ -82,7 +84,9 @@
     "payments": "Paiements",
     "noPayments": "Aucun paiement.",
     "edit": "Modifier",
-    "printReceipt": "Reçu"
+    "printReceipt": "Reçu",
+    "withholding": "Retenue à la source",
+    "netPayable": "Net à payer"
   },
   "error": {
     "VALIDATION": "Données invalides.",
@@ -124,6 +128,8 @@
     "tax": "TVA",
     "total": "Total TTC",
     "save": "Enregistrer le brouillon",
-    "editTitle": "Modifier le brouillon"
+    "editTitle": "Modifier le brouillon",
+    "withholding": "Retenue à la source",
+    "netPayable": "Net à payer"
   }
 }

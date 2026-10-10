@@ -7,8 +7,8 @@ import { accounts, journalEntries, journalLines, journals } from '../schema';
 import { accountTotals, type DateRange } from './reports';
 import {
   AGING_BUCKETS,
-  BILAN_LINES,
-  TCR_LINES,
+  type BilanLine,
+  type TcrLine,
   bilanAt,
   grandLivreWithOpening,
   partnerAging,
@@ -39,6 +39,9 @@ export interface ExportLabels {
   bilanPassif: string;
   tcrProduits: string;
   tcrCharges: string;
+  /** SCF bilan and TCR line names in the report locale. Falls back to the French constants when missing. */
+  bilanLine: (key: BilanLine) => string;
+  tcrLine: (key: TcrLine) => string;
   agingBuckets: Record<(typeof AGING_BUCKETS)[number], string>;
 }
 
@@ -162,8 +165,8 @@ export async function bilanTable(ctx: Ctx, asOf: string, l: ExportLabels): Promi
   const bilan = await bilanAt(ctx, asOf);
   return {
     rows: [
-      ...bilan.actif.map((x) => ({ section: l.bilanActif, line: BILAN_LINES[x.key], amount: x.amountCents })),
-      ...bilan.passif.map((x) => ({ section: l.bilanPassif, line: BILAN_LINES[x.key], amount: x.amountCents })),
+      ...bilan.actif.map((x) => ({ section: l.bilanActif, line: l.bilanLine(x.key), amount: x.amountCents })),
+      ...bilan.passif.map((x) => ({ section: l.bilanPassif, line: l.bilanLine(x.key), amount: x.amountCents })),
     ],
     columns: [text('section', l.section), text('line', l.line), money('amount', l.amount)],
   };
@@ -173,8 +176,8 @@ export async function tcrTable(ctx: Ctx, range: DateRange, l: ExportLabels): Pro
   const tcr = await tcrFor(ctx, range);
   return {
     rows: [
-      ...tcr.produits.map((x) => ({ section: l.tcrProduits, line: TCR_LINES[x.key].label, amount: x.amountCents })),
-      ...tcr.charges.map((x) => ({ section: l.tcrCharges, line: TCR_LINES[x.key].label, amount: x.amountCents })),
+      ...tcr.produits.map((x) => ({ section: l.tcrProduits, line: l.tcrLine(x.key), amount: x.amountCents })),
+      ...tcr.charges.map((x) => ({ section: l.tcrCharges, line: l.tcrLine(x.key), amount: x.amountCents })),
     ],
     columns: [text('section', l.section), text('line', l.line), money('amount', l.amount)],
   };

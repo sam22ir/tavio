@@ -35,12 +35,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   const t = await getTranslations({ locale, namespace: 'accounting.export' });
   const ta = await getTranslations({ locale, namespace: 'accounting.reports.aging' });
+  const ts = await getTranslations({ locale, namespace: 'accounting.statements' });
   const labels: ExportLabels = {
     entryDate: t('entryDate'), entryNumber: t('entryNumber'), journal: t('journal'), state: t('state'), ref: t('ref'),
     account: t('account'), accountName: t('accountName'), partner: t('partner'), label: t('label'), debit: t('debit'),
     credit: t('credit'), balance: t('balance'), opening: t('opening'), closing: t('closing'), movement: t('movement'),
     line: t('line'), amount: t('amount'), section: t('section'), bilanActif: t('bilanActif'), bilanPassif: t('bilanPassif'),
     tcrProduits: t('tcrProduits'), tcrCharges: t('tcrCharges'),
+    bilanLine: (key) => ts(`bilan.${key}`),
+    tcrLine: (key) => ts(`tcr.${key}`),
     agingBuckets: { '0-30': ta('0-30'), '31-60': ta('31-60'), '61-90': ta('61-90'), '90+': ta('90+') },
   };
 

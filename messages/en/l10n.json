@@ -120,6 +120,7 @@
     "print_deductible": "VAT deductible",
     "print_net": "VAT payable",
     "print_stamp": "Stamp duty (445)",
+    "print_withholding": "Withholding tax (447), to verify",
     "print_accounts": "Computed from posted entries: 4457 (collected), 4456 (deductible), 445 (stamp duty).",
     "print_verify": "Indicative amounts. Verify before any filing."
   }

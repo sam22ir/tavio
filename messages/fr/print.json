@@ -20,6 +20,8 @@
   "vat": "TVA",
   "base": "base HT",
   "stampDuty": "Droit de timbre",
+  "withholding": "Retenue à la source",
+  "netPayable": "Net à payer",
   "totalHt": "Total HT",
   "totalTtc": "Total TTC",
   "totalInWords": "Arrêté à la somme de",

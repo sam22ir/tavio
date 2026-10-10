@@ -4,7 +4,7 @@ import { formatDzd, type Cents } from '@/core/money';
 import type { Invoice, InvoiceLine, InvoicePayment } from '../schema';
 import { cancelInvoiceForm, postInvoiceForm, refundInvoiceForm, registerPaymentForm } from '../actions';
 import { PAYMENT_METHODS } from '../service/invoices';
-import { formatPercent, hasLineDiscount } from '../service/math';
+import { formatPercent, hasLineDiscount, netPayableCents, residualPayableCents } from '../service/math';
 
 type T = (key: string) => string;
 export type Kind = 'customers' | 'vendors';
@@ -64,7 +64,9 @@ export function InvoiceDetail({
   error?: string; partnerName: string; sellerLabel?: string;
 }) {
   const fmt = (c: Cents) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
-  const residual = invoice.totalCents - invoice.paidCents;
+  // Retenue à la source reduces what is payable to the supplier. ⚠ needs accountant verification
+  const netPayable = netPayableCents(invoice.totalCents, invoice.withholdingCents);
+  const residual = residualPayableCents(netPayable, invoice.paidCents);
   const kindHref = `/${locale}/invoicing/${kind}`;
   const isDraft = invoice.state === 'draft';
   const isPosted = invoice.state === 'posted';
@@ -111,6 +113,12 @@ export function InvoiceDetail({
         <dt>{t('detail.tax')}</dt><dd className="text-end">{fmt(invoice.taxCents)}</dd>
         <dt>{t('detail.stamp')}</dt><dd className="text-end">{fmt(invoice.stampCents)}</dd>
         <dt className="font-semibold">{t('detail.total')}</dt><dd className="text-end font-semibold">{fmt(invoice.totalCents)}</dd>
+        {invoice.withholdingCents > BigInt(0) ? (
+          <>
+            <dt>{t('detail.withholding')}</dt><dd className="text-end">{fmt(invoice.withholdingCents)}</dd>
+            <dt className="font-semibold">{t('detail.netPayable')}</dt><dd className="text-end font-semibold">{fmt(netPayable)}</dd>
+          </>
+        ) : null}
         <dt>{t('detail.paid')}</dt><dd className="text-end">{fmt(invoice.paidCents)}</dd>
         <dt>{t('detail.residual')}</dt><dd className="text-end">{fmt(residual)}</dd>
       </dl>

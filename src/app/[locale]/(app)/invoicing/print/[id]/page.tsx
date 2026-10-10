@@ -49,6 +49,7 @@ export default async function InvoicePrintPage({ params }: { params: Promise<{ l
         taxCents: invoice.taxCents,
         stampCents: invoice.stampCents,
         totalCents: invoice.totalCents,
+        withholdingCents: invoice.withholdingCents,
         paidCents: invoice.paidCents,
       }}
     />

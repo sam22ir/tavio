@@ -8,7 +8,8 @@ import { err, ok, type Result } from '@/core/result';
 import { invoiceLines, invoicePayments, invoices, type Invoice, type InvoiceLine } from '../schema';
 import { insertDraft, today, type NewInvoice } from './create';
 import { assertPeriodOpen, getL10nSettings, loadStampTiers } from '@/modules/l10n_dz';
-import { paymentStateFor, stampDutyCents } from './math';
+import { netPayableCents, paymentStateFor, residualPayableCents, stampDutyCents } from './math';
+import { taxes } from '@/modules/l10n_dz/schema';
 
 export const PAYMENT_METHODS = ['cash', 'ccp', 'transfer', 'cib', 'edahabia', 'cheque'] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
@@ -46,6 +47,16 @@ export async function postInvoice(ctx: Ctx, id: string): Promise<Result<{ number
   const open = await assertPeriodOpen(ctx, invoice.date);
   if (!open.ok) return open;
 
+  // Retenue à la source: the withheld amount is credited to the tax's purchase account (447 by default). ⚠ needs accountant verification
+  let withholdingAccountCode: string | null = null;
+  if (invoice.withholdingTaxId) {
+    const [wt] = await ctx.tx
+      .select({ purchaseAccountCode: taxes.purchaseAccountCode })
+      .from(taxes)
+      .where(and(eq(taxes.companyId, ctx.companyId), eq(taxes.id, invoice.withholdingTaxId)));
+    withholdingAccountCode = wt?.purchaseAccountCode ?? null;
+  }
+
   const numbering = NUMBERING[invoice.type]!;
   const number = await nextNumber(ctx, numbering.code, { prefix: numbering.prefix, padding: 5 });
   await ctx.tx
@@ -73,6 +84,9 @@ export async function postInvoice(ctx: Ctx, id: string): Promise<Result<{ number
     taxCents: invoice.taxCents.toString(),
     stampCents: invoice.stampCents.toString(),
     totalCents: invoice.totalCents.toString(),
+    ...(invoice.withholdingCents > BigInt(0)
+      ? { withholdingCents: invoice.withholdingCents.toString(), withholdingAccountCode: withholdingAccountCode ?? '447' }
+      : {}),
     taxLines: [...groups.values()].map((g) => ({
       taxId: g.taxId,
       ratePercent: g.ratePercent,
@@ -124,6 +138,7 @@ export async function createRefund(ctx: Ctx, invoiceId: string): Promise<Result<
     origin: invoice.number ?? undefined,
     sourceEntity: 'invoicing.invoice',
     sourceId: invoice.id,
+    withholdingTaxId: invoice.withholdingTaxId,
     lines: lines.map((l) => ({
       productId: l.productId,
       description: l.description,
@@ -160,13 +175,15 @@ export async function registerPayment(ctx: Ctx, invoiceId: string, input: Paymen
     stamp = stampDutyCents(input.amountCents, await loadStampTiers(ctx));
     total += stamp;
   }
-  const residual = total - invoice.paidCents;
+  // Payments are capped at the net payable: the gross total less the withholding (retenue à la source).
+  const payable = netPayableCents(total, invoice.withholdingCents);
+  const residual = residualPayableCents(payable, invoice.paidCents);
   if (input.amountCents > residual) {
     return err('VALIDATION', 'amount exceeds residual', { field: 'amountCents', residual: residual.toString() });
   }
 
   const paid = invoice.paidCents + input.amountCents;
-  const state = paymentStateFor(paid, total);
+  const state = paymentStateFor(paid, payable);
   const [pay] = await ctx.tx
     .insert(invoicePayments)
     .values({
