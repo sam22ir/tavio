@@ -293,6 +293,27 @@ export async function createAccount(ctx: Ctx, input: AccountInput): Promise<Resu
   return ok({ id: row.id });
 }
 
+export interface AccountUpsert {
+  code: string;
+  name: string;
+  type: AccountType;
+  reconcilable?: boolean;
+}
+
+/** Creates the account, or updates its name and type when the code exists. Never deletes. */
+export async function upsertAccount(ctx: Ctx, input: AccountUpsert): Promise<Result<{ id: string; created: boolean }>> {
+  const [existing] = await ctx.tx
+    .select({ id: accounts.id })
+    .from(accounts)
+    .where(and(eq(accounts.companyId, ctx.companyId), eq(accounts.code, input.code)));
+  if (!existing) {
+    const created = await createAccount(ctx, { code: input.code, name: input.name, type: input.type, reconcilable: input.reconcilable ?? false });
+    return created.ok ? ok({ id: created.value.id, created: true }) : created;
+  }
+  const updated = await updateAccount(ctx, existing.id, { name: input.name, type: input.type });
+  return updated.ok ? ok({ id: existing.id, created: false }) : updated;
+}
+
 /** Edits an account. Changing the type is refused once the account has journal lines, since reports depend on it. */
 export async function updateAccount(ctx: Ctx, accountId: string, patch: AccountPatch): Promise<Result<{ id: string }>> {
   const [acc] = await ctx.tx

@@ -43,6 +43,28 @@
     "status_duplicate": "Duplicate",
     "failed": "Import failed.",
     "error_column": "error",
-    "uom_default": "Default unit of measure: the first one in the list."
+    "uom_default": "Default unit of measure: the first one in the list.",
+    "template": "CSV template",
+    "dup_key_none": "— (no duplicate check)",
+    "opening_unbalanced": "The opening balances do not balance (difference: {difference} DZD). Nothing was imported.",
+    "f": {
+      "productCode": "Product code (SKU)",
+      "warehouseCode": "Warehouse code",
+      "quantity": "Quantity",
+      "unitCost": "Unit cost (DZD)",
+      "code": "Account code",
+      "label": "Label",
+      "parent": "Parent account",
+      "type": "Type",
+      "accountCode": "Account code",
+      "partner": "Partner (name, phone or NIF)",
+      "debit": "Debit (DZD)",
+      "credit": "Credit (DZD)",
+      "orderRef": "Quote ref",
+      "customer": "Customer (name, phone or NIF)",
+      "unitPrice": "Unit price (DZD)",
+      "discount": "Discount (%)",
+      "date": "Date"
+    }
   }
 }

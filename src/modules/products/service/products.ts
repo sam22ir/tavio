@@ -324,3 +324,12 @@ export async function productSkuKeys(ctx: Ctx): Promise<Set<string>> {
   for (const r of rows) if (r.sku) keys.add(`sku:${r.sku}`);
   return keys;
 }
+
+/** Product with this SKU in the company, for CSV imports. Returns null when none. */
+export async function findProductBySku(ctx: Ctx, sku: string): Promise<{ id: string; name: string } | null> {
+  const [row] = await ctx.tx
+    .select({ id: products.id, name: products.name })
+    .from(products)
+    .where(and(eq(products.companyId, ctx.companyId), eq(products.sku, sku)));
+  return row ?? null;
+}
