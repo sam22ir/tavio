@@ -6,7 +6,8 @@ import { routing } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd } from '@/core/money';
 import { ensureDefaults } from '@/modules/accounting/service/chart';
-import { generalLedger, g50Draft, partnerBalances, trialBalance } from '@/modules/accounting/service/reports';
+import { g50Draft, partnerBalances } from '@/modules/accounting/service/reports';
+import { partnerAging, statementsWithComparison, trialBalanceWithOpening, grandLivreWithOpening, AGING_BUCKETS } from '@/modules/accounting/service/statements';
 import { Input } from '@/ui/primitives/input';
 import { Label } from '@/ui/primitives/label';
 import { Button } from '@/ui/primitives/button';
@@ -15,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 type Search = Record<string, string | string[] | undefined>;
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
-const REPORTS = ['trial', 'ledger', 'partners', 'g50'] as const;
+const REPORTS = ['trial', 'ledger', 'partners', 'bilan', 'tcr', 'aging', 'g50'] as const;
 type ReportKey = (typeof REPORTS)[number];
 
 export default async function ReportsPage({
@@ -42,14 +43,24 @@ export default async function ReportsPage({
   const fmt = (c: bigint) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
   const base = `/${currentLocale}/accounting/reports`;
 
+  const asOf = to ?? new Date().toISOString().slice(0, 10);
+  const yearStart = from ?? `${asOf.slice(0, 4)}-01-01`;
+  const shiftYear = (d: string, years: number) => `${String(Number(d.slice(0, 4)) + years)}${d.slice(4)}`;
+  const comparison = { start: shiftYear(yearStart, -1), end: shiftYear(asOf, -1) };
+
   const data = await withPageCtx(async (ctx) => {
     await ensureDefaults(ctx);
-    if (report === 'trial') return { kind: 'trial' as const, value: await trialBalance(ctx, { from, to }) };
+    if (report === 'trial') return { kind: 'trial' as const, value: await trialBalanceWithOpening(ctx, { from, to }) };
     if (report === 'ledger') {
       if (!account) return { kind: 'ledger' as const, value: null };
-      const res = await generalLedger(ctx, account, { from, to });
+      const res = await grandLivreWithOpening(ctx, account, { from, to });
       return { kind: 'ledger' as const, value: res.ok ? res.value : null };
     }
+    if (report === 'bilan' || report === 'tcr') {
+      const stmts = await statementsWithComparison(ctx, { start: yearStart, end: asOf }, comparison);
+      return { kind: report, value: stmts };
+    }
+    if (report === 'aging') return { kind: 'aging' as const, value: await partnerAging(ctx, asOf, '411') };
     if (report === 'partners') {
       const acc = account === '401' ? '401' : '411';
       return { kind: 'partners' as const, value: await partnerBalances(ctx, acc, { from, to }) };
@@ -57,9 +68,22 @@ export default async function ReportsPage({
     return { kind: 'g50' as const, value: await g50Draft(ctx, year, month) };
   });
 
+  const exportHref = `/${currentLocale}/accounting/reports/export?from=${yearStart}&to=${asOf}`;
+  const singleKind = ({ trial: 'balance', ledger: 'ledger', bilan: 'bilan', tcr: 'tcr', aging: 'aging' } as Record<string, string>)[report];
+  const singleHref = singleKind
+    ? `/${currentLocale}/accounting/reports/export?report=${singleKind}&from=${yearStart}&to=${asOf}${singleKind === 'ledger' && account ? `&account=${account}` : ''}`
+    : null;
+
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('reports.title')}</h1>
+      <a href={exportHref} className="w-fit rounded-md border px-3 py-1.5 text-sm">{t('reports.export')}</a>
+      {singleHref ? (
+        <div className="flex flex-wrap gap-2 text-sm">
+          <a href={`${singleHref}&format=xlsx`} className="rounded-md border px-3 py-1.5">{t('reports.exportXlsx')}</a>
+          <a href={`${singleHref}&format=csv&sep=;`} className="rounded-md border px-3 py-1.5">{t('reports.exportCsv')}</a>
+        </div>
+      ) : null}
       <nav className="flex flex-wrap gap-2">
         {REPORTS.map((r) => (
           <Link key={r} href={`${base}?report=${r}`} className={`rounded-md border px-3 py-1.5 text-sm ${r === report ? 'bg-muted font-medium' : ''}`}>
@@ -206,6 +230,97 @@ export default async function ReportsPage({
           <p role="note" className="text-sm">{t('reports.g50.verify')}</p>
         </div>
       ) : null}
+      {data.kind === 'bilan' ? (
+        <div className="grid gap-6 md:grid-cols-2">
+          {(['actif', 'passif'] as const).map((side) => (
+            <div key={side} className="overflow-x-auto">
+              <h2 className="mb-2 font-medium">{t(`reports.bilan.${side}`)}</h2>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('fields.name')}</TableHead>
+                    <TableHead className="text-end">{t('reports.bilan.current')}</TableHead>
+                    <TableHead className="text-end">{t('reports.bilan.previous')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(side === 'actif' ? data.value.bilan.actif : data.value.bilan.passif).map((l, i) => (
+                    <TableRow key={l.key}>
+                      <TableCell>{l.label}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
+                      <TableCell className="text-end tabular-nums">
+                        {data.value.previous ? fmt((side === 'actif' ? data.value.previous.bilan.actif : data.value.previous.bilan.passif)[i]!.amountCents) : ''}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ))}
+          <p className="text-sm md:col-span-2">
+            {data.value.bilan.balanced ? t('reports.bilan.balanced') : t('reports.bilan.notBalanced')}
+          </p>
+        </div>
+      ) : null}
+
+      {data.kind === 'tcr' ? (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('fields.name')}</TableHead>
+                <TableHead className="text-end">{t('reports.bilan.current')}</TableHead>
+                <TableHead className="text-end">{t('reports.bilan.previous')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...data.value.tcr.produits, ...data.value.tcr.charges].map((l, i) => {
+                const prevList = data.value.previous ? [...data.value.previous.tcr.produits, ...data.value.previous.tcr.charges] : [];
+                return (
+                  <TableRow key={l.key}>
+                    <TableCell>{l.label}</TableCell>
+                    <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
+                    <TableCell className="text-end tabular-nums">{prevList[i] ? fmt(prevList[i]!.amountCents) : ''}</TableCell>
+                  </TableRow>
+                );
+              })}
+              <TableRow className="font-semibold">
+                <TableCell>{t('reports.tcr.result')}</TableCell>
+                <TableCell className="text-end tabular-nums">{fmt(data.value.tcr.resultCents)}</TableCell>
+                <TableCell className="text-end tabular-nums">{data.value.previous ? fmt(data.value.previous.tcr.resultCents) : ''}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      ) : null}
+
+      {data.kind === 'aging' ? (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('fields.partner')}</TableHead>
+                {AGING_BUCKETS.map((b) => (
+                  <TableHead key={b} className="text-end">{t(`reports.aging.${b}`)}</TableHead>
+                ))}
+                <TableHead className="text-end">{t('reports.totals')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.value.map((r) => (
+                <TableRow key={r.partnerId ?? r.partnerName}>
+                  <TableCell>{r.partnerName}</TableCell>
+                  {AGING_BUCKETS.map((b) => (
+                    <TableCell key={b} className="text-end tabular-nums">{fmt(r.buckets[b])}</TableCell>
+                  ))}
+                  <TableCell className="text-end tabular-nums">{fmt(r.totalCents)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : null}
+
     </main>
   );
 }

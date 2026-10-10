@@ -63,7 +63,7 @@ export function TaxForm() {
     const input = {
       code: str('code'),
       name: str('name'),
-      kind: str('kind') as 'vat' | 'stamp' | 'other',
+      kind: str('kind') as 'tva' | 'tap' | 'retenue_source' | 'other',
       rate: str('rate'),
       scope: str('scope') as 'sale' | 'purchase' | 'both',
       validFrom: str('validFrom'),
@@ -97,9 +97,10 @@ export function TaxForm() {
       </div>
       <div className="grid gap-1.5">
         <Label htmlFor="tax-kind">{t('fields.kind')}</Label>
-        <select id="tax-kind" name="kind" className={SELECT_CLASS} defaultValue="vat">
-          <option value="vat">{t('options.kind.vat')}</option>
-          <option value="stamp">{t('options.kind.stamp')}</option>
+        <select id="tax-kind" name="kind" className={SELECT_CLASS} defaultValue="tva">
+          <option value="tva">{t('options.kind.tva')}</option>
+          <option value="tap">{t('options.kind.tap')}</option>
+          <option value="retenue_source">{t('options.kind.retenue_source')}</option>
           <option value="other">{t('options.kind.other')}</option>
         </select>
       </div>

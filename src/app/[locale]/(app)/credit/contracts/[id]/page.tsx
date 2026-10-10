@@ -7,9 +7,11 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd, type Cents } from '@/core/money';
 import { getContract } from '@/modules/credit_sales/service/contracts';
 import { listContractDocuments } from '@/modules/credit_sales/service/documents';
+import { listGuarantors } from '@/modules/credit_sales/service/guarantors';
 import { listMembers } from '@/core/tenancy/members';
 import { CONTRACT_SOURCE_ENTITY, sourceDeliveryStatus } from '@/modules/inventory/service/deliveries';
 import { ContractWorkflowSections } from '@/modules/credit_sales/ui/contract-workflow-sections';
+import { GuarantorsSection } from '@/modules/credit_sales/ui/guarantors-section';
 import { WorkflowBar } from '@/modules/credit_sales/ui/workflow-bar';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
 import { RecordPaymentButton } from '@/modules/credit_sales/ui/record-payment';
@@ -36,7 +38,9 @@ export default async function ContractDetailPage({
     const docs = await listContractDocuments(ctx, id);
     if (!docs.ok) return docs;
     const members = await listMembers(ctx.companyId);
-    return { ok: true as const, value: { docs: docs.value, members } };
+    const guarantors = await listGuarantors(ctx, id);
+    if (!guarantors.ok) return guarantors;
+    return { ok: true as const, value: { docs: docs.value, members, guarantors: guarantors.value } };
   });
   if (!workflow.ok) notFound();
   const deliveryRes = await withPageCtx((ctx) =>
@@ -150,6 +154,20 @@ export default async function ContractDetailPage({
           )}
         </section>
       ) : null}
+
+      <GuarantorsSection
+        contractId={contract.id}
+        state={contract.state}
+        guarantors={workflow.value.guarantors.map((g) => ({
+          id: g.id,
+          fullName: g.fullName,
+          nin: g.nin,
+          phone: g.phone,
+          address: g.address,
+          relation: g.relation,
+          hasIdDocument: g.hasIdDocument,
+        }))}
+      />
 
       <section className="flex flex-col gap-2">
         <h2 className="font-medium">{t('contract.installments')}</h2>

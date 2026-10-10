@@ -1,5 +1,5 @@
 import { applyRate, lineSubtotal, parseDiscountRate, type Cents } from '@/core/money';
-import { DZ_STAMP_DUTY_TIERS } from '@/modules/l10n_dz';
+import { tierDutyCents, type StampTier } from '@/modules/l10n_dz/data';
 
 export interface LineInput {
   quantity: string;        // decimal string, up to 3 places
@@ -76,17 +76,16 @@ function normalizeRate(rate: string): string {
 }
 
 /**
- * Timbre fiscal for a cash payment, from DZ_STAMP_DUTY_TIERS. Amount is whole DA (centimes dropped).
- * A tier covers [minAmountDa, maxAmountDa), the upper bound excluded, so 30 000 DA falls in the 1.5 DA tier.
- * ⚠ needs accountant verification
+ * Timbre fiscal for a payment, from the company's stamp tiers (see l10n_dz stamp settings).
+ * Tiers are ascending; the first tier whose upToDa is above the amount applies. The amount is whole DA
+ * (centimes dropped). Tiers come from the caller, so this stays a pure function.
+ * Whether the payment method is subject to stamp duty is decided by the caller. ⚠ needs accountant verification
  */
-export function stampDutyCents(amountCents: Cents): Cents {
-  const da = Number(amountCents / BigInt(100));
-  const tier = DZ_STAMP_DUTY_TIERS.find(
-    (t) => da >= t.minAmountDa && (t.maxAmountDa === null || da < t.maxAmountDa),
-  );
+export function stampDutyCents(amountCents: Cents, tiers: readonly StampTier[]): Cents {
+  const da = amountCents / BigInt(100);
+  const tier = tiers.find((t) => t.upToDa === null || da < t.upToDa);
   if (!tier) return BigInt(0);
-  return BigInt(Math.round(tier.dutyDa * 100));
+  return tierDutyCents(tier, amountCents);
 }
 
 export type PaymentState = 'not_paid' | 'partial' | 'paid';

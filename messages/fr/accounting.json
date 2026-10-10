@@ -6,7 +6,8 @@
     "entries": "Écritures",
     "accounts": "Plan comptable",
     "journals": "Journaux",
-    "reports": "États"
+    "reports": "États",
+    "fiscalYears": "Exercices"
   },
   "fields": {
     "date": "Date",
@@ -22,7 +23,8 @@
     "accountClass": "Classe",
     "number": "Numéro",
     "state": "État",
-    "partner": "Tiers"
+    "partner": "Tiers",
+    "reconcilable": "Lettrable"
   },
   "options": {
     "type": {
@@ -41,29 +43,49 @@
       "purchase": "Achat",
       "cash": "Caisse",
       "bank": "Banque",
-      "general": "Opérations diverses"
+      "general": "Opérations diverses",
+      "misc": "Divers"
     }
   },
   "form": {
     "pickAccount": "Choisir un compte",
     "addLine": "Ajouter une ligne",
     "removeLine": "Supprimer la ligne",
-    "post": "Comptabiliser"
+    "post": "Comptabiliser",
+    "save": "Enregistrer",
+    "create": "Créer",
+    "archive": "Archiver",
+    "archiveConfirm": "Archiver ce compte ? Impossible s’il a des écritures.",
+    "archiveYes": "Oui, archiver",
+    "cancel": "Annuler",
+    "created": "Compte créé.",
+    "saved": "Modifications enregistrées.",
+    "posted": "Écriture comptabilisée.",
+    "totals": "Total débit : {debit} · Total crédit : {credit}",
+    "balancedOk": "Équilibrée",
+    "notBalanced": "Non équilibrée",
+    "saveDraft": "Enregistrer le brouillon",
+    "deleteDraft": "Supprimer le brouillon"
   },
   "accounts": {
     "title": "Plan comptable (SCF)",
-    "verifyNote": "⚠ Les comptes sont à valider par un expert-comptable."
+    "verifyNote": "⚠ Les comptes sont à valider par un expert-comptable.",
+    "new": "Nouveau compte",
+    "archived": "Ce compte est archivé."
   },
   "journals": {
-    "title": "Journaux"
+    "title": "Journaux",
+    "new": "Nouveau journal",
+    "codeFixed": "Le code du journal ne peut plus être modifié."
   },
   "entries": {
     "title": "Écritures comptables",
     "new": "Nouvelle écriture",
-    "newTitle": "Nouvelle écriture manuelle"
+    "newTitle": "Nouvelle écriture manuelle",
+    "draftTitle": "Écriture (brouillon)"
   },
   "detail": {
-    "reverse": "Extourner",
+    "reverse": "Contrepasser",
     "total": "Total"
   },
   "reports": {
@@ -72,7 +94,10 @@
       "trial": "Balance",
       "ledger": "Grand livre",
       "partners": "Soldes tiers",
-      "g50": "G50 (TVA) ⚠"
+      "g50": "G50 (TVA) ⚠",
+      "bilan": "Bilan",
+      "tcr": "TCR",
+      "aging": "Âge des créances"
     },
     "year": "Année",
     "month": "Mois",
@@ -90,7 +115,27 @@
       "deductible": "TVA déductible (4456)",
       "net": "TVA à payer",
       "verify": "⚠ Brouillon de calcul uniquement : à vérifier par un expert-comptable avant toute déclaration."
-    }
+    },
+    "export": "Export comptable (ZIP)",
+    "bilan": {
+      "actif": "Actif",
+      "passif": "Passif",
+      "current": "Exercice",
+      "previous": "Exercice précédent",
+      "balanced": "Bilan équilibré : total actif = total passif.",
+      "notBalanced": "Bilan non équilibré : vérifiez les écritures."
+    },
+    "tcr": {
+      "result": "Résultat net"
+    },
+    "aging": {
+      "0-30": "0–30 j",
+      "31-60": "31–60 j",
+      "61-90": "61–90 j",
+      "90+": "Plus de 90 j"
+    },
+    "exportXlsx": "Exporter XLSX",
+    "exportCsv": "Exporter CSV"
   },
   "errors": {
     "generic": "Une erreur est survenue. Réessayez.",
@@ -111,5 +156,56 @@
     "STATE": "Action impossible dans cet état.",
     "CONFLICT": "Conflit : l'action a déjà été effectuée.",
     "INTERNAL": "Erreur interne."
+  },
+  "fiscalYears": {
+    "title": "Exercices",
+    "list": "Exercices fiscaux",
+    "empty": "Aucun exercice. Créez le premier ci-dessous.",
+    "state": {
+      "open": "Ouvert",
+      "closed": "Clôturé"
+    },
+    "close": "Clôturer",
+    "closeConfirm": "Clôturer cet exercice ? Le résultat et les à-nouveaux seront générés.",
+    "closeYes": "Oui, clôturer",
+    "closeNo": "Annuler",
+    "closed": "Exercice clôturé.",
+    "create": "Nouvel exercice",
+    "name": "Nom",
+    "start": "Début",
+    "end": "Fin",
+    "createSubmit": "Créer",
+    "created": "Exercice créé.",
+    "lock": "Date de verrouillage",
+    "lockHelp": "Aucune écriture n’est possible à cette date ou avant.",
+    "lockDate": "Verrouiller jusqu’au",
+    "lockSubmit": "Enregistrer",
+    "errors": {
+      "generic": "Action impossible. Vérifiez les dates et l’état des exercices."
+    }
+  },
+  "export": {
+    "entryDate": "Date",
+    "entryNumber": "N° écriture",
+    "journal": "Journal",
+    "state": "État",
+    "ref": "Référence",
+    "account": "Compte",
+    "accountName": "Intitulé du compte",
+    "partner": "Tiers",
+    "label": "Libellé",
+    "debit": "Débit",
+    "credit": "Crédit",
+    "balance": "Solde",
+    "opening": "Solde d’ouverture",
+    "closing": "Solde de clôture",
+    "movement": "Mouvement",
+    "line": "Poste",
+    "amount": "Montant",
+    "section": "Section",
+    "bilanActif": "Actif",
+    "bilanPassif": "Passif",
+    "tcrProduits": "Produits",
+    "tcrCharges": "Charges"
   }
 }

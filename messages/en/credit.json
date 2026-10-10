@@ -6,7 +6,8 @@
     "contracts": "Contracts",
     "payments": "Payments",
     "overdue": "Overdue",
-    "requirements": "Document requirements"
+    "requirements": "Document requirements",
+    "clauses": "Contract clauses"
   },
   "fields": {
     "reference": "Reference",
@@ -253,5 +254,41 @@
     "active": "Active",
     "save": "Save",
     "saved": "Requirement saved"
+  },
+  "clauses": {
+    "title": "Contract clauses",
+    "intro": "Installment sale contract template. Leave a field empty to use the default template. Variables without a value print as a blank line.",
+    "fr": "French clauses",
+    "ar": "Arabic clauses",
+    "variables": "Available variables",
+    "defaultHint": "Empty: the default template is used. The default template must be validated by a lawyer.",
+    "city": "City (place of contract)",
+    "latePenalty": "Late payment penalty (% per month)",
+    "guarantorThreshold": "Guarantor required above (DZD)",
+    "guarantorThresholdHelp": "Above this financed amount, a guarantor is required before the contract can be activated. Empty: no rule.",
+    "save": "Save",
+    "saved": "Clauses saved",
+    "errors": {
+      "threshold": "Invalid guarantor amount"
+    }
+  },
+  "guarantors": {
+    "title": "Guarantors",
+    "add": "Add guarantor",
+    "edit": "Edit",
+    "remove": "Remove",
+    "save": "Save",
+    "cancel": "Cancel",
+    "empty": "No guarantor on this contract.",
+    "locked": "Guarantors can only be changed while the contract is draft or approved.",
+    "fullName": "Full name",
+    "nin": "NIN",
+    "phone": "Phone",
+    "relation": "Relationship to the client",
+    "address": "Address",
+    "idDocument": "ID document (JPEG, PNG, WebP or PDF, 10 MB max)",
+    "idDocumentAttached": "ID document attached",
+    "saved": "Guarantor saved",
+    "removed": "Guarantor removed"
   }
 }

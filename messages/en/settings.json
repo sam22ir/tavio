@@ -15,6 +15,44 @@
     "defaultLocale": "Default language",
     "timezone": "Time zone",
     "currency": "Currency",
-    "notFound": "Company not found."
-  }
+    "notFound": "Company not found.",
+    "rib": "RIB",
+    "ccp": "CCP",
+    "fields": {
+      "legalName": "Legal name",
+      "displayName": "Trade name",
+      "address": "Address",
+      "wilayaCode": "Wilaya",
+      "phone": "Phone",
+      "email": "Email",
+      "nif": "NIF (15 digits)",
+      "nis": "NIS (15 digits)",
+      "rc": "RC",
+      "ai": "AI",
+      "rib": "RIB (20 digits)",
+      "ccp": "CCP",
+      "logo": "Logo"
+    },
+    "save": "Save",
+    "saved": "Company information saved.",
+    "noLogo": "No logo.",
+    "verifyNote": "Tax and bank identifiers must be verified by the accountant before printing.",
+    "warnings": {
+      "nifFormat": "NIF is not 15 digits. Please verify.",
+      "nisFormat": "NIS is not 15 digits. Please verify.",
+      "ribFormat": "RIB is not 20 digits. Please verify."
+    },
+    "errors": {
+      "required": "Legal name and trade name are required.",
+      "wilaya": "Invalid wilaya.",
+      "email": "Invalid email.",
+      "logo": "Logo rejected (JPEG, PNG, WebP or PDF, 10 MB max).",
+      "save": "Could not save.",
+      "forbidden": "Owners and admins only.",
+      "session": "Session expired, please sign in again.",
+      "notFound": "Company not found.",
+      "duplicate": "This NIF or RC is already used by another company."
+    }
+  },
+  "fiscalYearsLink": "Fiscal years"
 }

@@ -4,7 +4,10 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd } from '@/core/money';
+import { centsToDecimal } from '@/core/io';
+import { ensureDefaults, listAccounts, listJournals } from '@/modules/accounting/service/chart';
 import { getEntry } from '@/modules/accounting/service/entries';
+import { DraftEntryForm } from '@/modules/accounting/ui/draft-entry-form';
 import { ReverseButton } from '@/modules/accounting/ui/reverse-button';
 import { Chatter } from '@/modules/chatter/ui/chatter';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/primitives/table';
@@ -22,6 +25,37 @@ export default async function EntryDetailPage({
   const res = await withPageCtx((ctx) => getEntry(ctx, id));
   if (!res.ok) notFound();
   const { entry, journalCode, journalName, lines } = res.value;
+
+  if (entry.state === 'draft') {
+    const editor = await withPageCtx(async (ctx) => {
+      await ensureDefaults(ctx);
+      const accs = await listAccounts(ctx, { page: 1, pageSize: 100, filters: {} });
+      return { accounts: accs.rows.filter((a) => !a.archived), journals: await listJournals(ctx), lines: await getEntry(ctx, id) };
+    });
+    const fullLines = editor.lines.ok ? editor.lines.value.lines : [];
+    return (
+      <section className="flex flex-col gap-6 p-4 md:p-6">
+        <h1 className="font-mono text-2xl font-semibold">{t('entries.draftTitle')}</h1>
+        <DraftEntryForm
+          accounts={editor.accounts.map((a) => ({ code: a.code, name: a.name }))}
+          journals={editor.journals.map((j) => ({ code: j.code, name: j.name }))}
+          draft={{
+            id: entry.id,
+            journalCode,
+            date: entry.date,
+            ref: entry.ref ?? '',
+            lines: fullLines.map((l, i) => ({
+              key: i + 1,
+              accountCode: l.accountCode,
+              label: l.label ?? '',
+              debit: centsToDecimal(l.debitCents) ?? '',
+              credit: centsToDecimal(l.creditCents) ?? '',
+            })),
+          }}
+        />
+      </section>
+    );
+  }
   const fmt = (c: bigint) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
   const totalDebit = lines.reduce((s, l) => s + l.debitCents, BigInt(0));
   const totalCredit = lines.reduce((s, l) => s + l.creditCents, BigInt(0));

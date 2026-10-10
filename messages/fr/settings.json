@@ -15,6 +15,44 @@
     "defaultLocale": "Langue par défaut",
     "timezone": "Fuseau horaire",
     "currency": "Devise",
-    "notFound": "Entreprise introuvable."
-  }
+    "notFound": "Entreprise introuvable.",
+    "rib": "RIB",
+    "ccp": "CCP",
+    "fields": {
+      "legalName": "Raison sociale",
+      "displayName": "Nom commercial",
+      "address": "Adresse",
+      "wilayaCode": "Wilaya",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "nif": "NIF (15 chiffres)",
+      "nis": "NIS (15 chiffres)",
+      "rc": "RC",
+      "ai": "AI",
+      "rib": "RIB (20 chiffres)",
+      "ccp": "CCP",
+      "logo": "Logo"
+    },
+    "save": "Enregistrer",
+    "saved": "Informations enregistrées.",
+    "noLogo": "Aucun logo.",
+    "verifyNote": "Les identifiants fiscaux et bancaires sont à vérifier par le comptable avant impression.",
+    "warnings": {
+      "nifFormat": "Le NIF ne compte pas 15 chiffres. Vérifiez-le.",
+      "nisFormat": "Le NIS ne compte pas 15 chiffres. Vérifiez-le.",
+      "ribFormat": "Le RIB ne compte pas 20 chiffres. Vérifiez-le."
+    },
+    "errors": {
+      "required": "La raison sociale et le nom commercial sont obligatoires.",
+      "wilaya": "Wilaya invalide.",
+      "email": "E-mail invalide.",
+      "logo": "Logo refusé (JPEG, PNG, WebP ou PDF, 10 Mo max).",
+      "save": "Enregistrement impossible.",
+      "forbidden": "Réservé aux propriétaires et administrateurs.",
+      "session": "Session expirée, reconnectez-vous.",
+      "notFound": "Entreprise introuvable.",
+      "duplicate": "Ce NIF ou ce RC est déjà utilisé par une autre entreprise."
+    }
+  },
+  "fiscalYearsLink": "Exercices"
 }

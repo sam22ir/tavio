@@ -1,9 +1,11 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import Link from 'next/link';
+import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { ensureDefaults, listJournals } from '@/modules/accounting/service/chart';
+import { JournalForm } from '@/modules/accounting/ui/journal-form';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/primitives/table';
 
 export default async function JournalsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -16,10 +18,15 @@ export default async function JournalsPage({ params }: { params: Promise<{ local
     return listJournals(ctx);
   });
   const t = await getTranslations('accounting');
+  const currentLocale = await getLocale();
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('journals.title')}</h1>
+      <section className="flex flex-col gap-3">
+        <h2 className="font-medium">{t('journals.new')}</h2>
+        <JournalForm />
+      </section>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
@@ -32,7 +39,9 @@ export default async function JournalsPage({ params }: { params: Promise<{ local
           <TableBody>
             {journals.map((j) => (
               <TableRow key={j.id}>
-                <TableCell className="font-mono">{j.code}</TableCell>
+                <TableCell className="font-mono">
+                  <Link href={`/${currentLocale}/accounting/journals/${j.id}`} className="hover:underline">{j.code}</Link>
+                </TableCell>
                 <TableCell>{j.name}</TableCell>
                 <TableCell>{t(`options.journalType.${j.type}`)}</TableCell>
               </TableRow>

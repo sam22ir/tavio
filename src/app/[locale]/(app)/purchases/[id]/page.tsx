@@ -66,6 +66,10 @@ export default async function PurchaseOrderDetailPage({
         </div>
       </header>
 
+      <Link href={`/${locale}/purchases/${id}/print`} target="_blank" className="w-fit text-sm font-medium underline">
+        {t('order.print')}
+      </Link>
+
       <SourceContractLink locale={locale} sourceEntity={order.sourceEntity} sourceId={order.sourceId} />
 
       {errorCode ? (

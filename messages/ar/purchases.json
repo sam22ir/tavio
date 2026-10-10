@@ -22,7 +22,8 @@
       "all": "استلام الكل"
     },
     "sourceContract": "تم إنشاؤه من العقد",
-    "openContract": "فتح العقد"
+    "openContract": "فتح العقد",
+    "print": "طباعة"
   },
   "fields": {
     "number": "الرقم",

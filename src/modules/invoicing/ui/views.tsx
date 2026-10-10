@@ -137,7 +137,10 @@ export function InvoiceDetail({
         {payments.length === 0 ? <p className="text-sm text-muted-foreground">{t('detail.noPayments')}</p> : (
           <ul className="text-sm">
             {payments.map((p) => (
-              <li key={p.id}>{p.date} · {t(`method.${p.method}`)} · {fmt(p.amountCents)}{p.reference ? ` · ${p.reference}` : ''}</li>
+              <li key={p.id} className="flex flex-wrap items-center gap-2">
+                <span>{p.date} · {t(`method.${p.method}`)} · {fmt(p.amountCents)}{p.reference ? ` · ${p.reference}` : ''}</span>
+                <Link href={`/${locale}/invoicing/payments/${p.id}/print`} target="_blank" className="underline">{t('detail.printReceipt')}</Link>
+              </li>
             ))}
           </ul>
         )}

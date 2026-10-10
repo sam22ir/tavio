@@ -129,7 +129,9 @@ describe('CPU sanity', () => {
     const csvMs = time(() => toCsv(rows, cols));
     const xlsxMs = time(() => toXlsx(rows, cols, { sheetName: 'Bench' }));
     console.log(`io export 10k x 10 (warm): csv ${csvMs.toFixed(1)} ms, xlsx ${xlsxMs.toFixed(1)} ms`);
-    expect(csvMs).toBeLessThan(300);
-    expect(xlsxMs).toBeLessThan(300);
+    // A loose ceiling: this guards against accidental O(n^2) regressions, not machine speed.
+    // The suite runs in parallel, so a busy machine can be several times slower than a quiet one.
+    expect(csvMs).toBeLessThan(1500);
+    expect(xlsxMs).toBeLessThan(1500);
   });
 });

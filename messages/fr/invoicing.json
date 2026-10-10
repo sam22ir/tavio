@@ -81,7 +81,8 @@
     },
     "payments": "Paiements",
     "noPayments": "Aucun paiement.",
-    "edit": "Modifier"
+    "edit": "Modifier",
+    "printReceipt": "Reçu"
   },
   "error": {
     "VALIDATION": "Données invalides.",
