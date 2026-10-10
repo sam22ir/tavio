@@ -47,3 +47,27 @@ export const reorderRuleEntity: EntityDef = {
     { name: 'maxQty', type: 'number', label: 'inventory.fields.max_qty', list: true },
   ],
 };
+
+export const deliveryEntity: EntityDef = {
+  name: 'inventory.delivery',
+  labelField: 'number',
+  defaultSort: { field: 'number', dir: 'desc' },
+  fields: [
+    { name: 'number', type: 'text', label: 'inventory.fields.number', list: true, search: true },
+    {
+      name: 'state',
+      type: 'select',
+      label: 'inventory.fields.state',
+      list: true,
+      filter: true,
+      options: [
+        { value: 'draft', label: 'inventory.options.delivery_state.draft' },
+        { value: 'ready', label: 'inventory.options.delivery_state.ready' },
+        { value: 'done', label: 'inventory.options.delivery_state.done' },
+        { value: 'cancelled', label: 'inventory.options.delivery_state.cancelled' },
+      ],
+    },
+    { name: 'scheduledDate', type: 'date', label: 'inventory.fields.scheduled_date', list: true },
+    { name: 'deliveredAt', type: 'datetime', label: 'inventory.fields.delivered_at', list: true },
+  ],
+};

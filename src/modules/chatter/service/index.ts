@@ -17,6 +17,7 @@ import {
   type Message,
 } from '../schema';
 import { isCheckViolation, isUniqueViolation } from './db-errors';
+import { assertEntityAccess } from './access';
 import { dueAfter, type DelayUnit } from './timing';
 
 export interface NewActivity {
@@ -150,6 +151,8 @@ export async function postMessage(
   const body = i.body.trim();
   if (!body) return err('VALIDATION', 'Message is empty');
   if (body.length > MAX_BODY) return err('VALIDATION', 'Message is too long');
+  const access = await assertEntityAccess(ctx, i.entity, i.recordId);
+  if (!access.ok) return access;
   const kind = i.kind ?? 'comment';
   const [row] = await ctx.tx
     .insert(messages)
@@ -186,6 +189,8 @@ export async function createActivity(
     planRunId?: string;
   },
 ): Promise<Result<{ id: string }>> {
+  const access = await assertEntityAccess(ctx, i.entity, i.recordId);
+  if (!access.ok) return access;
   const [row] = await ctx.tx
     .insert(activities)
     .values({
@@ -255,6 +260,8 @@ export async function completeActivity(
     .for('update', { of: activities });
   if (!row) return err('NOT_FOUND', 'Activity not found');
   const { activity: act, type } = row;
+  const access = await assertEntityAccess(ctx, act.entity, act.recordId);
+  if (!access.ok) return access;
   if (act.doneAt) return err('STATE', 'Activity is already done');
 
   const result = opts.result?.trim() || null;
@@ -319,6 +326,8 @@ export async function completeActivity(
 
 /** Idempotent: does nothing if an open activity with the same entity, recordId, type and dueDate exists. */
 export async function ensureActivity(ctx: Ctx, i: NewActivity): Promise<Result<{ id: string; created: boolean }>> {
+  const access = await assertEntityAccess(ctx, i.entity, i.recordId);
+  if (!access.ok) return access;
   const type = await resolveActivityType(ctx, i);
   if (!type.ok) return type;
   const [existing] = await ctx.tx
@@ -342,6 +351,8 @@ export async function ensureActivity(ctx: Ctx, i: NewActivity): Promise<Result<{
 
 /** Messages and activities on one record, merged, newest first. */
 export async function listThread(ctx: Ctx, entity: string, recordId: string): Promise<ThreadItem[]> {
+  // Out of scope reads as an empty thread, so the record's existence is not revealed.
+  if (!(await assertEntityAccess(ctx, entity, recordId)).ok) return [];
   const msgs = await ctx.tx
     .select()
     .from(messages)
@@ -595,3 +606,5 @@ export async function savePlan(ctx: Ctx, i: PlanInput): Promise<Result<{ id: str
   });
   return ok({ id: planId });
 }
+
+export * from './access';

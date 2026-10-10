@@ -15,6 +15,7 @@ import { activities } from '@/modules/chatter/schema';
 import { leads, lostReasons, stages } from '../schema';
 import { ensureDefaultPipeline } from './pipeline';
 import { LEAD_CHANNELS } from './lead-constants';
+import { leadScope, teamIdForUser } from './teams';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -69,6 +70,8 @@ export type LeadRow = {
   expectedCloseDate: string | null;
   salespersonId: string | null;
   salespersonName: string | null;
+  teamId: string | null;
+  teamName: string | null;
   priority: number;
   nextActivityDate: string | null;
   channel: string | null;
@@ -104,6 +107,9 @@ const leadColumns = {
   salespersonId: leads.salespersonId,
   // users is revoked from tavio_app; the tenant-scoped member_directory view carries the name.
   salespersonName: sql<string | null>`(select md.name from member_directory md where md.company_id = ${leads.companyId} and md.user_id = ${leads.salespersonId})`,
+  teamId: leads.teamId,
+  // sales_teams is tenant-scoped; the join is on the lead's own company.
+  teamName: sql<string | null>`(select st.name from sales_teams st where st.company_id = ${leads.companyId} and st.id = ${leads.teamId})`,
   priority: leads.priority,
   nextActivityDate: activities.dueDate,
   channel: leads.channel,
@@ -137,8 +143,9 @@ const FILTER_COLUMNS = {
   stageId: leads.stageId,
   salespersonId: leads.salespersonId,
   partnerId: leads.partnerId,
+  teamId: leads.teamId,
 } as const;
-const UUID_FILTERS = new Set<string>(['stageId', 'salespersonId', 'partnerId']);
+const UUID_FILTERS = new Set<string>(['stageId', 'salespersonId', 'partnerId', 'teamId']);
 
 const SORT_COLUMNS = {
   createdAt: leads.createdAt,
@@ -159,6 +166,8 @@ export async function listLeads(ctx: Ctx, q: ListQuery): Promise<Result<ListResu
     eq(leads.companyId, ctx.companyId),
     eq(leads.active, q.filters.active !== 'false'),
   ];
+  const scope = await leadScope(ctx);
+  if (scope) conds.push(scope);
 
   if (q.q) {
     const like = `%${escapeLike(q.q)}%`;
@@ -206,10 +215,12 @@ export async function listLeads(ctx: Ctx, q: ListQuery): Promise<Result<ListResu
 export async function leadsByStage(
   ctx: Ctx,
   pipelineId: string,
+  opts: { teamId?: string } = {},
 ): Promise<Result<{ stage: { id: string; name: string; position: number; probability: number; isWon: boolean; requirements: string | null }; leads: LeadRow[] }[]>> {
   const perm = requirePerm(ctx, 'crm.lead.read');
   if (!perm.ok) return perm;
   if (!UUID_RE.test(pipelineId)) return err('VALIDATION', 'Invalid pipeline id');
+  if (opts.teamId !== undefined && !UUID_RE.test(opts.teamId)) return err('VALIDATION', 'Invalid team id');
 
   const stageRows = await ctx.tx
     .select({
@@ -224,12 +235,15 @@ export async function leadsByStage(
     .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, pipelineId)))
     .orderBy(asc(stages.position));
 
+  const scope = await leadScope(ctx);
   const leadRows = await leadQuery(ctx.tx)
     .where(
       and(
         eq(leads.companyId, ctx.companyId),
         eq(leads.pipelineId, pipelineId),
         eq(leads.active, true),
+        scope,
+        opts.teamId ? eq(leads.teamId, opts.teamId) : undefined,
       ),
     )
     .orderBy(desc(leads.updatedAt));
@@ -242,21 +256,36 @@ export async function leadsByStage(
   );
 }
 
+/** Number of active leads the user may see, optionally narrowed by extra conditions (for dashboards). */
+export async function scopedLeadCount(ctx: Ctx, extraWhere?: SQL): Promise<Result<number>> {
+  const perm = requirePerm(ctx, 'crm.lead.read');
+  if (!perm.ok) return perm;
+  const scope = await leadScope(ctx);
+  const [row] = await ctx.tx
+    .select({ n: count() })
+    .from(leads)
+    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.active, true), scope, extraWhere));
+  return ok(row?.n ?? 0);
+}
+
 export async function getLead(ctx: Ctx, id: string): Promise<Result<LeadRow>> {
   const perm = requirePerm(ctx, 'crm.lead.read');
   if (!perm.ok) return perm;
   if (!UUID_RE.test(id)) return err('NOT_FOUND', 'Lead not found');
-  const [row] = await leadQuery(ctx.tx).where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id)));
+  const scope = await leadScope(ctx);
+  const [row] = await leadQuery(ctx.tx).where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id), scope));
   if (!row) return err('NOT_FOUND', 'Lead not found');
   return ok(row);
 }
 
 // Locks the lead row for the rest of the transaction.
+// Every lead mutation loads the lead through the visibility scope, so an out-of-scope lead is NOT_FOUND.
 async function lockLead(ctx: Ctx, id: string) {
+  const scope = await leadScope(ctx);
   const [row] = await ctx.tx
     .select()
     .from(leads)
-    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id)))
+    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, id), scope))
     .for('update');
   return row;
 }
@@ -328,6 +357,7 @@ export async function createLead(
       expectedRevenueCents: data.expectedRevenueCents,
       expectedCloseDate: data.expectedCloseDate,
       salespersonId: data.salespersonId,
+      teamId: data.salespersonId ? await teamIdForUser(ctx.tx, ctx.companyId, data.salespersonId) : null,
       priority: data.priority ?? 0,
       active: true,
       createdBy: ctx.userId,
@@ -357,9 +387,14 @@ export async function updateLead(ctx: Ctx, id: string, input: LeadUpdateInput): 
   }
 
   // Undefined keys are skipped by drizzle's update set, so only given fields change.
+  // A new salesperson brings their team along. Leads keep their team otherwise.
+  const teamId =
+    data.salespersonId !== undefined
+      ? await teamIdForUser(ctx.tx, ctx.companyId, data.salespersonId)
+      : undefined;
   await ctx.tx
     .update(leads)
-    .set({ ...data, updatedAt: new Date() })
+    .set({ ...data, ...(data.salespersonId !== undefined ? { teamId } : {}), updatedAt: new Date() })
     .where(eq(leads.id, id));
 
   await audit(ctx, {

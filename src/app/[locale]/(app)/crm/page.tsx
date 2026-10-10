@@ -10,22 +10,32 @@ import * as crm from '@/modules/crm/service';
 import { moveLeadAction } from '@/modules/crm/actions';
 import { KanbanBoard } from '@/modules/crm/ui/kanban-board';
 
-export default async function CrmPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function CrmPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
+  const sp = await searchParams;
+  const teamId = typeof sp.teamId === 'string' && sp.teamId ? sp.teamId : undefined;
   const t = await getTranslations('crm.ui');
   const board = await withPageCtx(async (ctx) => {
     const pipeline = await crm.ensureDefaultPipeline(ctx);
     if (!pipeline.ok) return { error: pipeline.error.message };
     const stages = await crm.listStages(ctx, pipeline.value.id);
     if (!stages.ok) return { error: stages.error.message };
-    const groups = await crm.leadsByStage(ctx, pipeline.value.id);
+    const groups = await crm.leadsByStage(ctx, pipeline.value.id, { teamId });
     if (!groups.ok) return { error: groups.error.message };
+    const teams = await crm.listTeams(ctx);
     return {
       columns: stages.value.map((s) => ({ id: s.id, label: s.name })),
       rows: groups.value.flatMap((g) => g.leads),
+      teams: teams.ok ? teams.value : [],
     };
   });
 
@@ -47,6 +57,26 @@ export default async function CrmPage({ params }: { params: Promise<{ locale: st
           </Link>
         </div>
       </div>
+
+      {'error' in board ? null : (
+        <form method="get" className="flex items-center gap-2 text-sm">
+          <label htmlFor="team-filter">{t('teamFilter')}</label>
+          <select id="team-filter" name="teamId" defaultValue={teamId ?? ''} className="h-9 rounded-md border bg-background px-3">
+            <option value="">{t('allTeams')}</option>
+            {board.teams.map((team) => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+            {t('applyFilter')}
+          </button>
+          <Link href={`/${locale}/crm/teams`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+            {t('teams')}
+          </Link>
+        </form>
+      )}
 
       {'error' in board ? (
         <p role="alert" className="rounded-md border p-4 text-sm text-destructive">
