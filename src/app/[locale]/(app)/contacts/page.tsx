@@ -26,6 +26,7 @@ export default async function ContactsPage({
   const result = await withPageCtx((ctx) => listPartners(ctx, query));
   const t = await getTranslations('contacts');
   const currentLocale = await getLocale();
+  const ioT = await getTranslations('io.import');
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
@@ -38,9 +39,14 @@ export default async function ContactsPage({
           basePath={`/${currentLocale}/contacts`}
           rowHref={(row) => `/${currentLocale}/contacts/${row.id}`}
           actions={
-            <Link href={`/${currentLocale}/contacts/new`} className={cn(buttonVariants())}>
-              {t('partner.new')}
-            </Link>
+            <>
+              <Link href={`/${currentLocale}/import/contacts.partner`} className={cn(buttonVariants({ variant: 'outline' }))}>
+                {ioT('button')}
+              </Link>
+              <Link href={`/${currentLocale}/contacts/new`} className={cn(buttonVariants())}>
+                {t('partner.new')}
+              </Link>
+            </>
           }
         />
       ) : (

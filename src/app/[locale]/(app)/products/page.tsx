@@ -21,6 +21,7 @@ export default async function ProductsPage({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const ioT = await getTranslations('io.import');
 
   const query = parseListQuery(await searchParams, productEntity);
   const t = await getTranslations('products');
@@ -37,9 +38,14 @@ export default async function ProductsPage({
         basePath={`/${locale}/products`}
         rowHref={(r) => `/${locale}/products/${r.id}`}
         actions={
-          <Link href={`/${locale}/products/new`} className={cn(buttonVariants({ size: 'sm' }))}>
-            {t('product.new')}
-          </Link>
+          <>
+            <Link href={`/${locale}/import/products.product`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+              {ioT('button')}
+            </Link>
+            <Link href={`/${locale}/products/new`} className={cn(buttonVariants({ size: 'sm' }))}>
+              {t('product.new')}
+            </Link>
+          </>
         }
       />
     </div>
