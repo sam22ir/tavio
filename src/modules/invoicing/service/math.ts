@@ -94,3 +94,22 @@ export function paymentStateFor(paid: Cents, total: Cents): PaymentState {
   if (paid <= BigInt(0)) return 'not_paid';
   return paid >= total ? 'paid' : 'partial';
 }
+
+/**
+ * Retenue à la source on a vendor bill: rate × untaxed base, rounded half-up to the centime.
+ * The base is the untaxed total (HT), not the TTC. ⚠ needs accountant verification of base and rate.
+ */
+export function withholdingOn(untaxedCents: Cents, ratePercent: string): Cents {
+  return applyRate(untaxedCents, ratePercent);
+}
+
+/** Amount payable to the supplier: the gross total less the withholding. Equal to the total when there is none. */
+export function netPayableCents(totalCents: Cents, withholdingCents: Cents): Cents {
+  return totalCents - withholdingCents;
+}
+
+/** Still to pay on a payable amount, never below zero. Payments are capped at this residual. */
+export function residualPayableCents(payableCents: Cents, paidCents: Cents): Cents {
+  const r = payableCents - paidCents;
+  return r > BigInt(0) ? r : BigInt(0);
+}

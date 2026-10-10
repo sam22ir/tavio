@@ -233,3 +233,50 @@ describe('creditPaymentLines and creditContractLines', () => {
   });
 });
 
+
+describe('invoiceLines with retenue à la source (withholding)', () => {
+  // Bill: untaxed 100 000.00, VAT 19 000.00, total 119 000.00, withholding 2 % of untaxed = 2 000.00 DA.
+  const bill = {
+    partnerId: 'p1',
+    number: 'FF-1',
+    untaxedCents: C(10000000),
+    taxCents: C(1900000),
+    stampCents: C(0),
+    totalCents: C(11900000),
+    withholdingCents: C(200000),
+    withholdingAccountCode: '447',
+  };
+
+  it('credits 401 with the net payable and 447 with the withholding, and balances', () => {
+    const lines = invoiceLines({ ...bill, type: 'in_invoice' });
+    expect(lines.map((l) => l.accountCode)).toEqual(['401', '447', '600', '4456']);
+    expect(lines[0]).toMatchObject({ creditCents: C(11700000) });
+    expect(lines[1]).toMatchObject({ creditCents: C(200000) });
+    expect(sum(lines, 'debitCents')).toBe(sum(lines, 'creditCents'));
+    expect(sum(lines, 'creditCents')).toBe(C(11900000));
+  });
+
+  it('keeps the bill total unchanged on the debit side', () => {
+    const lines = invoiceLines({ ...bill, type: 'in_invoice' });
+    expect(sum(lines, 'debitCents')).toBe(bill.totalCents);
+  });
+
+  it('uses the account from the tax when it is not 447', () => {
+    const lines = invoiceLines({ ...bill, type: 'in_invoice', withholdingAccountCode: '4470' });
+    expect(lines.find((l) => l.creditCents === C(200000))?.accountCode).toBe('4470');
+  });
+
+  it('posts no withholding line when there is no withholding', () => {
+    const lines = invoiceLines({ ...bill, withholdingCents: C(0), type: 'in_invoice' });
+    expect(lines.map((l) => l.accountCode)).toEqual(['401', '600', '4456']);
+    expect(lines[0]).toMatchObject({ creditCents: C(11900000) });
+  });
+
+  it('inverts the withholding lines on a supplier refund and stays balanced', () => {
+    const billLines = invoiceLines({ ...bill, type: 'in_invoice' });
+    const refund = invoiceLines({ ...bill, type: 'in_refund' });
+    expect(refund).toEqual(invertLines(billLines));
+    expect(refund.find((l) => l.accountCode === '447')).toMatchObject({ debitCents: C(200000) });
+    expect(sum(refund, 'debitCents')).toBe(sum(refund, 'creditCents'));
+  });
+});

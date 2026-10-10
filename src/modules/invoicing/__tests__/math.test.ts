@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { computeOrderTotals } from '@/modules/sales/service/totals';
+import { netPayableCents, residualPayableCents, withholdingOn } from '../service/math';
 import { computeLine, computeTotals, formatPercent, hasLineDiscount, paymentStateFor, parseQtyMilli, stampDutyCents as stampWithTiers } from '../service/math';
 import { stampTiersFromSeed } from '@/modules/l10n_dz/data';
 
@@ -157,5 +158,35 @@ describe('computeTotals with several lines', () => {
         { quantity: '0', unitPriceCents: c(100), ratePercent: '19' },
       ]),
     ).toThrow(RangeError);
+  });
+});
+
+describe('retenue à la source helpers', () => {
+  it('withholds rate × untaxed base, rounded to the centime', () => {
+    expect(withholdingOn(c(10000000), '2')).toBe(c(200000));
+    expect(withholdingOn(c(1005), '3')).toBe(c(30)); // 10.05 DA × 3 % = 0.3015 DA → 0.30 DA
+  });
+
+  it('withholds nothing at a zero rate', () => {
+    expect(withholdingOn(c(10000000), '0')).toBe(c(0));
+  });
+
+  it('net payable is the total less the withholding', () => {
+    expect(netPayableCents(c(11900000), c(200000))).toBe(c(11700000));
+    expect(netPayableCents(c(11900000), c(0))).toBe(c(11900000));
+  });
+
+  it('payment residual is capped at the net, never below zero', () => {
+    const net = netPayableCents(c(11900000), c(200000));
+    expect(residualPayableCents(net, c(0))).toBe(c(11700000));
+    expect(residualPayableCents(net, c(11700000))).toBe(c(0));
+    expect(residualPayableCents(net, c(11800000))).toBe(c(0));
+  });
+
+  it('a payment above the net residual is over the cap', () => {
+    const net = netPayableCents(c(11900000), c(200000));
+    const residual = residualPayableCents(net, c(0));
+    expect(c(11800000) > residual).toBe(true); // gross total would wrongly allow this
+    expect(c(11700000) > residual).toBe(false);
   });
 });

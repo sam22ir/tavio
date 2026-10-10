@@ -11,6 +11,8 @@ import { g50Declarations, type G50Declaration, type G50Figures } from '../schema
 const COLLECTED = '4457';
 const DEDUCTIBLE = '4456';
 const STAMP = '445';
+/** Retenue à la source withheld from suppliers. Reported apart from VAT. ⚠ needs accountant verification */
+const WITHHOLDING = '447';
 
 export interface G50Summary {
   collectedCents: bigint;
@@ -41,8 +43,12 @@ function validPeriod(year: number, month: number): boolean {
   return Number.isInteger(year) && year >= 2000 && year <= 2100 && Number.isInteger(month) && month >= 1 && month <= 12;
 }
 
-/** Sums posted lines on 4457, 4456 and 445 for the month. */
-export async function g50Draft(ctx: Ctx, year: number, month: number): Promise<{ period: { from: string; to: string } } & G50Summary> {
+/** Sums posted lines on 4457, 4456, 445 and 447 for the month. */
+export async function g50Draft(
+  ctx: Ctx,
+  year: number,
+  month: number,
+): Promise<{ period: { from: string; to: string }; withholdingCents: bigint } & G50Summary> {
   const period = periodBounds(year, month);
   const rows = await ctx.tx
     .select({
@@ -57,7 +63,7 @@ export async function g50Draft(ctx: Ctx, year: number, month: number): Promise<{
       and(
         eq(journalLines.companyId, ctx.companyId),
         eq(journalEntries.state, 'posted'),
-        inArray(accounts.code, [COLLECTED, DEDUCTIBLE, STAMP]),
+        inArray(accounts.code, [COLLECTED, DEDUCTIBLE, STAMP, WITHHOLDING]),
         sql`${journalEntries.date} >= ${period.from}`,
         sql`${journalEntries.date} <= ${period.to}`,
       ),
@@ -67,9 +73,11 @@ export async function g50Draft(ctx: Ctx, year: number, month: number): Promise<{
   const collected = byCode.get(COLLECTED) ?? { debit: BigInt(0), credit: BigInt(0) };
   const deductible = byCode.get(DEDUCTIBLE) ?? { debit: BigInt(0), credit: BigInt(0) };
   const stamp = byCode.get(STAMP) ?? { debit: BigInt(0), credit: BigInt(0) };
+  const withholding = byCode.get(WITHHOLDING) ?? { debit: BigInt(0), credit: BigInt(0) };
   return {
     period,
     ...g50Summary(collected.credit - collected.debit, deductible.debit - deductible.credit, stamp.credit - stamp.debit),
+    withholdingCents: withholding.credit - withholding.debit,
   };
 }
 
@@ -80,6 +88,7 @@ function toFigures(d: Awaited<ReturnType<typeof g50Draft>>): G50Figures {
     deductibleCents: d.deductibleCents.toString(),
     netDueCents: d.netDueCents.toString(),
     stampCents: d.stampCents.toString(),
+    withholdingCents: d.withholdingCents.toString(),
     needsAccountantReview: true,
   };
 }

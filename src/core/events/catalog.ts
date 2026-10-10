@@ -18,6 +18,9 @@ export interface InvoicePosted {
   taxCents: string;
   stampCents: string;
   totalCents: string;
+  /** Retenue à la source on a vendor bill. Present only when > 0. ⚠ needs accountant verification */
+  withholdingCents?: string;
+  withholdingAccountCode?: string;
   taxLines: { taxId: string | null; ratePercent: string; baseCents: string; taxCents: string }[];
 }
 export interface InvoicePaymentRegistered {

@@ -207,5 +207,45 @@
     "bilanPassif": "Liabilities",
     "tcrProduits": "Income",
     "tcrCharges": "Expenses"
+  },
+  "statements": {
+    "bilan": {
+      "ACT_INC": "Intangible fixed assets",
+      "ACT_CORP": "Tangible fixed assets",
+      "ACT_FIN": "Financial fixed assets",
+      "ACT_AMORT": "Depreciation and provisions (to deduct)",
+      "ACT_STOCK": "Inventories and work in progress",
+      "ACT_CREANCES": "Receivables and similar assets",
+      "ACT_TRESO": "Cash and cash equivalents",
+      "ACT_OTHER": "Other assets",
+      "PAS_CAP": "Equity (capital, reserves, retained earnings)",
+      "PAS_RESULT": "Result for the year",
+      "PAS_DETTES_FIN": "Financial debts",
+      "PAS_FOURN": "Suppliers and related accounts",
+      "PAS_FISC": "Taxes, duties and social liabilities",
+      "PAS_AUTRES": "Other liabilities",
+      "PAS_OTHER": "Other liabilities (unclassified)"
+    },
+    "tcr": {
+      "TCR_VENTES": "Sales and related income",
+      "TCR_VAR_STOCK_PROD": "Change in inventories of finished goods",
+      "TCR_PROD_IMMO": "Capitalised production",
+      "TCR_SUBV": "Operating subsidies",
+      "TCR_AUTRES_PROD_OP": "Other operating income",
+      "TCR_PROD_FIN": "Financial income",
+      "TCR_REPRISES": "Reversals of impairment and provisions",
+      "TCR_PROD_EXC": "Exceptional income",
+      "TCR_TRANSFERTS": "Transfers of expenses",
+      "TCR_ACHATS": "Consumed purchases",
+      "TCR_VAR_STOCK": "Change in inventories (expenses)",
+      "TCR_SERV_EXT": "External services and other consumables",
+      "TCR_IMPOTS": "Taxes, duties and similar payments",
+      "TCR_PERSONNEL": "Staff costs",
+      "TCR_AUTRES_CHARGES_OP": "Other operating expenses",
+      "TCR_CHARGES_FIN": "Financial expenses",
+      "TCR_CHARGES_EXC": "Exceptional expenses",
+      "TCR_DOTATIONS": "Depreciation, amortisation and provisions",
+      "TCR_IMPOTS_RES": "Income tax"
+    }
   }
 }

@@ -58,6 +58,9 @@ export interface InvoiceForPosting {
   taxCents: bigint;
   stampCents: bigint;
   totalCents: bigint;
+  /** Purchases only: retenue à la source withheld from the supplier, credited to withholdingAccountCode (447 by default). */
+  withholdingCents?: bigint;
+  withholdingAccountCode?: string;
   /**
    * Purchases only: the untaxed part of the bill for stock-tracked goods. With perpetual inventory it is
    * debited to 380 (cleared by the receipt's Dr 30 / Cr 380), and the rest stays on 600. Defaults to 0.
@@ -67,13 +70,14 @@ export interface InvoiceForPosting {
 
 /**
  * Sale: Dr 411 total / Cr 700 untaxed / Cr 4457 VAT / Cr 445 stamp.
- * Purchase: Cr 401 total / Dr 380 stocked goods / Dr 600 rest of untaxed / Dr 4456 VAT / Dr 445 stamp.
- * Refunds (out_refund, in_refund) invert every line.
- * ⚠ Needs accountant verification: stamp duty (445) side and account choice.
+ * Purchase: Cr 401 net payable / Cr 447 withholding / Dr 380 stocked goods / Dr 600 rest of untaxed / Dr 4456 VAT / Dr 445 stamp.
+ * Net payable = total - withholding, so the entry balances. Refunds (out_refund, in_refund) invert every line.
+ * ⚠ Needs accountant verification: stamp duty (445) side, account choice, and the withholding (447) base and rate.
  */
 export function invoiceLines(inv: InvoiceForPosting): DraftLine[] {
   const isSale = inv.type === 'out_invoice' || inv.type === 'out_refund';
   const stocked = isSale ? 0n : (inv.stockedUntaxedCents ?? 0n);
+  const withheld = isSale ? 0n : (inv.withholdingCents ?? 0n);
   const lines = isSale
     ? [
         ...line('411', 'debit', inv.totalCents, inv.partnerId, inv.number),
@@ -82,7 +86,8 @@ export function invoiceLines(inv: InvoiceForPosting): DraftLine[] {
         ...line('445', 'credit', inv.stampCents, null, inv.number),
       ]
     : [
-        ...line('401', 'credit', inv.totalCents, inv.partnerId, inv.number),
+        ...line('401', 'credit', inv.totalCents - withheld, inv.partnerId, inv.number),
+        ...line(inv.withholdingAccountCode ?? '447', 'credit', withheld, null, inv.number),
         ...line(INVENTORY_ACCOUNTS.stockedPurchases, 'debit', stocked, null, inv.number),
         ...line('600', 'debit', inv.untaxedCents - stocked, null, inv.number),
         ...line('4456', 'debit', inv.taxCents, null, inv.number),

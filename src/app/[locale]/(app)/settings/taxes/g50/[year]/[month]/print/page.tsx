@@ -33,6 +33,7 @@ export default async function G50PrintPage({
     { label: t('g50.print_deductible'), value: fig.deductible },
     { label: t('g50.print_net'), value: fig.net, strong: true },
     { label: t('g50.print_stamp'), value: fig.stamp },
+    { label: t('g50.print_withholding'), value: fig.withholding },
   ];
 
   return (

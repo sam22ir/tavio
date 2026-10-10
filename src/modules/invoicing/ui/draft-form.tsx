@@ -28,7 +28,12 @@ export function DraftForm({
   const [pending, startTransition] = useTransition();
 
   const taxRateById = useMemo(() => new Map(lookups.taxes.map((x) => [x.value, x.rate])), [lookups.taxes]);
-  const totals = useMemo(() => previewDraftTotals(form.lines, taxRateById), [form.lines, taxRateById]);
+  // Retenue à la source applies to vendor bills only. ⚠ needs accountant verification
+  const withholdingRate = lookups.withholdingTaxes.find((x) => x.value === form.withholdingTaxId)?.rate ?? '0';
+  const totals = useMemo(
+    () => previewDraftTotals(form.lines, taxRateById, kind === 'vendors' ? withholdingRate : '0'),
+    [form.lines, taxRateById, kind, withholdingRate],
+  );
 
   const setLine = (key: string, patch: Partial<DraftLineDraft>) =>
     setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.key === key ? { ...l, ...patch } : l)) }));
@@ -50,6 +55,7 @@ export function DraftForm({
       partnerId: form.partnerId,
       date: form.date,
       dueDate: form.dueDate || undefined,
+      withholdingTaxId: kind === 'vendors' ? form.withholdingTaxId || null : null,
       lines: form.lines.map((l) => ({
         productId: l.productId || null,
         description: l.description,
@@ -160,10 +166,28 @@ export function DraftForm({
         </button>
       </div>
 
+      {kind === 'vendors' && lookups.withholdingTaxes.length > 0 ? (
+        <label className="flex max-w-sm flex-col gap-1 text-sm">
+          {t('form.withholding')}
+          <select className={INPUT} value={form.withholdingTaxId ?? ''} onChange={(e) => setForm((f) => ({ ...f, withholdingTaxId: e.target.value }))}>
+            <option value="">{t('form.noWithholding')}</option>
+            {lookups.withholdingTaxes.map((tx) => (
+              <option key={tx.value} value={tx.value}>{tx.label}</option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+
       <dl className="grid max-w-sm grid-cols-2 gap-1 text-sm">
         <dt>{t('editor.untaxed')}</dt><dd className="text-end">{formatPreview(totals.untaxedCents, locale)}</dd>
         <dt>{t('editor.tax')}</dt><dd className="text-end">{formatPreview(totals.taxCents, locale)}</dd>
         <dt className="font-semibold">{t('editor.total')}</dt><dd className="text-end font-semibold">{formatPreview(totals.totalCents, locale)}</dd>
+        {totals.withholdingCents > BigInt(0) ? (
+          <>
+            <dt>{t('editor.withholding')}</dt><dd className="text-end">{formatPreview(totals.withholdingCents, locale)}</dd>
+            <dt className="font-semibold">{t('editor.netPayable')}</dt><dd className="text-end font-semibold">{formatPreview(totals.netPayableCents, locale)}</dd>
+          </>
+        ) : null}
       </dl>
 
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}

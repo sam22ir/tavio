@@ -6,11 +6,13 @@ export function figureCents(figures: G50Figures): {
   deductible: bigint;
   net: bigint;
   stamp: bigint;
+  withholding: bigint;
 } {
   return {
     collected: BigInt(figures.collectedCents),
     deductible: BigInt(figures.deductibleCents),
     net: BigInt(figures.netDueCents),
     stamp: BigInt(figures.stampCents),
+    withholding: BigInt(figures.withholdingCents ?? '0'),
   };
 }

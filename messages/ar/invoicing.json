@@ -32,7 +32,9 @@
     "discount": "الخصم %",
     "tax": "الرسم على القيمة المضافة",
     "noTax": "بدون رسم",
-    "submit": "إنشاء مسودة"
+    "submit": "إنشاء مسودة",
+    "withholding": "الاقتطاع من المنبع",
+    "noWithholding": "بدون اقتطاع"
   },
   "type": {
     "out_invoice": "فاتورة",
@@ -82,7 +84,9 @@
     "payments": "الدفعات",
     "noPayments": "لا توجد دفعات.",
     "edit": "تعديل",
-    "printReceipt": "وصل"
+    "printReceipt": "وصل",
+    "withholding": "الاقتطاع من المنبع",
+    "netPayable": "الصافي المستحق"
   },
   "error": {
     "VALIDATION": "بيانات غير صالحة.",
@@ -124,6 +128,8 @@
     "tax": "الرسم على القيمة المضافة",
     "total": "المجموع",
     "save": "حفظ المسودة",
-    "editTitle": "تعديل المسودة"
+    "editTitle": "تعديل المسودة",
+    "withholding": "الاقتطاع من المنبع",
+    "netPayable": "الصافي المستحق"
   }
 }
