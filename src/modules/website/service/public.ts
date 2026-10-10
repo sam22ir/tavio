@@ -11,6 +11,7 @@ import { nextNumber } from '@/core/sequences';
 import { err, ok, type Result } from '@/core/result';
 import { products } from '@/modules/products/schema';
 import { webOrders, websiteSettings } from '../schema';
+import { autoConvertWebOrder } from './convert';
 import {
   isRateLimited,
   isValidSlug,
@@ -217,6 +218,13 @@ export async function placeWebOrder(raw: unknown, db: Db = getDb()): Promise<Res
       })
       .returning({ id: webOrders.id });
     if (!row) return err('INTERNAL', 'insert failed');
+
+    const [settings] = await tx
+      .select({ auto: websiteSettings.autoCreateSaleOrder })
+      .from(websiteSettings)
+      .where(eq(websiteSettings.companyId, companyId))
+      .limit(1);
+    if (settings?.auto) await autoConvertWebOrder(tx, companyId, row.id);
 
     // Anonymous intake: audit with actor_type 'system' and no user.
     await tx.insert(auditLog).values({

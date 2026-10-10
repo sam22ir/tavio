@@ -59,8 +59,9 @@ export default async function WebsiteSettingsPage({ params }: { params: Promise<
                   about: row.about ?? '',
                   phoneWhatsapp: row.phoneWhatsapp ?? '',
                   showPrices: row.showPrices,
+                  autoCreateSaleOrder: row.autoCreateSaleOrder,
                 }
-              : { enabled: false, showPrices: true }
+              : { enabled: false, showPrices: true, autoCreateSaleOrder: false }
           }
         />
       </div>

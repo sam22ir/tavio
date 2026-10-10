@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd } from '@/core/money';
-import { buttonVariants } from '@/ui/primitives/button';
+import { Button, buttonVariants } from '@/ui/primitives/button';
 import { cn } from '@/ui/lib/cn';
 import { RecordForm } from '@/ui/views/record-form';
 import { Chatter } from '@/modules/chatter/ui/chatter';
@@ -16,6 +16,7 @@ import {
   reopenLeadAction,
   logAttemptAction,
   updateLeadFormAction,
+  createQuoteForm,
 } from '@/modules/crm/actions';
 import { leadFormEntity } from '@/modules/crm/ui/form-entity';
 import { LeadStatusActions } from '@/modules/crm/ui/lead-status-actions';
@@ -98,6 +99,12 @@ export default async function LeadPage({
           logAttempt={logAttemptAction}
         />
         <div className="flex flex-wrap gap-2">
+          <form action={createQuoteForm}>
+            <input type="hidden" name="id" value={id} />
+            <Button type="submit" size="sm" className="min-h-11">
+              {t('newQuote')}
+            </Button>
+          </form>
           {phone ? (
             <a href={`tel:${phone}`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
               {t('call')}

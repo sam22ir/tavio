@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
 import { defineAction, toFormAction } from '@/core/actions/define-action';
@@ -9,6 +10,7 @@ import { parseDzd } from '@/core/money';
 import * as crm from '@/modules/crm/service';
 import { saveTeamInput } from '@/modules/crm/service/teams';
 import { LEAD_CHANNELS } from '@/modules/crm/service/lead-constants';
+import { failureQuery } from '@/ui/feedback/failure-query';
 
 const emptyToUndef = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
 const optText = (max: number) => z.preprocess(emptyToUndef, z.string().trim().max(max).optional());
@@ -37,7 +39,7 @@ const leadInput = z.object({
   wilayaCode: optText(10),
   source: z.preprocess(
     emptyToUndef,
-    z.enum(['walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other']).optional(),
+    z.enum(['walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other', 'website']).optional(),
   ),
   channel: z.preprocess(emptyToUndef, z.enum(LEAD_CHANNELS).optional()),
   stageId: z.string().uuid(),
@@ -85,6 +87,11 @@ const markWonDefined = defineAction({ perm: 'crm.lead.write', schema: idInput, m
 const markLostDefined = defineAction(
   { perm: 'crm.lead.write', schema: lostInput, module: 'crm' },
   (ctx, input) => crm.markLost(ctx, input.id, input.lostReasonId, input.note),
+);
+
+const createQuoteDefined = defineAction(
+  { perm: 'crm.lead.write', schema: idInput, module: 'crm' },
+  (ctx, input) => crm.createQuoteFromLead(ctx, input.id),
 );
 
 const logAttemptDefined = defineAction(
@@ -179,4 +186,14 @@ export async function saveTeamFormAction(prev: FormState, fd: FormData): Promise
 export async function setLeadVisibilityAction(fd: FormData): Promise<void> {
   const result = await setVisibilityDefined({ restricted: fd.get('restricted') === 'on' });
   if (result.ok) refresh();
+}
+
+/** Lead page "New quote": creates the partner when missing and a linked draft quotation, then opens it. */
+export async function createQuoteForm(formData: FormData): Promise<void> {
+  const locale = await getLocale();
+  const id = String(formData.get('id') ?? '');
+  const r = await createQuoteDefined({ id });
+  if (!r.ok) redirect(`/${locale}/crm/${encodeURIComponent(id)}${failureQuery(r)}`);
+  refresh();
+  redirect(`/${locale}/sales/${encodeURIComponent(r.value.orderId)}`);
 }

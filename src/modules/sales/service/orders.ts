@@ -12,6 +12,7 @@ import { partners } from '@/modules/contacts/schema';
 import { products } from '@/modules/products/schema';
 import { taxes } from '@/modules/l10n_dz/schema';
 import { createInvoice } from '@/modules/invoicing/service/create';
+import { postMessage } from '@/modules/chatter/service';
 import { saleOrderLines, saleOrders } from '../schema';
 import { computeOrderTotals, type LineInput, type OrderTotals } from './totals';
 
@@ -310,6 +311,48 @@ export async function updateSaleOrder(
   return ok({ id, number: order.number, totalCents: totals.value.totalCents });
 }
 
+/**
+ * Creates an empty draft quotation for a partner, linked to the CRM lead it came from. Lines are added
+ * afterwards with updateSaleOrder. Used by the CRM "new quote" action.
+ */
+export async function createDraftQuote(
+  ctx: Ctx,
+  input: { partnerId: string; leadId: string; salespersonId: string | null },
+): Promise<Result<{ id: string }>> {
+  const perm = requirePerm(ctx, 'sales.order.write');
+  if (!perm.ok) return perm;
+  const [partner] = await ctx.tx
+    .select({ id: partners.id })
+    .from(partners)
+    .where(and(eq(partners.companyId, ctx.companyId), eq(partners.id, input.partnerId)));
+  if (!partner) return err('NOT_FOUND', 'PARTNER_NOT_FOUND');
+
+  const [row] = await ctx.tx
+    .insert(saleOrders)
+    .values({
+      companyId: ctx.companyId,
+      createdBy: ctx.userId,
+      partnerId: input.partnerId,
+      leadId: input.leadId,
+      state: 'draft',
+      orderDate: new Date().toISOString().slice(0, 10),
+      salespersonId: input.salespersonId,
+      untaxedCents: BigInt(0),
+      taxCents: BigInt(0),
+      totalCents: BigInt(0),
+    })
+    .returning({ id: saleOrders.id });
+  if (!row) return err('INTERNAL', 'insert failed');
+
+  await audit(ctx, {
+    action: 'create',
+    entity: ENTITY,
+    recordId: row.id,
+    after: { state: 'draft', leadId: input.leadId, partnerId: input.partnerId },
+  });
+  return ok({ id: row.id });
+}
+
 /** Draft to sent: the quotation was handed to the customer. */
 export async function markOrderSent(ctx: Ctx, id: string): Promise<Result<{ id: string }>> {
   const perm = requirePerm(ctx, 'sales.order.write');
@@ -380,6 +423,16 @@ export async function cancelOrder(ctx: Ctx, id: string): Promise<Result<{ id: st
     before: { state: order.state },
     after: { state: 'cancelled' },
   });
+  // A cancelled quote only leaves a note on its lead. The lead's stage does not change.
+  if (order.leadId) {
+    const note = await postMessage(ctx, {
+      entity: 'crm.lead',
+      recordId: order.leadId,
+      kind: 'system',
+      body: `Quote ${order.number ?? id.slice(0, 8)} cancelled`,
+    });
+    if (!note.ok) return note;
+  }
   return ok({ id });
 }
 

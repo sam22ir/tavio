@@ -11,6 +11,7 @@ import { err, ok, type AppError, type Result } from '@/core/result';
 import { partners } from '@/modules/contacts/schema';
 import { createDraftContract, type DraftContractInput } from '@/modules/credit_sales/service/contracts';
 import { postMessage } from '@/modules/chatter/service';
+import { createDraftQuote } from '@/modules/sales/service/orders';
 import { activities } from '@/modules/chatter/schema';
 import { leads, lostReasons, stages } from '../schema';
 import { ensureDefaultPipeline } from './pipeline';
@@ -34,7 +35,7 @@ export const leadInput = z.object({
   wilayaCode: z.preprocess(blank, z.string().regex(/^(0[1-9]|[1-4][0-9]|5[0-8])$/).optional()),
   source: z.preprocess(
     blank,
-    z.enum(['walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other']).optional(),
+    z.enum(['walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other', 'website']).optional(),
   ),
   channel: z.preprocess(blank, z.enum(LEAD_CHANNELS).optional()),
   stageId: uuid,
@@ -612,12 +613,7 @@ export async function convertToContract(
     await ctx.tx.transaction(async (sp) => {
       const spCtx: Ctx = { ...ctx, tx: sp };
 
-      let partnerId = lead.partnerId;
-      if (!partnerId) {
-        partnerId = await insertPartnerFromLead(spCtx, lead);
-      } else {
-        await ensureCustomer(spCtx, partnerId);
-      }
+      const partnerId = await linkLeadPartner(spCtx, lead);
 
       const contract = await createDraftContract(spCtx, { ...draft, leadId, partnerId });
       if (!contract.ok) {
@@ -671,6 +667,122 @@ export async function convertToContract(
   if (outcome.error) return { ok: false, error: outcome.error };
   if (!outcome.contractId || !outcome.partnerId) return err('INTERNAL', 'Conversion produced no contract');
   return ok({ contractId: outcome.contractId, partnerId: outcome.partnerId });
+}
+
+/**
+ * Returns the partner of the lead, creating it from the lead contact when there is none.
+ * An existing partner becomes a customer. Shared by the contract and the quote conversions.
+ */
+export async function linkLeadPartner(ctx: Ctx, lead: typeof leads.$inferSelect): Promise<string> {
+  if (!lead.partnerId) return insertPartnerFromLead(ctx, lead);
+  await ensureCustomer(ctx, lead.partnerId);
+  return lead.partnerId;
+}
+
+/**
+ * Creates an empty draft quotation linked to the lead. The partner is created when missing (same rules as
+ * convertToContract). Runs in a savepoint, so a failed quote leaves no partner behind.
+ */
+export async function createQuoteFromLead(
+  ctx: Ctx,
+  leadId: string,
+): Promise<Result<{ orderId: string; partnerId: string }>> {
+  const perm = requirePerm(ctx, 'crm.lead.write');
+  if (!perm.ok) return perm;
+
+  const lead = await lockLead(ctx, leadId);
+  if (!lead) return err('NOT_FOUND', 'Lead not found');
+  if (lead.status === 'lost') return err('CONFLICT', 'Reopen the lead before quoting it');
+
+  const outcome: { error?: AppError; orderId?: string; partnerId?: string } = {};
+  try {
+    await ctx.tx.transaction(async (sp) => {
+      const spCtx: Ctx = { ...ctx, tx: sp };
+      const partnerId = await linkLeadPartner(spCtx, lead);
+      const quote = await createDraftQuote(spCtx, {
+        partnerId,
+        leadId,
+        salespersonId: lead.salespersonId,
+      });
+      if (!quote.ok) {
+        outcome.error = quote.error;
+        sp.rollback();
+      }
+      if (quote.ok) {
+        await sp
+          .update(leads)
+          .set({ partnerId, updatedAt: new Date() })
+          .where(eq(leads.id, leadId));
+        const posted = await postMessage(spCtx, {
+          entity: 'crm.lead',
+          recordId: leadId,
+          kind: 'system',
+          body: 'Draft quotation created',
+        });
+        if (!posted.ok) {
+          outcome.error = posted.error;
+          sp.rollback();
+        }
+        outcome.orderId = quote.value.id;
+        outcome.partnerId = partnerId;
+      }
+    });
+  } catch (e) {
+    if (!outcome.error) throw e;
+  }
+
+  if (outcome.error) return { ok: false, error: outcome.error };
+  if (!outcome.orderId || !outcome.partnerId) return err('INTERNAL', 'Quote was not created');
+  return ok({ orderId: outcome.orderId, partnerId: outcome.partnerId });
+}
+
+/**
+ * Called when a quotation linked to the lead is confirmed. An open lead moves to the pipeline's won
+ * stage with a chatter note. Won and lost leads are left alone. Runs inside the confirming transaction
+ * and skips the per-user permission checks, because the confirmation itself was authorised.
+ */
+export async function markLeadWonFromQuote(ctx: Ctx, leadId: string, orderNumber: string): Promise<void> {
+  const [lead] = await ctx.tx
+    .select()
+    .from(leads)
+    .where(and(eq(leads.companyId, ctx.companyId), eq(leads.id, leadId)))
+    .for('update');
+  if (!lead || lead.status !== 'open') return;
+
+  const [won] = await ctx.tx
+    .select()
+    .from(stages)
+    .where(and(eq(stages.companyId, ctx.companyId), eq(stages.pipelineId, lead.pipelineId), eq(stages.isWon, true)))
+    .limit(1);
+  if (!won) return;
+
+  const now = new Date();
+  await ctx.tx
+    .update(leads)
+    .set({
+      stageId: won.id,
+      stageEnteredAt: now,
+      probability: won.probability,
+      status: 'won',
+      wonAt: lead.wonAt ?? now,
+      updatedAt: now,
+    })
+    .where(eq(leads.id, leadId));
+
+  await audit(ctx, {
+    entity: 'crm.lead',
+    recordId: leadId,
+    action: 'move',
+    before: { stageId: lead.stageId, status: lead.status },
+    after: { stageId: won.id, status: 'won', quote: orderNumber },
+  });
+  await postMessage(ctx, {
+    entity: 'crm.lead',
+    recordId: leadId,
+    kind: 'system',
+    body: `Quote ${orderNumber} confirmed: lead won`,
+  });
+  await emit(ctx, { name: 'crm.lead.won', payload: { leadId } });
 }
 
 // A draft contract needs a customer, so an existing partner linked to the lead becomes one here.

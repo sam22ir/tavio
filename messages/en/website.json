@@ -19,7 +19,8 @@
     "wilayaCode": "Wilaya",
     "totalCents": "Total (DZD)",
     "state": "Status",
-    "address": "Address"
+    "address": "Address",
+    "autoCreateSaleOrder": "Create the sale order automatically"
   },
   "options": {
     "state": {
@@ -45,6 +46,28 @@
       "product": "Product",
       "quantity": "Qty",
       "subtotal": "Subtotal"
+    },
+    "linked": {
+      "title": "Sale order and invoicing",
+      "none": "No linked sale order. Orders are converted by hand or automatically, depending on the website setting.",
+      "sale": "Sale order",
+      "draft": "Draft",
+      "state": {
+        "draft": "Draft",
+        "sent": "Sent",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "done": "Done"
+      },
+      "open_sale": "Open sale order",
+      "no_invoice": "No invoice for this order yet.",
+      "invoice": "Invoice",
+      "open_invoice": "Open invoice",
+      "payment": {
+        "not_paid": "Not paid",
+        "partial": "Partly paid",
+        "paid": "Paid"
+      }
     }
   },
   "shop": {
@@ -54,7 +77,8 @@
     "no_products": "No products are available right now.",
     "add_to_cart": "Add to cart",
     "added": "Added to your cart.",
-    "view_cart": "View cart"
+    "view_cart": "View cart",
+    "contact": "Contact"
   },
   "cart": {
     "title": "Cart",
@@ -86,6 +110,23 @@
       "rate_limited": "Too many orders were placed with this number. Try again later or contact the shop.",
       "invalid": "Check the details you entered, especially the phone number and wilaya.",
       "generic": "The order could not be saved. Try again."
+    }
+  },
+  "contact": {
+    "title": "Contact us",
+    "done": "Thank you, your message has been received. We will get back to you soon.",
+    "submit": "Send message",
+    "fields": {
+      "name": "Full name",
+      "phone": "Phone number",
+      "email": "Email (optional)",
+      "wilayaCode": "Wilaya code (01 to 58)",
+      "message": "Message"
+    },
+    "errors": {
+      "rate_limited": "Too many messages were sent from this number. Try again later.",
+      "invalid": "Check the details you entered, especially the phone and wilaya.",
+      "generic": "The message could not be sent. Try again."
     }
   }
 }

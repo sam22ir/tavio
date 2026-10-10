@@ -21,6 +21,9 @@ export async function ShopHeader({ shop, locale }: { shop: ShopPublic; locale: s
         <Link href={`${home}/cart`} className="inline-flex min-h-11 items-center hover:underline">
           {t('shop.cart')}
         </Link>
+        <Link href={`${home}/contact`} className="inline-flex min-h-11 items-center hover:underline">
+          {t('shop.contact')}
+        </Link>
       </nav>
     </header>
   );
