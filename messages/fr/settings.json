@@ -53,5 +53,6 @@
       "notFound": "Entreprise introuvable.",
       "duplicate": "Ce NIF ou ce RC est déjà utilisé par une autre entreprise."
     }
-  }
+  },
+  "fiscalYearsLink": "Exercices"
 }

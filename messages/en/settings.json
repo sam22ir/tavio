@@ -53,5 +53,6 @@
       "notFound": "Company not found.",
       "duplicate": "This NIF or RC is already used by another company."
     }
-  }
+  },
+  "fiscalYearsLink": "Fiscal years"
 }

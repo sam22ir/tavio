@@ -38,6 +38,10 @@ export const accounts = pgTable(
     accountClass: integer('account_class').notNull(),
     type: text('type').notNull(),
     reconcilable: boolean('reconcilable').notNull().default(false),
+    // Parent class or account prefix, e.g. '60' for '601'. Display and grouping only.
+    parentCode: text('parent_code'),
+    // Archived accounts stay in place; archiving is refused once the account has journal lines.
+    archived: boolean('archived').notNull().default(false),
   },
   (t) => [
     uniqueIndex('accounts_company_id_code_key').on(t.companyId, t.code),
@@ -66,7 +70,8 @@ export const journals = pgTable(
     uniqueIndex('journals_company_id_code_key').on(t.companyId, t.code),
     check(
       'journals_type_check',
-      sql`${t.type} in ('sale', 'purchase', 'cash', 'bank', 'general')`,
+      // 'general' is the legacy name of 'misc' (the OD seed). Both are accepted.
+      sql`${t.type} in ('sale', 'purchase', 'cash', 'bank', 'misc', 'general')`,
     ),
   ],
 );
@@ -134,7 +139,42 @@ export const journalLines = pgTable(
   ],
 );
 
+// Fiscal years. A closed year rejects postings (see service/fiscal.ts). Tenant table.
+export const fiscalYears = pgTable(
+  'fiscal_years',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    name: text('name').notNull(),
+    startDate: date('start_date', { mode: 'string' }).notNull(),
+    endDate: date('end_date', { mode: 'string' }).notNull(),
+    state: text('state').notNull().default('open'),
+    closedAt: timestamp('closed_at', { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex('fiscal_years_company_id_start_date_key').on(t.companyId, t.startDate),
+    check('fiscal_years_state_check', sql`${t.state} in ('open', 'closed')`),
+    check('fiscal_years_range_check', sql`${t.endDate} >= ${t.startDate}`),
+  ],
+);
+
+// Per-company accounting settings. lockDate: no posting on or before it (null = no lock). Tenant table.
+export const accountingSettings = pgTable(
+  'accounting_settings',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    lockDate: date('lock_date', { mode: 'string' }),
+  },
+  (t) => [uniqueIndex('accounting_settings_company_id_key').on(t.companyId)],
+);
+
 export type Account = typeof accounts.$inferSelect;
+export type FiscalYear = typeof fiscalYears.$inferSelect;
 export type Journal = typeof journals.$inferSelect;
 export type JournalEntry = typeof journalEntries.$inferSelect;
 export type JournalLine = typeof journalLines.$inferSelect;

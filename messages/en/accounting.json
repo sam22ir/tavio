@@ -6,7 +6,8 @@
     "entries": "Entries",
     "accounts": "Chart of accounts",
     "journals": "Journals",
-    "reports": "Reports"
+    "reports": "Reports",
+    "fiscalYears": "Fiscal years"
   },
   "fields": {
     "date": "Date",
@@ -22,7 +23,8 @@
     "accountClass": "Class",
     "number": "Number",
     "state": "State",
-    "partner": "Partner"
+    "partner": "Partner",
+    "reconcilable": "Reconcilable"
   },
   "options": {
     "type": {
@@ -41,26 +43,46 @@
       "purchase": "Purchase",
       "cash": "Cash",
       "bank": "Bank",
-      "general": "General"
+      "general": "General",
+      "misc": "Misc"
     }
   },
   "form": {
     "pickAccount": "Pick an account",
     "addLine": "Add line",
     "removeLine": "Remove line",
-    "post": "Post entry"
+    "post": "Post entry",
+    "save": "Save",
+    "create": "Create",
+    "archive": "Archive",
+    "archiveConfirm": "Archive this account? Not possible if it has entries.",
+    "archiveYes": "Yes, archive",
+    "cancel": "Cancel",
+    "created": "Account created.",
+    "saved": "Changes saved.",
+    "posted": "Entry posted.",
+    "totals": "Total debit: {debit} · Total credit: {credit}",
+    "balancedOk": "Balanced",
+    "notBalanced": "Not balanced",
+    "saveDraft": "Save draft",
+    "deleteDraft": "Delete draft"
   },
   "accounts": {
     "title": "Chart of accounts (SCF)",
-    "verifyNote": "⚠ Accounts need review by a chartered accountant."
+    "verifyNote": "⚠ Accounts need review by a chartered accountant.",
+    "new": "New account",
+    "archived": "This account is archived."
   },
   "journals": {
-    "title": "Journals"
+    "title": "Journals",
+    "new": "New journal",
+    "codeFixed": "The journal code cannot be changed."
   },
   "entries": {
     "title": "Journal entries",
     "new": "New entry",
-    "newTitle": "New manual entry"
+    "newTitle": "New manual entry",
+    "draftTitle": "Entry (draft)"
   },
   "detail": {
     "reverse": "Reverse",
@@ -72,7 +94,10 @@
       "trial": "Trial balance",
       "ledger": "General ledger",
       "partners": "Partner balances",
-      "g50": "G50 (VAT) ⚠"
+      "g50": "G50 (VAT) ⚠",
+      "bilan": "Balance sheet",
+      "tcr": "Income statement",
+      "aging": "Receivables aging"
     },
     "year": "Year",
     "month": "Month",
@@ -90,7 +115,27 @@
       "deductible": "VAT deductible (4456)",
       "net": "VAT due",
       "verify": "⚠ Calculation draft only: verify with a chartered accountant before filing."
-    }
+    },
+    "export": "Accounting export (ZIP)",
+    "bilan": {
+      "actif": "Assets",
+      "passif": "Liabilities",
+      "current": "This year",
+      "previous": "Previous year",
+      "balanced": "Balance sheet balanced: assets = liabilities.",
+      "notBalanced": "Balance sheet not balanced: check the entries."
+    },
+    "tcr": {
+      "result": "Net result"
+    },
+    "aging": {
+      "0-30": "0–30 days",
+      "31-60": "31–60 days",
+      "61-90": "61–90 days",
+      "90+": "Over 90 days"
+    },
+    "exportXlsx": "Export XLSX",
+    "exportCsv": "Export CSV"
   },
   "errors": {
     "generic": "Something went wrong. Try again.",
@@ -111,5 +156,56 @@
     "STATE": "Action not allowed in this state.",
     "CONFLICT": "Conflict: the action was already done.",
     "INTERNAL": "Internal error."
+  },
+  "fiscalYears": {
+    "title": "Fiscal years",
+    "list": "Fiscal years",
+    "empty": "No fiscal year yet. Create the first one below.",
+    "state": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "close": "Close",
+    "closeConfirm": "Close this fiscal year? The result and opening entries will be generated.",
+    "closeYes": "Yes, close",
+    "closeNo": "Cancel",
+    "closed": "Fiscal year closed.",
+    "create": "New fiscal year",
+    "name": "Name",
+    "start": "Start",
+    "end": "End",
+    "createSubmit": "Create",
+    "created": "Fiscal year created.",
+    "lock": "Lock date",
+    "lockHelp": "No entry can be posted on or before this date.",
+    "lockDate": "Lock up to",
+    "lockSubmit": "Save",
+    "errors": {
+      "generic": "Action not possible. Check the dates and the fiscal year states."
+    }
+  },
+  "export": {
+    "entryDate": "Date",
+    "entryNumber": "Entry no.",
+    "journal": "Journal",
+    "state": "State",
+    "ref": "Reference",
+    "account": "Account",
+    "accountName": "Account name",
+    "partner": "Partner",
+    "label": "Label",
+    "debit": "Debit",
+    "credit": "Credit",
+    "balance": "Balance",
+    "opening": "Opening balance",
+    "closing": "Closing balance",
+    "movement": "Movement",
+    "line": "Line",
+    "amount": "Amount",
+    "section": "Section",
+    "bilanActif": "Assets",
+    "bilanPassif": "Liabilities",
+    "tcrProduits": "Income",
+    "tcrCharges": "Expenses"
   }
 }
