@@ -173,8 +173,86 @@ export const accountingSettings = pgTable(
   (t) => [uniqueIndex('accounting_settings_company_id_key').on(t.companyId)],
 );
 
+// Bank and cash statements (SCF 512 / 512x and 53). Account code rules are enforced in service/bank-statements.ts. Tenant table.
+export const bankStatements = pgTable(
+  'bank_statements',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    accountId: uuid('account_id')
+      .notNull()
+      .references(() => accounts.id),
+    name: text('name').notNull(),
+    dateFrom: date('date_from', { mode: 'string' }).notNull(),
+    dateTo: date('date_to', { mode: 'string' }).notNull(),
+    openingBalanceCents: bigint('opening_balance_cents', { mode: 'bigint' }).notNull(),
+    closingBalanceCents: bigint('closing_balance_cents', { mode: 'bigint' }).notNull(),
+    // open: lines can be matched, unmatched, ignored. done: closed, read-only.
+    state: text('state').notNull().default('open'),
+    closedAt: timestamp('closed_at', { withTimezone: true }),
+  },
+  (t) => [
+    index('bank_statements_company_id_account_id_idx').on(t.companyId, t.accountId),
+    check('bank_statements_state_check', sql`${t.state} in ('open', 'done')`),
+    check('bank_statements_range_check', sql`${t.dateTo} >= ${t.dateFrom}`),
+  ],
+);
+
+// Statement lines. amount is signed: positive is money in (debit on the bank account). Tenant table.
+export const bankStatementLines = pgTable(
+  'bank_statement_lines',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    statementId: uuid('statement_id')
+      .notNull()
+      .references(() => bankStatements.id, { onDelete: 'cascade' }),
+    date: date('date', { mode: 'string' }).notNull(),
+    label: text('label').notNull().default(''),
+    reference: text('reference'),
+    amountCents: bigint('amount_cents', { mode: 'bigint' }).notNull(),
+    partnerId: uuid('partner_id').references(() => partners.id),
+    // unmatched: no entry line linked. matched: one or more links in bank_statement_matches. ignored: skipped on purpose.
+    state: text('state').notNull().default('unmatched'),
+  },
+  (t) => [
+    index('bank_statement_lines_company_id_statement_id_idx').on(t.companyId, t.statementId),
+    check('bank_statement_lines_state_check', sql`${t.state} in ('unmatched', 'matched', 'ignored')`),
+  ],
+);
+
+// Links a statement line to journal lines. Several journal lines can match one statement line (sum match).
+// A journal line is linked at most once company-wide. A journal line is reconciled when its link sits on a done statement.
+// Tenant table.
+export const bankStatementMatches = pgTable(
+  'bank_statement_matches',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    statementLineId: uuid('statement_line_id')
+      .notNull()
+      .references(() => bankStatementLines.id, { onDelete: 'cascade' }),
+    journalLineId: uuid('journal_line_id')
+      .notNull()
+      .references(() => journalLines.id),
+  },
+  (t) => [
+    uniqueIndex('bank_statement_matches_company_id_journal_line_id_key').on(t.companyId, t.journalLineId),
+    index('bank_statement_matches_company_id_statement_line_id_idx').on(t.companyId, t.statementLineId),
+  ],
+);
+
 export type Account = typeof accounts.$inferSelect;
 export type FiscalYear = typeof fiscalYears.$inferSelect;
 export type Journal = typeof journals.$inferSelect;
 export type JournalEntry = typeof journalEntries.$inferSelect;
 export type JournalLine = typeof journalLines.$inferSelect;
+export type BankStatement = typeof bankStatements.$inferSelect;
+export type BankStatementLine = typeof bankStatementLines.$inferSelect;
+export type BankStatementMatch = typeof bankStatementMatches.$inferSelect;
