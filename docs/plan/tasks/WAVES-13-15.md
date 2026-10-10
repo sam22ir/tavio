@@ -18,10 +18,10 @@ Sizes: S ≈ half a day of agent work, M ≈ 1 day, L ≈ 2+ days.
 
 | # | Question | Recommendation | Blocks |
 |---|---|---|---|
-| D1 | Stock valuation method | Weighted average cost (CMUP), the usual method for Algerian SMEs | 13-D |
-| D2 | WhatsApp sending | Meta WhatsApp Cloud API, directly. Needs a Meta Business account, a dedicated phone number and approved message templates | 15-F |
-| D3 | SMS | Skip in v1 (WhatsApp + email cover it), or pick a local provider | 15-F |
-| D4 | Online payment in the customer portal | Chargily Pay (CIB + Edahabia). Needs a registered business account. Fallback: portal without payment in v1 | 15-E |
+| D1 | Stock valuation method | **Decided:** weighted average cost (CMUP) | 13-D |
+| D2 | WhatsApp sending | **Later.** Build 15-F with email first and a pluggable WhatsApp channel (manual wa.me links until then) | 15-F |
+| D3 | SMS | **Decided:** not in v1 | 15-F |
+| D4 | Online payment in the customer portal | **Later.** Build the portal without payment; payment plugs in later (Chargily Pay is the candidate) | 15-E |
 | D5 | Accountant review | Needed for 13-D, 14-C and 14-D (accounts, rates, bilan/TCR layout, G50). Work proceeds with "to verify" flags | release of W14 |
 | D6 | Lawyer review | Needed for the default credit contract clauses (14-B) | release of 14-B |
 
