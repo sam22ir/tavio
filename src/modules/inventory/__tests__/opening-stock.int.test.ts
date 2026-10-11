@@ -1,3 +1,4 @@
+import { deleteTestCompanies } from '@/testing/db-cleanup';
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -8,7 +9,7 @@ import { loadDevEnv } from '@/core/env/load-dev-env';
 import { OWNER_PERMS } from '@/core/perms';
 import { accounts, journalLines } from '@/modules/accounting/schema';
 import { products, uoms } from '@/modules/products/schema';
-import { stockLocations, stockMoves } from '../schema';
+import { stockMoves } from '../schema';
 import '@/modules/accounting/events';
 import '../events';
 import { createAdjustment } from '../service/adjustments';
@@ -41,11 +42,8 @@ async function fixture(): Promise<{ args: TenantArgs; productId: string }> {
 }
 
 afterAll(async () => {
-  for (const id of createdCompanies) {
-    await db.delete(journalLines).where(eq(journalLines.companyId, id));
-    await db.delete(stockMoves).where(eq(stockMoves.companyId, id));
-    await db.delete(stockLocations).where(eq(stockLocations.companyId, id));
-  }
+  // Posted journal lines are immutable by design; the shared helper does a best-effort cleanup.
+  await deleteTestCompanies(db, createdCompanies);
 });
 
 describe.skipIf(!process.env.TAVIO_W5_DB)('opening stock (database)', () => {
