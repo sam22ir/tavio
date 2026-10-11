@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -10,13 +10,26 @@ vi.mock('@opennextjs/cloudflare', () => ({
 
 import { runInBackground } from '../env';
 
-describe('portal migration tenant isolation', () => {
-  const sql = readFileSync(join(process.cwd(), 'drizzle', '0019_w16_portal_tables.sql'), 'utf8');
+// Every tenant table created from wave 13 on (migration 0011+) must enable RLS, carry the
+// tenant_isolation policy and be granted to tavio_app (the 0009 ALL TABLES grant predates them).
+describe('tenant tables created since 0011 are isolated and granted', () => {
+  const dir = join(process.cwd(), 'drizzle');
+  const files = readdirSync(dir).filter((f) => /^\d{4}_.*\.sql$/.test(f) && Number(f.slice(0, 4)) >= 11);
+  const all = files.map((f) => readFileSync(join(dir, f), 'utf8')).join('\n');
+  const tenantTables = [...all.matchAll(/CREATE TABLE "([a-z0-9_]+)" \(([\s\S]*?)\n\);/g)]
+    .filter(([, , body]) => /"company_id" uuid NOT NULL/.test(body ?? ''))
+    .map(([, name]) => name as string);
 
-  it.each(['portal_access_tokens', 'portal_login_requests'])('enables RLS with a company policy on %s', (table) => {
-    expect(sql).toContain(`ALTER TABLE "${table}" ENABLE ROW LEVEL SECURITY`);
-    expect(sql).toContain(`CREATE POLICY tenant_isolation ON "${table}" FOR ALL`);
-    expect(sql).toContain(`current_setting('app.company_id', true)`);
+  it('finds the new tenant tables', () => {
+    expect(tenantTables).toEqual(expect.arrayContaining(['portal_access_tokens', 'outbound_messages']));
+  });
+
+  it.each(tenantTables)('%s has RLS, the tenant policy and a grant', (table) => {
+    const t = `"?${table}"?`;
+    expect(all).toMatch(new RegExp(`ALTER TABLE ${t} ENABLE ROW LEVEL SECURITY`));
+    expect(all).toMatch(new RegExp(`CREATE POLICY tenant_isolation ON ${t} FOR ALL`));
+    // Grants may list several tables: GRANT ... ON a, b, c TO tavio_app.
+    expect(all).toMatch(new RegExp(`GRANT SELECT, INSERT, UPDATE, DELETE ON [^;]*\\b${table}\\b[^;]* TO tavio_app`));
   });
 });
 

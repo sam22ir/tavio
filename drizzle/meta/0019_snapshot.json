@@ -1,5 +1,5 @@
 {
-  "id": "9808ec34-6d31-4b08-912a-00563429096a",
+  "id": "cde09786-bd8e-4478-879d-b2676f7e29bf",
   "prevId": "af52f3a6-415f-42bb-96d8-08054ccc0927",
   "version": "7",
   "dialect": "postgresql",
@@ -2226,6 +2226,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_by": {
           "name": "created_by",
           "type": "uuid",
@@ -2401,6 +2407,575 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.message_opt_outs": {
+      "name": "message_opt_outs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partner_id": {
+          "name": "partner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "channel": {
+          "name": "channel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "message_opt_outs_company_partner_channel_key": {
+          "name": "message_opt_outs_company_partner_channel_key",
+          "columns": [
+            {
+              "expression": "company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "partner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "channel",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "message_opt_outs_company_id_companies_id_fk": {
+          "name": "message_opt_outs_company_id_companies_id_fk",
+          "tableFrom": "message_opt_outs",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "message_opt_outs_channel_check": {
+          "name": "message_opt_outs_channel_check",
+          "value": "\"message_opt_outs\".\"channel\" in ('email', 'whatsapp')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.message_settings": {
+      "name": "message_settings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reminders_enabled": {
+          "name": "reminders_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "before_days": {
+          "name": "before_days",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 3
+        },
+        "overdue_days": {
+          "name": "overdue_days",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[1, 7]'::jsonb"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "message_settings_company_id_key": {
+          "name": "message_settings_company_id_key",
+          "columns": [
+            {
+              "expression": "company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "message_settings_company_id_companies_id_fk": {
+          "name": "message_settings_company_id_companies_id_fk",
+          "tableFrom": "message_settings",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "message_settings_before_days_check": {
+          "name": "message_settings_before_days_check",
+          "value": "\"message_settings\".\"before_days\" between 0 and 30"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.message_templates": {
+      "name": "message_templates",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "locale": {
+          "name": "locale",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject": {
+          "name": "subject",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "message_templates_company_key_locale_key": {
+          "name": "message_templates_company_key_locale_key",
+          "columns": [
+            {
+              "expression": "company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "message_templates_company_id_companies_id_fk": {
+          "name": "message_templates_company_id_companies_id_fk",
+          "tableFrom": "message_templates",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "message_templates_locale_check": {
+          "name": "message_templates_locale_check",
+          "value": "\"message_templates\".\"locale\" in ('fr', 'ar')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.outbound_messages": {
+      "name": "outbound_messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "channel": {
+          "name": "channel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "to_address": {
+          "name": "to_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partner_id": {
+          "name": "partner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subject": {
+          "name": "subject",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "body_html": {
+          "name": "body_html",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "body_text": {
+          "name": "body_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "template_key": {
+          "name": "template_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "related_entity": {
+          "name": "related_entity",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "related_id": {
+          "name": "related_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'queued'"
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "available_at": {
+          "name": "available_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_error": {
+          "name": "last_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sent_at": {
+          "name": "sent_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wa_url": {
+          "name": "wa_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "override_opt_out": {
+          "name": "override_opt_out",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "dedupe_key": {
+          "name": "dedupe_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "outbound_messages_company_state_idx": {
+          "name": "outbound_messages_company_state_idx",
+          "columns": [
+            {
+              "expression": "company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "state",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "outbound_messages_company_related_idx": {
+          "name": "outbound_messages_company_related_idx",
+          "columns": [
+            {
+              "expression": "company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "related_entity",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "related_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "outbound_messages_queued_available_idx": {
+          "name": "outbound_messages_queued_available_idx",
+          "columns": [
+            {
+              "expression": "available_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"outbound_messages\".\"state\" = 'queued'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "outbound_messages_company_dedupe_key_key": {
+          "name": "outbound_messages_company_dedupe_key_key",
+          "columns": [
+            {
+              "expression": "company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "dedupe_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"outbound_messages\".\"dedupe_key\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "outbound_messages_company_id_companies_id_fk": {
+          "name": "outbound_messages_company_id_companies_id_fk",
+          "tableFrom": "outbound_messages",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "outbound_messages_channel_check": {
+          "name": "outbound_messages_channel_check",
+          "value": "\"outbound_messages\".\"channel\" in ('email', 'whatsapp')"
+        },
+        "outbound_messages_state_check": {
+          "name": "outbound_messages_state_check",
+          "value": "\"outbound_messages\".\"state\" in ('queued', 'sent', 'failed', 'manual')"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.accounting_settings": {
@@ -10893,6 +11468,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "origin_delivery_id": {
+          "name": "origin_delivery_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -10965,8 +11546,8 @@
           "method": "btree",
           "with": {}
         },
-        "deliveries_company_id_source_live_key": {
-          "name": "deliveries_company_id_source_live_key",
+        "deliveries_company_id_source_open_key": {
+          "name": "deliveries_company_id_source_open_key",
           "columns": [
             {
               "expression": "company_id",
@@ -10988,7 +11569,7 @@
             }
           ],
           "isUnique": true,
-          "where": "\"deliveries\".\"source_id\" is not null and \"deliveries\".\"state\" <> 'cancelled'",
+          "where": "\"deliveries\".\"source_id\" is not null and \"deliveries\".\"state\" in ('draft', 'ready')",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -11078,6 +11659,19 @@
           "type": "numeric(14, 3)",
           "primaryKey": false,
           "notNull": true
+        },
+        "delivered_qty": {
+          "name": "delivered_qty",
+          "type": "numeric(14, 3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "sale_order_line_id": {
+          "name": "sale_order_line_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -11092,6 +11686,27 @@
             },
             {
               "expression": "delivery_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "delivery_lines_company_id_sale_line_idx": {
+          "name": "delivery_lines_company_id_sale_line_idx",
+          "columns": [
+            {
+              "expression": "company_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sale_order_line_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -11151,6 +11766,10 @@
         "delivery_lines_quantity_check": {
           "name": "delivery_lines_quantity_check",
           "value": "\"delivery_lines\".\"quantity\" > 0"
+        },
+        "delivery_lines_delivered_check": {
+          "name": "delivery_lines_delivered_check",
+          "value": "\"delivery_lines\".\"delivered_qty\" >= 0 and \"delivery_lines\".\"delivered_qty\" <= \"delivery_lines\".\"quantity\""
         }
       },
       "isRLSEnabled": false
@@ -15112,6 +15731,13 @@
           "notNull": true,
           "default": false
         },
+        "invoice_policy": {
+          "name": "invoice_policy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'order'"
+        },
         "barcode": {
           "name": "barcode",
           "type": "text",
@@ -15289,6 +15915,10 @@
         "products_kind_check": {
           "name": "products_kind_check",
           "value": "\"products\".\"kind\" in ('goods', 'service')"
+        },
+        "products_invoice_policy_check": {
+          "name": "products_invoice_policy_check",
+          "value": "\"products\".\"invoice_policy\" in ('order', 'delivery')"
         },
         "products_sale_price_cents_check": {
           "name": "products_sale_price_cents_check",
@@ -16769,6 +17399,27 @@
           "type": "bigint",
           "primaryKey": false,
           "notNull": true
+        },
+        "delivered_qty": {
+          "name": "delivered_qty",
+          "type": "numeric(14, 3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "cancelled_qty": {
+          "name": "cancelled_qty",
+          "type": "numeric(14, 3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "invoiced_qty": {
+          "name": "invoiced_qty",
+          "type": "numeric(14, 3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
         }
       },
       "indexes": {
@@ -16855,6 +17506,10 @@
         "sale_order_lines_quantity_check": {
           "name": "sale_order_lines_quantity_check",
           "value": "\"sale_order_lines\".\"quantity\" > 0"
+        },
+        "sale_order_lines_progress_check": {
+          "name": "sale_order_lines_progress_check",
+          "value": "\"sale_order_lines\".\"delivered_qty\" >= 0 and \"sale_order_lines\".\"cancelled_qty\" >= 0 and \"sale_order_lines\".\"invoiced_qty\" >= 0"
         },
         "sale_order_lines_unit_price_check": {
           "name": "sale_order_lines_unit_price_check",
