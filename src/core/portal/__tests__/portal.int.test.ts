@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { loadDevEnv } from '@/core/env/load-dev-env';
 import { getDb } from '@/core/db/client';
 import { companies } from '@/core/db/schema/tenancy';
 import { withTenant } from '@/core/db/tenant';
+import { deleteTestCompanies } from '@/testing/db-cleanup';
 import { partners } from '@/modules/contacts/schema';
 import { invoices } from '@/modules/invoicing/schema';
 import { portalCtx } from '../context';
@@ -33,8 +33,8 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('customer portal isolation (database)'
     companyA = a!.id;
     companyB = b!.id;
     await withTenant({ ...staff, companyId: companyA }, async (ctx) => {
-      const [p] = await ctx.tx.insert(partners).values({ companyId: companyA, kind: 'individual', displayName: 'A One', email: 'a1@example.dz', isCustomer: true }).returning({ id: partners.id });
-      const [p2] = await ctx.tx.insert(partners).values({ companyId: companyA, kind: 'individual', displayName: 'A Two', isCustomer: true }).returning({ id: partners.id });
+      const [p] = await ctx.tx.insert(partners).values({ companyId: companyA, kind: 'individual', firstName: 'Amel', lastName: 'One', displayName: 'A One', email: 'a1@example.dz', isCustomer: true }).returning({ id: partners.id });
+      const [p2] = await ctx.tx.insert(partners).values({ companyId: companyA, kind: 'individual', firstName: 'Amel', lastName: 'Two', displayName: 'A Two', isCustomer: true }).returning({ id: partners.id });
       partnerA = p!.id;
       partnerA2 = p2!.id;
       const [i] = await ctx.tx.insert(invoices).values({ companyId: companyA, type: 'out_invoice', number: 'FA-A1', partnerId: partnerA, state: 'posted', date: '2026-10-01' }).returning({ id: invoices.id });
@@ -43,15 +43,14 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('customer portal isolation (database)'
       invoiceOfA2 = i2!.id;
     });
     await withTenant({ ...staff, companyId: companyB }, async (ctx) => {
-      const [p] = await ctx.tx.insert(partners).values({ companyId: companyB, kind: 'individual', displayName: 'B One', isCustomer: true }).returning({ id: partners.id });
+      const [p] = await ctx.tx.insert(partners).values({ companyId: companyB, kind: 'individual', firstName: 'Bilal', lastName: 'One', displayName: 'B One', isCustomer: true }).returning({ id: partners.id });
       const [i] = await ctx.tx.insert(invoices).values({ companyId: companyB, type: 'out_invoice', number: 'FB-1', partnerId: p!.id, state: 'posted', date: '2026-10-01' }).returning({ id: invoices.id });
       invoiceOfB = i!.id;
     });
   });
 
   afterAll(async () => {
-    await db.delete(companies).where(eq(companies.id, companyA));
-    await db.delete(companies).where(eq(companies.id, companyB));
+    await deleteTestCompanies(db, [companyA, companyB]);
   });
 
   it("a token for partner A cannot read partner B's invoice, nor another partner's in the same company", async () => {

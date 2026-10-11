@@ -52,10 +52,10 @@ export default async function PortalLoginPage({
               autoComplete="username"
               inputMode="email"
               placeholder={t('login.placeholder')}
-              className="min-h-11 rounded-lg border border-stone-300 bg-white px-3 text-base outline-none focus:border-[oklch(0.55_0.11_185)]"
+              className="min-h-11 rounded-lg border border-stone-300 bg-white px-3 text-base outline-none focus:border-[#08409D]"
             />
           </label>
-          <button type="submit" className="min-h-11 rounded-lg bg-[oklch(0.55_0.11_185)] px-4 font-medium text-white">
+          <button type="submit" className="min-h-11 rounded-lg bg-[#08409D] px-4 font-medium text-white">
             {t('login.submit')}
           </button>
         </form>

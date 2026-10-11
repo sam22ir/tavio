@@ -287,6 +287,13 @@ export async function validateDelivery(
       .where(eq(deliveryLines.id, p.id));
   }
 
+  // Mark the delivery done before any backorder is inserted: the open-delivery unique index on
+  // (company, source) would otherwise reject the remainder, which shares this delivery's source.
+  await ctx.tx
+    .update(deliveries)
+    .set({ state: 'done', deliveredAt: sql`now()`, updatedAt: sql`now()` })
+    .where(eq(deliveries.id, delivery.id));
+
   let backorderId: string | null = null;
   if (plan.backorder) {
     const remainder = plan.backorderLines.map((b) => {
@@ -325,10 +332,6 @@ export async function validateDelivery(
     }
   }
 
-  await ctx.tx
-    .update(deliveries)
-    .set({ state: 'done', deliveredAt: sql`now()`, updatedAt: sql`now()` })
-    .where(eq(deliveries.id, delivery.id));
   await audit(ctx, {
     entity: 'inventory.delivery',
     recordId: delivery.id,

@@ -85,7 +85,8 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('credit contract deliveries move stock
       expect((await sourceDeliveryStatus(ctx, { sourceEntity: CONTRACT, sourceId })).ok).toBe(true);
       await setDeliverySignedBy(ctx, { deliveryId: id, signedByName: 'Client' });
       const validated = await validateDelivery(ctx, id);
-      expect(validated).toEqual({ ok: true, value: { moves: 1 } });
+      expect(validated.ok).toBe(true);
+      expect(validated.ok && validated.value.moves).toBe(1);
     });
     expect(await onHand(args, goodsId)).toBe(6);
     expect(await onHand(args, serviceId)).toBe(0);

@@ -38,7 +38,7 @@ export default async function PortalContractPage({ params }: { params: Promise<{
 
   return (
     <article className="flex flex-col gap-5">
-      <Link href={`/${locale}/portal/contracts`} className="inline-flex min-h-11 items-center text-sm text-[oklch(0.55_0.11_185)]">
+      <Link href={`/${locale}/portal/contracts`} className="inline-flex min-h-11 items-center text-sm text-[#08409D]">
         {t('contract.back')}
       </Link>
       <header className="flex flex-col gap-1">
@@ -97,7 +97,7 @@ export default async function PortalContractPage({ params }: { params: Promise<{
               <li key={r.id}>
                 <Link href={`/${locale}/portal/receipts/${r.id}/print`} className="flex min-h-11 items-center justify-between gap-2 rounded-lg border border-stone-200 bg-white p-3 text-sm">
                   <span dir="ltr">{r.number}</span>
-                  <span className="text-[oklch(0.55_0.11_185)]">{t('receipts.print')}</span>
+                  <span className="text-[#08409D]">{t('receipts.print')}</span>
                 </Link>
               </li>
             ))}

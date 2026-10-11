@@ -11,7 +11,7 @@ import '@/modules/event-handlers';
 import { createPartner } from '@/modules/contacts/service/partners';
 import { products, uoms } from '@/modules/products/schema';
 import { accounts, journalEntries, journalLines } from '@/modules/accounting/schema';
-import { stockMoves } from '@/modules/inventory/schema';
+import { deliveries, deliveryLines, stockMoves } from '@/modules/inventory/schema';
 import { onHandByLocation } from '@/modules/inventory/service/stock';
 import {
   confirmOrder as confirmSaleOrder,
@@ -58,7 +58,8 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('cross-module flows (integration)', ()
       id: productId,
       companyId,
       name: 'Cement bag',
-      kind: 'goods',
+      kind: 'goods', trackStock: true,
+
       uomId,
       salePriceCents: BigInt(100000),
       costCents: BigInt(50000),
@@ -91,7 +92,7 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('cross-module flows (integration)', ()
     partnerId = partner.ok ? partner.value.id : '';
   });
 
-  it('confirms a sale order and creates a draft delivery move', async () => {
+  it('confirms a sale order and creates one draft delivery for it', async () => {
     const created = await withTenant(args, (ctx) =>
       createSaleOrder(ctx, {
         partnerId,
@@ -104,18 +105,25 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('cross-module flows (integration)', ()
     const confirmed = await withTenant(args, (ctx) => confirmSaleOrder(ctx, saleOrderId));
     expect(confirmed.ok).toBe(true);
 
+    const rows = await db
+      .select()
+      .from(deliveries)
+      .where(
+        and(
+          eq(deliveries.companyId, companyId),
+          eq(deliveries.sourceEntity, 'sales.order'),
+          eq(deliveries.sourceId, saleOrderId),
+        ),
+      );
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.state).toBe('draft');
+    const lines = await db.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, rows[0]?.id ?? ''));
+    expect(lines.some((l) => l.productId === productId)).toBe(true);
     const moves = await db
       .select()
       .from(stockMoves)
-      .where(
-        and(
-          eq(stockMoves.companyId, companyId),
-          eq(stockMoves.sourceEntity, 'sales.order'),
-          eq(stockMoves.sourceId, saleOrderId),
-        ),
-      );
-    expect(moves.some((m) => m.productId === productId)).toBe(true);
-    expect(moves.every((m) => m.state === 'draft')).toBe(true);
+      .where(and(eq(stockMoves.companyId, companyId), eq(stockMoves.sourceId, saleOrderId)));
+    expect(moves).toHaveLength(0);
   });
 
   it('invoices and posts the sale, and books a balanced journal entry', async () => {

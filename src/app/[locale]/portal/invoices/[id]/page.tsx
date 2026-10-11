@@ -36,7 +36,7 @@ export default async function PortalInvoicePage({ params }: { params: Promise<{ 
 
   return (
     <article className="flex flex-col gap-5">
-      <Link href={`/${locale}/portal/invoices`} className="inline-flex min-h-11 items-center text-sm text-[oklch(0.55_0.11_185)]">
+      <Link href={`/${locale}/portal/invoices`} className="inline-flex min-h-11 items-center text-sm text-[#08409D]">
         {t('invoice.back')}
       </Link>
       <header className="flex flex-col gap-1">
@@ -98,7 +98,7 @@ export default async function PortalInvoicePage({ params }: { params: Promise<{ 
           {t('invoice.print')}
         </Link>
         {portalPaymentsEnabled() ? (
-          <button type="button" disabled={!canPayOnline()} className="min-h-11 rounded-lg bg-[oklch(0.55_0.11_185)] px-4 text-sm font-medium text-white disabled:opacity-50">
+          <button type="button" disabled={!canPayOnline()} className="min-h-11 rounded-lg bg-[#08409D] px-4 text-sm font-medium text-white disabled:opacity-50">
             {t('pay.online')}
           </button>
         ) : null}

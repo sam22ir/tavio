@@ -40,6 +40,7 @@ async function fixture(): Promise<{ args: TenantArgs; goodsId: string; partnerId
     name: 'Washer',
     kind: 'goods',
     trackStock: true,
+    invoicePolicy: 'delivery',
     uomId: unitRow.id,
     salePriceCents: BigInt(10000),
     costCents: BigInt(5000),
