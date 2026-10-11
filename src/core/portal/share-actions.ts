@@ -6,7 +6,7 @@ import { getContract } from '@/modules/credit_sales/service/contracts';
 import { loadInvoice } from '@/modules/invoicing/service/invoices';
 import { partners } from '@/modules/contacts/schema';
 import { eq, and } from 'drizzle-orm';
-import { createPortalLink, type CreatedPortalLink } from './links';
+import { createPortalLink, listDocumentPortalLinks, revokePortalLink, type CreatedPortalLink, type PortalLinkRow } from './links';
 
 // Staff actions behind the "Partager" and "Inviter au portail" buttons.
 
@@ -66,4 +66,22 @@ export async function createPortalInviteAction(raw: unknown): Promise<Result<Por
       .where(and(eq(partners.companyId, ctx.companyId), eq(partners.id, partnerId)));
     return { ok: true, value: toResult(link.value, p?.phone ?? null) };
   });
+}
+
+const RevokeForm = z.object({ linkId: UUID });
+
+/** Staff action: the document links of one invoice or contract, metadata only. */
+export async function listPortalDocumentLinksAction(raw: unknown): Promise<Result<PortalLinkRow[]>> {
+  const parsed = DocumentForm.safeParse(raw);
+  if (!parsed.success) return err('VALIDATION', 'invalid input');
+  const target = { entity: parsed.data.kind === 'invoice' ? 'invoicing.invoice' as const : 'credit_sales.contract' as const, id: parsed.data.id };
+  return withPageCtx((ctx) => listDocumentPortalLinks(ctx, target));
+}
+
+/** Staff action: revokes one document link. */
+export async function revokePortalLinkAction(raw: unknown): Promise<Result<{ id: string }>> {
+  const parsed = RevokeForm.safeParse(raw);
+  if (!parsed.success) return err('VALIDATION', 'invalid input');
+  const linkId = parsed.data.linkId;
+  return withPageCtx((ctx) => revokePortalLink(ctx, linkId));
 }

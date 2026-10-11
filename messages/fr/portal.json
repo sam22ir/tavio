@@ -21,7 +21,8 @@
       "link": "Ce lien est invalide.",
       "config": "L'espace client n'est pas configuré.",
       "invalid": "Saisie invalide. Vérifiez votre e-mail ou téléphone.",
-      "company_missing": "Ce lien est incomplet. Utilisez le lien fourni par votre entreprise."
+      "company_missing": "Ce lien est incomplet. Utilisez le lien fourni par votre entreprise.",
+      "scoped": "Pour voir tout votre compte, recevez un lien de connexion."
     }
   },
   "home": {
@@ -117,6 +118,12 @@
     "creating": "Création…",
     "messageDocument": "Bonjour, voici votre document : {url}",
     "messageInvite": "Bonjour, accédez à votre espace client : {url}",
-    "emailSubject": "Votre espace client"
+    "emailSubject": "Votre espace client",
+    "existingLinks": "Liens existants",
+    "revoke": "Révoquer le lien",
+    "revoked": "Révoqué",
+    "noLinks": "Aucun lien pour ce document.",
+    "linkExpires": "Expire le {date}",
+    "linkActive": "Actif"
   }
 }

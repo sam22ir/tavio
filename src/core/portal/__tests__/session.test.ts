@@ -8,7 +8,8 @@ const OTHER = 'another-secret-value-for-tests-9876543210';
 const COMPANY = '3f1c2b7a-8d4e-4f5a-9b6c-7d8e9f0a1b2c';
 const PARTNER = '7a9e0b1c-2d3e-4f50-8a61-b72c83d94e05';
 const NOW = new Date('2026-10-11T10:00:00Z');
-const session = { companyId: COMPANY, partnerId: PARTNER, exp: NOW.getTime() + 7 * 24 * 60 * 60 * 1000 };
+const TOKEN = '5c2d1e0f-3a4b-4c5d-8e6f-7a8b9c0d1e2f';
+const session = { companyId: COMPANY, partnerId: PARTNER, tokenId: TOKEN, scope: null, exp: NOW.getTime() + 7 * 24 * 60 * 60 * 1000 };
 
 describe('portal session cookie', () => {
   it('round-trips a signed session', () => {
@@ -18,7 +19,7 @@ describe('portal session cookie', () => {
 
   it('refuses a tampered payload', () => {
     const [payload, signature] = signPortalSession(session, SECRET).split('.') as [string, string];
-    const forged = Buffer.from(JSON.stringify({ v: 1, companyId: COMPANY, partnerId: '00000000-0000-4000-8000-000000000001', exp: session.exp }), 'utf8').toString('base64url');
+    const forged = Buffer.from(JSON.stringify({ v: 1, companyId: COMPANY, partnerId: '00000000-0000-4000-8000-000000000001', tokenId: TOKEN, scope: null, exp: session.exp }), 'utf8').toString('base64url');
     expect(payload).not.toBe(forged);
     expect(verifyPortalSession(`${forged}.${signature}`, SECRET, NOW)).toBeNull();
   });

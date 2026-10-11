@@ -28,7 +28,7 @@ export default async function PortalLoginPage({
 
       {e ? (
         <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-          {t(`login.errors.${['expired', 'used', 'link', 'config', 'invalid'].includes(e) ? e : 'link'}`)}
+          {t(`login.errors.${['expired', 'used', 'link', 'config', 'invalid', 'scoped'].includes(e) ? e : 'link'}`)}
         </p>
       ) : null}
 

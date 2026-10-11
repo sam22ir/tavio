@@ -2,7 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { requirePortalSession } from '@/core/portal/session-cookie';
+import { requireDocumentPortalSession } from '@/core/portal/session-cookie';
 import { portalCtx } from '@/core/portal/context';
 import { partnerOwnsContract } from '@/core/portal/queries';
 import { loadContractPrint } from '@/modules/credit_sales/print/queries';
@@ -16,7 +16,7 @@ export default async function PortalContractPrintPage({ params }: { params: Prom
   const { locale, id } = await params;
   if (!hasLocale(routing.locales, locale) || !UUID_RE.test(id)) notFound();
   setRequestLocale(locale);
-  const session = await requirePortalSession(locale);
+  const session = await requireDocumentPortalSession(locale, 'credit_sales.contract', id);
 
   const input = await portalCtx(session, locale as 'fr' | 'ar' | 'en', async (scope) => {
     if (!(await partnerOwnsContract(scope, id))) return null;

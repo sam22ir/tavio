@@ -21,7 +21,8 @@
       "link": "This link is not valid.",
       "config": "The customer space is not configured.",
       "invalid": "Invalid entry. Check your email or phone.",
-      "company_missing": "This link is incomplete. Use the link your company sent you."
+      "company_missing": "This link is incomplete. Use the link your company sent you.",
+      "scoped": "To see your whole account, request a sign-in link."
     }
   },
   "home": {
@@ -117,6 +118,12 @@
     "creating": "Creating…",
     "messageDocument": "Hello, here is your document: {url}",
     "messageInvite": "Hello, open your customer space: {url}",
-    "emailSubject": "Your customer space"
+    "emailSubject": "Your customer space",
+    "existingLinks": "Existing links",
+    "revoke": "Revoke link",
+    "revoked": "Revoked",
+    "noLinks": "No link for this document.",
+    "linkExpires": "Expires {date}",
+    "linkActive": "Active"
   }
 }

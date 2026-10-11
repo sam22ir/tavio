@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { portalAccessTokens } from '@/core/db/schema/portal';
@@ -67,8 +67,9 @@ export async function issuePortalToken(
 
 /** Staff action: creates a portal link for a partner, audited and noted in chatter. */
 export async function createPortalLink(ctx: Ctx, input: CreatePortalLinkInput): Promise<Result<CreatedPortalLink>> {
+  // Minting a link lets someone outside the company open a document: it needs the write permission on that document.
   const perm = input.target
-    ? requirePerm(ctx, input.target.entity === 'invoicing.invoice' ? 'invoicing.invoice.read' : 'credit_sales.contract.read')
+    ? requirePerm(ctx, input.target.entity === 'invoicing.invoice' ? 'invoicing.invoice.write' : 'credit_sales.contract.write')
     : requirePerm(ctx, 'contacts.partner.write');
   if (!perm.ok) return perm;
   if (!UUID_RE.test(input.partnerId)) return err('NOT_FOUND', 'partner not found');
@@ -122,4 +123,60 @@ export async function createPortalLink(ctx: Ctx, input: CreatePortalLinkInput): 
     purpose,
     expiresAt: issued.expiresAt,
   });
+}
+
+export interface PortalLinkRow {
+  id: string;
+  createdAt: Date;
+  expiresAt: Date;
+  revokedAt: Date | null;
+  active: boolean;
+}
+
+const READ_PERM_BY_ENTITY = {
+  'invoicing.invoice': 'invoicing.invoice.read',
+  'credit_sales.contract': 'credit_sales.contract.read',
+} as const;
+
+/** Document links for one invoice or contract. Returns no token, only metadata. */
+export async function listDocumentPortalLinks(
+  ctx: Ctx,
+  target: { entity: 'invoicing.invoice' | 'credit_sales.contract'; id: string },
+  now: Date = new Date(),
+): Promise<Result<PortalLinkRow[]>> {
+  const perm = requirePerm(ctx, READ_PERM_BY_ENTITY[target.entity]);
+  if (!perm.ok) return perm;
+  if (!UUID_RE.test(target.id)) return err('NOT_FOUND', 'document not found');
+  const rows = await ctx.tx
+    .select({ id: portalAccessTokens.id, createdAt: portalAccessTokens.createdAt, expiresAt: portalAccessTokens.expiresAt, revokedAt: portalAccessTokens.revokedAt })
+    .from(portalAccessTokens)
+    .where(and(
+      eq(portalAccessTokens.companyId, ctx.companyId),
+      eq(portalAccessTokens.purpose, 'document'),
+      eq(portalAccessTokens.targetEntity, target.entity),
+      eq(portalAccessTokens.targetId, target.id),
+    ))
+    .orderBy(desc(portalAccessTokens.createdAt))
+    .limit(50);
+  return ok(rows.map((r) => ({ ...r, active: r.revokedAt === null && r.expiresAt.getTime() > now.getTime() })));
+}
+
+/** Staff action: revokes one document link. Its session ends on the next request. Audited. */
+export async function revokePortalLink(ctx: Ctx, linkId: string, now: Date = new Date()): Promise<Result<{ id: string }>> {
+  if (!UUID_RE.test(linkId)) return err('NOT_FOUND', 'link not found');
+  const [row] = await ctx.tx
+    .select({ id: portalAccessTokens.id, targetEntity: portalAccessTokens.targetEntity, targetId: portalAccessTokens.targetId, revokedAt: portalAccessTokens.revokedAt })
+    .from(portalAccessTokens)
+    .where(and(eq(portalAccessTokens.companyId, ctx.companyId), eq(portalAccessTokens.id, linkId), eq(portalAccessTokens.purpose, 'document')));
+  if (!row || !row.targetEntity || !row.targetId) return err('NOT_FOUND', 'link not found');
+  const entity = row.targetEntity as 'invoicing.invoice' | 'credit_sales.contract';
+  const perm = requirePerm(ctx, entity === 'invoicing.invoice' ? 'invoicing.invoice.write' : 'credit_sales.contract.write');
+  if (!perm.ok) return perm;
+  if (row.revokedAt) return ok({ id: row.id });
+  await ctx.tx
+    .update(portalAccessTokens)
+    .set({ revokedAt: now })
+    .where(and(eq(portalAccessTokens.companyId, ctx.companyId), eq(portalAccessTokens.id, row.id), isNull(portalAccessTokens.revokedAt)));
+  await audit(ctx, { action: 'portal_link_revoked', entity: 'portal.access', recordId: row.id, after: { target: { entity, id: row.targetId } } });
+  return ok({ id: row.id });
 }

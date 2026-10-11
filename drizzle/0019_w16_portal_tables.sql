@@ -8,6 +8,7 @@ CREATE TABLE "portal_access_tokens" (
 	"target_id" uuid,
 	"expires_at" timestamp with time zone NOT NULL,
 	"used_at" timestamp with time zone,
+	"revoked_at" timestamp with time zone,
 	"created_by" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "portal_access_tokens_purpose_check" CHECK ("portal_access_tokens"."purpose" in ('login', 'document')),

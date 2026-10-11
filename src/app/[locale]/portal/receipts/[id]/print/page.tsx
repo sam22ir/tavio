@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { requirePortalSession } from '@/core/portal/session-cookie';
 import { portalCtx } from '@/core/portal/context';
-import { partnerOwnsReceipt } from '@/core/portal/queries';
+import { isFullSession } from '@/core/portal/session';
+import { partnerOwnsReceipt, receiptBelongsToContract } from '@/core/portal/queries';
 import { loadReceiptPrint } from '@/modules/credit_sales/print/queries';
 import { labels } from '@/modules/credit_sales/print/shared';
 import { ReceiptView } from '@/modules/credit_sales/print/views';
@@ -20,6 +21,12 @@ export default async function PortalReceiptPrintPage({ params }: { params: Promi
 
   const input = await portalCtx(session, locale as 'fr' | 'ar' | 'en', async (scope) => {
     if (!(await partnerOwnsReceipt(scope, id))) return null;
+    if (!isFullSession(session)) {
+      // A document-link session sees a receipt only when it belongs to the one contract that link opened.
+      const scoped = session.scope;
+      if (!scoped || scoped.entity !== 'credit_sales.contract') return null;
+      if (!(await receiptBelongsToContract(scope, id, scoped.id))) return null;
+    }
     return loadReceiptPrint(scope.ctx, id);
   });
   if (!input) notFound();

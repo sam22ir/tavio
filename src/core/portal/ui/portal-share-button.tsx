@@ -1,7 +1,11 @@
 'use client';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { createPortalDocumentLinkAction, createPortalInviteAction, type PortalShareResult } from '../share-actions';
+import {
+  createPortalDocumentLinkAction, createPortalInviteAction, listPortalDocumentLinksAction, revokePortalLinkAction,
+  type PortalShareResult,
+} from '../share-actions';
+import type { PortalLinkRow } from '../links';
 
 type Props =
   | { mode: 'document'; kind: 'invoice' | 'contract'; id: string; label?: string }
@@ -14,6 +18,29 @@ export function PortalShareButton(props: Props) {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [pending, start] = useTransition();
+  const [links, setLinks] = useState<PortalLinkRow[] | null>(null);
+
+  function loadLinks(): void {
+    if (props.mode !== 'document') return;
+    start(async () => {
+      const res = await listPortalDocumentLinksAction({ kind: props.kind, id: props.id });
+      setLinks(res.ok ? res.value : []);
+    });
+  }
+
+  useEffect(() => {
+    loadLinks();
+    // Reload when the document changes; loadLinks reads props at call time.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.mode, props.mode === 'document' ? props.kind : null, props.mode === 'document' ? props.id : null]);
+
+  function revoke(linkId: string): void {
+    start(async () => {
+      const res = await revokePortalLinkAction({ linkId });
+      if (!res.ok) setError(t('error'));
+      loadLinks();
+    });
+  }
 
   function create(): void {
     setError(null);
@@ -21,8 +48,10 @@ export function PortalShareButton(props: Props) {
       const res = props.mode === 'document'
         ? await createPortalDocumentLinkAction({ kind: props.kind, id: props.id })
         : await createPortalInviteAction({ partnerId: props.partnerId });
-      if (res.ok) setResult(res.value);
-      else setError(t('error'));
+      if (res.ok) {
+        setResult(res.value);
+        loadLinks();
+      } else setError(t('error'));
     });
   }
 
@@ -52,6 +81,27 @@ export function PortalShareButton(props: Props) {
         {pending ? t('creating') : label}
       </button>
       {error ? <p role="alert" className="text-sm text-red-700">{error}</p> : null}
+      {props.mode === 'document' && links ? (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium">{t('existingLinks')}</p>
+          {links.length === 0 ? <p className="text-xs text-stone-500">{t('noLinks')}</p> : null}
+          <ul className="flex flex-col gap-2">
+            {links.map((l) => (
+              <li key={l.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-stone-200 bg-white p-2 text-sm">
+                <span className="text-stone-600">
+                  {l.revokedAt ? t('revoked') : t('linkExpires', { date: new Date(l.expiresAt).toLocaleDateString() })}
+                </span>
+                {l.active ? (
+                  <button type="button" onClick={() => revoke(l.id)} disabled={pending}
+                    className="min-h-11 rounded-lg border border-stone-300 px-3 text-sm disabled:opacity-50">
+                    {t('revoke')}
+                  </button>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       {result ? (
         <div role="region" aria-label={t('title')} className="flex flex-col gap-3 rounded-xl border border-stone-200 bg-white p-4">
           <p className="text-sm font-medium">{t('title')}</p>

@@ -41,12 +41,14 @@ export interface TokenState {
   purpose: PortalPurpose;
   expiresAt: Date;
   usedAt: Date | null;
+  revokedAt?: Date | null;
 }
 
-export type TokenCheck = { ok: true } | { ok: false; reason: 'expired' | 'used' };
+export type TokenCheck = { ok: true } | { ok: false; reason: 'expired' | 'used' | 'revoked' };
 
 /** Pure check of a stored token row. Login links are refused once used or after expiry. */
 export function checkTokenState(row: TokenState, now: Date = new Date()): TokenCheck {
+  if (row.revokedAt) return { ok: false, reason: 'revoked' };
   if (row.expiresAt.getTime() <= now.getTime()) return { ok: false, reason: 'expired' };
   if (row.purpose === 'login' && row.usedAt !== null) return { ok: false, reason: 'used' };
   return { ok: true };

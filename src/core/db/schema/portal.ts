@@ -24,6 +24,8 @@ export const portalAccessTokens = pgTable(
     targetId: uuid('target_id'),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     usedAt: timestamp('used_at', { withTimezone: true }),
+    // Set by staff ("Révoquer le lien"). A revoked link is refused and ends existing document sessions.
+    revokedAt: timestamp('revoked_at', { withTimezone: true }),
     // references users.id (FK added by integrator)
     createdBy: uuid('created_by'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

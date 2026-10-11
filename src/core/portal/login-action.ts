@@ -14,9 +14,9 @@ const LoginForm = z.object({
   identifier: z.string().trim().min(3).max(200),
 });
 
+// Only the address Cloudflare sets is trusted. Without it (local dev) every request shares one 'unknown' bucket.
 function clientIp(h: Headers): string | null {
-  const forwarded = h.get('cf-connecting-ip') ?? h.get('x-forwarded-for')?.split(',')[0];
-  return forwarded?.trim() || null;
+  return h.get('cf-connecting-ip')?.trim() || null;
 }
 
 /**

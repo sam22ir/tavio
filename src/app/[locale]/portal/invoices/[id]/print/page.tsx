@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { requirePortalSession } from '@/core/portal/session-cookie';
+import { requireDocumentPortalSession } from '@/core/portal/session-cookie';
 import { portalCtx } from '@/core/portal/context';
 import { partnerOwnsPostedInvoice } from '@/core/portal/queries';
 import { loadInvoice } from '@/modules/invoicing/service/invoices';
@@ -18,7 +18,7 @@ export default async function PortalInvoicePrintPage({ params }: { params: Promi
   const { locale, id } = await params;
   if (!hasLocale(routing.locales, locale) || !UUID_RE.test(id)) notFound();
   setRequestLocale(locale);
-  const session = await requirePortalSession(locale);
+  const session = await requireDocumentPortalSession(locale, 'invoicing.invoice', id);
 
   const data = await portalCtx(session, locale as 'fr' | 'ar' | 'en', async (scope) => {
     if (!(await partnerOwnsPostedInvoice(scope, id))) return null;

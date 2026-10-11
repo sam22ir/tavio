@@ -1,6 +1,6 @@
 import { and, desc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { partners } from '@/modules/contacts/schema';
-import { creditContracts, creditInstallments, creditReceipts } from '@/modules/credit_sales/schema';
+import { creditContracts, creditInstallments, creditPaymentAllocations, creditReceipts } from '@/modules/credit_sales/schema';
 import { invoices } from '@/modules/invoicing/schema';
 import type { PortalScope } from './context';
 
@@ -217,3 +217,26 @@ export async function partnerOwnsReceipt(scope: PortalScope, receiptId: string):
   return rows.length > 0;
 }
 
+
+/** True when the receipt's payment was allocated to this contract. Used for contract-scoped sessions. */
+export async function receiptBelongsToContract(scope: PortalScope, receiptId: string, contractId: string): Promise<boolean> {
+  const [receipt] = await scope.ctx.tx
+    .select({ paymentId: creditReceipts.paymentId })
+    .from(creditReceipts)
+    .where(and(
+      eq(creditReceipts.companyId, scope.companyId),
+      eq(creditReceipts.id, receiptId),
+      eq(creditReceipts.partnerId, scope.partnerId),
+    ));
+  if (!receipt) return false;
+  const rows = await scope.ctx.tx
+    .select({ id: creditPaymentAllocations.id })
+    .from(creditPaymentAllocations)
+    .where(and(
+      eq(creditPaymentAllocations.companyId, scope.companyId),
+      eq(creditPaymentAllocations.paymentId, receipt.paymentId),
+      eq(creditPaymentAllocations.contractId, contractId),
+    ))
+    .limit(1);
+  return rows.length > 0;
+}

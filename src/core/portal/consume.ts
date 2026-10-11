@@ -12,8 +12,10 @@ import { checkTokenState, parsePortalToken, hashPortalToken, type PortalPurpose,
 export interface ConsumedLink {
   companyId: string;
   partnerId: string;
+  tokenId: string;
   purpose: PortalPurpose;
   target: PortalTarget | null;
+  expiresAt: Date;
 }
 
 /**
@@ -40,7 +42,7 @@ export async function consumePortalToken(
         .for('update');
       if (!row) return err('NOT_FOUND', 'link not found');
 
-      const state = checkTokenState({ purpose: row.purpose as PortalPurpose, expiresAt: row.expiresAt, usedAt: row.usedAt }, now);
+      const state = checkTokenState({ purpose: row.purpose as PortalPurpose, expiresAt: row.expiresAt, usedAt: row.usedAt, revokedAt: row.revokedAt }, now);
       if (!state.ok) return err('FORBIDDEN', `link ${state.reason}`, { reason: state.reason });
 
       if (row.purpose === 'login') {
@@ -61,7 +63,7 @@ export async function consumePortalToken(
       const target: PortalTarget | null = row.targetEntity && row.targetId
         ? { entity: row.targetEntity as PortalTarget['entity'], id: row.targetId }
         : null;
-      return ok({ companyId: parsed.companyId, partnerId: partner.id, purpose: row.purpose as PortalPurpose, target });
+      return ok({ companyId: parsed.companyId, partnerId: partner.id, tokenId: row.id, purpose: row.purpose as PortalPurpose, target, expiresAt: row.expiresAt });
     },
     db,
   );

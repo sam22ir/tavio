@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { requirePortalSession } from '@/core/portal/session-cookie';
+import { requireFullPortalSession } from '@/core/portal/session-cookie';
 import { portalCtx } from '@/core/portal/context';
 import { portalHomeSummary } from '@/core/portal/queries';
 import { formatDzd } from '@/core/money';
@@ -14,7 +14,7 @@ export default async function PortalHomePage({ params }: { params: Promise<{ loc
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const session = await requirePortalSession(locale);
+  const session = await requireFullPortalSession(locale);
   const t = await getTranslations('portal');
   const loc = locale as 'fr' | 'ar' | 'en';
   const s = await portalCtx(session, loc, (scope) => portalHomeSummary(scope));

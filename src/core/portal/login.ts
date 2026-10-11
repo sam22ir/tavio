@@ -58,6 +58,14 @@ export async function requestPortalLogin(input: PortalLoginRequest): Promise<voi
         const idKey = id ? loginKeyHash('id', `${id.kind}:${id.value}`) : loginKeyHash('id', `raw:${input.identifier.trim().toLowerCase()}`);
         const ipKey = loginKeyHash('ip', input.ip ?? 'unknown');
 
+        // Serialize requests per key (transaction-scoped advisory locks, always taken in the same order),
+        // then insert this attempt and count the window including it. Concurrent attempts cannot all pass.
+        await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${idKey}, 0))`);
+        await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${ipKey}, 0))`);
+        await tx.insert(portalLoginRequests).values([
+          { companyId: input.companyId, keyHash: idKey },
+          { companyId: input.companyId, keyHash: ipKey },
+        ]);
         const [counts] = await tx
           .select({
             byId: sql<number>`count(*) filter (where ${portalLoginRequests.keyHash} = ${idKey})::int`,
@@ -69,12 +77,8 @@ export async function requestPortalLogin(input: PortalLoginRequest): Promise<voi
             gt(portalLoginRequests.createdAt, since),
             or(eq(portalLoginRequests.keyHash, idKey), eq(portalLoginRequests.keyHash, ipKey)),
           ));
-        await tx.insert(portalLoginRequests).values([
-          { companyId: input.companyId, keyHash: idKey },
-          { companyId: input.companyId, keyHash: ipKey },
-        ]);
         if (!id) return null;
-        if ((counts?.byId ?? 0) >= LOGIN_MAX_PER_IDENTIFIER || (counts?.byIp ?? 0) >= LOGIN_MAX_PER_IP) return null;
+        if ((counts?.byId ?? 0) > LOGIN_MAX_PER_IDENTIFIER || (counts?.byIp ?? 0) > LOGIN_MAX_PER_IP) return null;
 
         const matches = await tx
           .select({ id: partners.id, email: partners.email })
