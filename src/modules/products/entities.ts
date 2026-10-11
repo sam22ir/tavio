@@ -57,6 +57,15 @@ export const productEntity: EntityDef = {
     { name: 'salePriceCents', type: 'money', label: 'products.fields.salePriceCents', required: true, list: true },
     { name: 'costCents', type: 'money', label: 'products.fields.costCents', required: true },
     { name: 'trackStock', type: 'boolean', label: 'products.fields.trackStock' },
+    {
+      name: 'invoicePolicy',
+      type: 'select',
+      label: 'products.fields.invoicePolicy',
+      options: [
+        { value: 'order', label: 'products.options.invoicePolicy.order' },
+        { value: 'delivery', label: 'products.options.invoicePolicy.delivery' },
+      ],
+    },
     { name: 'active', type: 'boolean', label: 'products.fields.active', list: true, filter: true },
     { name: 'description', type: 'textarea', label: 'products.fields.description' },
   ],

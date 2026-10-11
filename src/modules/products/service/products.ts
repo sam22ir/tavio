@@ -43,6 +43,8 @@ export const productInput = z.object({
   salePriceCents: dzdAmount,
   costCents: dzdAmount,
   trackStock: checkbox,
+  // Invoice policy. Omitted: 'delivery' for goods, 'order' for services.
+  invoicePolicy: z.enum(['order', 'delivery']).optional(),
   active: checkbox,
   description: optionalText(2000),
 });
@@ -150,6 +152,7 @@ export async function listProducts(ctx: Ctx, q: ListQuery): Promise<Result<ListR
       salePriceCents: products.salePriceCents,
       costCents: products.costCents,
       trackStock: products.trackStock,
+      invoicePolicy: products.invoicePolicy,
       active: products.active,
       description: products.description,
     })
@@ -205,6 +208,7 @@ export async function createProduct(ctx: Ctx, input: ProductInput): Promise<Resu
       salePriceCents: sale.value,
       costCents: cost.value,
       trackStock: input.trackStock,
+      invoicePolicy: input.invoicePolicy ?? (input.kind === 'goods' ? 'delivery' : 'order'),
       active: input.active,
       description: input.description,
     })
@@ -249,6 +253,7 @@ export async function updateProduct(ctx: Ctx, input: ProductUpdateInput): Promis
       salePriceCents: sale.value,
       costCents: cost.value,
       trackStock: input.trackStock,
+      invoicePolicy: input.invoicePolicy ?? before.invoicePolicy,
       active: input.active,
       description: input.description,
       updatedAt: new Date(),

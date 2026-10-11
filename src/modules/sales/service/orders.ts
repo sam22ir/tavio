@@ -12,9 +12,19 @@ import { partners } from '@/modules/contacts/schema';
 import { products } from '@/modules/products/schema';
 import { taxes } from '@/modules/l10n_dz/schema';
 import { createInvoice } from '@/modules/invoicing/service/create';
+import { invoices } from '@/modules/invoicing/schema';
+import { sourceDeliveryStatus } from '@/modules/inventory/service/deliveries';
 import { postMessage } from '@/modules/chatter/service';
 import { saleOrderLines, saleOrders } from '../schema';
 import { computeOrderTotals, type LineInput, type OrderTotals } from './totals';
+import {
+  billableQuantity,
+  orderProgress,
+  qtyFromMilli,
+  qtyMilli,
+  type InvoicePolicy,
+  type OrderProgress,
+} from './progress';
 
 const ENTITY = 'sales.order';
 const EDITABLE_STATES = ['draft', 'sent'] as const;
@@ -200,6 +210,11 @@ export interface SaleOrderDetail {
   order: Row;
   lines: Row[];
   partnerName: string;
+  progress: OrderProgress;
+  /** Live deliveries of the order (empty when the user cannot read deliveries). */
+  deliveries: { id: string; number: string; state: string; deliveredAt: string | null }[];
+  /** Invoices created from the order. */
+  invoices: { id: string; number: string | null; state: string; date: string; totalCents: string }[];
 }
 
 export async function getSaleOrder(ctx: Ctx, id: string): Promise<Result<SaleOrderDetail>> {
@@ -225,13 +240,49 @@ export async function getSaleOrder(ctx: Ctx, id: string): Promise<Result<SaleOrd
       taxRate: taxes.rate,
       subtotalCents: saleOrderLines.subtotalCents,
       taxCents: saleOrderLines.taxCents,
+      deliveredQty: saleOrderLines.deliveredQty,
+      cancelledQty: saleOrderLines.cancelledQty,
+      invoicedQty: saleOrderLines.invoicedQty,
+      policy: products.invoicePolicy,
     })
     .from(saleOrderLines)
     .leftJoin(taxes, eq(taxes.id, saleOrderLines.taxId))
+    .leftJoin(products, eq(products.id, saleOrderLines.productId))
     .where(and(eq(saleOrderLines.orderId, id), eq(saleOrderLines.companyId, ctx.companyId)))
     .orderBy(asc(saleOrderLines.id));
 
-  return ok({ order: order.order as Row, lines: lines as Row[], partnerName: order.partnerName });
+  const progress = orderProgress(
+    lines.map((l) => ({
+      quantity: String(l.quantity),
+      deliveredQty: String(l.deliveredQty),
+      cancelledQty: String(l.cancelledQty),
+      invoicedQty: String(l.invoicedQty),
+      policy: l.policy === 'delivery' ? 'delivery' : 'order',
+    })),
+  );
+  const shipments = await sourceDeliveryStatus(ctx, { sourceEntity: ENTITY, sourceId: id });
+  const invoiceRows = await ctx.tx
+    .select({
+      id: invoices.id,
+      number: invoices.number,
+      state: invoices.state,
+      date: invoices.date,
+      totalCents: invoices.totalCents,
+    })
+    .from(invoices)
+    .where(and(eq(invoices.companyId, ctx.companyId), eq(invoices.sourceEntity, ENTITY), eq(invoices.sourceId, id)))
+    .orderBy(asc(invoices.date));
+
+  return ok({
+    order: order.order as Row,
+    lines: lines as Row[],
+    partnerName: order.partnerName,
+    progress,
+    deliveries: shipments.ok
+      ? shipments.value.deliveries.map((d) => ({ id: d.id, number: d.number, state: d.state, deliveredAt: d.deliveredAt }))
+      : [],
+    invoices: invoiceRows.map((r) => ({ ...r, totalCents: String(r.totalCents), date: String(r.date) })),
+  });
 }
 
 export async function createSaleOrder(ctx: Ctx, input: SaleOrderInput): Promise<Result<SaleOrderSaved>> {
@@ -384,7 +435,7 @@ export async function confirmOrder(ctx: Ctx, id: string): Promise<Result<{ id: s
   }
 
   const lines = await ctx.tx
-    .select({ productId: saleOrderLines.productId, quantity: saleOrderLines.quantity })
+    .select({ id: saleOrderLines.id, productId: saleOrderLines.productId, quantity: saleOrderLines.quantity })
     .from(saleOrderLines)
     .where(eq(saleOrderLines.orderId, id));
   if (lines.length === 0) return err('VALIDATION', 'ORDER_HAS_NO_LINES');
@@ -403,7 +454,12 @@ export async function confirmOrder(ctx: Ctx, id: string): Promise<Result<{ id: s
   });
   await emit(ctx, {
     name: 'sales.order.confirmed',
-    payload: { orderId: id, partnerId: order.partnerId, number, lines },
+    payload: {
+      orderId: id,
+      partnerId: order.partnerId,
+      number,
+      lines: lines.map((l) => ({ productId: l.productId, quantity: l.quantity, saleOrderLineId: l.id })),
+    },
   });
   return ok({ id, number });
 }
@@ -414,9 +470,16 @@ export async function cancelOrder(ctx: Ctx, id: string): Promise<Result<{ id: st
 
   const order = await loadOrderForUpdate(ctx, id);
   if (!order) return err('NOT_FOUND', 'ORDER_NOT_FOUND');
-  if (order.invoiced) return err('STATE', 'ORDER_ALREADY_INVOICED');
   if (!(CANCELLABLE_STATES as readonly string[]).includes(order.state)) {
     return err('STATE', 'ORDER_NOT_CANCELLABLE', { state: order.state });
+  }
+  // Goods already handed over or billed cannot be cancelled. Open deliveries are cancelled below.
+  const moved = await ctx.tx
+    .select({ deliveredQty: saleOrderLines.deliveredQty, invoicedQty: saleOrderLines.invoicedQty })
+    .from(saleOrderLines)
+    .where(eq(saleOrderLines.orderId, id));
+  if (order.invoiced || moved.some((l) => qtyMilli(l.deliveredQty) > 0n || qtyMilli(l.invoicedQty) > 0n)) {
+    return err('CONFLICT', 'ORDER_HAS_DELIVERIES_OR_INVOICES', { state: order.state });
   }
 
   await ctx.tx
@@ -430,6 +493,7 @@ export async function cancelOrder(ctx: Ctx, id: string): Promise<Result<{ id: st
     before: { state: order.state },
     after: { state: 'cancelled' },
   });
+  await emit(ctx, { name: 'sales.order.cancelled', payload: { orderId: id, number: order.number } });
   // A cancelled quote only leaves a note on its lead. The lead's stage does not change.
   if (order.leadId) {
     const note = await postMessage(ctx, {
@@ -443,21 +507,50 @@ export async function cancelOrder(ctx: Ctx, id: string): Promise<Result<{ id: st
   return ok({ id });
 }
 
-/** Creates a draft out_invoice through the invoicing stub, then marks the order invoiced and done. */
+/**
+ * Creates a draft out_invoice for what is billable now: per line, the ordered quantity (policy 'order') or
+ * the delivered quantity (policy 'delivery'), less what was already billed. Several invoices per order are
+ * allowed. Errors when nothing is billable.
+ */
 export async function createInvoiceFromOrder(ctx: Ctx, id: string): Promise<Result<{ invoiceId: string }>> {
   const perm = requirePerm(ctx, 'sales.order.write');
   if (!perm.ok) return perm;
 
   const order = await loadOrderForUpdate(ctx, id);
   if (!order) return err('NOT_FOUND', 'ORDER_NOT_FOUND');
-  if (order.state !== 'confirmed' || !order.number) return err('STATE', 'ORDER_NOT_CONFIRMED', { state: order.state });
-  if (order.invoiced) return err('CONFLICT', 'ORDER_ALREADY_INVOICED');
+  if (order.state !== 'confirmed' && order.state !== 'done') {
+    return err('STATE', 'ORDER_NOT_CONFIRMED', { state: order.state });
+  }
+  if (!order.number) return err('STATE', 'ORDER_NOT_CONFIRMED', { state: order.state });
 
   const lines = await ctx.tx
     .select()
     .from(saleOrderLines)
     .where(eq(saleOrderLines.orderId, id))
     .orderBy(asc(saleOrderLines.id));
+  const productIds = [...new Set(lines.map((l) => l.productId).filter((v): v is string => !!v))];
+  const policyRows = productIds.length
+    ? await ctx.tx
+        .select({ id: products.id, invoicePolicy: products.invoicePolicy })
+        .from(products)
+        .where(and(eq(products.companyId, ctx.companyId), inArray(products.id, productIds)))
+    : [];
+  const policyById = new Map(policyRows.map((r) => [r.id, r.invoicePolicy === 'delivery' ? 'delivery' : 'order'] as const));
+
+  const billable = lines
+    .map((l) => {
+      const policy: InvoicePolicy = (l.productId && policyById.get(l.productId)) || 'order';
+      const quantity = billableQuantity({
+        quantity: l.quantity,
+        deliveredQty: l.deliveredQty,
+        cancelledQty: l.cancelledQty,
+        invoicedQty: l.invoicedQty,
+        policy,
+      });
+      return { line: l, quantity };
+    })
+    .filter((b) => qtyMilli(b.quantity) > 0n);
+  if (billable.length === 0) return err('CONFLICT', 'NOTHING_TO_INVOICE');
 
   const created = await createInvoice(ctx, {
     type: 'out_invoice',
@@ -465,21 +558,25 @@ export async function createInvoiceFromOrder(ctx: Ctx, id: string): Promise<Resu
     origin: order.number,
     sourceEntity: ENTITY,
     sourceId: id,
-    lines: lines.map((l) => ({
-      productId: l.productId,
-      description: l.description,
-      quantity: l.quantity,
-      unitPriceCents: l.unitPriceCents,
-      discountRate: l.discountRate,
-      taxId: l.taxId,
+    lines: billable.map(({ line, quantity }) => ({
+      productId: line.productId,
+      description: line.description,
+      quantity,
+      unitPriceCents: line.unitPriceCents,
+      discountRate: line.discountRate,
+      taxId: line.taxId,
     })),
   });
   if (!created.ok) return created;
 
-  await ctx.tx
-    .update(saleOrders)
-    .set({ invoiced: true, state: 'done', updatedAt: sql`now()` })
-    .where(eq(saleOrders.id, id));
+  for (const { line, quantity } of billable) {
+    await ctx.tx
+      .update(saleOrderLines)
+      .set({ invoicedQty: qtyFromMilli(qtyMilli(line.invoicedQty) + qtyMilli(quantity)), updatedAt: sql`now()` })
+      .where(eq(saleOrderLines.id, line.id));
+  }
+  const synced = await syncOrderProgress(ctx, id);
+  if (!synced.ok) return synced;
   await audit(ctx, {
     action: 'invoice',
     entity: ENTITY,
@@ -487,6 +584,58 @@ export async function createInvoiceFromOrder(ctx: Ctx, id: string): Promise<Resu
     after: { invoiceId: created.value.id },
   });
   return ok({ invoiceId: created.value.id });
+}
+
+/**
+ * Recomputes the order's delivery and invoice progress from its lines and sets the derived `invoiced` flag
+ * and state: 'done' once fully delivered and fully invoiced, otherwise 'confirmed'. Called after invoicing
+ * and by the delivery event handler. No permission check: internal.
+ */
+export async function syncOrderProgress(ctx: Ctx, orderId: string): Promise<Result<OrderProgress>> {
+  const [order] = await ctx.tx
+    .select({ state: saleOrders.state })
+    .from(saleOrders)
+    .where(and(eq(saleOrders.id, orderId), eq(saleOrders.companyId, ctx.companyId)))
+    .for('update');
+  if (!order) return err('NOT_FOUND', 'ORDER_NOT_FOUND');
+  if (order.state !== 'confirmed' && order.state !== 'done') return ok(orderProgress([]));
+
+  const lines = await ctx.tx
+    .select({
+      quantity: saleOrderLines.quantity,
+      deliveredQty: saleOrderLines.deliveredQty,
+      cancelledQty: saleOrderLines.cancelledQty,
+      invoicedQty: saleOrderLines.invoicedQty,
+      productId: saleOrderLines.productId,
+    })
+    .from(saleOrderLines)
+    .where(eq(saleOrderLines.orderId, orderId));
+  const productIds = [...new Set(lines.map((l) => l.productId).filter((v): v is string => !!v))];
+  const policyRows = productIds.length
+    ? await ctx.tx
+        .select({ id: products.id, invoicePolicy: products.invoicePolicy })
+        .from(products)
+        .where(and(eq(products.companyId, ctx.companyId), inArray(products.id, productIds)))
+    : [];
+  const policyById = new Map(policyRows.map((r) => [r.id, r.invoicePolicy === 'delivery' ? 'delivery' : 'order'] as const));
+  const progress = orderProgress(
+    lines.map((l) => ({
+      quantity: l.quantity,
+      deliveredQty: l.deliveredQty,
+      cancelledQty: l.cancelledQty,
+      invoicedQty: l.invoicedQty,
+      policy: ((l.productId && policyById.get(l.productId)) || 'order') as InvoicePolicy,
+    })),
+  );
+  await ctx.tx
+    .update(saleOrders)
+    .set({
+      invoiced: progress.invoiceStatus === 'invoiced',
+      state: progress.done ? 'done' : 'confirmed',
+      updatedAt: sql`now()`,
+    })
+    .where(eq(saleOrders.id, orderId));
+  return ok(progress);
 }
 
 export interface SaleLookups {

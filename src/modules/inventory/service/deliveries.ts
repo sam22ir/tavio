@@ -3,19 +3,23 @@ import { and, desc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { fileUrl, uploadFile } from '@/core/files/service';
+import { emit } from '@/core/events';
+import type { InventoryDeliveryValidated } from '@/core/events/catalog';
 import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { nextNumber } from '@/core/sequences';
 import { getPartner } from '@/modules/contacts/service/partners';
 import { products } from '@/modules/products/schema';
 import { deliveries, deliveryLines, type Delivery } from '../schema';
-import { closeReservations, aggregateLines, type ReservableLine } from './reservations';
+import { closeReservations, aggregateLines, reserveLines, type ReservableLine } from './reservations';
 import { fromMilli } from './quantity';
 import { moveLines, stockTrackedLines } from './moves';
 import { ensureDefaultWarehouse } from './warehouses';
+import { planDeliveryValidation } from './delivery-plan';
 
 export const DELIVERY_SOURCE_ENTITY = 'inventory.delivery';
 export const CONTRACT_SOURCE_ENTITY = 'credit_sales.contract';
+export const SALE_ORDER_SOURCE_ENTITY = 'sales.order';
 export const SIGNED_BY_NAME_MAX = 200;
 
 /** Reason codes carried in `error.details.reason`. The UI maps them to `inventory.errors.<reason>`. */
@@ -136,11 +140,98 @@ export async function createDraftDelivery(
   return ok({ deliveryId: row.id, created: true });
 }
 
+export interface DeliveryLineRef {
+  productId: string;
+  quantity: string;
+  saleOrderLineId?: string | null;
+}
+
 /**
- * Validates a delivery: creates done stock moves from the internal location to the customer
- * location for each line, consumes the reservations of the source document and marks the delivery done.
+ * Creates a draft delivery for a sale order, one line per stock-tracked goods line of the order, each
+ * pointing back at its sale order line. Idempotent: a live delivery for the order is left alone.
+ * No permission check: called from event handlers.
  */
-export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Result<{ moves: number }>> {
+export async function createOrderDelivery(
+  ctx: Ctx,
+  input: { partnerId: string; sourceEntity: string; sourceId: string; lines: readonly DeliveryLineRef[]; note?: string },
+): Promise<Result<{ deliveryId: string | null; created: boolean }>> {
+  if (input.lines.length === 0) return ok({ deliveryId: null, created: false });
+  const [live] = await ctx.tx
+    .select({ id: deliveries.id })
+    .from(deliveries)
+    .where(
+      and(
+        eq(deliveries.companyId, ctx.companyId),
+        eq(deliveries.sourceEntity, input.sourceEntity),
+        eq(deliveries.sourceId, input.sourceId),
+        ne(deliveries.state, 'cancelled'),
+      ),
+    );
+  if (live) return ok({ deliveryId: live.id, created: false });
+  const id = await insertDeliveryWithLines(ctx, { ...input, originDeliveryId: null }, input.lines);
+  return ok({ deliveryId: id, created: true });
+}
+
+/** Inserts a draft delivery and its lines. Returns the delivery id. Caller checks idempotency and permissions. */
+async function insertDeliveryWithLines(
+  ctx: Ctx,
+  head: { partnerId: string; sourceEntity: string; sourceId: string; note?: string; originDeliveryId: string | null },
+  lines: readonly DeliveryLineRef[],
+): Promise<string> {
+  const number = await nextNumber(ctx, 'inventory.delivery', { prefix: 'LIV-' });
+  const [row] = await ctx.tx
+    .insert(deliveries)
+    .values({
+      companyId: ctx.companyId,
+      createdBy: ctx.userId,
+      number,
+      partnerId: head.partnerId,
+      sourceEntity: head.sourceEntity,
+      sourceId: head.sourceId,
+      state: 'draft',
+      note: head.note ?? null,
+      originDeliveryId: head.originDeliveryId,
+    })
+    .returning({ id: deliveries.id });
+  if (!row) throw new Error('delivery insert returned no row');
+  for (const line of lines) {
+    await ctx.tx.insert(deliveryLines).values({
+      companyId: ctx.companyId,
+      createdBy: ctx.userId,
+      deliveryId: row.id,
+      productId: line.productId,
+      quantity: line.quantity,
+      saleOrderLineId: line.saleOrderLineId ?? null,
+    });
+  }
+  await audit(ctx, {
+    entity: 'inventory.delivery',
+    recordId: row.id,
+    action: 'create',
+    after: { number, sourceEntity: head.sourceEntity, sourceId: head.sourceId, originDeliveryId: head.originDeliveryId },
+  });
+  return row.id;
+}
+
+export interface ValidateDeliveryOptions {
+  /** Quantity handed over per delivery line id. A missing line is delivered in full. */
+  deliveredQty?: Readonly<Record<string, string>>;
+  /** Drop the remainder instead of creating a backorder. */
+  noBackorder?: boolean;
+}
+
+/**
+ * Validates a delivery. Posts one stock move per line for the quantity delivered (not the demanded one),
+ * records the delivered quantities, and marks the delivery done. Whatever is left over becomes a backorder
+ * (a new draft delivery linked to this one), unless `noBackorder` drops it. Contract reservations are
+ * consumed, and re-reserved for the backorder. Sale order deliveries emit inventory.delivery.validated so
+ * the order's progress follows.
+ */
+export async function validateDelivery(
+  ctx: Ctx,
+  deliveryId: string,
+  opts: ValidateDeliveryOptions = {},
+): Promise<Result<{ moves: number; backorderId: string | null }>> {
   const perm = requirePerm(ctx, 'inventory.delivery.post');
   if (!perm.ok) return perm;
 
@@ -155,14 +246,31 @@ export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Re
   if (!signer.ok) return signer;
 
   const lines = await ctx.tx
-    .select({ productId: deliveryLines.productId, quantity: deliveryLines.quantity })
+    .select({
+      id: deliveryLines.id,
+      productId: deliveryLines.productId,
+      quantity: deliveryLines.quantity,
+      saleOrderLineId: deliveryLines.saleOrderLineId,
+    })
     .from(deliveryLines)
     .where(and(eq(deliveryLines.deliveryId, delivery.id), eq(deliveryLines.companyId, ctx.companyId)));
 
+  const planned = planDeliveryValidation({
+    lines: lines.map((l) => ({ id: l.id, quantity: l.quantity })),
+    delivered: opts.deliveredQty ?? {},
+    noBackorder: opts.noBackorder ?? false,
+  });
+  if (!planned.ok) return planned;
+  const plan = planned.value;
+  const byId = new Map(lines.map((l) => [l.id, l]));
+
   const wh = await ensureDefaultWarehouse(ctx);
   // Only stock-tracked goods move; a service line on the delivery is documentary.
+  const movable = plan.lines
+    .filter((p) => p.deliveredQty !== '0.000')
+    .map((p) => ({ productId: byId.get(p.id)?.productId ?? '', quantity: p.deliveredQty }));
   const posted = await moveLines(ctx, {
-    lines: await stockTrackedLines(ctx, lines),
+    lines: await stockTrackedLines(ctx, movable),
     sourceEntity: DELIVERY_SOURCE_ENTITY,
     sourceId: delivery.id,
     reference: delivery.number,
@@ -172,13 +280,49 @@ export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Re
   });
   if (!posted.ok) return posted;
 
+  for (const p of plan.lines) {
+    await ctx.tx
+      .update(deliveryLines)
+      .set({ deliveredQty: p.deliveredQty, updatedAt: sql`now()` })
+      .where(eq(deliveryLines.id, p.id));
+  }
+
+  let backorderId: string | null = null;
+  if (plan.backorder) {
+    const remainder = plan.backorderLines.map((b) => {
+      const src = byId.get(b.id);
+      return { productId: src?.productId ?? '', quantity: b.quantity, saleOrderLineId: src?.saleOrderLineId ?? null };
+    });
+    backorderId = await insertDeliveryWithLines(
+      ctx,
+      {
+        partnerId: delivery.partnerId,
+        sourceEntity: delivery.sourceEntity ?? '',
+        sourceId: delivery.sourceId ?? '',
+        note: delivery.note ?? undefined,
+        originDeliveryId: delivery.id,
+      },
+      remainder,
+    );
+  }
+
   if (delivery.sourceEntity && delivery.sourceId) {
+    // Reservations of a contract are used up by what left. A backorder re-reserves its remainder.
     const consumed = await closeReservations(ctx, {
       sourceEntity: delivery.sourceEntity,
       sourceId: delivery.sourceId,
       state: 'consumed',
     });
     if (!consumed.ok) return consumed;
+    if (plan.backorder && delivery.sourceEntity === CONTRACT_SOURCE_ENTITY) {
+      const reserved = await reserveLines(ctx, {
+        lines: plan.backorderLines.map((b) => ({ productId: byId.get(b.id)?.productId ?? '', quantity: b.quantity })),
+        locationId: wh.internalLocationId,
+        sourceEntity: delivery.sourceEntity,
+        sourceId: delivery.sourceId,
+      });
+      if (!reserved.ok) return reserved;
+    }
   }
 
   await ctx.tx
@@ -190,9 +334,25 @@ export async function validateDelivery(ctx: Ctx, deliveryId: string): Promise<Re
     recordId: delivery.id,
     action: 'validate',
     before: { state: delivery.state },
-    after: { state: 'done' },
+    after: { state: 'done', backorderId, cancelledQty: plan.cancelledQty },
   });
-  return ok({ moves: posted.value.created });
+
+  if (delivery.sourceEntity === SALE_ORDER_SOURCE_ENTITY && delivery.sourceId) {
+    const payload: InventoryDeliveryValidated = {
+      deliveryId: delivery.id,
+      sourceEntity: delivery.sourceEntity,
+      sourceId: delivery.sourceId,
+      lines: plan.lines
+        .filter((p) => byId.get(p.id)?.saleOrderLineId)
+        .map((p) => ({
+          saleOrderLineId: byId.get(p.id)?.saleOrderLineId ?? '',
+          deliveredQty: p.deliveredQty,
+          cancelledQty: opts.noBackorder ? p.remainder : '0.000',
+        })),
+    };
+    await emit(ctx, { name: 'inventory.delivery.validated', payload });
+  }
+  return ok({ moves: posted.value.created, backorderId });
 }
 
 /** Open deliveries can still be cancelled, signed for or validated. */
@@ -427,7 +587,10 @@ export interface DeliveryDetail {
   signatureFileId: string | null;
   proofFileId: string | null;
   note: string | null;
-  lines: { productId: string; productName: string; quantity: string }[];
+  /** Delivery this one is the backorder of, when set. */
+  originDeliveryId: string | null;
+  originNumber: string | null;
+  lines: { id: string; productId: string; productName: string; quantity: string; deliveredQty: string }[];
 }
 
 /** One delivery with its lines, for the detail page. */
@@ -441,13 +604,21 @@ export async function getDelivery(ctx: Ctx, deliveryId: string): Promise<Result<
   if (!row) return err('NOT_FOUND', 'Delivery not found');
   const lines = await ctx.tx
     .select({
+      id: deliveryLines.id,
       productId: deliveryLines.productId,
       productName: products.name,
       quantity: deliveryLines.quantity,
+      deliveredQty: deliveryLines.deliveredQty,
     })
     .from(deliveryLines)
     .innerJoin(products, eq(products.id, deliveryLines.productId))
     .where(and(eq(deliveryLines.deliveryId, row.id), eq(deliveryLines.companyId, ctx.companyId)));
+  const [origin] = row.originDeliveryId
+    ? await ctx.tx
+        .select({ number: deliveries.number })
+        .from(deliveries)
+        .where(and(eq(deliveries.id, row.originDeliveryId), eq(deliveries.companyId, ctx.companyId)))
+    : [];
   return ok({
     id: row.id,
     number: row.number,
@@ -461,6 +632,8 @@ export async function getDelivery(ctx: Ctx, deliveryId: string): Promise<Result<
     signatureFileId: row.signatureFileId,
     proofFileId: row.proofFileId,
     note: row.note,
+    originDeliveryId: row.originDeliveryId,
+    originNumber: origin?.number ?? null,
     lines,
   });
 }

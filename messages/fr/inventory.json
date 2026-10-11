@@ -97,7 +97,10 @@
     "move_not_draft": "Seuls les mouvements en brouillon peuvent être validés.",
     "move_done": "Un mouvement validé ne peut pas être annulé.",
     "signed_by_required": "Saisissez le nom du signataire avant de valider la livraison.",
-    "signed_by_too_long": "Le nom est trop long."
+    "signed_by_too_long": "Le nom est trop long.",
+    "delivery_qty_invalid": "Quantité livrée invalide.",
+    "delivery_qty_over": "La quantité livrée dépasse la quantité commandée.",
+    "delivery_nothing_delivered": "Rien n’est livré. Indiquez au moins une quantité."
   },
   "deliveries": {
     "title": "Livraisons",
@@ -116,7 +119,17 @@
     "view_contract": "Ouvrir le contrat",
     "lines_title": "Lignes",
     "receipt_title": "Réception",
-    "open": "Ouvrir"
+    "open": "Ouvrir",
+    "print": "Imprimer le BL",
+    "ordered": "Commandé",
+    "delivered_qty": "Livré",
+    "remaining": "Reste",
+    "no_backorder": "Pas de reliquat (annuler le reste)",
+    "backorder_hint": "Le reste est reporté sur une livraison de reliquat, sauf si vous cochez « Pas de reliquat ».",
+    "backorder_of": "Reliquat de",
+    "backorder_created": "Livraison de reliquat créée",
+    "edit_qty": "Quantité livrée",
+    "back_to_delivery": "Retour à la livraison"
   },
   "valuation": {
     "title": "Valorisation du stock",

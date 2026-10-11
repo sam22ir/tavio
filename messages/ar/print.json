@@ -60,5 +60,14 @@
     "cib": "CIB",
     "edahabia": "الذهبية",
     "cheque": "شيك"
-  }
+  },
+  "deliveryNote": "وصل التسليم",
+  "qtyOrdered": "الكمية المطلوبة",
+  "qtyDelivered": "الكمية المُسلَّمة",
+  "qtyRemaining": "المتبقي",
+  "deliveryAddress": "عنوان التسليم",
+  "originBackorder": "متأخرات لـ",
+  "signatureDeliverer": "المُسلِّم",
+  "signatureReceiver": "المستلم (الزبون)",
+  "deliveryNoPrices": "وثيقة بدون أسعار"
 }

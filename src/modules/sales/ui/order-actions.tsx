@@ -18,13 +18,19 @@ export function OrderActions({ id, state, invoiced, locale }: Props) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const run = (fn: (input: { id: string }) => Promise<{ ok: boolean; error?: { code: string } }>, after?: (id: string) => void) =>
+  const run = (fn: (input: { id: string }) => Promise<{ ok: boolean; error?: { code: string; message?: string } }>, after?: (id: string) => void) =>
     startTransition(async () => {
       setError(null);
       const result = await fn({ id });
       if (!result.ok) {
-        setError(t('errors.failed'));
-        toast.error(t('errors.failed'));
+        const message =
+          result.error?.message === 'ORDER_HAS_DELIVERIES_OR_INVOICES'
+            ? t('errors.has_deliveries')
+            : result.error?.message === 'NOTHING_TO_INVOICE'
+              ? t('errors.nothing_to_invoice')
+              : t('errors.failed');
+        setError(message);
+        toast.error(message);
         return;
       }
       if (after) after(id);
@@ -34,6 +40,7 @@ export function OrderActions({ id, state, invoiced, locale }: Props) {
   const canEdit = state === 'draft' || state === 'sent';
   const canSend = state === 'draft';
   const canConfirm = state === 'draft' || state === 'sent';
+  // Several invoices per order are allowed while confirmed; the service refuses when nothing is billable.
   const canInvoice = state === 'confirmed' && !invoiced;
   const canCancel = !invoiced && (state === 'draft' || state === 'sent' || state === 'confirmed');
 

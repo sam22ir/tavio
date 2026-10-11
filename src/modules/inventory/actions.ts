@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { defineAction, toFormAction } from '@/core/actions/define-action';
 import type { FormState } from '@/core/entities/types';
 import { cancelMove, createMove, validateMove } from './service/moves';
+import { DELIVERY_NOTHING_DELIVERED, DELIVERY_QTY_INVALID, DELIVERY_QTY_OVER } from './service/delivery-plan';
 import { createAdjustment } from './service/adjustments';
 import { createReorderRule } from './service/stock';
 import { createWarehouse } from './service/warehouses';
@@ -71,9 +72,15 @@ const adjustmentAction = defineAction(
   { perm: 'inventory.adjustment.write', schema: adjustmentInput, module: MODULE },
   createAdjustment,
 );
+const validateDeliveryInput = z.object({
+  id: uuid,
+  /** Quantity handed over per delivery line id. Omitted: everything is delivered. */
+  deliveredQty: z.record(z.string(), z.string()).optional(),
+  noBackorder: z.boolean().optional(),
+});
 const deliveryValidateAction = defineAction(
-  { perm: 'inventory.delivery.post', schema: idInput, module: MODULE },
-  (ctx, { id }) => validateDelivery(ctx, id),
+  { perm: 'inventory.delivery.post', schema: validateDeliveryInput, module: MODULE },
+  (ctx, { id, deliveredQty, noBackorder }) => validateDelivery(ctx, id, { deliveredQty, noBackorder: noBackorder ?? false }),
 );
 const deliverySignedByAction = defineAction(
   {
@@ -165,14 +172,29 @@ export async function cancelMoveForm(formData: FormData): Promise<void> {
   redirect(`/${locale}/inventory/moves/${encodeURIComponent(id)}${failureQuery(r)}`);
 }
 
-/** Validate button on the deliveries list. */
+/** Reasons the delivery form shows as messages (inventory.errors.<reason>). */
+const DELIVERY_REASONS: readonly string[] = [SIGNED_BY_REQUIRED, DELIVERY_QTY_INVALID, DELIVERY_QTY_OVER, DELIVERY_NOTHING_DELIVERED];
+
+/**
+ * Validate form. On the list it validates in full. On the detail page it reads `qty_<lineId>` fields
+ * (quantities handed over) and the `noBackorder` checkbox, and returns to the detail page (`returnTo`).
+ */
 export async function validateDeliveryForm(formData: FormData): Promise<void> {
   const locale = await getLocale();
   const id = String(formData.get('id') ?? '');
-  const r = await deliveryValidateAction({ id });
+  const deliveredQty: Record<string, string> = {};
+  for (const [key, value] of formData.entries()) {
+    if (key.startsWith('qty_') && typeof value === 'string') deliveredQty[key.slice(4)] = value;
+  }
+  const r = await deliveryValidateAction({
+    id,
+    deliveredQty: Object.keys(deliveredQty).length > 0 ? deliveredQty : undefined,
+    noBackorder: formData.get('noBackorder') === 'on',
+  });
   const reason = !r.ok ? r.error.details?.reason : undefined;
-  const query = reason === SIGNED_BY_REQUIRED ? `?error=${SIGNED_BY_REQUIRED}` : failureQuery(r);
-  redirect(`/${locale}/inventory/deliveries${query}`);
+  const failure = typeof reason === 'string' && DELIVERY_REASONS.includes(reason) ? `?error=${reason}` : failureQuery(r);
+  const back = formData.get('returnTo') === 'detail' ? `/${locale}/inventory/deliveries/${id}` : `/${locale}/inventory/deliveries`;
+  redirect(`${back}${failure}`);
 }
 
 /** Cancel button on the deliveries list. */
