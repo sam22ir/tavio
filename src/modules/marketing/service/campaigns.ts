@@ -207,25 +207,8 @@ export async function updateCampaign(ctx: Ctx, id: string, input: CampaignValues
 }
 
 /** Builds the recipient list from the segment. Partners without a phone are skipped. */
-export async function buildRecipients(
-  ctx: Ctx,
-  id: string,
-  today: string,
-): Promise<Result<{ count: number; skippedNoPhone: number }>> {
-  const perm = requirePerm(ctx, WRITE);
-  if (!perm.ok) return perm;
-  const current = await getCampaign(ctx, id);
-  if (!current.ok) return current;
-
-  const existing = await ctx.tx
-    .select({ status: campaignRecipients.status })
-    .from(campaignRecipients)
-    .where(and(eq(campaignRecipients.companyId, ctx.companyId), eq(campaignRecipients.campaignId, id)));
-  if (!canBuildRecipients(current.value.state, existing.map((r) => r.status))) {
-    return err('STATE', 'Recipients are already being handled', { state: current.value.state });
-  }
-
-  const seg = current.value.segment;
+/** Partner conditions for a campaign segment. Shared by the WhatsApp recipient build and the email queue. */
+export function segmentConditions(ctx: Ctx, seg: CampaignSegment, today: string): SQL[] {
   const conditions: SQL[] = [
     eq(partners.companyId, ctx.companyId),
     eq(partners.active, true),
@@ -245,6 +228,29 @@ export async function buildRecipients(
         and c.state in ('active', 'defaulted')
     )`);
   }
+
+  return conditions;
+}
+
+export async function buildRecipients(
+  ctx: Ctx,
+  id: string,
+  today: string,
+): Promise<Result<{ count: number; skippedNoPhone: number }>> {
+  const perm = requirePerm(ctx, WRITE);
+  if (!perm.ok) return perm;
+  const current = await getCampaign(ctx, id);
+  if (!current.ok) return current;
+
+  const existing = await ctx.tx
+    .select({ status: campaignRecipients.status })
+    .from(campaignRecipients)
+    .where(and(eq(campaignRecipients.companyId, ctx.companyId), eq(campaignRecipients.campaignId, id)));
+  if (!canBuildRecipients(current.value.state, existing.map((r) => r.status))) {
+    return err('STATE', 'Recipients are already being handled', { state: current.value.state });
+  }
+
+  const conditions = segmentConditions(ctx, current.value.segment, today);
 
   const matched = await ctx.tx
     .select({ id: partners.id, phone: partners.phone })

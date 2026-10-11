@@ -7,6 +7,7 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { formatDzd } from '@/core/money';
 import { formatDate, labels } from '@/modules/credit_sales/print/shared';
 import { listReceiptRows } from '@/modules/credit_sales/print/queries';
+import { SendMessageButton } from '@/core/messaging/ui/send-message-button';
 
 export default async function ReceiptsPage({
   params,
@@ -42,6 +43,7 @@ export default async function ReceiptsPage({
                 <span className="text-sm tabular-nums">
                   {formatDzd(r.totalCents, locale as Locale)}
                 </span>
+                {r.state !== 'voided' ? <SendMessageButton entity="credit_sales.receipt" recordId={r.id} partnerId={r.partnerId} templateKey="payment_receipt" /> : null}
                 <Link href={`/${locale}/credit/receipts/${r.id}/print`} className="text-sm underline">
                   {t.printButton}
                 </Link>

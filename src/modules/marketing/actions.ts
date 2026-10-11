@@ -1,6 +1,7 @@
 'use server';
 
 import { failureQuery } from '@/ui/feedback/failure-query';
+import { queueCampaignEmails } from './service/email';
 import { redirect } from 'next/navigation';
 import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
@@ -89,3 +90,17 @@ export async function setRecipientStatusForm(formData: FormData): Promise<void> 
   });
   redirect(`/${locale}/marketing/${encodeURIComponent(campaignId)}/recipients${failureQuery(r)}`);
 }
+
+/** Form action for "Send by email": queues the campaign through the messaging outbox. */
+export async function queueCampaignEmailsForm(formData: FormData): Promise<void> {
+  const locale = await getLocale();
+  const id = String(formData.get('id') ?? '');
+  const today = new Date().toISOString().slice(0, 10);
+  const r = await queueCampaignEmailsAction({ id, today });
+  redirect(`/${locale}/marketing/${encodeURIComponent(id)}${failureQuery(r)}`);
+}
+
+const queueCampaignEmailsAction = defineAction(
+  { perm: WRITE, schema: z.object({ id: z.uuid(), today: z.string().regex(/^\d{4}-\d{2}-\d{2}$/) }), module: MODULE },
+  (ctx, { id, today }) => queueCampaignEmails(ctx, id, today),
+);

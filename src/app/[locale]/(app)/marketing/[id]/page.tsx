@@ -4,7 +4,8 @@ import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { routing } from '@/i18n/routing';
-import { buildRecipientsForm, updateCampaignForm } from '@/modules/marketing/actions';
+import { buildRecipientsForm, queueCampaignEmailsForm, updateCampaignForm } from '@/modules/marketing/actions';
+import { campaignDeliveryCounts } from '@/core/messaging/service';
 import { campaignEntity } from '@/modules/marketing/entities';
 import { campaignFormValues, getCampaign, listRecipients } from '@/modules/marketing/service/campaigns';
 import { isEditable } from '@/modules/marketing/service/message';
@@ -69,6 +70,10 @@ export default async function CampaignDetailPage({
         </div>
       </section>
 
+      {campaign.channel === 'email' ? (
+        <EmailDelivery id={id} editable={editable} />
+      ) : null}
+
       <section className="flex flex-col gap-3">
         <h2 className="text-base font-semibold">{t('recipients.title')}</h2>
         <div className="flex flex-wrap gap-2">
@@ -104,5 +109,23 @@ export default async function CampaignDetailPage({
 
       <Chatter entity="marketing.campaign" recordId={id} />
     </main>
+  );
+}
+
+async function EmailDelivery({ id, editable }: { id: string; editable: boolean }) {
+  const te = await getTranslations('messaging.campaign');
+  const counts = await withPageCtx((ctx) => campaignDeliveryCounts(ctx, id));
+  return (
+    <section className="flex flex-col gap-3">
+      <p className="text-sm text-muted-foreground">
+        {te('counts', { sent: counts.sent, failed: counts.failed, manual: counts.manual, queued: counts.queued })}
+      </p>
+      {editable ? (
+        <form action={queueCampaignEmailsForm}>
+          <input type="hidden" name="id" value={id} />
+          <Button type="submit">{te('sendEmails')}</Button>
+        </form>
+      ) : null}
+    </section>
   );
 }

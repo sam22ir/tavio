@@ -9,6 +9,7 @@ import { formatDzd } from '@/core/money';
 import { getSaleOrder } from '@/modules/sales/service/orders';
 import { DELIVERY_BADGE, INVOICE_BADGE } from '@/modules/sales/service/progress-view';
 import { OrderActions } from '@/modules/sales/ui/order-actions';
+import { SendMessageButton } from '@/core/messaging/ui/send-message-button';
 import { Chatter } from '@/modules/chatter/ui/chatter';
 import { toMilliText } from '@/modules/inventory/service/delivery-view';
 
@@ -49,6 +50,10 @@ export default async function SaleOrderPage({ params }: { params: Promise<{ loca
       </div>
 
       <OrderActions id={id} state={String(order.state)} invoiced={progress.invoiceStatus === 'invoiced'} locale={locale} />
+      <div className="flex flex-wrap gap-2">
+        <SendMessageButton entity="sales.order" recordId={id} partnerId={String(order.partnerId)} templateKey="quote_sent" />
+        <SendMessageButton entity="sales.order" recordId={id} partnerId={String(order.partnerId)} templateKey="portal_invite" invite />
+      </div>
 
       <dl className="grid gap-2 text-sm sm:grid-cols-3">
         <div>

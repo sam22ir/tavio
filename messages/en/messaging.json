@@ -1,0 +1,94 @@
+{
+  "send": {
+    "button": "Send",
+    "invite": "Invite to portal",
+    "title": "Send message",
+    "inviteTitle": "Invite to the customer portal",
+    "channel": "Channel",
+    "email": "Email",
+    "whatsapp": "WhatsApp (wa.me link)",
+    "to": "Recipient",
+    "subject": "Subject",
+    "body": "Message",
+    "bodyHelp": "The customer portal link is added automatically.",
+    "submit": "Send",
+    "cancel": "Cancel",
+    "loading": "Preparing message…",
+    "queued": "Message queued. It will go out on the next check.",
+    "prepared": "Message prepared.",
+    "openWhatsapp": "Open WhatsApp",
+    "optedOut": "This customer opted out of email. This transactional message is sent anyway.",
+    "noRecipient": "No email or phone is on file for this partner.",
+    "error": "Could not send.",
+    "errorCode": "Error: {message}",
+    "inviteHelp": "A portal sign-in link (30 minutes, single use) is sent to the customer."
+  },
+  "settings": {
+    "title": "Message templates",
+    "templates": "Templates",
+    "reminders": "Automatic reminders",
+    "remindersEnabled": "Send due-date reminders by email",
+    "beforeDays": "Reminder before due date (days)",
+    "overdueDays": "Overdue follow-ups (days, comma separated)",
+    "overdueHelp": "For example 1, 7. Each reminder is sent once only.",
+    "save": "Save",
+    "saved": "Saved.",
+    "reset": "Restore default template",
+    "preview": "Preview",
+    "previewHelp": "Preview with sample values. The link is replaced when sent.",
+    "variables": "Available variables: {vars}",
+    "locale": {
+      "fr": "French",
+      "ar": "Arabic"
+    },
+    "custom": "Customised",
+    "isDefault": "Default template",
+    "unknownVar": "Unknown variables: {vars}",
+    "keys": {
+      "quote_sent": "Quote sent",
+      "invoice_sent": "Invoice sent",
+      "contract_sent": "Contract sent",
+      "payment_receipt": "Payment receipt",
+      "installment_reminder_before": "Reminder before due date",
+      "installment_overdue": "Overdue follow-up",
+      "portal_invite": "Portal invitation"
+    },
+    "nav": "Message templates",
+    "messagesLog": "Message log"
+  },
+  "log": {
+    "title": "Message log",
+    "nav": "Message log",
+    "state": {
+      "queued": "Queued",
+      "sent": "Sent",
+      "failed": "Failed",
+      "manual": "Manual (WhatsApp)",
+      "all": "All states"
+    },
+    "channel": {
+      "all": "All channels",
+      "email": "Email",
+      "whatsapp": "WhatsApp"
+    },
+    "empty": "No messages.",
+    "to": "Recipient",
+    "subject": "Subject",
+    "template": "Template",
+    "created": "Created",
+    "attempts": "Attempts",
+    "error": "Error",
+    "filter": "Filter",
+    "prev": "Previous",
+    "next": "Next",
+    "openWa": "Open WhatsApp",
+    "total": "{count} message(s)",
+    "status": "Status"
+  },
+  "campaign": {
+    "counts": "Sent: {sent} · Failed: {failed} · Manual: {manual} · Queued: {queued}",
+    "sendEmails": "Send by email",
+    "queued": "{count} email(s) queued.",
+    "none": "No eligible email recipients (opted-out partners are excluded)."
+  }
+}
