@@ -60,5 +60,14 @@
     "cib": "CIB",
     "edahabia": "Edahabia",
     "cheque": "Cheque"
-  }
+  },
+  "deliveryNote": "Delivery note",
+  "qtyOrdered": "Ordered quantity",
+  "qtyDelivered": "Delivered quantity",
+  "qtyRemaining": "Remaining",
+  "deliveryAddress": "Delivery address",
+  "originBackorder": "Backorder of",
+  "signatureDeliverer": "Delivered by",
+  "signatureReceiver": "Received by (customer)",
+  "deliveryNoPrices": "Document without prices"
 }

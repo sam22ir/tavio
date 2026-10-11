@@ -38,6 +38,7 @@ export interface ReceiptListRow {
   state: string;
   issuedAt: Date;
   totalCents: bigint;
+  partnerId: string;
   partnerName: string;
 }
 
@@ -49,6 +50,7 @@ export async function listReceiptRows(ctx: Ctx, limit = 200): Promise<ReceiptLis
       state: creditReceipts.state,
       issuedAt: creditReceipts.issuedAt,
       totalCents: creditReceipts.totalCents,
+      partnerId: creditReceipts.partnerId,
       partnerName: partners.displayName,
     })
     .from(creditReceipts)

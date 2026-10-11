@@ -13,6 +13,7 @@ import { listCustomFieldDefs } from '@/modules/platform/service/custom-fields';
 import { CustomFieldsEditor, type CustomFieldView } from '@/modules/platform/ui/custom-fields-editor';
 import { Button } from '@/ui/primitives/button';
 import { RecordForm } from '@/ui/views/record-form';
+import { PortalShareButton } from '@/core/portal/ui/portal-share-button';
 import { RelatedLinks } from '@/ui/views/related-links';
 import { formatCell } from '@/ui/views/format';
 import { PARTNER_FORM_ENTITY } from '../_lib/form-entity';
@@ -88,6 +89,7 @@ export default async function ContactDetailPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
+      <PortalShareButton mode="invite" partnerId={partner.id} />
       <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
         ← {t('contacts.partner.title')}
       </Link>

@@ -14,6 +14,6 @@ export const manifest = defineModule({
   ],
   app: { pillar: 'sales', icon: 'ShoppingCart', label: 'shell.apps.sales', order: 1 },
   menus: [{ label: 'sales.menu.orders', href: '/sales', perm: 'sales.order.read', order: 50 }],
-  events: { emits: ['sales.order.confirmed'] },
+  events: { emits: ['sales.order.confirmed', 'sales.order.cancelled'] },
   entities: [saleOrderEntity],
 });

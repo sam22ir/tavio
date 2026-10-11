@@ -7,7 +7,21 @@ export interface QtyLine {
   unitCostCents?: string;
 }
 
-export interface SalesOrderConfirmed { orderId: string; partnerId: string; number: string; lines: QtyLine[] }
+export interface SalesOrderConfirmed {
+  orderId: string;
+  partnerId: string;
+  number: string;
+  /** Lines with their sale order line id, so the delivery can point back at them. */
+  lines: (QtyLine & { saleOrderLineId: string })[];
+}
+export interface SalesOrderCancelled { orderId: string; number: string | null }
+/** One validated delivery of a sale order: per order line, what was handed over and what was dropped. */
+export interface InventoryDeliveryValidated {
+  deliveryId: string;
+  sourceEntity: string | null;
+  sourceId: string | null;
+  lines: { saleOrderLineId: string; deliveredQty: string; cancelledQty: string }[];
+}
 export interface InvoicePosted {
   invoiceId: string;
   type: 'out_invoice' | 'out_refund' | 'in_invoice' | 'in_refund';
@@ -61,6 +75,8 @@ export interface CreditContractStateChanged {
 
 export interface EventCatalog {
   'sales.order.confirmed': SalesOrderConfirmed;
+  'sales.order.cancelled': SalesOrderCancelled;
+  'inventory.delivery.validated': InventoryDeliveryValidated;
   'invoicing.invoice.posted': InvoicePosted;
   'invoicing.payment.registered': InvoicePaymentRegistered;
   'purchases.order.received': PurchaseOrderReceived;
@@ -81,6 +97,8 @@ export type EventName = keyof EventCatalog;
 /** Runtime list of every event name. The type check fails to compile when an event is missing here. */
 export const EVENT_NAMES = [
   'sales.order.confirmed',
+  'sales.order.cancelled',
+  'inventory.delivery.validated',
   'invoicing.invoice.posted',
   'invoicing.payment.registered',
   'purchases.order.received',

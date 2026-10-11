@@ -97,7 +97,10 @@
     "move_not_draft": "يمكن تأكيد الحركات المسودة فقط.",
     "move_done": "لا يمكن إلغاء حركة مؤكدة.",
     "signed_by_required": "أدخل اسم من وقّع الاستلام قبل التحقق من التسليم.",
-    "signed_by_too_long": "الاسم طويل جدا."
+    "signed_by_too_long": "الاسم طويل جدا.",
+    "delivery_qty_invalid": "كمية مُسلَّمة غير صالحة.",
+    "delivery_qty_over": "الكمية المُسلَّمة تتجاوز الكمية المطلوبة.",
+    "delivery_nothing_delivered": "لم يُسلَّم شيء. أدخل كمية واحدة على الأقل."
   },
   "deliveries": {
     "title": "التسليمات",
@@ -116,7 +119,17 @@
     "view_contract": "فتح العقد",
     "lines_title": "البنود",
     "receipt_title": "الاستلام",
-    "open": "فتح"
+    "open": "فتح",
+    "print": "طباعة وصل التسليم",
+    "ordered": "المطلوب",
+    "delivered_qty": "المُسلَّم",
+    "remaining": "المتبقي",
+    "no_backorder": "بدون متأخرات (إلغاء المتبقي)",
+    "backorder_hint": "يُرحَّل المتبقي إلى عملية تسليم لاحقة، إلا إذا حددت «بدون متأخرات».",
+    "backorder_of": "متأخرات لـ",
+    "backorder_created": "تم إنشاء عملية تسليم للمتأخرات",
+    "edit_qty": "الكمية المُسلَّمة",
+    "back_to_delivery": "العودة إلى التسليم"
   },
   "valuation": {
     "title": "تقييم المخزون",

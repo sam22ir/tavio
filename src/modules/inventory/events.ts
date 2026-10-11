@@ -4,6 +4,7 @@ import type {
   CreditContractStateChanged,
   PosOrderPaid,
   PurchaseOrderReceived,
+  SalesOrderCancelled,
   SalesOrderConfirmed,
 } from '@/core/events/catalog';
 import type { Ctx } from '@/core/ctx';
@@ -11,26 +12,40 @@ import { creditContractLines } from '@/modules/credit_sales/schema';
 import { ensureDefaultWarehouse } from './service/warehouses';
 import { moveLines, stockTrackedLines } from './service/moves';
 import { closeReservations, releasesContractReservations, reserveLines } from './service/reservations';
-import { cancelOpenDeliveriesForSource, createDraftDelivery, returnDoneDeliveriesForSource } from './service/deliveries';
+import {
+  cancelOpenDeliveriesForSource,
+  createDraftDelivery,
+  createOrderDelivery,
+  returnDoneDeliveriesForSource,
+  SALE_ORDER_SOURCE_ENTITY as SALE_ORDER_ENTITY,
+} from './service/deliveries';
 
 const CONTRACT_ENTITY = 'credit_sales.contract';
 
 // Side-effect module: imported from src/modules/inventory/index.ts so the handlers are registered.
 // Handlers check by source id and product before creating anything, so redelivery is safe.
 
-// Sales confirmation: delivery moves stay draft until someone validates them.
+// Sales confirmation: one draft delivery for the stock-tracked goods lines. Validating it posts the moves
+// for what is actually handed over (partial deliveries and backorders are handled by the delivery service).
 on('sales.order.confirmed', async (ctx: Ctx, event) => {
   const p = event.payload as SalesOrderConfirmed;
-  const wh = await ensureDefaultWarehouse(ctx);
-  await moveLines(ctx, {
-    lines: p.lines,
-    sourceEntity: 'sales.order',
+  const tracked = await stockTrackedLines(ctx, p.lines);
+  if (tracked.length === 0) return;
+  const created = await createOrderDelivery(ctx, {
+    partnerId: p.partnerId,
+    sourceEntity: SALE_ORDER_ENTITY,
     sourceId: p.orderId,
-    reference: p.number,
-    fromLocationId: wh.internalLocationId,
-    toLocationId: wh.customerLocationId,
-    post: false,
+    lines: tracked.map((l) => ({ productId: l.productId ?? '', quantity: l.quantity, saleOrderLineId: l.saleOrderLineId })),
   });
+  if (!created.ok) throw new Error(created.error.message);
+});
+
+// Sales cancellation: open deliveries are cancelled and their reservations released. The sales service
+// refuses the cancel once anything was delivered, so no done delivery is touched here.
+on('sales.order.cancelled', async (ctx: Ctx, event) => {
+  const p = event.payload as SalesOrderCancelled;
+  const cancelled = await cancelOpenDeliveriesForSource(ctx, { sourceEntity: SALE_ORDER_ENTITY, sourceId: p.orderId });
+  if (!cancelled.ok) throw new Error(cancelled.error.message);
 });
 
 // Purchase receipt: goods are in stock as soon as the order is received.

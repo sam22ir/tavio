@@ -97,7 +97,10 @@
     "move_not_draft": "Only draft moves can be validated.",
     "move_done": "A validated move cannot be cancelled.",
     "signed_by_required": "Enter who signed for the delivery before validating it.",
-    "signed_by_too_long": "The name is too long."
+    "signed_by_too_long": "The name is too long.",
+    "delivery_qty_invalid": "Invalid delivered quantity.",
+    "delivery_qty_over": "The delivered quantity is above the ordered quantity.",
+    "delivery_nothing_delivered": "Nothing is delivered. Enter at least one quantity."
   },
   "deliveries": {
     "title": "Deliveries",
@@ -116,7 +119,17 @@
     "view_contract": "Open contract",
     "lines_title": "Lines",
     "receipt_title": "Receipt",
-    "open": "Open"
+    "open": "Open",
+    "print": "Print delivery note",
+    "ordered": "Ordered",
+    "delivered_qty": "Delivered",
+    "remaining": "Remaining",
+    "no_backorder": "No backorder (cancel the remainder)",
+    "backorder_hint": "The remainder carries over to a backorder delivery, unless you tick \"No backorder\".",
+    "backorder_of": "Backorder of",
+    "backorder_created": "Backorder delivery created",
+    "edit_qty": "Quantity delivered",
+    "back_to_delivery": "Back to delivery"
   },
   "valuation": {
     "title": "Stock valuation",

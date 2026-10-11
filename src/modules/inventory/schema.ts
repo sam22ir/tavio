@@ -206,15 +206,19 @@ export const deliveries = pgTable(
     // FK → files.id (added by integrator)
     proofFileId: uuid('proof_file_id'),
     note: text('note'),
+    // Backorder link: the delivery this one is the remainder of. Null for first deliveries.
+    // FK → deliveries.id (added by integrator)
+    originDeliveryId: uuid('origin_delivery_id'),
   },
   (t) => [
     uniqueIndex('deliveries_company_id_number_key').on(t.companyId, t.number),
     index('deliveries_company_id_state_idx').on(t.companyId, t.state),
     index('deliveries_company_id_source_idx').on(t.companyId, t.sourceEntity, t.sourceId),
-    // Idempotency for event handlers: one live delivery per source document.
-    uniqueIndex('deliveries_company_id_source_live_key')
+    // One open delivery per source document. Done deliveries do not block a backorder.
+    // Event handlers check for an existing live delivery before inserting (idempotency).
+    uniqueIndex('deliveries_company_id_source_open_key')
       .on(t.companyId, t.sourceEntity, t.sourceId)
-      .where(sql`${t.sourceId} is not null and ${t.state} <> 'cancelled'`),
+      .where(sql`${t.sourceId} is not null and ${t.state} in ('draft', 'ready')`),
     check('deliveries_state_check', sql`${t.state} in ('draft', 'ready', 'done', 'cancelled')`),
     check('deliveries_done_at_check', sql`${t.state} <> 'done' or ${t.deliveredAt} is not null`),
   ],
@@ -233,11 +237,18 @@ export const deliveryLines = pgTable(
     productId: uuid('product_id')
       .notNull()
       .references(() => products.id),
+    // Quantity demanded on this delivery (remainder for a backorder).
     quantity: numeric('quantity', { precision: 14, scale: 3 }).notNull(),
+    // Quantity actually handed over when the delivery was validated. Default 0 while open.
+    deliveredQty: numeric('delivered_qty', { precision: 14, scale: 3 }).notNull().default('0'),
+    // Sale order line this delivery line serves. FK → sale_order_lines.id (added by integrator). Null otherwise.
+    saleOrderLineId: uuid('sale_order_line_id'),
   },
   (t) => [
     index('delivery_lines_company_id_delivery_id_idx').on(t.companyId, t.deliveryId),
+    index('delivery_lines_company_id_sale_line_idx').on(t.companyId, t.saleOrderLineId),
     check('delivery_lines_quantity_check', sql`${t.quantity} > 0`),
+    check('delivery_lines_delivered_check', sql`${t.deliveredQty} >= 0 and ${t.deliveredQty} <= ${t.quantity}`),
   ],
 );
 

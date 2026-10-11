@@ -1,0 +1,129 @@
+{
+  "brand": "Customer space",
+  "nav": {
+    "label": "Portal navigation",
+    "home": "Home",
+    "invoices": "Invoices",
+    "contracts": "Credit",
+    "receipts": "Receipts",
+    "logout": "Log out"
+  },
+  "login": {
+    "title": "Customer space",
+    "intro": "Enter your email or phone. If an account exists, we will send you a sign-in link.",
+    "identifier": "Email or phone",
+    "placeholder": "you@example.com or 0550 00 00 00",
+    "submit": "Send me a link",
+    "sent": "If an account exists for this address or number, a sign-in link has just been sent. The link is valid for 30 minutes.",
+    "errors": {
+      "expired": "This link has expired. Request a new one.",
+      "used": "This link has already been used. Request a new one.",
+      "link": "This link is not valid.",
+      "config": "The customer space is not configured.",
+      "invalid": "Invalid entry. Check your email or phone.",
+      "company_missing": "This link is incomplete. Use the link your company sent you.",
+      "scoped": "To see your whole account, request a sign-in link."
+    }
+  },
+  "home": {
+    "greeting": "Hello {name}",
+    "subtitle": "Your position today",
+    "balance": "Balance",
+    "invoicesDue": "Invoices to pay",
+    "installmentsDue": "Upcoming instalments",
+    "installmentsOverdue": "Overdue instalments",
+    "viewInvoices": "View invoices",
+    "viewContracts": "View credit"
+  },
+  "pay": {
+    "online": "Pay online",
+    "soon": "Online payment will be available soon."
+  },
+  "invoices": {
+    "title": "Invoices",
+    "empty": "No invoices yet.",
+    "paymentState": {
+      "not_paid": "Unpaid",
+      "partial": "Partly paid",
+      "paid": "Paid"
+    }
+  },
+  "invoice": {
+    "back": "← Back to invoices",
+    "date": "Date",
+    "dueDate": "Due date",
+    "status": "Status",
+    "description": "Description",
+    "qty": "Qty",
+    "lineTotal": "Total",
+    "untaxed": "Subtotal",
+    "tax": "VAT",
+    "total": "Total incl. VAT",
+    "paid": "Already paid",
+    "balance": "Balance due",
+    "payments": "Payments",
+    "noPayments": "No payments recorded.",
+    "print": "Print / PDF"
+  },
+  "contracts": {
+    "title": "Credit",
+    "empty": "No credit contracts yet.",
+    "states": {
+      "submitted": "Submitted",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "refused": "Refused",
+      "reserved": "Reserved",
+      "active": "In progress",
+      "completed": "Settled",
+      "cancelled": "Cancelled",
+      "defaulted": "Defaulted"
+    }
+  },
+  "contract": {
+    "back": "← Back to credit",
+    "state": "Status",
+    "total": "Total",
+    "financed": "Amount financed",
+    "paid": "Already paid",
+    "remaining": "Balance due",
+    "schedule": "Schedule",
+    "payments": "Payments",
+    "noPayments": "No payments recorded.",
+    "receipts": "Receipts",
+    "print": "Print contract"
+  },
+  "status": {
+    "paid": "Paid",
+    "due": "Due",
+    "overdue": "Overdue"
+  },
+  "receipts": {
+    "title": "Receipts",
+    "empty": "No receipts yet.",
+    "voided": "Void",
+    "print": "Print / PDF"
+  },
+  "share": {
+    "button": "Share",
+    "invite": "Invite to portal",
+    "title": "Portal link",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Copy failed, select the link instead.",
+    "whatsapp": "WhatsApp",
+    "email": "Email (send later)",
+    "expires": "Valid until {date}",
+    "error": "The link could not be created.",
+    "creating": "Creating…",
+    "messageDocument": "Hello, here is your document: {url}",
+    "messageInvite": "Hello, open your customer space: {url}",
+    "emailSubject": "Your customer space",
+    "existingLinks": "Existing links",
+    "revoke": "Revoke link",
+    "revoked": "Revoked",
+    "noLinks": "No link for this document.",
+    "linkExpires": "Expires {date}",
+    "linkActive": "Active"
+  }
+}

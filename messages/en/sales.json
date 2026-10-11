@@ -40,7 +40,9 @@
     "unitPrice": "Unit price (DA)",
     "discount": "Discount (%)",
     "tax": "Tax",
-    "subtotal": "Subtotal"
+    "subtotal": "Subtotal",
+    "deliveredQty": "Delivered",
+    "invoicedQty": "Invoiced"
   },
   "options": {
     "state": {
@@ -63,7 +65,9 @@
     "alreadyInvoiced": "This order is already invoiced.",
     "notConfirmed": "The order must be confirmed before invoicing.",
     "invalidAmount": "Invalid amount.",
-    "failed": "Something went wrong. Try again."
+    "failed": "Something went wrong. Try again.",
+    "has_deliveries": "Cannot cancel: goods were already delivered or invoiced.",
+    "nothing_to_invoice": "Nothing to invoice yet."
   },
   "print": {
     "validUntil": "Valid until",
@@ -80,5 +84,31 @@
     "footer": "Quotation only, not a tax invoice. Seller legal details are set in company settings."
   },
   "empty": "No quotations or orders yet.",
-  "newLine": "New line"
+  "newLine": "New line",
+  "progress": {
+    "delivery": {
+      "to_deliver": "To deliver",
+      "partial": "Partially delivered",
+      "delivered": "Delivered"
+    },
+    "invoice": {
+      "to_invoice": "To invoice",
+      "partial": "Partially invoiced",
+      "invoiced": "Invoiced"
+    }
+  },
+  "sections": {
+    "deliveries": "Deliveries",
+    "invoices": "Invoices",
+    "none": "None",
+    "noDeliveries": "No delivery for this order yet.",
+    "noInvoices": "No invoice for this order yet.",
+    "openDelivery": "Open delivery"
+  },
+  "deliveryState": {
+    "draft": "Draft",
+    "ready": "Ready",
+    "done": "Delivered",
+    "cancelled": "Cancelled"
+  }
 }
