@@ -1,0 +1,122 @@
+{
+  "brand": "Espace client",
+  "nav": {
+    "label": "Navigation portail",
+    "home": "Accueil",
+    "invoices": "Factures",
+    "contracts": "Crédits",
+    "receipts": "Reçus",
+    "logout": "Se déconnecter"
+  },
+  "login": {
+    "title": "Espace client",
+    "intro": "Saisissez votre e-mail ou votre téléphone. Si un compte existe, nous vous enverrons un lien de connexion.",
+    "identifier": "E-mail ou téléphone",
+    "placeholder": "vous@exemple.dz ou 0550 00 00 00",
+    "submit": "Recevoir mon lien",
+    "sent": "Si un compte existe pour cette adresse ou ce numéro, un lien de connexion vient d'être envoyé. Le lien est valable 30 minutes.",
+    "errors": {
+      "expired": "Ce lien a expiré. Demandez un nouveau lien.",
+      "used": "Ce lien a déjà été utilisé. Demandez un nouveau lien.",
+      "link": "Ce lien est invalide.",
+      "config": "L'espace client n'est pas configuré.",
+      "invalid": "Saisie invalide. Vérifiez votre e-mail ou téléphone.",
+      "company_missing": "Ce lien est incomplet. Utilisez le lien fourni par votre entreprise."
+    }
+  },
+  "home": {
+    "greeting": "Bonjour {name}",
+    "subtitle": "Votre situation à ce jour",
+    "balance": "Solde",
+    "invoicesDue": "Factures à payer",
+    "installmentsDue": "Échéances à venir",
+    "installmentsOverdue": "Échéances en retard",
+    "viewInvoices": "Voir les factures",
+    "viewContracts": "Voir les crédits"
+  },
+  "pay": {
+    "online": "Payer en ligne",
+    "soon": "Le paiement en ligne sera bientôt disponible."
+  },
+  "invoices": {
+    "title": "Factures",
+    "empty": "Aucune facture pour le moment.",
+    "paymentState": {
+      "not_paid": "Non payée",
+      "partial": "Partiellement payée",
+      "paid": "Payée"
+    }
+  },
+  "invoice": {
+    "back": "← Retour aux factures",
+    "date": "Date",
+    "dueDate": "Échéance",
+    "status": "Statut",
+    "description": "Désignation",
+    "qty": "Qté",
+    "lineTotal": "Total",
+    "untaxed": "Total HT",
+    "tax": "TVA",
+    "total": "Total TTC",
+    "paid": "Déjà payé",
+    "balance": "Reste à payer",
+    "payments": "Paiements",
+    "noPayments": "Aucun paiement enregistré.",
+    "print": "Imprimer / PDF"
+  },
+  "contracts": {
+    "title": "Crédits",
+    "empty": "Aucun crédit pour le moment.",
+    "states": {
+      "submitted": "Soumis",
+      "under_review": "En étude",
+      "approved": "Approuvé",
+      "refused": "Refusé",
+      "reserved": "Réservé",
+      "active": "En cours",
+      "completed": "Soldé",
+      "cancelled": "Annulé",
+      "defaulted": "Défaillant"
+    }
+  },
+  "contract": {
+    "back": "← Retour aux crédits",
+    "state": "Statut",
+    "total": "Total",
+    "financed": "Montant financé",
+    "paid": "Déjà payé",
+    "remaining": "Reste à payer",
+    "schedule": "Échéancier",
+    "payments": "Paiements",
+    "noPayments": "Aucun paiement enregistré.",
+    "receipts": "Reçus",
+    "print": "Imprimer le contrat"
+  },
+  "status": {
+    "paid": "Payée",
+    "due": "À payer",
+    "overdue": "En retard"
+  },
+  "receipts": {
+    "title": "Reçus",
+    "empty": "Aucun reçu pour le moment.",
+    "voided": "Annulé",
+    "print": "Imprimer / PDF"
+  },
+  "share": {
+    "button": "Partager",
+    "invite": "Inviter au portail",
+    "title": "Lien portail",
+    "copy": "Copier",
+    "copied": "Copié",
+    "copyFailed": "Copie impossible, sélectionnez le lien.",
+    "whatsapp": "WhatsApp",
+    "email": "E-mail (à envoyer plus tard)",
+    "expires": "Valable jusqu'au {date}",
+    "error": "Le lien n'a pas pu être créé.",
+    "creating": "Création…",
+    "messageDocument": "Bonjour, voici votre document : {url}",
+    "messageInvite": "Bonjour, accédez à votre espace client : {url}",
+    "emailSubject": "Votre espace client"
+  }
+}

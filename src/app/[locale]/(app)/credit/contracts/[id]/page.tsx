@@ -21,6 +21,7 @@ import { Chatter } from '@/modules/chatter/ui/chatter';
 import { Button } from '@/ui/primitives/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/primitives/card';
 import { ContractActions } from './contract-actions';
+import { PortalShareButton } from '@/core/portal/ui/portal-share-button';
 
 export default async function ContractDetailPage({
   params,
@@ -73,6 +74,7 @@ export default async function ContractDetailPage({
         </div>
         <div className="flex flex-wrap gap-2">
           <ContractActions contractId={contract.id} state={contract.state} />
+          {contract.state !== 'draft' ? <PortalShareButton mode="document" kind="contract" id={contract.id} /> : null}
           <WorkflowBar contractId={contract.id} state={contract.state} />
           {contract.state === 'active' ? (
             <RecordPaymentButton contractId={contract.id} remainingCents={totals.remainingCents.toString()} />
