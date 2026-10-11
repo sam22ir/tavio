@@ -22,6 +22,24 @@ export function readPortalBaseUrl(): string | null {
   return value ? value.replace(/\/+$/, '') : null;
 }
 
+/**
+ * Runs a side effect (the login email) after the response when the Workers runtime allows it, so a matched
+ * account does not answer slower than an unmatched one. Falls back to awaiting elsewhere. Never rejects.
+ */
+export async function runInBackground(task: Promise<unknown>): Promise<void> {
+  const safe = task.then(() => undefined, () => undefined);
+  try {
+    const ctx = getCloudflareContext({ async: false }).ctx as { waitUntil?: (p: Promise<unknown>) => void } | undefined;
+    if (ctx?.waitUntil) {
+      ctx.waitUntil(safe);
+      return;
+    }
+  } catch {
+    // Not running on Workers.
+  }
+  await safe;
+}
+
 /** Feature flag for the online payment button. Off unless PORTAL_PAYMENTS is exactly "true". */
 export function portalPaymentsEnabled(): boolean {
   return readPortalEnv('PORTAL_PAYMENTS') === 'true';

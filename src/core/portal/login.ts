@@ -8,6 +8,7 @@ import { withTenant } from '@/core/db/tenant';
 import { partners } from '@/modules/contacts/schema';
 import { normalizePhone } from '@/modules/contacts/service/partners';
 import { PORTAL_ACTOR_ID, PORTAL_PERMS } from './context';
+import { runInBackground } from './env';
 import { portalLoginEmail } from './emails';
 import { issuePortalToken } from './links';
 import { portalTokenUrl } from './tokens';
@@ -102,7 +103,7 @@ export async function requestPortalLogin(input: PortalLoginRequest): Promise<voi
     ).then(async (mail) => {
       if (!mail) return;
       const content = portalLoginEmail(input.locale, mail.companyName, mail.url);
-      await sendEmail({ to: mail.email, subject: content.subject, html: content.html, text: content.text });
+      await runInBackground(sendEmail({ to: mail.email, subject: content.subject, html: content.html, text: content.text }));
     });
   } catch {
     // Never reveal failures to the requester. Details are not logged with personal data.
