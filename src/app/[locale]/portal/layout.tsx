@@ -8,6 +8,9 @@ import { currentPortalSession } from '@/core/portal/session-cookie';
 import { portalCtx } from '@/core/portal/context';
 import { companyIdentityOf } from '@/modules/invoicing/queries';
 
+// Every portal page reads the portal session cookie; never prerender at build time.
+export const dynamic = 'force-dynamic';
+
 // Portal shell. Separate from the staff shell: no staff menus and no staff session.
 // Renders the company header only when a valid portal session exists. Pages enforce access themselves.
 export default async function PortalLayout({
