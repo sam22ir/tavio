@@ -64,7 +64,7 @@ function Card({
       <h2 className="text-sm font-medium text-stone-600">{title}</h2>
       <p className={`text-xl font-semibold tabular-nums ${alert ? 'text-red-700' : ''}`} dir="ltr">{amount}</p>
       <p className="text-sm text-stone-500">{count}</p>
-      <Link href={href} className="mt-auto inline-flex min-h-11 items-center text-sm font-medium text-[oklch(0.55_0.11_185)]">
+      <Link href={href} className="mt-auto inline-flex min-h-11 items-center text-sm font-medium text-[#08409D]">
         {linkLabel}
       </Link>
     </article>
@@ -75,7 +75,7 @@ function Card({
 function PayOnline({ label, hint, enabled }: { label: string; hint: string; enabled: boolean }) {
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-dashed border-stone-300 bg-white p-4">
-      <button type="button" disabled={!enabled} className="min-h-11 rounded-lg bg-[oklch(0.55_0.11_185)] px-4 font-medium text-white disabled:opacity-50">
+      <button type="button" disabled={!enabled} className="min-h-11 rounded-lg bg-[#08409D] px-4 font-medium text-white disabled:opacity-50">
         {label}
       </button>
       {!enabled ? <p className="text-sm text-stone-500">{hint}</p> : null}
