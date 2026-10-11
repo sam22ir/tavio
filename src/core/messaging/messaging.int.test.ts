@@ -7,6 +7,7 @@ import { companies, outboundMessages } from '@/core/db/schema';
 import type { Ctx } from '@/core/ctx';
 import type { Db } from '@/core/db/types';
 import { drainMessages, queueMessage } from './outbox';
+import { deleteTestCompanies } from '@/testing/db-cleanup';
 
 loadDevEnv();
 
@@ -22,7 +23,7 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('messaging queue to cron send (databas
   const created: string[] = [];
 
   afterAll(async () => {
-    for (const id of created) await db.delete(companies).where(eq(companies.id, id));
+    await deleteTestCompanies(db, created);
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
   });

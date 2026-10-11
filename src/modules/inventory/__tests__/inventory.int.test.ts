@@ -8,7 +8,7 @@ import { loadDevEnv } from '@/core/env/load-dev-env';
 import { emit } from '@/core/events';
 import { OWNER_PERMS } from '@/core/perms';
 import { products, uoms } from '@/modules/products/schema';
-import { stockLocations, stockMoves } from '../schema';
+import { deliveries, deliveryLines, stockLocations, stockMoves } from '../schema';
 import '../events';
 import { createAdjustment } from '../service/adjustments';
 import { cancelMove, createMove, validateMove } from '../service/moves';
@@ -34,7 +34,8 @@ async function fixture(): Promise<{ args: TenantArgs; productId: string; uomId: 
     id: productId,
     companyId,
     name: 'Widget',
-    kind: 'goods',
+    kind: 'goods', trackStock: true,
+
     uomId,
     salePriceCents: BigInt(0),
     costCents: BigInt(0),
@@ -59,7 +60,7 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('inventory service (database)', () => 
     expect(b).toEqual(a);
   });
 
-  it('sales confirmation creates draft delivery moves once per product', async () => {
+  it('sales confirmation creates one draft delivery, idempotently, and posts no stock until validation', async () => {
     const { args, productId } = await fixture();
     const orderId = randomUUID();
     const payload = {
@@ -74,10 +75,14 @@ describe.skipIf(!process.env.TAVIO_W5_DB)('inventory service (database)', () => 
     };
     await withTenant(args, (ctx) => emit(ctx, { name: 'sales.order.confirmed', payload }));
     await withTenant(args, (ctx) => emit(ctx, { name: 'sales.order.confirmed', payload }));
-    const rows = await db.select().from(stockMoves).where(eq(stockMoves.sourceId, orderId));
+    const rows = await db.select().from(deliveries).where(eq(deliveries.sourceId, orderId));
     expect(rows).toHaveLength(1);
     expect(rows[0]?.state).toBe('draft');
-    expect(rows[0]?.quantity).toBe('3.500');
+    const lines = await db.select().from(deliveryLines).where(eq(deliveryLines.deliveryId, rows[0]?.id ?? ''));
+    expect(lines.every((l) => l.productId === productId)).toBe(true);
+    expect(lines.reduce((sum, l) => sum + Number(l.quantity), 0)).toBeCloseTo(3.5);
+    const moves = await db.select().from(stockMoves).where(eq(stockMoves.sourceId, orderId));
+    expect(moves).toHaveLength(0);
   });
 
   it('receipts are posted and change stock; adjustments set the counted quantity', async () => {
