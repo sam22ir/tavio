@@ -49,9 +49,11 @@ describe('outbox', () => {
       await emit(await ctxFor(tx, companyId), { name: 'test.outbox.int', payload: { ok: true } });
 
       const seen: string[] = [];
+      // The outbox is shared by every company: a large batch keeps leftover pending rows from other runs
+      // from pushing this test's row out of the claimed set.
       const processed = await drainOutbox(asDb(tx), async (row) => {
         if (row.companyId === companyId) seen.push(row.eventName);
-      });
+      }, 1000);
 
       expect(processed).toBeGreaterThanOrEqual(1);
       expect(seen).toEqual(['test.outbox.int']);
