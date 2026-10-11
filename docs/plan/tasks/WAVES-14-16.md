@@ -62,6 +62,8 @@ Order: 15-0, then 15-A, 15-B and 15-C in parallel, with 15-D starting at the sam
 
 ## Wave 16: links between apps (Odoo parity)
 
+**Status (2026-10-11): done and deployed.** 16-A related links, 16-B CRM/sales/website, 16-C delivery notes + backorders + invoicing by delivered qty, 16-D import/export, 16-E customer portal (scoped document links, revocation; payment hook off), 16-F email outbox, templates, reminders, opt-out. Sample data now lives in a separate demo company. Migrations 0018–0019.
+
 | Task | What | Size |
 |---|---|---|
 | **16-A Related records ("smart buttons")** | A generic `RelatedLinks` bar on detail pages showing counts and links. Contact: leads, quotes/orders, credit contracts, invoices, payments, tickets, POS orders. Product: stock per warehouse, moves, sales, purchases. SO: deliveries, invoices. Invoice: payments, origin order. Contract: moves, entries. It's driven by a registry, so each module declares its relations once. | M |
