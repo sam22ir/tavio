@@ -40,7 +40,9 @@
     "unitPrice": "سعر الوحدة (دج)",
     "discount": "الخصم (%)",
     "tax": "الضريبة",
-    "subtotal": "المجموع الفرعي"
+    "subtotal": "المجموع الفرعي",
+    "deliveredQty": "مُسلَّم",
+    "invoicedQty": "مُفوتَر"
   },
   "options": {
     "state": {
@@ -63,7 +65,9 @@
     "alreadyInvoiced": "هذا الطلب مفوتر بالفعل.",
     "notConfirmed": "يجب تأكيد الطلب قبل الفوترة.",
     "invalidAmount": "مبلغ غير صالح.",
-    "failed": "حدث خطأ. حاول مرة أخرى."
+    "failed": "حدث خطأ. حاول مرة أخرى.",
+    "has_deliveries": "تعذر الإلغاء: تم تسليم البضائع أو فوترتها بالفعل.",
+    "nothing_to_invoice": "لا شيء للفوترة حالياً."
   },
   "print": {
     "validUntil": "صالح حتى",
@@ -80,5 +84,31 @@
     "footer": "عرض سعر فقط وليس فاتورة ضريبية. تُضبط البيانات القانونية للبائع في إعدادات الشركة."
   },
   "empty": "لا توجد عروض أسعار أو طلبات بعد.",
-  "newLine": "سطر جديد"
+  "newLine": "سطر جديد",
+  "progress": {
+    "delivery": {
+      "to_deliver": "قيد التسليم",
+      "partial": "مُسلَّم جزئياً",
+      "delivered": "مُسلَّم"
+    },
+    "invoice": {
+      "to_invoice": "قيد الفوترة",
+      "partial": "مُفوتَر جزئياً",
+      "invoiced": "مُفوتَر"
+    }
+  },
+  "sections": {
+    "deliveries": "عمليات التسليم",
+    "invoices": "الفواتير",
+    "none": "لا شيء",
+    "noDeliveries": "لا توجد عملية تسليم لهذا الطلب بعد.",
+    "noInvoices": "لا توجد فاتورة لهذا الطلب بعد.",
+    "openDelivery": "فتح التسليم"
+  },
+  "deliveryState": {
+    "draft": "مسودة",
+    "ready": "جاهزة",
+    "done": "مُسلَّمة",
+    "cancelled": "ملغاة"
+  }
 }

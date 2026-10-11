@@ -17,7 +17,13 @@ import {
   partnerDisplayNames,
   SIGNED_BY_REQUIRED,
 } from '@/modules/inventory/service/deliveries';
+import { remainingOf, toMilliText } from '@/modules/inventory/service/delivery-view';
 import { Button } from '@/ui/primitives/button';
+import {
+  DELIVERY_NOTHING_DELIVERED,
+  DELIVERY_QTY_INVALID,
+  DELIVERY_QTY_OVER,
+} from '@/modules/inventory/service/delivery-plan';
 
 export default async function DeliveryDetailPage({
   params,
@@ -46,8 +52,8 @@ export default async function DeliveryDetailPage({
   const open = delivery.state === 'draft' || delivery.state === 'ready';
   const partnerNames = await withPageCtx((ctx) => partnerDisplayNames(ctx, [delivery.partnerId]));
   const partnerName = partnerNames.ok ? partnerNames.value.get(delivery.partnerId) ?? '–' : '–';
-  const failureMessage =
-    failure === SIGNED_BY_REQUIRED ? t(`errors.${SIGNED_BY_REQUIRED}`) : failure ? tViews('error') : null;
+  const knownFailures: readonly string[] = [SIGNED_BY_REQUIRED, DELIVERY_QTY_INVALID, DELIVERY_QTY_OVER, DELIVERY_NOTHING_DELIVERED];
+  const failureMessage = failure && knownFailures.includes(failure) ? t(`errors.${failure}`) : failure ? tViews('error') : null;
   const signatureUrl = delivery.signatureFileId
     ? await withPageCtx((ctx) => deliveryFileUrl(ctx, delivery.signatureFileId as string))
     : null;
@@ -70,18 +76,30 @@ export default async function DeliveryDetailPage({
           <h1 className="text-xl font-semibold break-words">{delivery.number}</h1>
           <span className="text-sm text-muted-foreground">{t(`options.delivery_state.${delivery.state}`)}</span>
         </div>
-        {open ? (
-          <form action={validateDeliveryForm}>
-            <input type="hidden" name="id" value={delivery.id} />
-            <Button type="submit">{t('deliveries.validate')}</Button>
-          </form>
-        ) : null}
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href={`/${currentLocale}/inventory/deliveries/${delivery.id}/print`}
+            className="inline-flex min-h-11 items-center rounded-md border px-4 text-sm font-medium"
+          >
+            {t('deliveries.print')}
+          </Link>
+        </div>
       </header>
 
       <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-md border p-4 sm:grid-cols-2">
         <Item label={t('fields.partner')} value={partnerName} />
         <Item label={t('fields.scheduled_date')} value={delivery.scheduledDate ?? '–'} />
         <Item label={t('fields.delivered_at')} value={delivery.deliveredAt ? delivery.deliveredAt.slice(0, 10) : '–'} />
+        {delivery.originDeliveryId ? (
+          <div className="flex flex-col gap-0.5">
+            <dt className="text-xs text-muted-foreground">{t('deliveries.backorder_of')}</dt>
+            <dd className="text-sm">
+              <Link href={`/${currentLocale}/inventory/deliveries/${delivery.originDeliveryId}`} className="underline">
+                {delivery.originNumber ?? '–'}
+              </Link>
+            </dd>
+          </div>
+        ) : null}
         <div className="flex flex-col gap-0.5">
           <dt className="text-xs text-muted-foreground">{t('deliveries.source_contract')}</dt>
           <dd className="text-sm">
@@ -94,27 +112,59 @@ export default async function DeliveryDetailPage({
         </div>
       </dl>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold">{t('deliveries.lines_title')}</h2>
-        <div className="overflow-x-auto rounded-md border">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/50">
-              <tr>
-                <th className="p-3 text-start font-medium">{t('fields.product')}</th>
-                <th className="p-3 text-end font-medium">{t('fields.quantity')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {delivery.lines.map((line) => (
-                <tr key={line.productId} className="border-t">
-                  <td className="p-3 break-words">{line.productName}</td>
-                  <td className="p-3 text-end tabular-nums">{line.quantity}</td>
+      <form action={validateDeliveryForm} className="flex flex-col gap-3">
+        <input type="hidden" name="id" value={delivery.id} />
+        <input type="hidden" name="returnTo" value="detail" />
+        <section className="flex flex-col gap-3">
+          <h2 className="text-base font-semibold">{t('deliveries.lines_title')}</h2>
+          <div className="overflow-x-auto rounded-md border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/50">
+                <tr>
+                  <th className="p-3 text-start font-medium">{t('fields.product')}</th>
+                  <th className="p-3 text-end font-medium">{t('deliveries.ordered')}</th>
+                  <th className="p-3 text-end font-medium">{t('deliveries.delivered_qty')}</th>
+                  <th className="p-3 text-end font-medium">{t('deliveries.remaining')}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+              </thead>
+              <tbody>
+                {delivery.lines.map((line) => (
+                  <tr key={line.id} className="border-t">
+                    <td className="p-3 break-words">{line.productName}</td>
+                    <td className="p-3 text-end tabular-nums">{toMilliText(line.quantity)}</td>
+                    <td className="p-3 text-end tabular-nums">
+                      {open ? (
+                        <label className="flex flex-col items-end gap-1">
+                          <span className="sr-only">{t('deliveries.edit_qty')}</span>
+                          <input
+                            name={`qty_${line.id}`}
+                            inputMode="decimal"
+                            defaultValue={remainingOf(line.quantity, line.deliveredQty)}
+                            className="min-h-11 w-28 rounded-md border p-2 text-end"
+                          />
+                        </label>
+                      ) : (
+                        toMilliText(line.deliveredQty)
+                      )}
+                    </td>
+                    <td className="p-3 text-end tabular-nums">{remainingOf(line.quantity, line.deliveredQty)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {open ? (
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <label className="flex min-h-11 items-center gap-2 text-sm">
+                <input type="checkbox" name="noBackorder" className="size-5" />
+                <span>{t('deliveries.no_backorder')}</span>
+              </label>
+              <Button type="submit">{t('deliveries.validate')}</Button>
+            </div>
+          ) : null}
+          {open ? <p className="text-xs text-muted-foreground">{t('deliveries.backorder_hint')}</p> : null}
+        </section>
+      </form>
 
       <section className="flex flex-col gap-3 rounded-md border p-4">
         <h2 className="text-base font-semibold">{t('deliveries.receipt_title')}</h2>

@@ -36,7 +36,8 @@ export const saleOrders = pgTable(
     untaxedCents: bigint('untaxed_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     taxCents: bigint('tax_cents', { mode: 'bigint' }).notNull().default(sql`0`),
     totalCents: bigint('total_cents', { mode: 'bigint' }).notNull().default(sql`0`),
-    // True once an invoice has been created from this order (W5-B createInvoice)
+    // Derived: true when every line is invoiced for its policy (see sales progress.ts). Kept in sync on invoice
+    // and delivery events. Sub-statuses (to deliver / partly / delivered, to invoice / partly / invoiced) are derived.
     invoiced: boolean('invoiced').notNull().default(false),
     // CRM lead this quotation was made from (crm_leads.id, FK added by integrator). Null for direct quotes.
     leadId: uuid('lead_id'),
@@ -75,10 +76,20 @@ export const saleOrderLines = pgTable(
     taxId: uuid('tax_id').references(() => taxes.id),
     subtotalCents: bigint('subtotal_cents', { mode: 'bigint' }).notNull(),
     taxCents: bigint('tax_cents', { mode: 'bigint' }).notNull(),
+    // Quantity handed over, from validated deliveries (sales.order.* via inventory.delivery.validated).
+    deliveredQty: numeric('delivered_qty', { precision: 14, scale: 3 }).notNull().default('0'),
+    // Quantity dropped without a backorder (delivery validated with "pas de reliquat").
+    cancelledQty: numeric('cancelled_qty', { precision: 14, scale: 3 }).notNull().default('0'),
+    // Quantity billed on posted invoices created from this order.
+    invoicedQty: numeric('invoiced_qty', { precision: 14, scale: 3 }).notNull().default('0'),
   },
   (t) => [
     index('sale_order_lines_company_id_order_id_idx').on(t.companyId, t.orderId),
     check('sale_order_lines_quantity_check', sql`${t.quantity} > 0`),
+    check(
+      'sale_order_lines_progress_check',
+      sql`${t.deliveredQty} >= 0 and ${t.cancelledQty} >= 0 and ${t.invoicedQty} >= 0`,
+    ),
     check('sale_order_lines_unit_price_check', sql`${t.unitPriceCents} >= 0`),
     check(
       'sale_order_lines_discount_check',

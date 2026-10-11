@@ -40,7 +40,9 @@
     "unitPrice": "Prix unitaire (DA)",
     "discount": "Remise (%)",
     "tax": "Taxe",
-    "subtotal": "Sous-total"
+    "subtotal": "Sous-total",
+    "deliveredQty": "Livré",
+    "invoicedQty": "Facturé"
   },
   "options": {
     "state": {
@@ -63,7 +65,9 @@
     "alreadyInvoiced": "Cette commande est déjà facturée.",
     "notConfirmed": "La commande doit être confirmée avant facturation.",
     "invalidAmount": "Montant invalide.",
-    "failed": "Une erreur est survenue. Réessayez."
+    "failed": "Une erreur est survenue. Réessayez.",
+    "has_deliveries": "Annulation impossible : des marchandises ont déjà été livrées ou facturées.",
+    "nothing_to_invoice": "Rien à facturer pour le moment."
   },
   "print": {
     "validUntil": "Valide jusqu'au",
@@ -80,5 +84,31 @@
     "footer": "Devis sans valeur de facture. Les mentions légales du vendeur figurent dans les paramètres de la société."
   },
   "empty": "Aucun devis ni commande pour le moment.",
-  "newLine": "Nouvelle ligne"
+  "newLine": "Nouvelle ligne",
+  "progress": {
+    "delivery": {
+      "to_deliver": "À livrer",
+      "partial": "Livré partiellement",
+      "delivered": "Livré"
+    },
+    "invoice": {
+      "to_invoice": "À facturer",
+      "partial": "Facturé partiellement",
+      "invoiced": "Facturé"
+    }
+  },
+  "sections": {
+    "deliveries": "Livraisons",
+    "invoices": "Factures",
+    "none": "Aucune",
+    "noDeliveries": "Aucune livraison pour cette commande.",
+    "noInvoices": "Aucune facture pour cette commande.",
+    "openDelivery": "Ouvrir la livraison"
+  },
+  "deliveryState": {
+    "draft": "Brouillon",
+    "ready": "Prête",
+    "done": "Livrée",
+    "cancelled": "Annulée"
+  }
 }

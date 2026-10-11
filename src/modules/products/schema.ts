@@ -74,6 +74,9 @@ export const products = pgTable(
     // FK → taxes.id (added by integrator)
     defaultTaxId: uuid('default_tax_id'),
     trackStock: boolean('track_stock').notNull().default(false),
+    // When a sale order line is invoiced: 'order' bills the ordered quantity, 'delivery' bills what was delivered.
+    // Set per product; the form defaults to 'delivery' for goods and 'order' for services.
+    invoicePolicy: text('invoice_policy').notNull().default('order'),
     barcode: text('barcode'),
     description: text('description'),
     active: boolean('active').notNull().default(true),
@@ -89,6 +92,7 @@ export const products = pgTable(
       .on(t.companyId, t.barcode)
       .where(sql`${t.barcode} is not null`),
     check('products_kind_check', sql`${t.kind} in ('goods', 'service')`),
+    check('products_invoice_policy_check', sql`${t.invoicePolicy} in ('order', 'delivery')`),
     check('products_sale_price_cents_check', sql`${t.salePriceCents} >= 0`),
     check('products_cost_cents_check', sql`${t.costCents} >= 0`),
   ],
