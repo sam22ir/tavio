@@ -8,6 +8,7 @@ import { paymentsOf, partnerNameOf } from '@/modules/invoicing/queries';
 import { InvoiceDetail } from '@/modules/invoicing/ui/views';
 import { InvoiceOriginLink } from '@/modules/invoicing/ui/origin-link';
 import { RelatedLinks } from '@/ui/views/related-links';
+import { PortalShareButton } from '@/core/portal/ui/portal-share-button';
 
 export default async function CustomerInvoicePage({
   params, searchParams,
@@ -27,6 +28,7 @@ export default async function CustomerInvoicePage({
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
       <RelatedLinks source="invoicing.invoice" id={id} />
+      {data.invoice.state === 'posted' ? <PortalShareButton mode="document" kind="invoice" id={id} /> : null}
       <InvoiceOriginLink locale={locale} sourceEntity={data.invoice.sourceEntity} sourceId={data.invoice.sourceId} />
       <InvoiceDetail
         invoice={data.invoice} lines={data.lines} payments={data.payments} kind="customers" locale={locale}

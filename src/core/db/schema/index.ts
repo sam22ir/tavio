@@ -4,3 +4,4 @@ export * from './infra';
 export * from './auth';
 export * from './ai';
 export * from './demo';
+export * from './portal';

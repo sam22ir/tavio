@@ -1,0 +1,41 @@
+import { setRequestLocale } from 'next-intl/server';
+import { hasLocale } from 'next-intl';
+import { notFound } from 'next/navigation';
+import { routing } from '@/i18n/routing';
+import { requirePortalSession } from '@/core/portal/session-cookie';
+import { portalCtx } from '@/core/portal/context';
+import { isFullSession } from '@/core/portal/session';
+import { partnerOwnsReceipt, receiptBelongsToContract } from '@/core/portal/queries';
+import { loadReceiptPrint } from '@/modules/credit_sales/print/queries';
+import { labels } from '@/modules/credit_sales/print/shared';
+import { ReceiptView } from '@/modules/credit_sales/print/views';
+import { PrintButton } from '@/ui/print/print-button';
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export default async function PortalReceiptPrintPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
+  const { locale, id } = await params;
+  if (!hasLocale(routing.locales, locale) || !UUID_RE.test(id)) notFound();
+  setRequestLocale(locale);
+  const session = await requirePortalSession(locale);
+
+  const input = await portalCtx(session, locale as 'fr' | 'ar' | 'en', async (scope) => {
+    if (!(await partnerOwnsReceipt(scope, id))) return null;
+    if (!isFullSession(session)) {
+      // A document-link session sees a receipt only when it belongs to the one contract that link opened.
+      const scoped = session.scope;
+      if (!scoped || scoped.entity !== 'credit_sales.contract') return null;
+      if (!(await receiptBelongsToContract(scope, id, scoped.id))) return null;
+    }
+    return loadReceiptPrint(scope.ctx, id);
+  });
+  if (!input) notFound();
+
+  const t = labels(locale as 'fr' | 'ar' | 'en');
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="print:hidden"><PrintButton label={t.printButton} /></div>
+      <ReceiptView input={input} />
+    </div>
+  );
+}
