@@ -1,0 +1,94 @@
+{
+  "send": {
+    "button": "Envoyer",
+    "invite": "Inviter au portail",
+    "title": "Envoyer le message",
+    "inviteTitle": "Inviter au portail client",
+    "channel": "Canal",
+    "email": "E-mail",
+    "whatsapp": "WhatsApp (lien wa.me)",
+    "to": "Destinataire",
+    "subject": "Objet",
+    "body": "Message",
+    "bodyHelp": "Le lien vers l'espace client est ajouté automatiquement.",
+    "submit": "Envoyer",
+    "cancel": "Annuler",
+    "loading": "Préparation du message…",
+    "queued": "Message mis en file d'attente. Il partira à la prochaine vérification.",
+    "prepared": "Message préparé.",
+    "openWhatsapp": "Ouvrir WhatsApp",
+    "optedOut": "Ce client s'est désabonné des e-mails. Ce message transactionnel est envoyé quand même.",
+    "noRecipient": "Aucune adresse ou aucun téléphone enregistré pour ce partenaire.",
+    "error": "Envoi impossible.",
+    "errorCode": "Erreur : {message}",
+    "inviteHelp": "Un lien de connexion au portail (30 minutes, usage unique) est envoyé au client."
+  },
+  "settings": {
+    "title": "Modèles de messages",
+    "templates": "Modèles",
+    "reminders": "Rappels automatiques",
+    "remindersEnabled": "Envoyer les rappels d'échéance par e-mail",
+    "beforeDays": "Rappel avant l'échéance (jours)",
+    "overdueDays": "Relances après échéance (jours, séparés par des virgules)",
+    "overdueHelp": "Par exemple 1, 7. Chaque relance n'est envoyée qu'une fois.",
+    "save": "Enregistrer",
+    "saved": "Enregistré.",
+    "reset": "Rétablir le modèle par défaut",
+    "preview": "Aperçu",
+    "previewHelp": "Aperçu avec des valeurs d'exemple. Le lien est remplacé à l'envoi.",
+    "variables": "Variables disponibles : {vars}",
+    "locale": {
+      "fr": "Français",
+      "ar": "Arabe"
+    },
+    "custom": "Personnalisé",
+    "isDefault": "Modèle par défaut",
+    "unknownVar": "Variables inconnues : {vars}",
+    "keys": {
+      "quote_sent": "Devis envoyé",
+      "invoice_sent": "Facture envoyée",
+      "contract_sent": "Contrat envoyé",
+      "payment_receipt": "Reçu de paiement",
+      "installment_reminder_before": "Rappel avant échéance",
+      "installment_overdue": "Relance après échéance",
+      "portal_invite": "Invitation au portail"
+    },
+    "nav": "Modèles de messages",
+    "messagesLog": "Journal des messages"
+  },
+  "log": {
+    "title": "Journal des messages",
+    "nav": "Journal des messages",
+    "state": {
+      "queued": "En attente",
+      "sent": "Envoyé",
+      "failed": "Échec",
+      "manual": "Manuel (WhatsApp)",
+      "all": "Tous les états"
+    },
+    "channel": {
+      "all": "Tous les canaux",
+      "email": "E-mail",
+      "whatsapp": "WhatsApp"
+    },
+    "empty": "Aucun message.",
+    "to": "Destinataire",
+    "subject": "Objet",
+    "template": "Modèle",
+    "created": "Créé le",
+    "attempts": "Tentatives",
+    "error": "Erreur",
+    "filter": "Filtrer",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "openWa": "Ouvrir WhatsApp",
+    "total": "{count} message(s)",
+    "status": "Statut"
+  },
+  "campaign": {
+    "counts": "Envoyés : {sent} · Échecs : {failed} · Manuels : {manual} · En attente : {queued}",
+    "sendEmails": "Envoyer par e-mail",
+    "queued": "{count} e-mail(s) mis en file d'attente.",
+    "none": "Aucun destinataire e-mail éligible (désabonnés exclus)."
+  }
+}

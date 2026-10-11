@@ -22,6 +22,7 @@ import { Button } from '@/ui/primitives/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/primitives/card';
 import { ContractActions } from './contract-actions';
 import { PortalShareButton } from '@/core/portal/ui/portal-share-button';
+import { SendMessageButton } from '@/core/messaging/ui/send-message-button';
 
 export default async function ContractDetailPage({
   params,
@@ -75,6 +76,8 @@ export default async function ContractDetailPage({
         <div className="flex flex-wrap gap-2">
           <ContractActions contractId={contract.id} state={contract.state} />
           {contract.state !== 'draft' ? <PortalShareButton mode="document" kind="contract" id={contract.id} /> : null}
+          {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="contract_sent" /> : null}
+          {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="portal_invite" invite /> : null}
           <WorkflowBar contractId={contract.id} state={contract.state} />
           {contract.state === 'active' ? (
             <RecordPaymentButton contractId={contract.id} remainingCents={totals.remainingCents.toString()} />

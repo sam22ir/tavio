@@ -8,6 +8,7 @@ import { ensureActivity } from '@/modules/chatter/service';
 import { creditContracts } from '../schema';
 import { listDueSoon, listOverdue, type OverdueRow } from '../service/payments';
 import { installmentActivityTitle } from '../service/reminders';
+import { queueInstallmentReminders } from '@/core/messaging/reminders';
 
 export interface DailyRemindersResult {
   companies: number;
@@ -15,6 +16,8 @@ export interface DailyRemindersResult {
   overdue: number;
   activitiesCreated: number;
   failedCompanies: number;
+  /** Automatic reminder emails queued (see core/messaging/reminders). */
+  emailsQueued: number;
 }
 
 const DUE_SOON_DAYS = 3;
@@ -28,6 +31,7 @@ export async function runDailyReminders(db: Db): Promise<DailyRemindersResult> {
     overdue: 0,
     activitiesCreated: 0,
     failedCompanies: 0,
+    emailsQueued: 0,
   };
 
   const rows = await db
@@ -69,13 +73,14 @@ export async function runDailyReminders(db: Db): Promise<DailyRemindersResult> {
       }
       const counts = await withTenant(
         args.value,
-        (ctx) => remindCompany(ctx),
+        async (ctx) => ({ ...(await remindCompany(ctx)), emails: (await queueInstallmentReminders(ctx)).queued }),
         db,
       );
       result.companies += 1;
       result.dueSoon += counts.dueSoon;
       result.overdue += counts.overdue;
       result.activitiesCreated += counts.activitiesCreated;
+      result.emailsQueued += counts.emails;
     } catch {
       result.failedCompanies += 1;
     }

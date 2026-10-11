@@ -24,6 +24,7 @@ export default async function SettingsPage({
   const t = await getTranslations('settings');
   const tc = await getTranslations('settings.company');
   const tt = await getTranslations('team');
+  const tm = await getTranslations('messaging.settings');
 
   const rows = await withTenant(shell.tenant, async (ctx) =>
     ctx.tx.select().from(companies).where(eq(companies.id, ctx.companyId)).limit(1),
@@ -41,6 +42,12 @@ export default async function SettingsPage({
       </Link>
       <Link href={`/${locale}/settings/fiscal-years`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
         {t('fiscalYearsLink')}
+      </Link>
+      <Link href={`/${locale}/settings/messaging`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+        {tm('nav')}
+      </Link>
+      <Link href={`/${locale}/settings/messages`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+        {tm('messagesLog')}
       </Link>
       <div className="rounded-lg border p-4">
         <h2 className="mb-4 font-medium">{tc('title')}</h2>
