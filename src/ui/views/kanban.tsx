@@ -101,7 +101,7 @@ export function Kanban({ entity, columns, rows, onMove, rowHref }: KanbanProps) 
                 if (id) move(id, col.id)
               }}
               className={cn(
-                "min-w-0 flex-col gap-2 rounded-lg border bg-muted/40 p-2 md:flex md:w-72 md:shrink-0",
+                "min-w-0 flex-col gap-2 rounded-lg border bg-default/40 p-2 md:flex md:w-72 md:shrink-0",
                 isActive ? "flex" : "hidden",
                 dragOver === col.id && "ring-2 ring-ring",
               )}

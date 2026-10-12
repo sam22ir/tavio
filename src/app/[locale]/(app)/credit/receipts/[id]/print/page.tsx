@@ -29,7 +29,7 @@ export default async function ReceiptPrintPage({
       <PrintButton label={t.printButton}>
         <Link
           href={`/api/credit/receipts/${id}/pdf`}
-          className="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+          className="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-default"
         >
           {t.pdfButton}
         </Link>

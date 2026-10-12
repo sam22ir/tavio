@@ -83,7 +83,7 @@ export function CommandSearch() {
               <p className="text-sm text-muted-foreground">{t('palette.empty')}</p>
             ) : null}
             {visible?.hits.map((hit) => (
-              <Link key={`${hit.kind}-${hit.href}`} href={hit.href} onClick={() => setOpen(false)} className="flex items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-accent">
+              <Link key={`${hit.kind}-${hit.href}`} href={hit.href} onClick={() => setOpen(false)} className="flex items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-default">
                 <span>{hit.label}</span>
                 <span className="text-xs text-muted-foreground">{t(`palette.kind.${hit.kind}`)}</span>
               </Link>

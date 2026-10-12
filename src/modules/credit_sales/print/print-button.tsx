@@ -8,7 +8,7 @@ export function PrintButton({ label, children }: { label: string; children?: Rea
       <button
         type="button"
         onClick={() => window.print()}
-        className="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-muted"
+        className="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-default"
       >
         {label}
       </button>

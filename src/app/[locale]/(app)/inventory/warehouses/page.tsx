@@ -20,7 +20,7 @@ export default async function WarehousesPage({ params }: { params: Promise<{ loc
       {result.ok ? (
         <div className="overflow-x-auto rounded-md border">
           <table className="w-full text-sm">
-            <thead className="bg-muted/50">
+            <thead className="bg-default/50">
               <tr>
                 <th className="p-3 text-start font-medium">{t('fields.code')}</th>
                 <th className="p-3 text-start font-medium">{t('fields.name')}</th>

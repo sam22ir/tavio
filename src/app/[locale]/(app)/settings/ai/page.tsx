@@ -116,7 +116,7 @@ export default async function AiSettingsPage({
           {t('setup.title')}
         </h2>
         <p className="text-sm text-muted-foreground">{t('setup.body')}</p>
-        <pre className="overflow-x-auto rounded-md border bg-muted p-3 text-xs" dir="ltr">
+        <pre className="overflow-x-auto rounded-md border bg-default p-3 text-xs" dir="ltr">
 {`wrangler secret put AI_API_KEY
 wrangler secret put AI_BASE_URL
 wrangler secret put AI_MODEL

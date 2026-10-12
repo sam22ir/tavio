@@ -85,7 +85,7 @@ export default async function LeavePage({
                   key={s || 'all'}
                   href={s ? `?state=${s}` : '?'}
                   aria-current={(state ?? '') === s ? 'page' : undefined}
-                  className="rounded-md border px-3 py-1 hover:bg-muted aria-[current=page]:bg-muted"
+                  className="rounded-md border px-3 py-1 hover:bg-default aria-[current=page]:bg-default"
                 >
                   {s ? stateLabel(s) : t('leave.all')}
                 </a>

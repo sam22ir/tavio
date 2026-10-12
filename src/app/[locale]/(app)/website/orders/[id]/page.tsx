@@ -79,7 +79,7 @@ export default async function WebOrderDetailPage({
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full min-w-[360px] text-sm">
-          <thead className="bg-muted text-start">
+          <thead className="bg-default text-start">
             <tr>
               <th className="p-2 text-start">{t('orders.line.product')}</th>
               <th className="p-2 text-end">{t('orders.line.quantity')}</th>

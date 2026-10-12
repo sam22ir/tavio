@@ -117,7 +117,7 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
         {unknown.length > 0 ? (
           <p role="alert" className="text-sm text-destructive">{t('unknownVar', { vars: unknown.map((v) => `{${v}}`).join(' ') })}</p>
         ) : null}
-        <div className="flex flex-col gap-2 rounded-md bg-muted/40 p-3">
+        <div className="flex flex-col gap-2 rounded-md bg-default/40 p-3">
           <h3 className="text-sm font-medium">{t('preview')}</h3>
           <p className="text-xs text-muted-foreground">{t('previewHelp')}</p>
           <p dir="auto" className="text-sm font-semibold">{preview.subject}</p>

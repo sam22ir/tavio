@@ -305,7 +305,7 @@ export function PlansEditor({
           </label>
         </div>
         {steps.map((s, i) => (
-          <div key={i} className="grid grid-cols-1 gap-2 rounded-md bg-muted/40 p-2 sm:grid-cols-6">
+          <div key={i} className="grid grid-cols-1 gap-2 rounded-md bg-default/40 p-2 sm:grid-cols-6">
             <select aria-label={t('stepType')} className={selectClass} value={s.activityTypeId} onChange={(e) => updateStep(i, { activityTypeId: e.target.value })}>
               {types.map((ty) => (
                 <option key={ty.id} value={ty.id}>{ty.label}</option>

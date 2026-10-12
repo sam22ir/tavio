@@ -55,7 +55,7 @@ export default async function ValuationPage({
         ) : (
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-default/50">
                 <tr>
                   <th className="p-3 text-start font-medium">{t('fields.product')}</th>
                   <th className="p-3 text-end font-medium">{t('fields.on_hand')}</th>
@@ -73,7 +73,7 @@ export default async function ValuationPage({
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="border-t bg-muted/50 font-semibold">
+              <tfoot className="border-t bg-default/50 font-semibold">
                 <tr>
                   <td className="p-3" colSpan={3}>{t('valuation.total')}</td>
                   <td className="p-3 text-end tabular-nums">{formatDzd(BigInt(report.value.totalCents), locale)}</td>

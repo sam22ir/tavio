@@ -110,7 +110,7 @@ export function BankStatementImport({ accounts }: { accounts: StatementAccountOp
           <div className="overflow-x-auto rounded-md border">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="bg-muted/50">
+                <tr className="bg-default/50">
                   {preview.headers.map((h, i) => (
                     <th key={`${h}-${i}`} className="px-2 py-1 text-start font-medium">{h}</th>
                   ))}

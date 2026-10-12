@@ -72,7 +72,7 @@ export default async function SaleOrderPage({ params }: { params: Promise<{ loca
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full min-w-[32rem] text-sm">
-          <thead className="bg-muted/50 text-start">
+          <thead className="bg-default/50 text-start">
             <tr>
               <th className="p-2 text-start">{t('fields.description')}</th>
               <th className="p-2 text-end">{t('fields.quantity')}</th>

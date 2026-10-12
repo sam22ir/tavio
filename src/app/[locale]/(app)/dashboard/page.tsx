@@ -199,7 +199,7 @@ function Chip({ label, value, danger = false }: { label: string; value: string; 
   return (
     <span
       className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ${
-        danger ? 'bg-destructive/10 text-destructive' : 'bg-muted text-foreground'
+        danger ? 'bg-destructive/10 text-destructive' : 'bg-default text-foreground'
       }`}
     >
       <span className="font-semibold tabular-nums">{value}</span>

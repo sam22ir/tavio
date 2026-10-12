@@ -92,7 +92,7 @@ export default async function LeadPage({
           <dd>{amount}</dd>
         </dl>
         {requirements ? (
-          <div className="rounded-md border bg-muted/40 p-3 text-sm">
+          <div className="rounded-md border bg-default/40 p-3 text-sm">
             <p className="font-medium">{t('stageRequirements')}</p>
             <p className="whitespace-pre-line text-muted-foreground">{requirements}</p>
           </div>

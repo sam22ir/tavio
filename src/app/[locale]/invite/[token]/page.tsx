@@ -48,7 +48,7 @@ export default async function InvitePage({
           </Link>
           <Link
             href={`/${locale}/login?next=${next}`}
-            className="inline-flex flex-1 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-accent"
+            className="inline-flex flex-1 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-default"
           >
             {t('invite_page.login')}
           </Link>

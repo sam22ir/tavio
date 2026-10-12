@@ -67,7 +67,7 @@ export default async function MessagesLogPage({
           <p className="text-xs text-muted-foreground">{t('total', { count: res.value.total })}</p>
           <div className="overflow-x-auto rounded-lg border">
             <table className="w-full text-sm">
-              <thead className="bg-muted/40 text-start">
+              <thead className="bg-default/40 text-start">
                 <tr>
                   <th className="p-2 text-start">{t('created')}</th>
                   <th className="p-2 text-start">{t('to')}</th>

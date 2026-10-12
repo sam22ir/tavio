@@ -28,7 +28,7 @@ export function InvoiceList({ rows, kind, locale, t, newHref }: { rows: ListRow[
       ) : (
         <div className="overflow-x-auto rounded-md border">
           <table className="w-full text-sm">
-            <thead className="bg-muted text-start">
+            <thead className="bg-default text-start">
               <tr>
                 <th className="p-2 text-start">{t('list.col.number')}</th>
                 <th className="p-2 text-start">{t('list.col.date')}</th>
@@ -99,7 +99,7 @@ export function InvoiceDetail({
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full text-sm">
-          <thead className="bg-muted"><tr><th className="p-2 text-start">{t('form.description')}</th><th className="p-2 text-start">{t('form.quantity')}</th><th className="p-2 text-start">{t('form.unitPrice')}</th>{showDiscount ? <th className="p-2 text-start">{t('form.discount')}</th> : null}</tr></thead>
+          <thead className="bg-default"><tr><th className="p-2 text-start">{t('form.description')}</th><th className="p-2 text-start">{t('form.quantity')}</th><th className="p-2 text-start">{t('form.unitPrice')}</th>{showDiscount ? <th className="p-2 text-start">{t('form.discount')}</th> : null}</tr></thead>
           <tbody>
             {lines.map((l) => (
               <tr key={l.id} className="border-t"><td className="p-2">{l.description}</td><td className="p-2">{String(l.quantity)}</td><td className="p-2">{fmt(l.unitPriceCents)}</td>{showDiscount ? <td className="p-2">{formatPercent(String(l.discountRate))}</td> : null}</tr>

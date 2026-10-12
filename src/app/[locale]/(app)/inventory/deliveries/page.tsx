@@ -41,7 +41,7 @@ export default async function DeliveriesPage({
         ) : (
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-default/50">
                 <tr>
                   <th className="p-3 text-start font-medium">{t('fields.number')}</th>
                   <th className="p-3 text-start font-medium">{t('fields.partner')}</th>

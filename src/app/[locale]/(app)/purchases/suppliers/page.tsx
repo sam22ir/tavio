@@ -50,7 +50,7 @@ export default async function PurchaseSuppliersPage({
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full min-w-[28rem] text-sm">
-          <thead className="bg-muted/50 text-start">
+          <thead className="bg-default/50 text-start">
             <tr>
               <th className="p-3 text-start">{t('fields.product')}</th>
               <th className="p-3 text-start">{t('fields.partner')}</th>

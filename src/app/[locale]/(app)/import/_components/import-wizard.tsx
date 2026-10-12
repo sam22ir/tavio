@@ -249,7 +249,7 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
           <p className="text-sm text-muted-foreground">{duplicateRule}</p>
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
+              <thead className="bg-default/50">
                 <tr>
                   <th className="px-3 py-2 text-start font-medium">{t('line')}</th>
                   <th className="px-3 py-2 text-start font-medium">{t('status_ok')}</th>

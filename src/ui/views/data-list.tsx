@@ -73,7 +73,7 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
           {/* Desktop: table with sortable headers */}
           <div className="hidden overflow-x-auto rounded-md border md:block">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50 text-start">
+              <thead className="bg-default/50 text-start">
                 <tr>
                   {listFields.map((field) => {
                     const active = query.sort === field.name;
@@ -94,7 +94,7 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
               </thead>
               <tbody>
                 {result.rows.map((row) => (
-                  <tr key={row.id} className="border-t hover:bg-muted/30">
+                  <tr key={row.id} className="border-t hover:bg-default/30">
                     {listFields.map((field, i) => (
                       <td key={field.name} className="px-3 py-2 text-start tabular-nums">
                         {i === 0 && rowHref ? (
@@ -157,7 +157,7 @@ async function ExportMenu({ entityName, query, locale }: { entityName: string; q
       <ul className="absolute end-0 z-10 mt-1 min-w-56 rounded-md border bg-background p-1 shadow-md">
         {items.map((item) => (
           <li key={item.label}>
-            <a href={item.href} className="block rounded-sm px-3 py-2 text-sm hover:bg-muted">
+            <a href={item.href} className="block rounded-sm px-3 py-2 text-sm hover:bg-default">
               {item.label}
             </a>
           </li>

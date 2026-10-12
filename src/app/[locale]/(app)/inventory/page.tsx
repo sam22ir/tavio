@@ -24,7 +24,7 @@ export default async function StockPage({ params }: { params: Promise<{ locale: 
         ) : (
           <div className="overflow-x-auto rounded-md border">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50 text-start">
+              <thead className="bg-default/50 text-start">
                 <tr>
                   <th className="p-3 text-start font-medium">{t('fields.product')}</th>
                   <th className="p-3 text-end font-medium">{t('fields.on_hand')}</th>

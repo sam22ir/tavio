@@ -226,7 +226,7 @@ export function TeamPanel({
           </form>
 
           {invite ? (
-            <div className="flex flex-col gap-3 rounded-md bg-muted p-3">
+            <div className="flex flex-col gap-3 rounded-md bg-default p-3">
               <p className="text-sm font-medium">{t('invite.created')}</p>
               {invite.emailSent ? <p className="text-sm">{t('invite.email_sent')}</p> : null}
               <div className="flex flex-col gap-2 sm:flex-row">

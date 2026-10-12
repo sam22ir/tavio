@@ -16,7 +16,7 @@ export function SchedulePreview({ lines, locale, labels }: Props) {
   return (
     <div className="overflow-x-auto rounded-md border">
       <table className="w-full text-sm">
-        <thead className="bg-muted/50">
+        <thead className="bg-default/50">
           <tr>
             <th scope="col" className="px-3 py-2 text-start font-medium">{labels.seq}</th>
             <th scope="col" className="px-3 py-2 text-start font-medium">{labels.dueDate}</th>

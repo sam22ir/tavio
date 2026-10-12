@@ -35,7 +35,7 @@ export default async function ShopHomePage({
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {products.map((p) => (
             <li key={p.id}>
-              <Link href={`${base}/products/${p.id}`} className="flex h-full min-h-11 flex-col gap-2 rounded-md border p-4 hover:bg-muted">
+              <Link href={`${base}/products/${p.id}`} className="flex h-full min-h-11 flex-col gap-2 rounded-md border p-4 hover:bg-default">
                 <span className="break-words font-medium">{productName(p, currentLocale)}</span>
                 {resolved.shop.showPrices ? (
                   <span className="text-sm text-muted-foreground">

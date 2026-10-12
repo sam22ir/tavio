@@ -58,7 +58,7 @@ export default async function PosSessionsPage({
               <li key={s.id}>
                 <Link
                   href={`/${locale}/pos/session/${s.id}`}
-                  className="flex min-h-11 items-center justify-between gap-3 p-3 hover:bg-muted"
+                  className="flex min-h-11 items-center justify-between gap-3 p-3 hover:bg-default"
                 >
                   <span className="text-sm">
                     {s.openedAt.toLocaleString(currentLocale === 'ar' ? 'ar-DZ' : `${currentLocale}-DZ`)}

@@ -37,7 +37,7 @@ export function AssistantChat() {
       <ol className="flex flex-col gap-4">
         {turns.map((turn, i) => (
           <li key={i} className="flex flex-col gap-2">
-            <p className="self-end rounded-md bg-muted px-3 py-2 text-sm">{turn.question}</p>
+            <p className="self-end rounded-md bg-default px-3 py-2 text-sm">{turn.question}</p>
             {turn.answer ? <p className="text-sm">{turn.answer}</p> : <p className="text-sm text-muted-foreground">{t('assistant.thinking')}</p>}
             {turn.tables?.map((tbl, j) => (
               <div key={j} className="overflow-x-auto rounded-md border">

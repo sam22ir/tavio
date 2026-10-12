@@ -29,11 +29,11 @@ export async function RelatedLinks({ source, id }: { source: string; id: string 
           <Link
             key={relation.id}
             href={relation.href(locale, id)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-background px-3 text-sm hover:bg-muted"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-background px-3 text-sm hover:bg-default"
           >
             <Icon aria-hidden className="size-4 text-muted-foreground" />
             <span>{t(relation.labelKey)}</span>
-            <span className="rounded-full bg-muted px-2 text-xs font-medium tabular-nums">{count}</span>
+            <span className="rounded-full bg-default px-2 text-xs font-medium tabular-nums">{count}</span>
           </Link>
         );
       })}

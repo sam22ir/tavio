@@ -12,7 +12,7 @@ export interface InstallmentRow {
 }
 
 const STATUS_CLASS: Record<InstallmentStatus, string> = {
-  upcoming: 'bg-muted text-muted-foreground',
+  upcoming: 'bg-default text-muted-foreground',
   partial: 'bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100',
   paid: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/40 dark:text-emerald-100',
   late: 'bg-red-100 text-red-900 dark:bg-red-900/40 dark:text-red-100',
@@ -37,7 +37,7 @@ export function InstallmentsTable({ rows, locale, labels }: Props) {
   return (
     <div className="overflow-x-auto rounded-md border">
       <table className="w-full text-sm">
-        <thead className="bg-muted/50">
+        <thead className="bg-default/50">
           <tr>
             <th scope="col" className="px-3 py-2 text-start font-medium">{labels.seq}</th>
             <th scope="col" className="px-3 py-2 text-start font-medium">{labels.dueDate}</th>

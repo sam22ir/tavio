@@ -86,7 +86,7 @@ export default async function ReportsPage({
       ) : null}
       <nav className="flex flex-wrap gap-2">
         {REPORTS.map((r) => (
-          <Link key={r} href={`${base}?report=${r}`} className={`rounded-md border px-3 py-1.5 text-sm ${r === report ? 'bg-muted font-medium' : ''}`}>
+          <Link key={r} href={`${base}?report=${r}`} className={`rounded-md border px-3 py-1.5 text-sm ${r === report ? 'bg-default font-medium' : ''}`}>
             {t(`reports.tabs.${r}`)}
           </Link>
         ))}
