@@ -64,7 +64,7 @@ export const partners = pgTable(
     phoneAlt: text('phone_alt'),
     email: text('email'),
     address: text('address'),
-    // '01' to '58', from wilayas seed (l10n_dz)
+    // '01' to '69', from wilayas seed (l10n_dz)
     wilayaCode: text('wilaya_code'),
     // Free text in P1
     commune: text('commune'),

@@ -9,7 +9,7 @@ describe('normalizeWarehouse', () => {
 
   it('accepts a valid wilaya code and rejects an unknown one', () => {
     expect(normalizeWarehouse({ code: 'A', name: 'A', wilayaCode: '16' }).ok).toBe(true);
-    const bad = normalizeWarehouse({ code: 'A', name: 'A', wilayaCode: '59' });
+    const bad = normalizeWarehouse({ code: 'A', name: 'A', wilayaCode: '70' });
     expect(bad.ok).toBe(false);
   });
 

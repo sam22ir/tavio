@@ -102,8 +102,10 @@ describe('partnerInput', () => {
     expect(parsed.data.email).toBeUndefined();
   });
 
-  it('rejects wilaya codes outside 01 to 58', () => {
-    expect(partnerInput.safeParse({ kind: 'company', wilayaCode: '59' }).success).toBe(false);
+  it('accepts wilaya codes 01 to 69 and rejects the rest', () => {
+    expect(partnerInput.safeParse({ kind: 'company', wilayaCode: '59' }).success).toBe(true);
+    expect(partnerInput.safeParse({ kind: 'company', wilayaCode: '69' }).success).toBe(true);
+    expect(partnerInput.safeParse({ kind: 'company', wilayaCode: '70' }).success).toBe(false);
   });
 });
 

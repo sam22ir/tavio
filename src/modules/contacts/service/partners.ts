@@ -1,4 +1,5 @@
 import { and, asc, count, desc, eq, ilike, ne, or, sql, type AnyColumn, type SQL } from 'drizzle-orm';
+import { WILAYA_CODE_RE } from '@/core/tenancy/wilayas';
 import { z } from 'zod';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
@@ -10,7 +11,7 @@ import { partners, type NewPartner, type Partner } from '../schema';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const E164_RE = /^\+[1-9]\d{7,14}$/;
-const WILAYA_RE = /^(0[1-9]|[1-4]\d|5[0-8])$/;
+const WILAYA_RE = WILAYA_CODE_RE;
 const OPTIONS_LIMIT = 50;
 const MAX_PAGE_SIZE = 100;
 

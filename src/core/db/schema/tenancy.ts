@@ -36,7 +36,7 @@ export const companies = pgTable(
     // Algerian bank identifiers for printed documents (nullable, no default)
     rib: text('rib'),
     ccp: text('ccp'),
-    // references wilayas seed, '01' to '58'
+    // references wilayas seed, '01' to '69'
     wilayaCode: text('wilaya_code'),
     commune: text('commune'),
     // E.164

@@ -52,7 +52,7 @@ export default async function WarehousesPage({ params }: { params: Promise<{ loc
           fields={[
             { name: 'code', label: t('fields.code'), required: true, hint: t('warehouses.code_hint') },
             { name: 'name', label: t('fields.name'), required: true },
-            { name: 'wilayaCode', label: t('fields.wilaya_code'), hint: '01–58' },
+            { name: 'wilayaCode', label: t('fields.wilaya_code'), hint: '01–69' },
           ]}
         />
       </section>

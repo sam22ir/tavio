@@ -60,7 +60,7 @@ export const webOrders = pgTable(
     customerName: text('customer_name').notNull(),
     // E.164
     phone: text('phone').notNull(),
-    // '01' to '58', from wilayas seed (l10n_dz)
+    // '01' to '69', from wilayas seed (l10n_dz)
     wilayaCode: text('wilaya_code').notNull(),
     address: text('address').notNull(),
     // [{ productId, name, unitPriceCents: string, quantity: number, subtotalCents: string }]

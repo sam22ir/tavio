@@ -1,4 +1,5 @@
 import { and, asc, eq, isNull } from 'drizzle-orm';
+import { WILAYA_CODE_RE } from '@/core/tenancy/wilayas';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
 import { requirePerm } from '@/core/perms';
@@ -6,7 +7,7 @@ import { err, ok, type Result } from '@/core/result';
 import { stockLocations, warehouses, type StockLocation, type Warehouse } from '../schema';
 
 export const DEFAULT_WAREHOUSE_CODE = 'WH';
-const WILAYA_RE = /^(0[1-9]|[1-4]\d|5[0-8])$/;
+const WILAYA_RE = WILAYA_CODE_RE;
 
 export interface WarehouseInput {
   code: string;

@@ -69,10 +69,12 @@ describe('lineSubtotal', () => {
 });
 
 describe('WILAYA_RE', () => {
-  it('accepts 01 to 58 only', () => {
+  it('accepts 01 to 69 only', () => {
     expect(WILAYA_RE.test('01')).toBe(true);
     expect(WILAYA_RE.test('58')).toBe(true);
+    expect(WILAYA_RE.test('59')).toBe(true);
+    expect(WILAYA_RE.test('69')).toBe(true);
     expect(WILAYA_RE.test('00')).toBe(false);
-    expect(WILAYA_RE.test('59')).toBe(false);
+    expect(WILAYA_RE.test('70')).toBe(false);
   });
 });

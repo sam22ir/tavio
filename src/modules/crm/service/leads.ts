@@ -1,4 +1,5 @@
 import { and, asc, count, desc, eq, ilike, or, sql, type SQL } from 'drizzle-orm';
+import { WILAYA_CODE_RE } from '@/core/tenancy/wilayas';
 import { z } from 'zod';
 import type { Ctx } from '@/core/ctx';
 import { audit } from '@/core/audit';
@@ -32,7 +33,7 @@ export const leadInput = z.object({
   contactName: text(200),
   phone: text(32),
   email: text(254),
-  wilayaCode: z.preprocess(blank, z.string().regex(/^(0[1-9]|[1-4][0-9]|5[0-8])$/).optional()),
+  wilayaCode: z.preprocess(blank, z.string().regex(WILAYA_CODE_RE).optional()),
   source: z.preprocess(
     blank,
     z.enum(['walk_in', 'phone', 'facebook', 'instagram', 'whatsapp', 'referral', 'other', 'website']).optional(),
