@@ -208,6 +208,66 @@ describe('CCP direct debit', { timeout: 60_000 }, () => {
     expect(refused.ok).toBe(false);
   });
 
+  it('settles each debit on its own installment, whatever order the results arrive in', async () => {
+    const f = await activeContract([BigInt(1000), BigInt(1000)]);
+    await run(f, (ctx) => saveMandate(ctx, { contractId: f.contractId, ccpAccount: '0012345678', signedOn: '2030-01-02' }));
+    const batch = await run(f, (ctx) => createBatch(ctx, { month: '2030-02' }));
+    if (!batch.ok) throw new Error('batch');
+    const [first, second] = (await run(f, (ctx) => getBatch(ctx, batch.value.id)))!.items;
+
+    // The second installment's debit is entered first: it must pay the second installment, not fill the first.
+    const r2 = await run(f, (ctx) => settleItem(ctx, { itemId: second!.id, outcome: 'paid', settledOn: '2030-02-06' }));
+    expect(r2.ok && r2.value.outcome).toBe('paid');
+    expect(await paidOf(f.contractId)).toEqual([BigInt(0), BigInt(1000)]);
+
+    const r1 = await run(f, (ctx) => settleItem(ctx, { itemId: first!.id, outcome: 'paid', settledOn: '2030-02-06' }));
+    expect(r1.ok && r1.value.outcome).toBe('paid');
+    expect(await paidOf(f.contractId)).toEqual([BigInt(1000), BigInt(1000)]);
+  });
+
+  it('pays the right installment when an earlier one is still held in an unresolved debit', async () => {
+    const f = await activeContract([BigInt(1000), BigInt(1000)]);
+    await run(f, (ctx) => saveMandate(ctx, { contractId: f.contractId, ccpAccount: '0012345678', signedOn: '2030-01-02' }));
+
+    // Batch A holds installment 1 (1000). The customer then pays 600 in the shop, so the debit can no longer be posted.
+    const a = await run(f, (ctx) => createBatch(ctx, { month: '2030-01' }));
+    if (!a.ok) throw new Error('batch A');
+    const itemA = (await run(f, (ctx) => getBatch(ctx, a.value.id)))!.items[0]!;
+    await run(f, (ctx) => recordPayment(ctx, { contractId: f.contractId, amountCents: BigInt(600), method: 'cash' }));
+    const held = await run(f, (ctx) => settleItem(ctx, { itemId: itemA.id, outcome: 'paid', settledOn: '2030-01-07' }));
+    expect(held.ok && held.value.outcome).toBe('needs_review');
+    expect(await paidOf(f.contractId)).toEqual([BigInt(600), BigInt(0)]);
+
+    // Batch B can only pick up installment 2, and its debit must settle installment 2, leaving installment 1 untouched.
+    const b = await run(f, (ctx) => createBatch(ctx, { month: '2030-02' }));
+    expect(b.ok && b.value.items).toBe(1);
+    if (!b.ok) throw new Error('batch B');
+    const itemB = (await run(f, (ctx) => getBatch(ctx, b.value.id)))!.items[0]!;
+    const paid = await run(f, (ctx) => settleItem(ctx, { itemId: itemB.id, outcome: 'paid', settledOn: '2030-02-06' }));
+    expect(paid.ok && paid.value.outcome).toBe('paid');
+    expect(await paidOf(f.contractId)).toEqual([BigInt(600), BigInt(1000)]);
+  });
+
+  it('keeps a rejected installment open while the next one in the same batch is paid', async () => {
+    const f = await activeContract([BigInt(1000), BigInt(1000)]);
+    await run(f, (ctx) => saveMandate(ctx, { contractId: f.contractId, ccpAccount: '0012345678', signedOn: '2030-01-02' }));
+    const batch = await run(f, (ctx) => createBatch(ctx, { month: '2030-02' }));
+    if (!batch.ok) throw new Error('batch');
+    const [first, second] = (await run(f, (ctx) => getBatch(ctx, batch.value.id)))!.items;
+
+    const rej = await run(f, (ctx) => settleItem(ctx, { itemId: first!.id, outcome: 'rejected', reason: 'closed account', settledOn: '2030-02-06' }));
+    expect(rej.ok && rej.value.outcome).toBe('rejected');
+    const paid = await run(f, (ctx) => settleItem(ctx, { itemId: second!.id, outcome: 'paid', settledOn: '2030-02-06' }));
+    expect(paid.ok && paid.value.outcome).toBe('paid');
+    expect(await paidOf(f.contractId)).toEqual([BigInt(0), BigInt(1000)]);
+
+    // The rejected installment is eligible again.
+    const closed = await run(f, (ctx) => closeBatch(ctx, batch.value.id));
+    expect(closed.ok).toBe(true);
+    const next = await run(f, (ctx) => createBatch(ctx, { month: '2030-02' }));
+    expect(next.ok && next.value.items).toBe(1);
+  });
+
   it('is isolated per company', async () => {
     const a = await activeContract([BigInt(1000)]);
     const b = await activeContract([BigInt(1000)]);

@@ -18,7 +18,7 @@ import { MoreActions } from '@/ui/blocks/more-actions';
 import { Panel } from '@/ui/blocks/feed';
 import { StatusChip } from '@/ui/blocks/tint';
 import { can } from '@/core/perms';
-import { contractDebitState, getMandate } from '@/modules/credit_sales/service/debits';
+import { contractDebitState, getMandate, isMissingTableError } from '@/modules/credit_sales/service/debits';
 import { maskCcpAccount } from '@/modules/credit_sales/service/debit-file';
 import { MandateForm } from '@/modules/credit_sales/ui/debit-controls';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
@@ -56,12 +56,15 @@ export default async function ContractDetailPage({
   const deliveryRes = await withPageCtx((ctx) =>
     sourceDeliveryStatus(ctx, { sourceEntity: CONTRACT_SOURCE_ENTITY, sourceId: id }),
   );
-  // The debit tables arrive with migration 0020. Own transaction, so a missing table must not take the whole contract page down.
+  // The debit tables arrive with migration 0020. Own transaction, so a missing table (only that error) must not take the contract page down.
   const debit = await withPageCtx(async (ctx) => ({
     mandate: await getMandate(ctx, id),
     state: await contractDebitState(ctx, id),
     canWrite: can(ctx.perms, 'credit_sales.payment.write'),
-  })).catch(() => null);
+  })).catch((e: unknown) => {
+    if (isMissingTableError(e)) return null;
+    throw e;
+  });
   const tInv = await getTranslations('inventory');
   const fmt = (c: Cents) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
   const receiptByPayment = new Map(receipts.map((r) => [r.paymentId, r]));

@@ -56,6 +56,16 @@ export interface DebitBatchSummary {
 
 export type SettleOutcome = 'paid' | 'rejected' | 'needs_review';
 
+/** True when a query failed because a table does not exist (Postgres 42P01), i.e. migration 0020 is not applied yet. */
+export function isMissingTableError(e: unknown): boolean {
+  let cur: unknown = e;
+  for (let i = 0; i < 4 && cur && typeof cur === 'object'; i++) {
+    if ((cur as { code?: unknown }).code === '42P01') return true;
+    cur = (cur as { cause?: unknown }).cause;
+  }
+  return false;
+}
+
 function todayAlgiers(): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Algiers' }).format(new Date());
 }
@@ -392,6 +402,8 @@ export async function settleItem(
       method: 'ccp',
       receivedAt: receivedAtFor(settledOn),
       reference: item.reference,
+      // The debit settles exactly its own installment, whatever order results arrive in or whatever older ones are still open.
+      installmentId: item.installmentId,
     });
     if (posted.ok) paymentId = posted.value.paymentId;
     else code = posted.error.message;
@@ -487,12 +499,19 @@ export async function importResults(ctx: Ctx, input: { batchId: string; text: st
       summary.skipped++;
       continue;
     }
-    const result = await ctx.tx.transaction(async (tx) =>
-      settleItem(
-        { ...ctx, tx },
-        { itemId: item.id, outcome: row.status, settledOn: row.settledOn ?? undefined, reason: row.reason ?? undefined },
-      ),
-    );
+    let result: Result<{ outcome: SettleOutcome; code?: string }>;
+    try {
+      result = await ctx.tx.transaction(async (tx) =>
+        settleItem(
+          { ...ctx, tx },
+          { itemId: item.id, outcome: row.status, settledOn: row.settledOn ?? undefined, reason: row.reason ?? undefined },
+        ),
+      );
+    } catch {
+      // The savepoint is rolled back; the other rows are unaffected. Report the row and carry on.
+      summary.errors.push({ line: 0, message: `${row.reference}: ROW_FAILED` });
+      continue;
+    }
     if (!result.ok) {
       summary.errors.push({ line: 0, message: `${row.reference}: ${result.error.message}` });
       continue;

@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState, useTransition } from 'react';
+import { createContext, useContext, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -27,6 +27,15 @@ function errorText(t: Translate, error: { code: string; message: string }): stri
 }
 
 const today = () => new Date().toISOString().slice(0, 10);
+
+// One debit date for the whole batch screen: the toolbar edits it, and every row action and the bulk action use it,
+// so receipts and collection figures carry the day the money moved, not the day someone typed the result in.
+const DebitDateContext = createContext<{ date: string; setDate: (d: string) => void }>({ date: '', setDate: () => {} });
+
+export function DebitDateProvider({ defaultDate, children }: { defaultDate: string; children: React.ReactNode }) {
+  const [date, setDate] = useState(defaultDate);
+  return <DebitDateContext.Provider value={{ date, setDate }}>{children}</DebitDateContext.Provider>;
+}
 
 export function NewBatchForm({ defaultMonth }: { defaultMonth: string }) {
   const t = useTranslations('credit');
@@ -60,7 +69,7 @@ export function NewBatchForm({ defaultMonth }: { defaultMonth: string }) {
 export function BatchToolbar({ batchId, status, hasPending }: { batchId: string; status: string; hasPending: boolean }) {
   const t = useTranslations('credit');
   const router = useRouter();
-  const [paidOn, setPaidOn] = useState(today());
+  const { date: paidOn, setDate: setPaidOn } = useContext(DebitDateContext);
   const [pending, start] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
   const open = status === 'draft' || status === 'exported';
@@ -151,9 +160,10 @@ export function BatchToolbar({ batchId, status, hasPending }: { batchId: string;
   );
 }
 
-export function ItemActions({ itemId, status, defaultDate }: { itemId: string; status: string; defaultDate: string }) {
+export function ItemActions({ itemId, status }: { itemId: string; status: string }) {
   const t = useTranslations('credit');
   const router = useRouter();
+  const { date: settledOn } = useContext(DebitDateContext);
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
   const [pending, start] = useTransition();
@@ -161,7 +171,7 @@ export function ItemActions({ itemId, status, defaultDate }: { itemId: string; s
 
   function settle(outcome: 'paid' | 'rejected') {
     start(async () => {
-      const r = await settleItemAction({ itemId, outcome, settledOn: defaultDate, reason: outcome === 'rejected' ? reason : undefined });
+      const r = await settleItemAction({ itemId, outcome, settledOn: settledOn || undefined, reason: outcome === 'rejected' ? reason : undefined });
       if (!r.ok) return void toast.error(errorText(t, r.error));
       toast.success(t('debits.settled'));
       setRejecting(false);

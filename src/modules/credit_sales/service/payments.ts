@@ -27,6 +27,12 @@ export interface RecordPaymentInput {
   chequeDueDate?: string;
   /** Cheque number. Stored in external_ref (no dedicated column); takes precedence over reference. */
   chequeNumber?: string;
+  /**
+   * Apply the whole payment to this installment only (it must belong to the contract and be open for at least the amount).
+   * Used by CCP direct debits, where each debit settles one specific installment regardless of what is older.
+   * Without it the payment fills installments oldest first.
+   */
+  installmentId?: string;
 }
 export interface OverdueRow {
   contractId: string; contractNumber: string;
@@ -82,6 +88,7 @@ export async function recordPayment(
     .for('update');
 
   const isDown = input.isDownPayment === true;
+  if (isDown && input.installmentId !== undefined) return err('VALIDATION', 'DOWN_PAYMENT_HAS_NO_INSTALLMENT');
   if (isDown) {
     const [existing] = await ctx.tx
       .select({ id: creditPaymentAllocations.id })
@@ -92,6 +99,10 @@ export async function recordPayment(
       return err('STATE', 'DOWN_PAYMENT_ALREADY_RECORDED');
     }
     if (input.amountCents > contract.downPaymentCents) return err('VALIDATION', 'OVERPAYMENT');
+  } else if (input.installmentId !== undefined) {
+    const target = installments.find((i) => i.id === input.installmentId);
+    if (!target) return err('NOT_FOUND', 'INSTALLMENT_NOT_FOUND');
+    if (input.amountCents > target.amountCents - target.paidCents) return err('VALIDATION', 'OVERPAYMENT');
   } else {
     const remaining = installments.reduce(
       (sum, i) => sum + (i.amountCents - i.paidCents),
@@ -136,7 +147,8 @@ export async function recordPayment(
       .where(eq(creditContracts.id, contract.id));
     left = BigInt(0);
   }
-  for (const inst of installments) {
+  const allocationTargets = input.installmentId === undefined ? installments : installments.filter((i) => i.id === input.installmentId);
+  for (const inst of allocationTargets) {
     if (left <= BigInt(0)) break;
     const open = inst.amountCents - inst.paidCents;
     if (open <= BigInt(0)) continue;

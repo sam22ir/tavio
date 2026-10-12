@@ -12,7 +12,7 @@ import { KpiTile } from '@/ui/blocks/kpi-tile';
 import { StatusChip, type Tint } from '@/ui/blocks/tint';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/primitives/table';
 import { getBatch } from '@/modules/credit_sales/service/debits';
-import { BatchToolbar, ItemActions } from '@/modules/credit_sales/ui/debit-controls';
+import { BatchToolbar, DebitDateProvider, ItemActions } from '@/modules/credit_sales/ui/debit-controls';
 
 const ITEM_TINT: Record<string, Tint> = { pending: 'warning', paid: 'success', rejected: 'danger', needs_review: 'violet', cancelled: 'neutral' };
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -63,6 +63,7 @@ export default async function DebitBatchPage({ params }: { params: Promise<{ loc
         <KpiTile label={t('debits.summary.total')} value={formatDzd(batch.totalCents as Cents, loc)} icon={Wallet} tint="neutral" />
       </div>
 
+      <DebitDateProvider defaultDate={today}>
       {canWrite ? (
         <section className="app-panel p-5">
           <BatchToolbar batchId={batch.id} status={batch.status} hasPending={batch.pending > 0} />
@@ -116,7 +117,7 @@ export default async function DebitBatchPage({ params }: { params: Promise<{ loc
                   </TableCell>
                   {open && canWrite ? (
                     <TableCell>
-                      <ItemActions itemId={i.id} status={i.status} defaultDate={today} />
+                      <ItemActions itemId={i.id} status={i.status} />
                     </TableCell>
                   ) : null}
                 </TableRow>
@@ -125,6 +126,7 @@ export default async function DebitBatchPage({ params }: { params: Promise<{ loc
           </Table>
         </div>
       </section>
+      </DebitDateProvider>
     </div>
   );
 }
