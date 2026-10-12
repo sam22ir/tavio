@@ -7,7 +7,8 @@
     "payments": "Paiements",
     "overdue": "Échéances en retard",
     "requirements": "Documents requis",
-    "clauses": "Clauses des contrats"
+    "clauses": "Clauses des contrats",
+    "debits": "Prélèvements CCP"
   },
   "fields": {
     "reference": "Référence",
@@ -139,7 +140,8 @@
     "overpayment": "Le montant dépasse le solde restant.",
     "cheque_number": "Numéro du chèque",
     "cheque_due_date": "Date d'échéance du chèque",
-    "cheque_due_required": "Un paiement par chèque nécessite une date d'échéance."
+    "cheque_due_required": "Un paiement par chèque nécessite une date d'échéance.",
+    "openDebitWarning": "{count} prélèvement(s) CCP en cours sur ce contrat. Un paiement enregistré ici peut faire double emploi."
   },
   "methods": {
     "cash": "Espèces",
@@ -291,5 +293,108 @@
     "idDocumentAttached": "Pièce d’identité jointe",
     "saved": "Garant enregistré",
     "removed": "Garant retiré"
+  },
+  "debits": {
+    "title": "Prélèvements CCP",
+    "intro": "Chaque mois, générez la liste des échéances à prélever sur les comptes CCP, exportez-la, puis saisissez le résultat de chaque prélèvement.",
+    "templateNote": "Le fichier exporté suit le modèle Revora. Ce n'est pas le format officiel d'Algérie Poste.",
+    "newBatch": "Nouveau lot",
+    "month": "Mois",
+    "create": "Générer le lot",
+    "created": "Lot {number} créé : {count} échéances.",
+    "empty": "Aucun lot de prélèvement pour le moment.",
+    "back": "Tous les lots",
+    "cols": {
+      "number": "Lot",
+      "month": "Mois",
+      "status": "Statut",
+      "items": "Échéances",
+      "total": "Total",
+      "progress": "Avancement"
+    },
+    "batch": {
+      "draft": "Brouillon",
+      "exported": "Exporté",
+      "closed": "Clôturé",
+      "cancelled": "Annulé"
+    },
+    "item": {
+      "pending": "En attente",
+      "paid": "Payé",
+      "rejected": "Rejeté",
+      "needs_review": "À vérifier",
+      "cancelled": "Retiré"
+    },
+    "table": {
+      "reference": "Référence",
+      "contract": "Contrat",
+      "customer": "Client",
+      "account": "Compte CCP",
+      "amount": "Montant",
+      "due": "Échéance",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "summary": {
+      "items": "Échéances",
+      "paid": "Payées",
+      "rejected": "Rejetées",
+      "review": "À vérifier",
+      "total": "Total"
+    },
+    "export": "Exporter le fichier",
+    "markAllPaid": "Tout marquer payé",
+    "paidOn": "Date du prélèvement",
+    "markPaid": "Payé",
+    "markRejected": "Rejeté",
+    "rejectReason": "Motif du rejet",
+    "dismiss": "Retirer du lot",
+    "close": "Clôturer le lot",
+    "cancel": "Annuler le lot",
+    "cancelConfirm": "Annuler ce lot ? Les échéances en attente seront libérées pour un prochain lot.",
+    "import": "Importer un fichier de résultats",
+    "importHint": "Colonnes : référence;statut (paid ou rejected);motif;date AAAA-MM-JJ. 300 lignes au maximum.",
+    "importDone": "{paid} payés, {rejected} rejetés, {review} à vérifier, {skipped} ignorés, {unknown} inconnus, {errors} lignes en erreur.",
+    "markedAll": "{paid} payés, {review} à vérifier.",
+    "closed": "Lot clôturé.",
+    "cancelled": "Lot annulé.",
+    "settled": "Résultat enregistré.",
+    "dismissed": "Échéance retirée du lot.",
+    "reviewHint": "Le prélèvement a eu lieu mais n'a pas pu être enregistré. Vérifiez le contrat, enregistrez le paiement à la main si besoin, puis retirez la ligne.",
+    "reasons": {
+      "ALREADY_SETTLED_ELSEWHERE": "L'échéance a déjà été réglée autrement.",
+      "OVERPAYMENT": "Le montant dépasse le solde restant.",
+      "CONTRACT_NOT_ACTIVE": "Le contrat n'est plus actif.",
+      "NOT_POSTED": "Paiement non enregistré."
+    },
+    "errors": {
+      "NO_ELIGIBLE_INSTALLMENTS": "Aucune échéance à prélever pour ce mois (contrats actifs avec mandat CCP).",
+      "INVALID_MONTH": "Mois invalide.",
+      "ITEMS_STILL_OPEN": "Des échéances sont encore en attente ou à vérifier.",
+      "BATCH_HAS_PAYMENTS": "Ce lot contient des paiements enregistrés : il ne peut plus être annulé.",
+      "BATCH_NOT_OPEN": "Ce lot est clôturé ou annulé.",
+      "ITEM_ALREADY_SETTLED": "Cette échéance a déjà un résultat.",
+      "TOO_MANY_ROWS": "Trop de lignes (300 au maximum).",
+      "EMPTY_FILE": "Fichier vide.",
+      "INVALID_DATE": "Date invalide.",
+      "NOT_FOUND": "Introuvable."
+    }
+  },
+  "mandate": {
+    "title": "Prélèvement CCP",
+    "hint": "Autorisation de prélèvement signée par le client. Le numéro est vérifié pour son format uniquement (10 à 20 chiffres).",
+    "account": "Numéro de compte CCP",
+    "signedOn": "Date de signature",
+    "save": "Enregistrer le mandat",
+    "saved": "Mandat enregistré.",
+    "deactivate": "Désactiver",
+    "deactivated": "Mandat désactivé.",
+    "inactive": "Mandat inactif",
+    "active": "Mandat actif",
+    "none": "Aucun mandat de prélèvement.",
+    "openDebits": "{count} prélèvements en cours",
+    "rejectedDebits": "{count} prélèvements rejetés",
+    "lastReason": "Dernier motif : {reason}",
+    "invalidAccount": "Numéro de compte invalide : 10 à 20 chiffres."
   }
 }

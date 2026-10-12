@@ -15,6 +15,12 @@ import { ContractWorkflowSections } from '@/modules/credit_sales/ui/contract-wor
 import { GuarantorsSection } from '@/modules/credit_sales/ui/guarantors-section';
 import { WorkflowBar } from '@/modules/credit_sales/ui/workflow-bar';
 import { MoreActions } from '@/ui/blocks/more-actions';
+import { Panel } from '@/ui/blocks/feed';
+import { StatusChip } from '@/ui/blocks/tint';
+import { can } from '@/core/perms';
+import { contractDebitState, getMandate } from '@/modules/credit_sales/service/debits';
+import { maskCcpAccount } from '@/modules/credit_sales/service/debit-file';
+import { MandateForm } from '@/modules/credit_sales/ui/debit-controls';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
 import { RecordPaymentButton } from '@/modules/credit_sales/ui/record-payment';
 import { InstallmentsTable } from '@/modules/credit_sales/ui/installments-table';
@@ -50,6 +56,12 @@ export default async function ContractDetailPage({
   const deliveryRes = await withPageCtx((ctx) =>
     sourceDeliveryStatus(ctx, { sourceEntity: CONTRACT_SOURCE_ENTITY, sourceId: id }),
   );
+  // The debit tables arrive with migration 0020. Own transaction, so a missing table must not take the whole contract page down.
+  const debit = await withPageCtx(async (ctx) => ({
+    mandate: await getMandate(ctx, id),
+    state: await contractDebitState(ctx, id),
+    canWrite: can(ctx.perms, 'credit_sales.payment.write'),
+  })).catch(() => null);
   const tInv = await getTranslations('inventory');
   const fmt = (c: Cents) => formatDzd(c, locale as 'fr' | 'ar' | 'en');
   const receiptByPayment = new Map(receipts.map((r) => [r.paymentId, r]));
@@ -78,7 +90,7 @@ export default async function ContractDetailPage({
           <ContractActions contractId={contract.id} state={contract.state} />
           <WorkflowBar contractId={contract.id} state={contract.state} />
           {contract.state === 'active' ? (
-            <RecordPaymentButton contractId={contract.id} remainingCents={totals.remainingCents.toString()} />
+            <RecordPaymentButton contractId={contract.id} remainingCents={totals.remainingCents.toString()} openDebits={debit?.state.open ?? 0} />
           ) : null}
           <MoreActions label={t('contract.more')}>
             {contract.state !== 'draft' ? <PortalShareButton mode="document" kind="contract" id={contract.id} /> : null}
@@ -163,6 +175,32 @@ export default async function ContractDetailPage({
             </ul>
           )}
         </section>
+      ) : null}
+
+      {debit && (debit.mandate || debit.canWrite) ? (
+        <Panel
+          title={t('mandate.title')}
+          action={
+            debit.mandate ? (
+              <StatusChip tint={debit.mandate.active ? 'success' : 'neutral'}>
+                {debit.mandate.active ? t('mandate.active') : t('mandate.inactive')}
+              </StatusChip>
+            ) : undefined
+          }
+        >
+          <p className="text-sm text-muted">{t('mandate.hint')}</p>
+          {debit.mandate ? (
+            <p className="flex flex-wrap items-center gap-2 text-sm">
+              <span dir="ltr">{maskCcpAccount(debit.mandate.ccpAccount)}</span>
+              {debit.state.open > 0 ? <StatusChip tint="warning">{t('mandate.openDebits', { count: debit.state.open })}</StatusChip> : null}
+              {debit.state.rejected > 0 ? <StatusChip tint="danger">{t('mandate.rejectedDebits', { count: debit.state.rejected })}</StatusChip> : null}
+              {debit.state.lastRejectReason ? <span className="text-muted">{t('mandate.lastReason', { reason: debit.state.lastRejectReason })}</span> : null}
+            </p>
+          ) : (
+            <p className="text-sm text-muted">{t('mandate.none')}</p>
+          )}
+          {debit.canWrite ? <MandateForm contractId={contract.id} mandate={debit.mandate} /> : null}
+        </Panel>
       ) : null}
 
       <GuarantorsSection

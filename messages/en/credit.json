@@ -7,7 +7,8 @@
     "payments": "Payments",
     "overdue": "Overdue",
     "requirements": "Document requirements",
-    "clauses": "Contract clauses"
+    "clauses": "Contract clauses",
+    "debits": "CCP direct debit"
   },
   "fields": {
     "reference": "Reference",
@@ -139,7 +140,8 @@
     "overpayment": "The amount is more than the remaining balance.",
     "cheque_number": "Cheque number",
     "cheque_due_date": "Cheque due date",
-    "cheque_due_required": "A cheque payment needs a due date."
+    "cheque_due_required": "A cheque payment needs a due date.",
+    "openDebitWarning": "{count} CCP debit(s) in progress on this contract. A payment recorded here may be a duplicate."
   },
   "methods": {
     "cash": "Cash",
@@ -291,5 +293,108 @@
     "idDocumentAttached": "ID document attached",
     "saved": "Guarantor saved",
     "removed": "Guarantor removed"
+  },
+  "debits": {
+    "title": "CCP direct debit",
+    "intro": "Each month, generate the list of installments to debit from customers' CCP accounts, export it, then record the result of each debit.",
+    "templateNote": "The exported file follows Revora's own template. It is not the official Algérie Poste format.",
+    "newBatch": "New batch",
+    "month": "Month",
+    "create": "Generate batch",
+    "created": "Batch {number} created: {count} installments.",
+    "empty": "No debit batches yet.",
+    "back": "All batches",
+    "cols": {
+      "number": "Batch",
+      "month": "Month",
+      "status": "Status",
+      "items": "Installments",
+      "total": "Total",
+      "progress": "Progress"
+    },
+    "batch": {
+      "draft": "Draft",
+      "exported": "Exported",
+      "closed": "Closed",
+      "cancelled": "Cancelled"
+    },
+    "item": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "rejected": "Rejected",
+      "needs_review": "Needs review",
+      "cancelled": "Removed"
+    },
+    "table": {
+      "reference": "Reference",
+      "contract": "Contract",
+      "customer": "Customer",
+      "account": "CCP account",
+      "amount": "Amount",
+      "due": "Due",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "summary": {
+      "items": "Installments",
+      "paid": "Paid",
+      "rejected": "Rejected",
+      "review": "Needs review",
+      "total": "Total"
+    },
+    "export": "Export file",
+    "markAllPaid": "Mark all paid",
+    "paidOn": "Debit date",
+    "markPaid": "Paid",
+    "markRejected": "Rejected",
+    "rejectReason": "Rejection reason",
+    "dismiss": "Remove from batch",
+    "close": "Close batch",
+    "cancel": "Cancel batch",
+    "cancelConfirm": "Cancel this batch? Pending installments will be released for a later batch.",
+    "import": "Import a results file",
+    "importHint": "Columns: reference;status (paid or rejected);reason;date YYYY-MM-DD. 300 rows at most.",
+    "importDone": "{paid} paid, {rejected} rejected, {review} need review, {skipped} skipped, {unknown} unknown, {errors} rows with errors.",
+    "markedAll": "{paid} paid, {review} need review.",
+    "closed": "Batch closed.",
+    "cancelled": "Batch cancelled.",
+    "settled": "Result saved.",
+    "dismissed": "Installment removed from the batch.",
+    "reviewHint": "The debit went through but could not be recorded. Check the contract, record the payment by hand if needed, then remove the line.",
+    "reasons": {
+      "ALREADY_SETTLED_ELSEWHERE": "The installment was already settled another way.",
+      "OVERPAYMENT": "The amount exceeds the remaining balance.",
+      "CONTRACT_NOT_ACTIVE": "The contract is no longer active.",
+      "NOT_POSTED": "Payment not recorded."
+    },
+    "errors": {
+      "NO_ELIGIBLE_INSTALLMENTS": "No installments to debit for this month (active contracts with a CCP mandate).",
+      "INVALID_MONTH": "Invalid month.",
+      "ITEMS_STILL_OPEN": "Some installments are still pending or need review.",
+      "BATCH_HAS_PAYMENTS": "This batch has recorded payments, so it can no longer be cancelled.",
+      "BATCH_NOT_OPEN": "This batch is closed or cancelled.",
+      "ITEM_ALREADY_SETTLED": "This installment already has a result.",
+      "TOO_MANY_ROWS": "Too many rows (300 at most).",
+      "EMPTY_FILE": "Empty file.",
+      "INVALID_DATE": "Invalid date.",
+      "NOT_FOUND": "Not found."
+    }
+  },
+  "mandate": {
+    "title": "CCP direct debit",
+    "hint": "The customer's signed debit authorization. The number is checked for format only (10 to 20 digits).",
+    "account": "CCP account number",
+    "signedOn": "Signature date",
+    "save": "Save mandate",
+    "saved": "Mandate saved.",
+    "deactivate": "Deactivate",
+    "deactivated": "Mandate deactivated.",
+    "inactive": "Mandate inactive",
+    "active": "Mandate active",
+    "none": "No debit mandate.",
+    "openDebits": "{count} debits in progress",
+    "rejectedDebits": "{count} rejected debits",
+    "lastReason": "Last reason: {reason}",
+    "invalidAccount": "Invalid account number: 10 to 20 digits."
   }
 }
