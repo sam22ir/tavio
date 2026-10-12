@@ -37,7 +37,7 @@ export function Pagination({ basePath, query, total }: PaginationProps) {
       >
         {t('views.prev')}
       </Link>
-      <span className="text-muted-foreground tabular-nums">
+      <span className="text-sm text-muted tabular-nums">
         {t('views.page')} {current} / {pageCount}
       </span>
       <Link

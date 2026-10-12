@@ -5,7 +5,9 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import type { EntityDef, ListQuery } from '@/core/entities/types';
 import { toSearchParams } from '@/core/entities/list-query';
+import { inputVariants } from '@heroui/styles';
 import { Input } from '@/ui/primitives/input';
+import { cn } from '@/ui/lib/cn';
 import { translateKey } from './format';
 
 const DEBOUNCE_MS = 300;
@@ -66,18 +68,18 @@ export function SearchBar({ entity, query }: SearchBarProps) {
         placeholder={t('views.search')}
         value={text}
         onChange={(e) => onSearchChange(e.target.value)}
-        className="sm:max-w-xs"
+        className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full px-4 sm:max-w-xs')}
       />
       {filterFields.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="sr-only sm:not-sr-only text-sm text-muted-foreground">{t('views.filters')}</span>
+          <span className="sr-only sm:not-sr-only text-sm text-muted">{t('views.filters')}</span>
           {filterFields.map((field) => (
             <select
               key={field.name}
               aria-label={t(field.label)}
               value={query.filters[field.name] ?? ''}
               onChange={(e) => onFilterChange(field.name, e.target.value)}
-              className="h-9 rounded-md border bg-background px-2 text-sm shadow-xs outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full ps-4 pe-8 text-sm')}
             >
               <option value="">{t(field.label)}</option>
               {(field.options ?? []).map((opt) => (

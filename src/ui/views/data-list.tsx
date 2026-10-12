@@ -53,7 +53,7 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
   };
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="app-panel flex flex-col gap-4 p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <SearchBar entity={entity} query={query} />
         {actions || exportable ? (
@@ -65,20 +65,20 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
       </div>
 
       {isEmpty ? (
-        <p className="rounded-md border border-dashed p-8 text-center text-sm text-muted-foreground">
+        <p className="rounded-2xl bg-surface-secondary p-8 text-center text-sm text-muted">
           {t('views.empty')}
         </p>
       ) : (
         <>
           {/* Desktop: table with sortable headers */}
-          <div className="hidden overflow-x-auto rounded-md border md:block">
+          <div className="hidden overflow-x-auto rounded-2xl bg-surface-secondary/60 md:block">
             <table className="w-full text-sm">
-              <thead className="bg-default/50 text-start">
+              <thead className="text-start text-xs uppercase tracking-wide text-muted">
                 <tr>
                   {listFields.map((field) => {
                     const active = query.sort === field.name;
                     return (
-                      <th key={field.name} scope="col" className="px-3 py-2 text-start font-medium">
+                      <th key={field.name} scope="col" className="px-4 py-3 text-start font-medium">
                         <Link
                           href={sortHref(basePath, query, field.name)}
                           aria-sort={active ? (query.dir === 'desc' ? 'descending' : 'ascending') : undefined}
@@ -94,9 +94,9 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
               </thead>
               <tbody>
                 {result.rows.map((row) => (
-                  <tr key={row.id} className="border-t hover:bg-default/30">
+                  <tr key={row.id} className="border-t border-separator hover:bg-default/40">
                     {listFields.map((field, i) => (
-                      <td key={field.name} className="px-3 py-2 text-start tabular-nums">
+                      <td key={field.name} className="px-4 py-3 text-start tabular-nums">
                         {i === 0 && rowHref ? (
                           <Link href={rowHref(row)} className="hover:underline">
                             {formatCell(field, cellValue(field, row), locale)}
@@ -115,13 +115,13 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
           {/* Mobile: stacked cards */}
           <ul className="flex flex-col gap-3 md:hidden">
             {result.rows.map((row) => (
-              <li key={row.id} className="rounded-md border p-4">
+              <li key={row.id} className="rounded-2xl bg-surface-secondary p-4">
                 <div className="text-base">{titleFor(row)}</div>
                 {secondary.length > 0 && (
                   <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
                     {secondary.map((field) => (
                       <div key={field.name} className="contents">
-                        <dt className="text-muted-foreground">{t(field.label)}</dt>
+                        <dt className="text-muted">{t(field.label)}</dt>
                         <dd className="text-end tabular-nums">
                           {formatCell(field, cellValue(field, row), locale)}
                         </dd>
@@ -154,10 +154,10 @@ async function ExportMenu({ entityName, query, locale }: { entityName: string; q
   return (
     <details className="relative">
       <summary className={cn(buttonVariants({ variant: 'outline' }), 'cursor-pointer list-none')}>{t('button')}</summary>
-      <ul className="absolute end-0 z-10 mt-1 min-w-56 rounded-md border bg-background p-1 shadow-md">
+      <ul className="absolute end-0 z-10 mt-1 min-w-56 rounded-2xl bg-surface p-1.5 shadow-lg">
         {items.map((item) => (
           <li key={item.label}>
-            <a href={item.href} className="block rounded-sm px-3 py-2 text-sm hover:bg-default">
+            <a href={item.href} className="block rounded-xl px-3 py-2 text-sm hover:bg-default/40">
               {item.label}
             </a>
           </li>
