@@ -68,7 +68,7 @@ export function SearchBar({ entity, query }: SearchBarProps) {
         placeholder={t('views.search')}
         value={text}
         onChange={(e) => onSearchChange(e.target.value)}
-        className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full px-4 sm:max-w-xs')}
+        className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full px-4 sm:w-64 sm:shrink-0')}
       />
       {filterFields.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
