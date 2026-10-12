@@ -77,7 +77,7 @@ export function LeadStatusActions({ id, status, reasons, markWon, markLost, reop
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1.5">
                   <Label>{t('lostReason')}</Label>
-                  <Select value={reason} onValueChange={setReason}>
+                  <Select value={reason} onValueChange={setReason} aria-label={t('lostReason')}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder={t('noReason')} />
                     </SelectTrigger>

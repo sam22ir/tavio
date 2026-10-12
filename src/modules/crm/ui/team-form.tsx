@@ -28,7 +28,7 @@ export function TeamForm({ team, members, action }: TeamFormProps) {
   const leaderId = `team-leader-${team?.id ?? "new"}`
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 rounded-md border p-4">
+    <form action={formAction} className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
       {team ? <input type="hidden" name="id" value={team.id} /> : null}
 
       <div className="flex flex-col gap-1.5">
@@ -42,7 +42,7 @@ export function TeamForm({ team, members, action }: TeamFormProps) {
           id={leaderId}
           name="leaderId"
           defaultValue={team?.leaderId ?? ""}
-          className="h-9 rounded-md border bg-background px-3 text-sm"
+          className="text-sm"
         >
           <option value="">{t("noLeader")}</option>
           {members.map((m) => (
@@ -74,7 +74,7 @@ export function TeamForm({ team, members, action }: TeamFormProps) {
         </p>
       ) : null}
       {state.ok ? (
-        <p role="status" className="text-sm text-muted-foreground">
+        <p role="status" className="text-sm text-muted">
           {t("teamSaved")}
         </p>
       ) : null}

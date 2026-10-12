@@ -31,7 +31,7 @@ interface LineDraft {
 const INITIAL_ROWS = 3;
 const MAX_ROWS = 100;
 const selectClass =
-  'h-11 w-full rounded-md border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2';
+  'w-full text-sm focus-visible:outline-none focus-visible:ring-2';
 
 // New purchase order. Lines are indexed line-0..line-N; the server skips empty rows.
 export function OrderForm({ action, partners, products, taxes }: OrderFormProps) {
@@ -98,7 +98,7 @@ export function OrderForm({ action, partners, products, taxes }: OrderFormProps)
       <fieldset className="flex flex-col gap-4">
         <legend className="text-sm font-medium">{t('form.lines')}</legend>
         {Array.from({ length: rows }, (_, i) => (
-          <div key={i} className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-12">
+          <div key={i} className="grid grid-cols-1 gap-3 rounded-2xl bg-surface-secondary p-3 sm:grid-cols-12">
             <div className="flex flex-col gap-1.5 sm:col-span-3">
               <Label htmlFor={`line-${i}-productId`}>{t('fields.product')}</Label>
               <select

@@ -1,79 +1,89 @@
 @import "tailwindcss";
+/* HeroUI v3 styles. Loaded once for every route; the marketing site layers its own tokens on top via .site. */
+@import "@heroui/styles";
+@source "../../node_modules/@heroui/react/dist";
 
+/* Light only: dark: utilities follow the .dark class (as HeroUI does), never the OS setting. */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Revora theme on HeroUI's token names (cool gray canvas, white surfaces, Revora blue accent). Light only.
+ * HeroUI derives -hover, -soft and -soft-foreground variants from these, so only the base values are set.
+ * The shadcn-only names at the bottom of the block are aliases so older utility classes keep resolving.
+ */
 :root {
-  --radius: 0.5rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.55 0.11 185);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.55 0.11 185);
-  --chart-1: oklch(0.55 0.11 185);
-  --chart-2: oklch(0.6 0.1 220);
-  --chart-3: oklch(0.7 0.12 150);
-  --chart-4: oklch(0.75 0.13 90);
-  --chart-5: oklch(0.65 0.14 40);
+  color-scheme: light;
+  --radius: 0.75rem;
+  --field-radius: 0.75rem;
+
+  --background: #eef0f3;
+  --foreground: #14171c;
+  --surface: #ffffff;
+  --surface-foreground: #14171c;
+  --surface-secondary: #f6f7f9;
+  --surface-secondary-foreground: #14171c;
+  --overlay: #ffffff;
+  --overlay-foreground: #14171c;
+
+  --accent: #08409d;
+  --accent-foreground: #ffffff;
+  --default: #e8eaee;
+  --default-foreground: #14171c;
+  --muted: #667085;
+  --border: rgb(20 23 28 / 0.08);
+  --separator: rgb(20 23 28 / 0.08);
+  --focus: #08409d;
+  --link: #08409d;
+
+  --field-background: #ffffff;
+  --field-foreground: #14171c;
+  --field-placeholder: #8a93a3;
+  --field-border-width: 1px;
+  --field-border: rgb(20 23 28 / 0.14);
+
+  --success: #1f9d55;
+  --success-foreground: #ffffff;
+  --warning: #d9930d;
+  --warning-foreground: #14171c;
+  --danger: #d6362d;
+  --danger-foreground: #ffffff;
+
+  /* shadcn-only names kept as aliases */
+  --card: var(--surface);
+  --card-foreground: var(--surface-foreground);
+  --popover: var(--overlay);
+  --popover-foreground: var(--overlay-foreground);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-foreground);
+  --secondary: var(--default);
+  --secondary-foreground: var(--default-foreground);
+  --muted-foreground: var(--muted);
+  --destructive: var(--danger);
+  --input: rgb(20 23 28 / 0.14);
+  --ring: var(--focus);
+  --chart-1: #08409d;
+  --chart-2: #3b82c4;
+  --chart-3: #1f9d55;
+  --chart-4: #d9930d;
+  --chart-5: #d6362d;
+
+  /* soft status pairs: pastel tint + deep tone of the same hue (chips, icon tiles, feed rows) */
+  --tint-success: #e3f4ea;
+  --tint-success-fg: #17703e;
+  --tint-warning: #fbf0d6;
+  --tint-warning-fg: #8a5a05;
+  --tint-danger: #fbe4e2;
+  --tint-danger-fg: #a5251e;
+  --tint-info: #e1ebfa;
+  --tint-info-fg: #0a3a8c;
+  --tint-neutral: #e8eaee;
+  --tint-neutral-fg: #4a5262;
+  --tint-violet: #ece8fa;
+  --tint-violet-fg: #4b3a9b;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.72 0.12 185);
-    --primary-foreground: oklch(0.145 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.72 0.12 185);
-  }
-}
-
-:root[data-theme="dark"] {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.72 0.12 185);
-  --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.72 0.12 185);
-}
-
+/* Aliases that HeroUI's @theme does not map. Names HeroUI already maps (background, foreground, muted, accent, border) are left to it. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -82,12 +92,8 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-chart-1: var(--chart-1);
@@ -95,21 +101,28 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-tint-success: var(--tint-success);
+  --color-tint-success-fg: var(--tint-success-fg);
+  --color-tint-warning: var(--tint-warning);
+  --color-tint-warning-fg: var(--tint-warning-fg);
+  --color-tint-danger: var(--tint-danger);
+  --color-tint-danger-fg: var(--tint-danger-fg);
+  --color-tint-info: var(--tint-info);
+  --color-tint-info-fg: var(--tint-info-fg);
+  --color-tint-neutral: var(--tint-neutral);
+  --color-tint-neutral-fg: var(--tint-neutral-fg);
+  --color-tint-violet: var(--tint-violet);
+  --color-tint-violet-fg: var(--tint-violet-fg);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* HeroUI defines its own --font-sans; reference the next/font variables directly. Only one is set per locale, so each var falls back to the other; an unset var without a fallback would invalidate the declaration. */
+  font-family: var(--font-inter, var(--font-noto-arabic, system-ui)), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Tailwind v4 defaults borders to currentColor; use the soft border token everywhere (shadcn base). */
+/* Tailwind v4 defaults borders to currentColor; use the soft border token everywhere. */
 @layer base {
   *,
   ::before,
@@ -118,33 +131,38 @@ body {
   }
 }
 
-/* Odoo-style app shell: cream canvas, white panels, Revora blue accents. Scoped to the (app) layout. */
+/* Authenticated app shell: gray canvas, framed workspace, white rounded panels. */
 .app-shell {
-  --background: #f4f1ea;
-  --foreground: #0f1a17;
-  --card: #ffffff;
-  --card-foreground: #0f1a17;
-  --popover: #ffffff;
-  --popover-foreground: #0f1a17;
-  --primary: #08409d;
-  --primary-foreground: #ffffff;
-  --secondary: #ebe6da;
-  --secondary-foreground: #0f1a17;
-  --accent: #ebe6da;
-  --accent-foreground: #0f1a17;
-  --muted: #ebe6da;
-  --muted-foreground: #5c6661;
-  --border: #e2dccd;
-  --input: #e2dccd;
-  --ring: #08409d;
   background: var(--background);
   color: var(--foreground);
 }
 
 .app-panel {
-  background: var(--card);
+  background: var(--surface);
   border-radius: 24px;
   box-shadow:
-    0 1px 2px rgb(15 26 23 / 0.04),
-    0 8px 24px -12px rgb(15 26 23 / 0.12);
+    0 1px 2px rgb(20 23 28 / 0.04),
+    0 8px 24px -12px rgb(20 23 28 / 0.1);
+}
+
+/* Native controls everywhere except the marketing site (which styles its own): the same pill fields and accent as the HeroUI ones. HeroUI's hidden form select is aria-hidden and left alone. */
+select:not([aria-hidden="true"]):not(.site *) {
+  min-height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--field-border);
+  background-color: var(--field-background);
+  color: var(--field-foreground);
+  padding-inline: 1rem 2rem;
+}
+input[type="checkbox"]:not(.site *),
+input[type="radio"]:not(.site *) {
+  accent-color: var(--accent);
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+@media print {
+  .app-shell {
+    background: #fff;
+  }
 }

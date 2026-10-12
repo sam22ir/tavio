@@ -40,7 +40,7 @@ export default async function TaxesSettingsPage({
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-6">
       <header className="flex flex-col gap-3">
         <h1 className="text-2xl font-semibold">{t('taxes.title')}</h1>
-        <p role="note" className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+        <p role="note" className="rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
           {t('taxes.warning')}
         </p>
         <LoadDefaultsButton />
@@ -51,40 +51,42 @@ export default async function TaxesSettingsPage({
           {t('tax.title')}
         </h2>
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('taxes.empty')}</p>
+          <p className="text-sm text-muted">{t('taxes.empty')}</p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('fields.code')}</TableHead>
-                <TableHead>{t('fields.name')}</TableHead>
-                <TableHead>{t('fields.kind')}</TableHead>
-                <TableHead className="text-end">{t('fields.rate')}</TableHead>
-                <TableHead>{t('fields.scope')}</TableHead>
-                <TableHead>{t('fields.validFrom')}</TableHead>
-                <TableHead>{t('fields.active')}</TableHead>
-                <TableHead />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map((r) => (
-                <TableRow key={r.id}>
-                  <TableCell className="font-mono">{r.code}</TableCell>
-                  <TableCell>{r.name}</TableCell>
-                  <TableCell>{t(`options.kind.${r.kind}`)}</TableCell>
-                  <TableCell className="text-end tabular-nums">{Number(r.rate)}%</TableCell>
-                  <TableCell>{t(`options.scope.${r.scope}`)}</TableCell>
-                  <TableCell>{r.validFrom}</TableCell>
-                  <TableCell>
-                    <Badge variant={r.active ? 'default' : 'secondary'}>
-                      {r.active ? t('taxes.status_active') : t('taxes.status_inactive')}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{r.active ? <ArchiveTaxButton id={r.id} /> : null}</TableCell>
+          <section className="app-panel flex flex-col gap-4 p-5">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('fields.code')}</TableHead>
+                  <TableHead>{t('fields.name')}</TableHead>
+                  <TableHead>{t('fields.kind')}</TableHead>
+                  <TableHead className="text-end">{t('fields.rate')}</TableHead>
+                  <TableHead>{t('fields.scope')}</TableHead>
+                  <TableHead>{t('fields.validFrom')}</TableHead>
+                  <TableHead>{t('fields.active')}</TableHead>
+                  <TableHead />
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {rows.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="font-mono">{r.code}</TableCell>
+                    <TableCell>{r.name}</TableCell>
+                    <TableCell>{t(`options.kind.${r.kind}`)}</TableCell>
+                    <TableCell className="text-end tabular-nums">{Number(r.rate)}%</TableCell>
+                    <TableCell>{t(`options.scope.${r.scope}`)}</TableCell>
+                    <TableCell>{r.validFrom}</TableCell>
+                    <TableCell>
+                      <Badge variant={r.active ? 'default' : 'secondary'}>
+                        {r.active ? t('taxes.status_active') : t('taxes.status_inactive')}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{r.active ? <ArchiveTaxButton id={r.id} /> : null}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </section>
         )}
       </section>
 
@@ -100,7 +102,7 @@ export default async function TaxesSettingsPage({
 
       <section aria-labelledby="g50-link-title" className="flex flex-col gap-2">
         <h2 id="g50-link-title" className="text-lg font-medium">{t('g50.title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('g50.intro')}</p>
+        <p className="text-sm text-muted">{t('g50.intro')}</p>
         <Link href="/settings/taxes/g50" className="text-sm font-medium underline underline-offset-4">
           {t('g50.open')}
         </Link>

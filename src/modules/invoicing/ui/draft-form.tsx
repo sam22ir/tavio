@@ -109,8 +109,8 @@ export function DraftForm({
 
       <div className="flex flex-col gap-3">
         {form.lines.map((line, index) => (
-          <fieldset key={line.key} className="grid gap-2 rounded-md border p-3 sm:grid-cols-12">
-            <legend className="px-1 text-xs text-muted-foreground">{t('editor.line', { n: index + 1 })}</legend>
+          <fieldset key={line.key} className="grid gap-2 rounded-2xl bg-surface-secondary p-3 sm:grid-cols-12">
+            <legend className="px-1 text-xs text-muted">{t('editor.line', { n: index + 1 })}</legend>
             <label className="flex flex-col gap-1 text-sm sm:col-span-4">
               {t('editor.product')}
               <select className={INPUT} value={line.productId} onChange={(e) => pickProduct(line.key, e.target.value)}>

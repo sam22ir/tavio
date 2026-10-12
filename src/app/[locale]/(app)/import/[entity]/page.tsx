@@ -23,7 +23,7 @@ export default async function ImportPage({
   const t = await getTranslations('io.import');
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <div className="flex flex-col gap-2">
         <Link href={`/${locale}/${entityListPath(entity)}`} className={cn(buttonVariants({ variant: 'ghost' }), 'w-fit')}>
           {t('back')}
@@ -38,7 +38,7 @@ export default async function ImportPage({
         wholeFile={!!target.wholeFile}
         templateHref={`/${locale}/import/${entity}/template`}
       />
-    </main>
+    </div>
   );
 }
 

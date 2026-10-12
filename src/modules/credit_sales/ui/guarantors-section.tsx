@@ -50,7 +50,7 @@ function GuarantorFields({ defaults, idPrefix }: { defaults?: GuarantorView; idP
         <Label htmlFor={`${idPrefix}-idDocument`}>{t('idDocument')}</Label>
         <input id={`${idPrefix}-idDocument`} name="idDocument" type="file" accept={ID_ACCEPT}
           className="block text-sm file:me-3 file:rounded-md file:border file:px-3 file:py-2" />
-        {defaults?.hasIdDocument ? <span className="text-xs text-muted-foreground">{t('idDocumentAttached')}</span> : null}
+        {defaults?.hasIdDocument ? <span className="text-xs text-muted">{t('idDocumentAttached')}</span> : null}
       </div>
     </div>
   );
@@ -89,13 +89,13 @@ export function GuarantorsSection({ contractId, state, guarantors }: {
           <Button type="button" variant="outline" className="min-h-11" onClick={() => setAdding(true)}>{t('add')}</Button>
         ) : null}
       </div>
-      {!editable ? <p className="text-sm text-muted-foreground">{t('locked')}</p> : null}
+      {!editable ? <p className="text-sm text-muted">{t('locked')}</p> : null}
 
-      {guarantors.length === 0 && !adding ? <p className="text-sm text-muted-foreground">{t('empty')}</p> : null}
+      {guarantors.length === 0 && !adding ? <p className="text-sm text-muted">{t('empty')}</p> : null}
 
       <ul className="flex flex-col gap-3">
         {guarantors.map((g) => (
-          <li key={g.id} className="rounded-md border p-3 text-sm">
+          <li key={g.id} className="rounded-2xl bg-surface-secondary p-3 text-sm">
             {editingId === g.id ? (
               <form
                 className="flex flex-col gap-3"
@@ -115,11 +115,11 @@ export function GuarantorsSection({ contractId, state, guarantors }: {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="flex flex-col gap-0.5">
                   <span className="font-medium">{g.fullName}</span>
-                  <span className="text-muted-foreground" dir="ltr">{t('nin')}: {g.nin}</span>
-                  {g.relation ? <span className="text-muted-foreground">{g.relation}</span> : null}
-                  {g.phone ? <span className="text-muted-foreground" dir="ltr">{g.phone}</span> : null}
-                  {g.address ? <span className="text-muted-foreground">{g.address}</span> : null}
-                  {g.hasIdDocument ? <span className="text-muted-foreground">{t('idDocumentAttached')}</span> : null}
+                  <span className="text-muted" dir="ltr">{t('nin')}: {g.nin}</span>
+                  {g.relation ? <span className="text-muted">{g.relation}</span> : null}
+                  {g.phone ? <span className="text-muted" dir="ltr">{g.phone}</span> : null}
+                  {g.address ? <span className="text-muted">{g.address}</span> : null}
+                  {g.hasIdDocument ? <span className="text-muted">{t('idDocumentAttached')}</span> : null}
                 </div>
                 {editable ? (
                   <div className="flex flex-wrap gap-2">
@@ -140,7 +140,7 @@ export function GuarantorsSection({ contractId, state, guarantors }: {
 
       {adding ? (
         <form
-          className="flex flex-col gap-3 rounded-md border p-3"
+          className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-3"
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);

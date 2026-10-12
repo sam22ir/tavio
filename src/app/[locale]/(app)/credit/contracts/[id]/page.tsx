@@ -14,6 +14,7 @@ import { CONTRACT_SOURCE_ENTITY, sourceDeliveryStatus } from '@/modules/inventor
 import { ContractWorkflowSections } from '@/modules/credit_sales/ui/contract-workflow-sections';
 import { GuarantorsSection } from '@/modules/credit_sales/ui/guarantors-section';
 import { WorkflowBar } from '@/modules/credit_sales/ui/workflow-bar';
+import { MoreActions } from '@/ui/blocks/more-actions';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
 import { RecordPaymentButton } from '@/modules/credit_sales/ui/record-payment';
 import { InstallmentsTable } from '@/modules/credit_sales/ui/installments-table';
@@ -75,16 +76,18 @@ export default async function ContractDetailPage({
         </div>
         <div className="flex flex-wrap gap-2">
           <ContractActions contractId={contract.id} state={contract.state} />
-          {contract.state !== 'draft' ? <PortalShareButton mode="document" kind="contract" id={contract.id} /> : null}
-          {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="contract_sent" /> : null}
-          {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="portal_invite" invite /> : null}
           <WorkflowBar contractId={contract.id} state={contract.state} />
           {contract.state === 'active' ? (
             <RecordPaymentButton contractId={contract.id} remainingCents={totals.remainingCents.toString()} />
           ) : null}
-          <Button asChild variant="outline">
-            <Link href={`${base}/${contract.id}/print`}>{t('contract.print')}</Link>
-          </Button>
+          <MoreActions label={t('contract.more')}>
+            {contract.state !== 'draft' ? <PortalShareButton mode="document" kind="contract" id={contract.id} /> : null}
+            {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="contract_sent" /> : null}
+            {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="portal_invite" invite /> : null}
+            <Button asChild variant="outline">
+              <Link href={`${base}/${contract.id}/print`}>{t('contract.print')}</Link>
+            </Button>
+          </MoreActions>
         </div>
       </header>
       <RelatedLinks source="credit_sales.contract" id={id} />
@@ -104,7 +107,7 @@ export default async function ContractDetailPage({
         </Card>
         <Card>
           <CardHeader><CardTitle className="text-sm font-medium">{t('totals.late')}</CardTitle></CardHeader>
-          <CardContent className="text-lg font-semibold tabular-nums text-red-700 dark:text-red-300">{fmt(totals.lateCents)}</CardContent>
+          <CardContent className="text-lg font-semibold tabular-nums text-danger">{fmt(totals.lateCents)}</CardContent>
         </Card>
       </div>
 
@@ -147,14 +150,14 @@ export default async function ContractDetailPage({
             {t('contract.delivery.title')}: {t(`contract.delivery.status.${deliveryRes.value.status}`)}
           </h2>
           {deliveryRes.value.deliveries.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('contract.delivery.none')}</p>
+            <p className="text-sm text-muted">{t('contract.delivery.none')}</p>
           ) : (
             <ul className="flex flex-col gap-1 text-sm">
               {deliveryRes.value.deliveries.map((d) => (
                 <li key={d.id} className="flex flex-wrap items-center gap-2">
                   <Link href={`/${locale}/inventory/deliveries/${d.id}`} className="underline">{d.number}</Link>
-                  <span className="text-muted-foreground">{tInv(`options.delivery_state.${d.state}`)}</span>
-                  {d.deliveredAt ? <span className="text-muted-foreground">{d.deliveredAt.slice(0, 10)}</span> : null}
+                  <span className="text-muted">{tInv(`options.delivery_state.${d.state}`)}</span>
+                  {d.deliveredAt ? <span className="text-muted">{d.deliveredAt.slice(0, 10)}</span> : null}
                 </li>
               ))}
             </ul>
@@ -203,7 +206,7 @@ export default async function ContractDetailPage({
       <section className="flex flex-col gap-2">
         <h2 className="font-medium">{t('payment.title')}</h2>
         {payments.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('payment.empty')}</p>
+          <p className="text-sm text-muted">{t('payment.empty')}</p>
         ) : (
           <ul className="divide-y rounded-md border">
             {payments.map((p) => {

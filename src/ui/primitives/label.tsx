@@ -1,20 +1,13 @@
-"use client"
-
 import * as React from "react"
+import { labelVariants } from "@heroui/styles"
 import { cn } from "@/ui/lib/cn"
-import { Label as LabelPrimitive } from "radix-ui"
 
-function Label({
-  className,
-  ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>) {
+// Native <label>: no client boundary needed, so server pages can render it directly.
+function Label({ className, ...props }: React.ComponentProps<"label">) {
   return (
-    <LabelPrimitive.Root
+    <label
       data-slot="label"
-      className={cn(
-        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-        className
-      )}
+      className={cn(labelVariants(), "flex items-center gap-2 text-sm leading-none font-medium select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-50", className)}
       {...props}
     />
   )

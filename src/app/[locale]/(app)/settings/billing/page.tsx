@@ -26,7 +26,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
   });
 
   if (!current) {
-    return <main className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></main>;
+    return <div className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></div>;
   }
 
   // No row means the company is on the Free plan.
@@ -38,44 +38,44 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
   const monthly = formatDzd(monthlyTotalCents(seedPlan, seats), currentLocale);
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('title')}</h1>
-      <section className="grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
+      <section className="grid gap-4 rounded-2xl bg-surface-secondary p-4 sm:grid-cols-2">
         <div>
-          <p className="text-sm text-muted-foreground">{t('plan')}</p>
+          <p className="text-sm text-muted">{t('plan')}</p>
           <p className="font-medium">{planName}</p>
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">{t('state')}</p>
+          <p className="text-sm text-muted">{t('state')}</p>
           <p className="font-medium">{t(`states.${state}`)}</p>
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">{t('seats')}</p>
+          <p className="text-sm text-muted">{t('seats')}</p>
           <p className="font-medium">{seats}</p>
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">{t('monthly')}</p>
+          <p className="text-sm text-muted">{t('monthly')}</p>
           <p className="font-medium">{monthly}</p>
         </div>
         {current.subscription?.trialEndsAt ? (
           <div>
-            <p className="text-sm text-muted-foreground">{t('trialEnds')}</p>
+            <p className="text-sm text-muted">{t('trialEnds')}</p>
             <p className="font-medium">{current.subscription.trialEndsAt.toISOString().slice(0, 10)}</p>
           </div>
         ) : null}
         {current.subscription?.currentPeriodEnd ? (
           <div>
-            <p className="text-sm text-muted-foreground">{t('periodEnds')}</p>
+            <p className="text-sm text-muted">{t('periodEnds')}</p>
             <p className="font-medium">{current.subscription.currentPeriodEnd.toISOString().slice(0, 10)}</p>
           </div>
         ) : null}
       </section>
-      <section className="flex flex-col gap-2 rounded-lg border p-4">
+      <section className="flex flex-col gap-2 rounded-2xl bg-surface-secondary p-4">
         <h2 className="font-medium">{t('payment.title')}</h2>
         <p className="text-sm">{t('payment.ccp')}</p>
         <p className="text-sm">{t('payment.transfer')}</p>
-        <p className="text-sm text-muted-foreground">{t('payment.reference')}</p>
+        <p className="text-sm text-muted">{t('payment.reference')}</p>
       </section>
-    </main>
+    </div>
   );
 }

@@ -27,9 +27,9 @@ export default async function TicketDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('ticket.error')}</p>
-      </main>
+      </div>
     );
   }
   const ticket = result.value;
@@ -37,16 +37,16 @@ export default async function TicketDetailPage({
   const targets = TICKET_STAGES.filter((s) => canTransition(stage, s));
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={`/${currentLocale}/helpdesk`} className="text-sm text-muted-foreground hover:underline">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
+      <Link href={`/${currentLocale}/helpdesk`} className="text-sm text-muted hover:underline">
         ← {t('ticket.title')}
       </Link>
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <span className="font-mono text-sm text-muted-foreground">{ticket.number}</span>
+          <span className="font-mono text-sm text-muted">{ticket.number}</span>
           <h1 className="text-xl font-semibold break-words">{ticket.subject}</h1>
-          <span className="text-sm text-muted-foreground">{t(`options.stage.${stage}`)}</span>
+          <span className="text-sm text-muted">{t(`options.stage.${stage}`)}</span>
         </div>
         <div className="flex flex-wrap gap-3">
           {targets.map((s) => (
@@ -61,19 +61,19 @@ export default async function TicketDetailPage({
         </div>
       </header>
 
-      <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-md border p-4 sm:grid-cols-2">
+      <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-2xl bg-surface-secondary p-4 sm:grid-cols-2">
         {(['channel', 'priority'] as const).map((name) => {
           const field = ticketEntity.fields.find((f) => f.name === name);
           return (
             <div key={name}>
-              <dt className="text-xs text-muted-foreground">{t(`fields.${name}`)}</dt>
+              <dt className="text-xs text-muted">{t(`fields.${name}`)}</dt>
               <dd className="text-sm">{field ? formatCell(field, ticket[name], currentLocale as 'fr' | 'ar' | 'en') : '–'}</dd>
             </div>
           );
         })}
         {ticket.description ? (
           <div className="sm:col-span-2">
-            <dt className="text-xs text-muted-foreground">{t('fields.description')}</dt>
+            <dt className="text-xs text-muted">{t('fields.description')}</dt>
             <dd className="whitespace-pre-line text-sm">{ticket.description}</dd>
           </div>
         ) : null}
@@ -83,6 +83,6 @@ export default async function TicketDetailPage({
         <h2 id="ticket-activity" className="text-base font-semibold">{t('ticket.activity')}</h2>
         <Chatter entity="helpdesk.ticket" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }

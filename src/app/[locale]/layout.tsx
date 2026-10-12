@@ -4,6 +4,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { dirFor } from '@/core/i18n/dir';
+import { HeroProviders } from '@/ui/providers';
 import { routing, type Locale } from '@/i18n/routing';
 import '../globals.css';
 
@@ -34,7 +35,9 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dirFor(locale)} className={`${fontClass} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          <HeroProviders locale={locale}>{children}</HeroProviders>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

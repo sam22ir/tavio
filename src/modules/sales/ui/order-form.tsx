@@ -9,6 +9,8 @@ import type { SaleLookups } from '../service/orders';
 
 export type { OrderLineDraft, OrderFormInitial } from './order-form-defaults';
 import { newLine, type OrderFormInitial, type OrderLineDraft } from './order-form-defaults';
+import { textAreaVariants } from '@heroui/styles';
+import { cn } from '@/ui/lib/cn';
 
 const INPUT = 'min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm';
 
@@ -124,7 +126,7 @@ export function OrderForm({
         <label className="flex flex-col gap-1 text-sm sm:col-span-2">
           {t('fields.note')}
           <textarea
-            className="min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            className={cn(textAreaVariants({ variant: 'primary' }), 'min-h-11 w-full rounded-2xl px-4 py-2 text-sm')}
             rows={2}
             value={form.note}
             onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))}
@@ -134,8 +136,8 @@ export function OrderForm({
 
       <div className="flex flex-col gap-3">
         {form.lines.map((line, index) => (
-          <fieldset key={line.key} className="grid gap-2 rounded-md border p-3 sm:grid-cols-12">
-            <legend className="px-1 text-xs text-muted-foreground">#{index + 1}</legend>
+          <fieldset key={line.key} className="grid gap-2 rounded-2xl bg-surface-secondary p-3 sm:grid-cols-12">
+            <legend className="px-1 text-xs text-muted">#{index + 1}</legend>
             <label className="flex flex-col gap-1 text-sm sm:col-span-4">
               {t('fields.product')}
               <select className={INPUT} value={line.productId} onChange={(e) => pickProduct(line.key, e.target.value)}>

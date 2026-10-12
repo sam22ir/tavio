@@ -33,11 +33,11 @@ export default async function CampaignDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">
           {t('page.error')}
         </p>
-      </main>
+      </div>
     );
   }
   const campaign = result.value;
@@ -49,14 +49,14 @@ export default async function CampaignDetailPage({
   const sampleName = t('editor.sampleName');
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
+      <Link href={listHref} className="text-sm text-muted hover:underline">
         ← {t('page.title')}
       </Link>
 
       <header className="flex flex-col gap-2">
         <h1 className="text-xl font-semibold break-words">{campaign.name}</h1>
-        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
           <Badge variant="secondary">{t(`options.channel.${campaign.channel}`)}</Badge>
           <Badge variant="outline">{t(`options.state.${campaign.state}`)}</Badge>
         </div>
@@ -87,7 +87,7 @@ export default async function CampaignDetailPage({
             {t('recipients.open')}
           </Link>
         </div>
-        <p className="text-sm text-muted-foreground">{t('editor.buildHint')}</p>
+        <p className="text-sm text-muted">{t('editor.buildHint')}</p>
       </section>
 
       <section className="flex flex-col gap-3">
@@ -103,12 +103,12 @@ export default async function CampaignDetailPage({
             />
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">{t('editor.locked')}</p>
+          <p className="text-sm text-muted">{t('editor.locked')}</p>
         )}
       </section>
 
       <Chatter entity="marketing.campaign" recordId={id} />
-    </main>
+    </div>
   );
 }
 
@@ -117,7 +117,7 @@ async function EmailDelivery({ id, editable }: { id: string; editable: boolean }
   const counts = await withPageCtx((ctx) => campaignDeliveryCounts(ctx, id));
   return (
     <section className="flex flex-col gap-3">
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-muted">
         {te('counts', { sent: counts.sent, failed: counts.failed, manual: counts.manual, queued: counts.queued })}
       </p>
       {editable ? (

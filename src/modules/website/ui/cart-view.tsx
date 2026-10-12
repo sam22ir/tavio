@@ -40,7 +40,7 @@ export function CartView({ slug, locale, products, showPrices, whatsappNumber, c
   if (lines.length === 0) {
     return (
       <div className="flex flex-col gap-4">
-        <p className="text-sm text-muted-foreground">{t('cart.empty')}</p>
+        <p className="text-sm text-muted">{t('cart.empty')}</p>
         <Link href={shopHref} className={cn(buttonVariants({ variant: 'outline' }), 'min-h-11 w-fit')}>
           {t('cart.continue_shopping')}
         </Link>
@@ -64,7 +64,7 @@ export function CartView({ slug, locale, products, showPrices, whatsappNumber, c
             <div className="flex min-w-0 flex-col">
               <span className="break-words font-medium">{productName(product, locale)}</span>
               {showPrices ? (
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-muted">
                   {formatDzd(BigInt(product.salePriceCents), locale)}
                 </span>
               ) : null}

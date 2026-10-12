@@ -71,6 +71,17 @@
       "wonThisMonth": "Won this month",
       "conversion": "Conversion rate this month",
       "overdueActivities": "Overdue activities"
+    },
+    "needsYou": "Needs you",
+    "assistant": {
+      "title": "Ask the assistant",
+      "hint": "Ask for figures, customers or due dates in plain language.",
+      "open": "Open assistant",
+      "prompts": {
+        "overdue": "Which customers are overdue?",
+        "collected": "Summarise this month's collections",
+        "leads": "Which leads should I follow up today?"
+      }
     }
   },
   "pillars": {

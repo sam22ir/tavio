@@ -54,7 +54,7 @@ export function AccountForm({ account, locale }: { account?: AccountFormValues; 
         </div>
         <div className="flex flex-col gap-1">
           <Label htmlFor="acc-type">{t('fields.type')}</Label>
-          <select id="acc-type" name="type" defaultValue={account?.type ?? 'asset'} className="h-11 rounded-md border bg-background px-3 text-sm">
+          <select id="acc-type" name="type" defaultValue={account?.type ?? 'asset'} className="text-sm">
             {TYPES.map((ty) => (
               <option key={ty} value={ty}>{t(`options.type.${ty}`)}</option>
             ))}

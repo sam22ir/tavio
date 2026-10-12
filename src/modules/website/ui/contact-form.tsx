@@ -69,7 +69,7 @@ export function ContactForm({ slug }: { slug: string }) {
       <div className="flex flex-col gap-2">
         <Label htmlFor="contact-wilaya">{t('contact.fields.wilayaCode')}</Label>
         <Input id="contact-wilaya" name="wilayaCode" inputMode="numeric" pattern="0[1-9]|[1-4][0-9]|5[0-8]" placeholder="16" required maxLength={2} dir="ltr" />
-        <p className="text-xs text-muted-foreground">{t('checkout.wilaya_hint')}</p>
+        <p className="text-xs text-muted">{t('checkout.wilaya_hint')}</p>
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="contact-message">{t('contact.fields.message')}</Label>

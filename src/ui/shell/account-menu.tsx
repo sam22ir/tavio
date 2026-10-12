@@ -63,9 +63,9 @@ export function AccountMenu({ email, companies, activeCompanyId }: AccountMenuPr
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
-          className="size-9 rounded-full bg-background font-semibold"
+          className="size-11 rounded-full bg-accent-soft font-semibold text-accent"
           aria-label={t('nav.account')}
           disabled={pending}
         >

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { stageLabel } from '@/modules/crm/stage-names';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -41,7 +42,7 @@ export default async function CrmPage({
     return {
       pipelineId: selected.id,
       pipelines: pipelines.value,
-      columns: stages.value.map((s) => ({ id: s.id, label: s.name })),
+      columns: stages.value.map((s) => ({ id: s.id, label: stageLabel(s.name, locale) })),
       rows: groups.value.flatMap((g) => g.leads),
       teams: teams.ok ? teams.value : [],
     };
@@ -70,9 +71,9 @@ export default async function CrmPage({
       </div>
 
       {'error' in board ? null : (
-        <form method="get" className="flex items-center gap-2 text-sm">
+        <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
           <label htmlFor="pipeline-filter">{t('pipelineFilter')}</label>
-          <select id="pipeline-filter" name="pipeline" defaultValue={board.pipelineId} className="h-9 rounded-md border bg-background px-3">
+          <select id="pipeline-filter" name="pipeline" defaultValue={board.pipelineId}>
             {board.pipelines.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
@@ -80,7 +81,7 @@ export default async function CrmPage({
             ))}
           </select>
           <label htmlFor="team-filter">{t('teamFilter')}</label>
-          <select id="team-filter" name="teamId" defaultValue={teamId ?? ''} className="h-9 rounded-md border bg-background px-3">
+          <select id="team-filter" name="teamId" defaultValue={teamId ?? ''}>
             <option value="">{t('allTeams')}</option>
             {board.teams.map((team) => (
               <option key={team.id} value={team.id}>

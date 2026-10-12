@@ -109,13 +109,13 @@ export function RecordPaymentButton({
               onChange={(e) => setAmount(e.target.value)}
               required
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted">
               {formatDzd(BigInt(remainingCents) as Cents, locale)}
             </p>
           </div>
           <div className="flex flex-col gap-2">
             <Label>{t('payment.method')}</Label>
-            <Select value={method} onValueChange={(v) => setMethod(v as (typeof METHODS)[number])}>
+            <Select value={method} onValueChange={(v) => setMethod(v as (typeof METHODS)[number])} aria-label={t('payment.method')}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>

@@ -46,24 +46,24 @@ export default async function ProjectDetailPage({
   if (!board.ok) {
     if (board.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('project.error')}</p>
-      </main>
+      </div>
     );
   }
   const { project, stages, tasks } = board.value;
   const nextState = project.state === 'active' ? 'done' : 'active';
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={`/${currentLocale}/projects`} className="text-sm text-muted-foreground hover:underline">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
+      <Link href={`/${currentLocale}/projects`} className="text-sm text-muted hover:underline">
         ← {t('project.title')}
       </Link>
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold break-words">{project.name}</h1>
-          <span className="text-sm text-muted-foreground">{t(`options.state.${project.state}`)}</span>
+          <span className="text-sm text-muted">{t(`options.state.${project.state}`)}</span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {(['active', 'done', 'archived'] as const)
@@ -106,6 +106,6 @@ export default async function ProjectDetailPage({
         <h2 id="project-activity" className="text-base font-semibold">{t('project.activity')}</h2>
         <Chatter entity="projects.project" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }

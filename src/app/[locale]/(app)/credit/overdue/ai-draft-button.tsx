@@ -53,7 +53,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex flex-col gap-1">
             <Label>{t('draft.tone.label')}</Label>
-            <Select value={tone} onValueChange={(v) => setTone(v as ReminderTone)}>
+            <Select value={tone} onValueChange={(v) => setTone(v as ReminderTone)} aria-label={t('draft.tone.label')}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="polite">{t('draft.tone.polite')}</SelectItem>
@@ -63,7 +63,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
           </div>
           <div className="flex flex-col gap-1">
             <Label>{t('draft.language.label')}</Label>
-            <Select value={language} onValueChange={(v) => setLanguage(v as ReminderLanguage)}>
+            <Select value={language} onValueChange={(v) => setLanguage(v as ReminderLanguage)} aria-label={t('draft.language.label')}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="fr">{t('draft.language.fr')}</SelectItem>
@@ -83,7 +83,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
           rows={6}
           aria-label={t('draft.text_label')}
         />
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
           <span>{source ? t(`draft.source.${source}`) : null}</span>
           <span>{text.length}/400</span>
         </div>
@@ -92,7 +92,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
             {t('draft.open_whatsapp')}
           </a>
         ) : (
-          <p className="text-sm text-muted-foreground">{phone ? null : t('draft.no_phone')}</p>
+          <p className="text-sm text-muted">{phone ? null : t('draft.no_phone')}</p>
         )}
       </DialogContent>
     </Dialog>

@@ -107,71 +107,73 @@ export function TeamPanel({
         </p>
       ) : null}
 
-      <section className="flex flex-col gap-3 rounded-lg border p-4">
+      <section className="app-panel p-5 flex flex-col gap-3">
         <h2 className="font-medium">{t('members.title')}</h2>
-        {members.length === 0 ? <p className="text-sm text-muted-foreground">{t('members.empty')}</p> : null}
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('members.name')}</TableHead>
-              <TableHead>{t('members.email')}</TableHead>
-              <TableHead>{t('members.role')}</TableHead>
-              <TableHead>{t('members.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {members.map((m) => (
-              <TableRow key={m.membershipId}>
-                <TableCell>
-                  {m.name}
-                  {m.isMe ? <span className="ms-2 text-xs text-muted-foreground">({t('members.you')})</span> : null}
-                </TableCell>
-                <TableCell dir="ltr" className="text-start">{m.email}</TableCell>
-                <TableCell>
-                  <select
-                    aria-label={t('members.role')}
-                    className="rounded-md border bg-background px-2 py-1 text-sm"
-                    defaultValue={m.roleKey}
-                    disabled={!canManage || pending}
-                    onChange={(e) => {
-                      const roleKey = e.currentTarget.value;
-                      void run(() => changeRoleAction(m.membershipId, roleKey));
-                    }}
-                  >
-                    {ROLE_KEYS.map((key) => (
-                      <option key={key} value={key}>
-                        {t(`roles.${key}`)}
-                      </option>
-                    ))}
-                  </select>
-                </TableCell>
-                <TableCell>
-                  {canManage ? (
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      disabled={pending}
-                      onClick={() => {
-                        if (window.confirm(t('members.confirm_remove'))) {
-                          void run(() => removeMemberAction(m.membershipId));
-                        }
+        {members.length === 0 ? <p className="text-sm text-muted">{t('members.empty')}</p> : null}
+        <div className="flex flex-col gap-4">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('members.name')}</TableHead>
+                <TableHead>{t('members.email')}</TableHead>
+                <TableHead>{t('members.role')}</TableHead>
+                <TableHead>{t('members.actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {members.map((m) => (
+                <TableRow key={m.membershipId}>
+                  <TableCell>
+                    {m.name}
+                    {m.isMe ? <span className="ms-2 text-xs text-muted">({t('members.you')})</span> : null}
+                  </TableCell>
+                  <TableCell dir="ltr" className="text-start">{m.email}</TableCell>
+                  <TableCell>
+                    <select
+                      aria-label={t('members.role')}
+                      className="text-sm"
+                      defaultValue={m.roleKey}
+                      disabled={!canManage || pending}
+                      onChange={(e) => {
+                        const roleKey = e.currentTarget.value;
+                        void run(() => changeRoleAction(m.membershipId, roleKey));
                       }}
                     >
-                      {t('members.remove')}
-                    </Button>
-                  ) : null}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                      {ROLE_KEYS.map((key) => (
+                        <option key={key} value={key}>
+                          {t(`roles.${key}`)}
+                        </option>
+                      ))}
+                    </select>
+                  </TableCell>
+                  <TableCell>
+                    {canManage ? (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        disabled={pending}
+                        onClick={() => {
+                          if (window.confirm(t('members.confirm_remove'))) {
+                            void run(() => removeMemberAction(m.membershipId));
+                          }
+                        }}
+                      >
+                        {t('members.remove')}
+                      </Button>
+                    ) : null}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </section>
 
-      <section className="flex flex-col gap-3 rounded-lg border p-4">
+      <section className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-4">
         <h2 className="font-medium">{t('invitations.title')}</h2>
         {invitations.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('invitations.empty')}</p>
+          <p className="text-sm text-muted">{t('invitations.empty')}</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {invitations.map((inv) => (
@@ -198,7 +200,7 @@ export function TeamPanel({
       </section>
 
       {canManage ? (
-        <section className="flex flex-col gap-4 rounded-lg border p-4">
+        <section className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
           <h2 className="font-medium">{t('invite.title')}</h2>
           <form onSubmit={onInvite} className="flex flex-col gap-4 sm:max-w-md">
             <div className="flex flex-col gap-2">
@@ -211,7 +213,7 @@ export function TeamPanel({
                 id="invite-role"
                 name="roleKey"
                 defaultValue="staff"
-                className="rounded-md border bg-background px-2 py-2 text-sm"
+                className="text-sm"
               >
                 {INVITE_ROLE_KEYS.map((key) => (
                   <option key={key} value={key}>
@@ -226,7 +228,7 @@ export function TeamPanel({
           </form>
 
           {invite ? (
-            <div className="flex flex-col gap-3 rounded-md bg-muted p-3">
+            <div className="flex flex-col gap-3 rounded-md bg-default p-3">
               <p className="text-sm font-medium">{t('invite.created')}</p>
               {invite.emailSent ? <p className="text-sm">{t('invite.email_sent')}</p> : null}
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -245,7 +247,7 @@ export function TeamPanel({
               </a>
             </div>
           ) : null}
-          {!emailEnabled ? <p className="text-xs text-muted-foreground">{t('invite.email_disabled')}</p> : null}
+          {!emailEnabled ? <p className="text-xs text-muted">{t('invite.email_disabled')}</p> : null}
         </section>
       ) : null}
     </div>

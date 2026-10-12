@@ -17,31 +17,33 @@ export default async function DepartmentsPage({ params }: { params: Promise<{ lo
   const result = await withPageCtx((ctx) => listDepartments(ctx));
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('department.title')}</h1>
       <DepartmentForm action={createDepartmentForm} />
       {result.ok ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('fields.departmentName')}</TableHead>
-              <TableHead>{t('fields.active')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {result.value.map((d) => (
-              <TableRow key={d.id}>
-                <TableCell className="break-words">{d.name}</TableCell>
-                <TableCell>{d.active ? t('fields.yes') : t('fields.no')}</TableCell>
+        <section className="app-panel flex flex-col gap-4 p-5">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('fields.departmentName')}</TableHead>
+                <TableHead>{t('fields.active')}</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {result.value.map((d) => (
+                <TableRow key={d.id}>
+                  <TableCell className="break-words">{d.name}</TableCell>
+                  <TableCell>{d.active ? t('fields.yes') : t('fields.no')}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </section>
       ) : (
         <p role="alert" className="text-sm text-destructive">
           {t('department.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

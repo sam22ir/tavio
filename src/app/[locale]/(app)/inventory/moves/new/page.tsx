@@ -23,8 +23,8 @@ export default async function NewMovePage({ params }: { params: Promise<{ locale
     : [];
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={`/${currentLocale}/inventory/moves`} className="text-sm text-muted-foreground hover:underline">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
+      <Link href={`/${currentLocale}/inventory/moves`} className="text-sm text-muted hover:underline">
         ← {t('moves.title')}
       </Link>
       <h1 className="text-xl font-semibold">{t('moves.new')}</h1>
@@ -45,6 +45,6 @@ export default async function NewMovePage({ params }: { params: Promise<{ locale
           {t('common.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

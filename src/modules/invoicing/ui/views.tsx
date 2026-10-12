@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { ErrorToast } from '@/ui/feedback/error-toast';
+import { toneForStatus } from '@/ui/blocks/status';
+import { StatusChip } from '@/ui/blocks/tint';
 import { formatDzd, type Cents } from '@/core/money';
 import type { Invoice, InvoiceLine, InvoicePayment } from '../schema';
 import { cancelInvoiceForm, postInvoiceForm, refundInvoiceForm, registerPaymentForm } from '../actions';
@@ -24,29 +26,29 @@ export function InvoiceList({ rows, kind, locale, t, newHref }: { rows: ListRow[
         <Link href={newHref} className={btnCls}>{kind === 'customers' ? t('list.new') : t('list.newVendor')}</Link>
       </div>
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('list.empty')}</p>
+        <p className="text-sm text-muted">{t('list.empty')}</p>
       ) : (
-        <div className="overflow-x-auto rounded-md border">
+        <div className="overflow-x-auto rounded-2xl bg-surface-secondary/60">
           <table className="w-full text-sm">
-            <thead className="bg-muted text-start">
+            <thead className="bg-default text-start">
               <tr>
-                <th className="p-2 text-start">{t('list.col.number')}</th>
-                <th className="p-2 text-start">{t('list.col.date')}</th>
-                <th className="p-2 text-start">{t('list.col.partner')}</th>
-                <th className="p-2 text-start">{t('list.col.total')}</th>
-                <th className="p-2 text-start">{t('list.col.state')}</th>
-                <th className="p-2 text-start">{t('list.col.payment')}</th>
+                <th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('list.col.number')}</th>
+                <th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('list.col.date')}</th>
+                <th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('list.col.partner')}</th>
+                <th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('list.col.total')}</th>
+                <th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('list.col.state')}</th>
+                <th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('list.col.payment')}</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.id} className="border-t">
-                  <td className="p-2"><Link className="underline" href={`${base}/${r.id}`}>{r.number ?? `#${r.id.slice(0, 8)}`}</Link></td>
-                  <td className="p-2">{r.date}</td>
-                  <td className="p-2">{r.partnerName}</td>
-                  <td className="p-2">{formatDzd(r.totalCents, locale as 'fr' | 'ar' | 'en')}</td>
-                  <td className="p-2">{t(`state.${r.state}`)}</td>
-                  <td className="p-2">{t(`payment.${r.paymentState}`)}</td>
+                <tr key={r.id} className="border-t border-separator">
+                  <td className="px-4 py-3"><Link className="underline" href={`${base}/${r.id}`}>{r.number ?? `#${r.id.slice(0, 8)}`}</Link></td>
+                  <td className="px-4 py-3">{r.date}</td>
+                  <td className="px-4 py-3">{r.partnerName}</td>
+                  <td className="px-4 py-3">{formatDzd(r.totalCents, locale as 'fr' | 'ar' | 'en')}</td>
+                  <td className="px-4 py-3"><StatusChip tint={toneForStatus(r.state)}>{t(`state.${r.state}`)}</StatusChip></td>
+                  <td className="px-4 py-3"><StatusChip tint={toneForStatus(r.paymentState)}>{t(`payment.${r.paymentState}`)}</StatusChip></td>
                 </tr>
               ))}
             </tbody>
@@ -77,9 +79,9 @@ export function InvoiceDetail({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold">{invoice.number ?? t('detail.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t(`type.${invoice.type}`)} · {partnerName} · {invoice.date}</p>
-          {sellerLabel ? <p className="text-xs text-muted-foreground">{sellerLabel}</p> : null}
-          <p className="text-sm">{t(`state.${invoice.state}`)} · {t(`payment.${invoice.paymentState}`)}</p>
+          <p className="text-sm text-muted">{t(`type.${invoice.type}`)} · {partnerName} · {invoice.date}</p>
+          {sellerLabel ? <p className="text-xs text-muted">{sellerLabel}</p> : null}
+          <p className="flex flex-wrap items-center gap-2 text-sm"><StatusChip tint={toneForStatus(invoice.state)}>{t(`state.${invoice.state}`)}</StatusChip><StatusChip tint={toneForStatus(invoice.paymentState)}>{t(`payment.${invoice.paymentState}`)}</StatusChip></p>
         </div>
         <div className="flex flex-wrap gap-2">
           {isDraft && isInvoice ? <Link href={`/${locale}/invoicing/${kind}/${invoice.id}/edit`} className={ghostCls}>{t('detail.edit')}</Link> : null}
@@ -97,12 +99,12 @@ export function InvoiceDetail({
       </div>
       {error ? <><p role="alert" className="text-sm text-destructive">{t(`error.${error}`)}</p><ErrorToast message={t(`error.${error}`)} /></> : null}
 
-      <div className="overflow-x-auto rounded-md border">
+      <div className="overflow-x-auto rounded-2xl bg-surface-secondary/60">
         <table className="w-full text-sm">
-          <thead className="bg-muted"><tr><th className="p-2 text-start">{t('form.description')}</th><th className="p-2 text-start">{t('form.quantity')}</th><th className="p-2 text-start">{t('form.unitPrice')}</th>{showDiscount ? <th className="p-2 text-start">{t('form.discount')}</th> : null}</tr></thead>
+          <thead className="bg-default"><tr><th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('form.description')}</th><th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('form.quantity')}</th><th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('form.unitPrice')}</th>{showDiscount ? <th className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start">{t('form.discount')}</th> : null}</tr></thead>
           <tbody>
             {lines.map((l) => (
-              <tr key={l.id} className="border-t"><td className="p-2">{l.description}</td><td className="p-2">{String(l.quantity)}</td><td className="p-2">{fmt(l.unitPriceCents)}</td>{showDiscount ? <td className="p-2">{formatPercent(String(l.discountRate))}</td> : null}</tr>
+              <tr key={l.id} className="border-t border-separator"><td className="px-4 py-3">{l.description}</td><td className="px-4 py-3">{String(l.quantity)}</td><td className="px-4 py-3">{fmt(l.unitPriceCents)}</td>{showDiscount ? <td className="px-4 py-3">{formatPercent(String(l.discountRate))}</td> : null}</tr>
             ))}
           </tbody>
         </table>
@@ -124,7 +126,7 @@ export function InvoiceDetail({
       </dl>
 
       {isPosted && residual > BigInt(0) ? (
-        <form action={registerPaymentForm} className="flex max-w-xl flex-col gap-3 rounded-md border p-4">
+        <form action={registerPaymentForm} className="flex max-w-xl flex-col gap-3 rounded-2xl bg-surface-secondary p-4">
           <h2 className="font-medium">{t('detail.payment.title')}</h2>
           <input type="hidden" name="id" value={invoice.id} />
           <input type="hidden" name="kind" value={kind} />
@@ -142,7 +144,7 @@ export function InvoiceDetail({
 
       <section id="payments" className="flex flex-col gap-2">
         <h2 className="font-medium">{t('detail.payments')}</h2>
-        {payments.length === 0 ? <p className="text-sm text-muted-foreground">{t('detail.noPayments')}</p> : (
+        {payments.length === 0 ? <p className="text-sm text-muted">{t('detail.noPayments')}</p> : (
           <ul className="text-sm">
             {payments.map((p) => (
               <li key={p.id} className="flex flex-wrap items-center gap-2">

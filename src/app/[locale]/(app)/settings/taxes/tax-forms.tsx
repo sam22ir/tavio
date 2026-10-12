@@ -16,7 +16,7 @@ import { Label } from '@/ui/primitives/label';
 type Status = { kind: 'ok' | 'error'; text: string } | null;
 
 const SELECT_CLASS =
-  'h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
+  'w-full text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
 
 export function LoadDefaultsButton() {
   const t = useTranslations('l10n');
@@ -126,7 +126,7 @@ export function TaxForm() {
       </div>
       <div className="grid gap-1.5">
         <Label htmlFor="tax-to">
-          {t('fields.validTo')} <span className="text-muted-foreground">({t('taxes.valid_to_optional')})</span>
+          {t('fields.validTo')} <span className="text-muted">({t('taxes.valid_to_optional')})</span>
         </Label>
         <Input id="tax-to" name="validTo" type="date" />
       </div>
@@ -179,7 +179,7 @@ export function ArchiveTaxButton({ id }: { id: string }) {
 function StatusLine({ status }: { status: Status }) {
   if (!status) return null;
   return (
-    <p role="status" className={status.kind === 'ok' ? 'text-sm text-emerald-700' : 'text-sm text-destructive'}>
+    <p role="status" className={status.kind === 'ok' ? 'text-sm text-tint-success-fg' : 'text-sm text-destructive'}>
       {status.text}
     </p>
   );

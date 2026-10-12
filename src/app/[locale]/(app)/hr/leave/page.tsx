@@ -49,7 +49,7 @@ export default async function LeavePage({
   const stateLabel = (s: string) => t(`options.leaveState.${s}`);
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failed ? <ErrorToast message={tViews('error')} /> : null}
       <h1 className="text-xl font-semibold">{t('leave.title')}</h1>
 
@@ -85,69 +85,71 @@ export default async function LeavePage({
                   key={s || 'all'}
                   href={s ? `?state=${s}` : '?'}
                   aria-current={(state ?? '') === s ? 'page' : undefined}
-                  className="rounded-md border px-3 py-1 hover:bg-muted aria-[current=page]:bg-muted"
+                  className="rounded-md border px-3 py-1 hover:bg-default aria-[current=page]:bg-default"
                 >
                   {s ? stateLabel(s) : t('leave.all')}
                 </a>
               ))}
             </nav>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t('fields.employee')}</TableHead>
-                    <TableHead>{t('fields.leaveType')}</TableHead>
-                    <TableHead>{t('fields.period')}</TableHead>
-                    <TableHead>{t('fields.days')}</TableHead>
-                    <TableHead>{t('fields.state')}</TableHead>
-                    <TableHead>{t('actions.label')}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {requests.map((r) => (
-                    <TableRow key={r.id}>
-                      <TableCell className="break-words">{r.employeeName}</TableCell>
-                      <TableCell>{r.typeName}</TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {r.fromDate} → {r.toDate}
-                      </TableCell>
-                      <TableCell>{Number(r.days).toFixed(0)}</TableCell>
-                      <TableCell>{stateLabel(r.state)}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-2">
-                          {r.state === 'draft' ? (
-                            <form action={submitLeaveForm}>
-                              <input type="hidden" name="id" value={r.id} />
-                              <Button type="submit" size="sm" variant="outline">
-                                {t('actions.submit')}
-                              </Button>
-                            </form>
-                          ) : null}
-                          {r.state === 'submitted' ? (
-                            <>
-                              <form action={decideLeaveForm}>
-                                <input type="hidden" name="id" value={r.id} />
-                                <input type="hidden" name="decision" value="approved" />
-                                <Button type="submit" size="sm">
-                                  {t('actions.approve')}
-                                </Button>
-                              </form>
-                              <form action={decideLeaveForm}>
-                                <input type="hidden" name="id" value={r.id} />
-                                <input type="hidden" name="decision" value="refused" />
-                                <Button type="submit" size="sm" variant="outline">
-                                  {t('actions.refuse')}
-                                </Button>
-                              </form>
-                            </>
-                          ) : null}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+              <section className="app-panel flex flex-col gap-4 p-5">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('fields.employee')}</TableHead>
+                        <TableHead>{t('fields.leaveType')}</TableHead>
+                        <TableHead>{t('fields.period')}</TableHead>
+                        <TableHead>{t('fields.days')}</TableHead>
+                        <TableHead>{t('fields.state')}</TableHead>
+                        <TableHead>{t('actions.label')}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {requests.map((r) => (
+                        <TableRow key={r.id}>
+                          <TableCell className="break-words">{r.employeeName}</TableCell>
+                          <TableCell>{r.typeName}</TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            {r.fromDate} → {r.toDate}
+                          </TableCell>
+                          <TableCell>{Number(r.days).toFixed(0)}</TableCell>
+                          <TableCell>{stateLabel(r.state)}</TableCell>
+                          <TableCell>
+                            <div className="flex flex-wrap gap-2">
+                              {r.state === 'draft' ? (
+                                <form action={submitLeaveForm}>
+                                  <input type="hidden" name="id" value={r.id} />
+                                  <Button type="submit" size="sm" variant="outline">
+                                    {t('actions.submit')}
+                                  </Button>
+                                </form>
+                              ) : null}
+                              {r.state === 'submitted' ? (
+                                <>
+                                  <form action={decideLeaveForm}>
+                                    <input type="hidden" name="id" value={r.id} />
+                                    <input type="hidden" name="decision" value="approved" />
+                                    <Button type="submit" size="sm">
+                                      {t('actions.approve')}
+                                    </Button>
+                                  </form>
+                                  <form action={decideLeaveForm}>
+                                    <input type="hidden" name="id" value={r.id} />
+                                    <input type="hidden" name="decision" value="refused" />
+                                    <Button type="submit" size="sm" variant="outline">
+                                      {t('actions.refuse')}
+                                    </Button>
+                                  </form>
+                                </>
+                              ) : null}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </section>
           </section>
         </>
       ) : (
@@ -155,6 +157,6 @@ export default async function LeavePage({
           {t('leave.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

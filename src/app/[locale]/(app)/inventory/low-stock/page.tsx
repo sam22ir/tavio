@@ -19,36 +19,38 @@ export default async function LowStockPage({ params }: { params: Promise<{ local
   const warehouses = await withPageCtx((ctx) => listWarehouses(ctx));
 
   return (
-    <main className="flex flex-col gap-8 p-4 md:p-6">
+    <div className="flex flex-col gap-8 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('low_stock.title')}</h1>
       {low.ok ? (
         low.value.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('low_stock.empty')}</p>
+          <p className="text-sm text-muted">{t('low_stock.empty')}</p>
         ) : (
-          <div className="overflow-x-auto rounded-md border">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="p-3 text-start font-medium">{t('fields.product')}</th>
-                  <th className="p-3 text-start font-medium">{t('fields.warehouse')}</th>
-                  <th className="p-3 text-end font-medium">{t('fields.on_hand')}</th>
-                  <th className="p-3 text-end font-medium">{t('fields.min_qty')}</th>
-                  <th className="p-3 text-end font-medium">{t('fields.to_order')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {low.value.map((row) => (
-                  <tr key={row.reorderRuleId} className="border-t">
-                    <td className="p-3 break-words">{row.productName}</td>
-                    <td className="p-3 break-words">{row.warehouseName}</td>
-                    <td className="p-3 text-end tabular-nums">{row.onHand}</td>
-                    <td className="p-3 text-end tabular-nums">{row.minQty}</td>
-                    <td className="p-3 text-end tabular-nums">{row.toOrder}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-default/50">
+                    <tr>
+                      <th className="p-3 text-start font-medium">{t('fields.product')}</th>
+                      <th className="p-3 text-start font-medium">{t('fields.warehouse')}</th>
+                      <th className="p-3 text-end font-medium">{t('fields.on_hand')}</th>
+                      <th className="p-3 text-end font-medium">{t('fields.min_qty')}</th>
+                      <th className="p-3 text-end font-medium">{t('fields.to_order')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {low.value.map((row) => (
+                      <tr key={row.reorderRuleId} className="border-t">
+                        <td className="p-3 break-words">{row.productName}</td>
+                        <td className="p-3 break-words">{row.warehouseName}</td>
+                        <td className="p-3 text-end tabular-nums">{row.onHand}</td>
+                        <td className="p-3 text-end tabular-nums">{row.minQty}</td>
+                        <td className="p-3 text-end tabular-nums">{row.toOrder}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+          </section>
         )
       ) : (
         <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
@@ -76,6 +78,6 @@ export default async function LowStockPage({ params }: { params: Promise<{ local
           <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
         )}
       </section>
-    </main>
+    </div>
   );
 }

@@ -102,7 +102,7 @@ export function SendMessageButton({ entity, recordId, partnerId, templateKey, in
             <Label htmlFor="msg-channel">{t('channel')}</Label>
             <select
               id="msg-channel"
-              className="h-11 rounded-md border bg-background px-3 text-sm"
+              className="text-sm"
               value={channel}
               onChange={(e) => changeChannel(e.target.value as MessageChannelId)}
               disabled={loading || sending}
@@ -113,9 +113,9 @@ export function SendMessageButton({ entity, recordId, partnerId, templateKey, in
           </div>
 
           {optedOut && channel === 'email' ? (
-            <p role="alert" className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">{t('optedOut')}</p>
+            <p role="alert" className="rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">{t('optedOut')}</p>
           ) : null}
-          {!loading && !to ? <p className="text-sm text-muted-foreground">{t('noRecipient')}</p> : null}
+          {!loading && !to ? <p className="text-sm text-muted">{t('noRecipient')}</p> : null}
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="msg-to">{t('to')}</Label>

@@ -195,7 +195,7 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
 
       {stage === 'map' && (
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted">
             {t('rows_count', { count: rows.length })} · {t('detected_separator', { sep: separator === '\t' ? 'TAB' : separator })}
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -206,7 +206,6 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
                   {f.required ? ' *' : ''}
                 </span>
                 <select
-                  className="rounded-md border bg-background p-2"
                   value={mapping[f.key] ?? ''}
                   onChange={(e) =>
                     setMapping((m) => ({ ...m, [f.key]: e.target.value === '' ? null : Number(e.target.value) }))
@@ -246,31 +245,33 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
       {stage === 'preview' && (
         <div className="flex flex-col gap-4">
           <p className="text-sm font-medium">{t('preview')}</p>
-          <p className="text-sm text-muted-foreground">{duplicateRule}</p>
-          <div className="overflow-x-auto rounded-md border">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="px-3 py-2 text-start font-medium">{t('line')}</th>
-                  <th className="px-3 py-2 text-start font-medium">{t('status_ok')}</th>
-                  <th className="px-3 py-2 text-start font-medium">{fields[0]?.label ?? ''}</th>
-                  <th className="px-3 py-2 text-start font-medium">{t('errors')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {preview.map((p) => (
-                  <tr key={p.line} className="border-t">
-                    <td className="px-3 py-2 tabular-nums">{p.line}</td>
-                    <td className={cn('px-3 py-2', p.status === 'error' && 'text-destructive')}>
-                      {p.status === 'ok' ? t('status_ok') : p.status === 'duplicate' ? t('status_duplicate') : t('status_error')}
-                    </td>
-                    <td className="px-3 py-2">{p.values[0] ?? ''}</td>
-                    <td className="px-3 py-2 text-destructive">{p.messages.join(' · ')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className="text-sm text-muted">{duplicateRule}</p>
+          <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-default/50">
+                    <tr>
+                      <th className="px-3 py-2 text-start font-medium">{t('line')}</th>
+                      <th className="px-3 py-2 text-start font-medium">{t('status_ok')}</th>
+                      <th className="px-3 py-2 text-start font-medium">{fields[0]?.label ?? ''}</th>
+                      <th className="px-3 py-2 text-start font-medium">{t('errors')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {preview.map((p) => (
+                      <tr key={p.line} className="border-t">
+                        <td className="px-3 py-2 tabular-nums">{p.line}</td>
+                        <td className={cn('px-3 py-2', p.status === 'error' && 'text-destructive')}>
+                          {p.status === 'ok' ? t('status_ok') : p.status === 'duplicate' ? t('status_duplicate') : t('status_error')}
+                        </td>
+                        <td className="px-3 py-2">{p.values[0] ?? ''}</td>
+                        <td className="px-3 py-2 text-destructive">{p.messages.join(' · ')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+          </section>
           <div className="flex gap-2">
             <button type="button" className={buttonVariants({ variant: 'outline' })} onClick={() => setStage('map')}>
               {t('back')}
@@ -291,20 +292,20 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
       {stage === 'done' && (
         <div className="flex flex-col gap-4">
           <dl className="grid max-w-md grid-cols-3 gap-3 text-sm">
-            <div className="rounded-md border p-3">
-              <dt className="text-muted-foreground">{t('created')}</dt>
+            <div className="rounded-2xl bg-surface-secondary p-3">
+              <dt className="text-muted">{t('created')}</dt>
               <dd className="text-lg font-semibold tabular-nums">{totals.created}</dd>
             </div>
-            <div className="rounded-md border p-3">
-              <dt className="text-muted-foreground">{t('skipped')}</dt>
+            <div className="rounded-2xl bg-surface-secondary p-3">
+              <dt className="text-muted">{t('skipped')}</dt>
               <dd className="text-lg font-semibold tabular-nums">{totals.skipped}</dd>
             </div>
-            <div className="rounded-md border p-3">
-              <dt className="text-muted-foreground">{t('errors')}</dt>
+            <div className="rounded-2xl bg-surface-secondary p-3">
+              <dt className="text-muted">{t('errors')}</dt>
               <dd className="text-lg font-semibold tabular-nums">{totals.errors.length}</dd>
             </div>
           </dl>
-          <p className="text-sm text-muted-foreground">{duplicateRule}</p>
+          <p className="text-sm text-muted">{duplicateRule}</p>
           <div className="flex flex-wrap gap-2">
             {totals.errors.length > 0 ? (
               <button type="button" className={buttonVariants({ variant: 'outline' })} onClick={downloadErrors}>

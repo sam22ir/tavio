@@ -19,13 +19,13 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
     return perm.ok ? listRules(ctx) : null;
   });
   if (!rules) {
-    return <main className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></main>;
+    return <div className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></div>;
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('title')}</h1>
-      {rules.length === 0 ? <p className="text-sm text-muted-foreground">{t('empty')}</p> : null}
+      {rules.length === 0 ? <p className="text-sm text-muted">{t('empty')}</p> : null}
       <div className="flex flex-col gap-4">
         {rules.map((rule) => {
           const cond = (rule.conditions as { field: string; op: string; value: string }[])[0];
@@ -58,7 +58,7 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
             active: rule.active,
           };
           return (
-            <details key={rule.id} className="rounded-lg border p-4">
+            <details key={rule.id} className="rounded-2xl bg-surface-secondary p-4">
               <summary className="cursor-pointer font-medium">
                 {rule.name} · {rule.triggerEvent ? t(`triggers.${rule.triggerEvent.replaceAll(".", "_")}`) : t('kinds.time')} · {rule.active ? t('status.active') : t('status.inactive')}
               </summary>
@@ -69,10 +69,10 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
           );
         })}
       </div>
-      <section className="flex flex-col gap-3 rounded-lg border p-4">
+      <section className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-4">
         <h2 className="font-medium">{t('new')}</h2>
         <RuleForm action={createRuleForm} />
       </section>
-    </main>
+    </div>
   );
 }

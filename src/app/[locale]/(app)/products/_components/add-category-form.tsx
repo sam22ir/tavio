@@ -44,7 +44,7 @@ export function AddCategoryForm() {
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-2 rounded-md border p-3 sm:flex-row sm:items-end">
+    <form onSubmit={submit} className="flex flex-col gap-2 rounded-2xl bg-surface-secondary p-3 sm:flex-row sm:items-end">
       <div className="flex flex-1 flex-col gap-1">
         <Label htmlFor="new-category-name">{t('fields.name')}</Label>
         <Input

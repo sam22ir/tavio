@@ -44,11 +44,11 @@ export default async function ContactDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">
           {t('contacts.partner.error')}
         </p>
-      </main>
+      </div>
     );
   }
   const partner: PartnerRow = result.value;
@@ -76,7 +76,7 @@ export default async function ContactDetailPage({
   ].filter((r): r is string => r !== null);
 
   const info = (
-    <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-md border p-4 sm:grid-cols-2">
+    <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-2xl bg-surface-secondary p-4 sm:grid-cols-2">
       <InfoItem label={t('contacts.partner.roles')} value={roles.length ? roles.join(', ') : '–'} />
       <InfoItem label={t('contacts.fields.kind')} value={kindLabel} />
       {INFO_FIELDS.map((name) => {
@@ -88,16 +88,16 @@ export default async function ContactDetailPage({
   );
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <PortalShareButton mode="invite" partnerId={partner.id} />
-      <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
+      <Link href={listHref} className="text-sm text-muted hover:underline">
         ← {t('contacts.partner.title')}
       </Link>
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold break-words">{partner.displayName}</h1>
-          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
             <span>{kindLabel}</span>
             {partner.active ? null : (
               <span className="text-destructive">{t('contacts.partner.inactive')}</span>
@@ -147,14 +147,14 @@ export default async function ContactDetailPage({
         </h2>
         <Chatter entity="contacts.partner" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }
 
 function InfoItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col">
-      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dt className="text-xs text-muted">{label}</dt>
       <dd className="text-sm break-words">{value}</dd>
     </div>
   );

@@ -25,13 +25,13 @@ export default async function VendorInvoicePage({
   if (!data) notFound();
   const t = await getTranslations('invoicing');
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <RelatedLinks source="invoicing.invoice" id={id} />
       <InvoiceOriginLink locale={locale} sourceEntity={data.invoice.sourceEntity} sourceId={data.invoice.sourceId} />
       <InvoiceDetail
         invoice={data.invoice} lines={data.lines} payments={data.payments} kind="vendors" locale={locale}
         t={(k) => t(k as never)} error={error} partnerName={data.partnerName}
       />
-    </main>
+    </div>
   );
 }

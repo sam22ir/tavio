@@ -77,7 +77,7 @@ export function BankStatementImport({ accounts }: { accounts: StatementAccountOp
   }
 
   return (
-    <section className="flex flex-col gap-4 rounded-lg border p-4">
+    <section className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
       <h2 className="font-medium">{t('importTitle')}</h2>
       <div className="flex flex-col gap-2">
         <Label htmlFor="bank-csv">{t('file')}</Label>
@@ -86,7 +86,7 @@ export function BankStatementImport({ accounts }: { accounts: StatementAccountOp
 
       {preview && mapping && (
         <form action={onImport} className="flex flex-col gap-4">
-          <p className="text-sm text-muted-foreground">{t('rows', { count: preview.rowCount })}</p>
+          <p className="text-sm text-muted">{t('rows', { count: preview.rowCount })}</p>
           <fieldset className="grid gap-3 sm:grid-cols-2">
             <legend className="mb-2 text-sm font-medium">{t('mappingTitle')}</legend>
             {MAPPABLE.map((key) => (
@@ -94,7 +94,7 @@ export function BankStatementImport({ accounts }: { accounts: StatementAccountOp
                 <Label htmlFor={`map-${key}`}>{t(`fields.${key}`)}</Label>
                 <select
                   id={`map-${key}`}
-                  className="h-11 rounded-md border bg-background px-3 text-sm"
+                  className="text-sm"
                   value={mapping[key] === null ? '' : String(mapping[key])}
                   onChange={(e) => setField(key, e.target.value)}
                 >
@@ -107,20 +107,20 @@ export function BankStatementImport({ accounts }: { accounts: StatementAccountOp
             ))}
           </fieldset>
 
-          <div className="overflow-x-auto rounded-md border">
+          <div className="overflow-x-auto rounded-2xl bg-surface-secondary/60">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="bg-muted/50">
+                <tr className="bg-default/50">
                   {preview.headers.map((h, i) => (
-                    <th key={`${h}-${i}`} className="px-2 py-1 text-start font-medium">{h}</th>
+                    <th key={`${h}-${i}`} className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start font-medium">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {preview.sample.map((row, r) => (
-                  <tr key={r} className="border-t">
+                  <tr key={r} className="border-t border-separator">
                     {preview.headers.map((_, i) => (
-                      <td key={i} className="px-2 py-1">{row[i] ?? ''}</td>
+                      <td key={i} className="px-4 py-3">{row[i] ?? ''}</td>
                     ))}
                   </tr>
                 ))}
@@ -131,7 +131,7 @@ export function BankStatementImport({ accounts }: { accounts: StatementAccountOp
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1">
               <Label htmlFor="stmt-account">{t('account')}</Label>
-              <select id="stmt-account" name="accountId" required className="h-11 rounded-md border bg-background px-3 text-sm">
+              <select id="stmt-account" name="accountId" required className="text-sm">
                 {accounts.map((a) => (
                   <option key={a.id} value={a.id}>{`${a.code} · ${a.name}`}</option>
                 ))}

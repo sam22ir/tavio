@@ -26,10 +26,10 @@ export default async function TeamPage({ params }: { params: Promise<{ locale: s
   });
 
   return (
-    <main className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold">{t('title')}</h1>
-        <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
+        <p className="text-sm text-muted">{t('subtitle')}</p>
       </div>
       <TeamPanel
         members={data.members.map((m) => ({
@@ -48,6 +48,6 @@ export default async function TeamPage({ params }: { params: Promise<{ locale: s
         canManage={data.canManage}
         emailEnabled={invitationEmailEnabled()}
       />
-    </main>
+    </div>
   );
 }

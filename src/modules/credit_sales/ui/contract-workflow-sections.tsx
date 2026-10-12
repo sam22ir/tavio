@@ -35,7 +35,7 @@ export interface ContractWorkflowData {
   bank: { name: string | null; reference: string | null; notifiedAt: string | null };
 }
 
-const SECTION = 'rounded-md border p-4 space-y-3';
+const SECTION = 'rounded-2xl bg-surface-secondary p-4 space-y-3';
 
 /** Document checklist, back office, decision, central risk and bank sections for one contract. */
 export function ContractWorkflowSections({ data }: { data: ContractWorkflowData }) {
@@ -66,14 +66,14 @@ export function ContractWorkflowSections({ data }: { data: ContractWorkflowData 
       <section className={SECTION}>
         <h3 className="font-medium">{t('documents.title')}</h3>
         {data.documents.length === 0 ? (
-          <p className="text-muted-foreground text-sm">{t('documents.empty')}</p>
+          <p className="text-muted text-sm">{t('documents.empty')}</p>
         ) : (
           <ul className="space-y-2">
             {data.documents.map((doc) => (
               <li key={doc.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
                 <span>
                   {doc.name}{' '}
-                  <span className="text-muted-foreground">
+                  <span className="text-muted">
                     ({doc.required ? t('documents.required') : t('documents.optional')})
                   </span>
                 </span>
@@ -106,7 +106,7 @@ export function ContractWorkflowSections({ data }: { data: ContractWorkflowData 
           <div className="flex flex-wrap items-end gap-2">
             <div className="grow">
               <Label htmlFor="bo-owner">{t('bo.owner')}</Label>
-              <select id="bo-owner" className="block w-full rounded-md border bg-background p-2 text-sm"
+              <select id="bo-owner" className="block w-full p-2 text-sm"
                 value={boOwner} onChange={(e) => setBoOwner(e.target.value)}>
                 {data.boOwners.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
@@ -157,7 +157,7 @@ export function ContractWorkflowSections({ data }: { data: ContractWorkflowData 
           </div>
         ) : null}
         {data.decision.decidedAt ? (
-          <p className="text-muted-foreground text-sm">{t('decision.decidedAt')}: {new Date(data.decision.decidedAt).toLocaleString()}</p>
+          <p className="text-muted text-sm">{t('decision.decidedAt')}: {new Date(data.decision.decidedAt).toLocaleString()}</p>
         ) : null}
       </section>
 

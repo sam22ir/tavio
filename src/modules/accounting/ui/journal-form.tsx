@@ -40,7 +40,7 @@ export function JournalForm({ journal }: { journal?: JournalFormValues }) {
         </div>
         <div className="flex flex-col gap-1">
           <Label htmlFor="j-type">{t('fields.type')}</Label>
-          <select id="j-type" name="type" defaultValue={current} className="h-11 rounded-md border bg-background px-3 text-sm">
+          <select id="j-type" name="type" defaultValue={current} className="text-sm">
             {TYPES.map((ty) => (
               <option key={ty} value={ty}>{t(`options.journalType.${ty}`)}</option>
             ))}

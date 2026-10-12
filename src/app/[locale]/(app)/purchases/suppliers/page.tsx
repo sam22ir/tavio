@@ -9,7 +9,7 @@ import { Button } from '@/ui/primitives/button';
 import { Input } from '@/ui/primitives/input';
 
 const selectClass =
-  'h-11 w-full rounded-md border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2';
+  'w-full text-sm focus-visible:outline-none focus-visible:ring-2';
 
 export default async function PurchaseSuppliersPage({
   params,
@@ -33,14 +33,14 @@ export default async function PurchaseSuppliersPage({
   ]);
   if (!rows.ok || !options.ok) {
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('errors.internal')}</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('suppliers.title')}</h1>
       {errorCode ? (
         <p role="alert" className="text-sm text-destructive">
@@ -50,7 +50,7 @@ export default async function PurchaseSuppliersPage({
 
       <div className="overflow-x-auto rounded-md border">
         <table className="w-full min-w-[28rem] text-sm">
-          <thead className="bg-muted/50 text-start">
+          <thead className="bg-default/50 text-start">
             <tr>
               <th className="p-3 text-start">{t('fields.product')}</th>
               <th className="p-3 text-start">{t('fields.partner')}</th>
@@ -69,7 +69,8 @@ export default async function PurchaseSuppliersPage({
         </table>
       </div>
 
-      <form action={addSupplierForm} className="flex flex-col gap-3 rounded-md border p-4 sm:max-w-xl">
+            <section className="app-panel flex flex-col gap-4 p-5">
+ <form action={addSupplierForm} className="flex flex-col gap-3 sm:max-w-xl">
         <h2 className="text-base font-medium">{t('suppliers.add')}</h2>
         <label className="flex flex-col gap-1.5 text-sm">
           {t('fields.product')}
@@ -93,6 +94,7 @@ export default async function PurchaseSuppliersPage({
         </label>
         <Button type="submit" className="min-h-11 sm:w-fit">{t('suppliers.save')}</Button>
       </form>
-    </main>
+      </section>
+    </div>
   );
 }

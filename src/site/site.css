@@ -1,6 +1,4 @@
-/* Marketing site only. Imported solely by the (site) layout; the app never loads this file. */
-@import "@heroui/styles";
-@source "../../node_modules/@heroui/react/dist";
+/* Marketing site only. Imported solely by the (site) layout. HeroUI styles now load once from globals.css. */
 
 /* Scoped to .site so the logged-in app keeps its own tokens. HeroUI light theme, custom values for the brief. */
 .site {

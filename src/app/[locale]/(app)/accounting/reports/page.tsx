@@ -75,7 +75,7 @@ export default async function ReportsPage({
     : null;
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('reports.title')}</h1>
       <a href={exportHref} className="w-fit rounded-md border px-3 py-1.5 text-sm">{t('reports.export')}</a>
       {singleHref ? (
@@ -86,7 +86,7 @@ export default async function ReportsPage({
       ) : null}
       <nav className="flex flex-wrap gap-2">
         {REPORTS.map((r) => (
-          <Link key={r} href={`${base}?report=${r}`} className={`rounded-md border px-3 py-1.5 text-sm ${r === report ? 'bg-muted font-medium' : ''}`}>
+          <Link key={r} href={`${base}?report=${r}`} className={`rounded-md border px-3 py-1.5 text-sm ${r === report ? 'bg-default font-medium' : ''}`}>
             {t(`reports.tabs.${r}`)}
           </Link>
         ))}
@@ -130,98 +130,104 @@ export default async function ReportsPage({
 
       {data.kind === 'trial' ? (
         <div className="flex flex-col gap-2">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('fields.code')}</TableHead>
-                  <TableHead>{t('fields.name')}</TableHead>
-                  <TableHead className="text-end">{t('fields.debit')}</TableHead>
-                  <TableHead className="text-end">{t('fields.credit')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.value.rows.map((r) => (
-                  <TableRow key={r.code}>
-                    <TableCell className="font-mono">{r.code}</TableCell>
-                    <TableCell>{r.name}</TableCell>
-                    <TableCell className="text-end tabular-nums">{fmt(r.debitCents)}</TableCell>
-                    <TableCell className="text-end tabular-nums">{fmt(r.creditCents)}</TableCell>
-                  </TableRow>
-                ))}
-                <TableRow className="font-semibold">
-                  <TableCell colSpan={2}>{t('reports.totals')}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fmt(data.value.totalDebitCents)}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fmt(data.value.totalCreditCents)}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
+            <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('fields.code')}</TableHead>
+                      <TableHead>{t('fields.name')}</TableHead>
+                      <TableHead className="text-end">{t('fields.debit')}</TableHead>
+                      <TableHead className="text-end">{t('fields.credit')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.value.rows.map((r) => (
+                      <TableRow key={r.code}>
+                        <TableCell className="font-mono">{r.code}</TableCell>
+                        <TableCell>{r.name}</TableCell>
+                        <TableCell className="text-end tabular-nums">{fmt(r.debitCents)}</TableCell>
+                        <TableCell className="text-end tabular-nums">{fmt(r.creditCents)}</TableCell>
+                      </TableRow>
+                    ))}
+                    <TableRow className="font-semibold">
+                      <TableCell colSpan={2}>{t('reports.totals')}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fmt(data.value.totalDebitCents)}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fmt(data.value.totalCreditCents)}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </section>
           <p className="text-sm">{data.value.balanced ? t('reports.balanced') : t('reports.notBalanced')}</p>
         </div>
       ) : null}
 
       {data.kind === 'ledger' ? (
         data.value ? (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('fields.date')}</TableHead>
-                  <TableHead>{t('fields.number')}</TableHead>
-                  <TableHead>{t('fields.label')}</TableHead>
-                  <TableHead className="text-end">{t('fields.debit')}</TableHead>
-                  <TableHead className="text-end">{t('fields.credit')}</TableHead>
-                  <TableHead className="text-end">{t('reports.balance')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.value.rows.map((r, i) => (
-                  <TableRow key={`${r.number}-${i}`}>
-                    <TableCell className="tabular-nums">{r.date}</TableCell>
-                    <TableCell className="font-mono">{r.number}</TableCell>
-                    <TableCell>{r.label ?? r.ref ?? ''}</TableCell>
-                    <TableCell className="text-end tabular-nums">{fmt(r.debitCents)}</TableCell>
-                    <TableCell className="text-end tabular-nums">{fmt(r.creditCents)}</TableCell>
-                    <TableCell className="text-end tabular-nums">{fmt(r.balanceCents)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+            <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('fields.date')}</TableHead>
+                      <TableHead>{t('fields.number')}</TableHead>
+                      <TableHead>{t('fields.label')}</TableHead>
+                      <TableHead className="text-end">{t('fields.debit')}</TableHead>
+                      <TableHead className="text-end">{t('fields.credit')}</TableHead>
+                      <TableHead className="text-end">{t('reports.balance')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.value.rows.map((r, i) => (
+                      <TableRow key={`${r.number}-${i}`}>
+                        <TableCell className="tabular-nums">{r.date}</TableCell>
+                        <TableCell className="font-mono">{r.number}</TableCell>
+                        <TableCell>{r.label ?? r.ref ?? ''}</TableCell>
+                        <TableCell className="text-end tabular-nums">{fmt(r.debitCents)}</TableCell>
+                        <TableCell className="text-end tabular-nums">{fmt(r.creditCents)}</TableCell>
+                        <TableCell className="text-end tabular-nums">{fmt(r.balanceCents)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </section>
         ) : (
-          <p className="text-sm text-muted-foreground">{t('reports.pickAccount')}</p>
+          <p className="text-sm text-muted">{t('reports.pickAccount')}</p>
         )
       ) : null}
 
       {data.kind === 'partners' ? (
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('fields.partner')}</TableHead>
-                <TableHead className="text-end">{t('fields.debit')}</TableHead>
-                <TableHead className="text-end">{t('fields.credit')}</TableHead>
-                <TableHead className="text-end">{t('reports.balance')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.value.map((r) => (
-                <TableRow key={r.partnerId ?? r.partnerName}>
-                  <TableCell>{r.partnerName}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fmt(r.debitCents)}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fmt(r.creditCents)}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fmt(r.balanceCents)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+          <section className="app-panel flex flex-col gap-4 p-5">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('fields.partner')}</TableHead>
+                    <TableHead className="text-end">{t('fields.debit')}</TableHead>
+                    <TableHead className="text-end">{t('fields.credit')}</TableHead>
+                    <TableHead className="text-end">{t('reports.balance')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.value.map((r) => (
+                    <TableRow key={r.partnerId ?? r.partnerName}>
+                      <TableCell>{r.partnerName}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fmt(r.debitCents)}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fmt(r.creditCents)}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fmt(r.balanceCents)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </section>
       ) : null}
 
       {data.kind === 'g50' ? (
-        <div className="flex flex-col gap-3 rounded-md border p-4">
-          <p className="text-sm text-muted-foreground">{t('reports.g50.period', { from: data.value.period.from, to: data.value.period.to })}</p>
+        <div className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-4">
+          <p className="text-sm text-muted">{t('reports.g50.period', { from: data.value.period.from, to: data.value.period.to })}</p>
           <dl className="grid gap-2 sm:grid-cols-3">
             <div><dt className="text-sm">{t('reports.g50.collected')}</dt><dd className="tabular-nums">{fmt(data.value.collectedCents)}</dd></div>
             <div><dt className="text-sm">{t('reports.g50.deductible')}</dt><dd className="tabular-nums">{fmt(data.value.deductibleCents)}</dd></div>
@@ -233,8 +239,41 @@ export default async function ReportsPage({
       {data.kind === 'bilan' ? (
         <div className="grid gap-6 md:grid-cols-2">
           {(['actif', 'passif'] as const).map((side) => (
-            <div key={side} className="overflow-x-auto">
-              <h2 className="mb-2 font-medium">{t(`reports.bilan.${side}`)}</h2>
+            <section key={side} className="app-panel flex flex-col gap-4 p-5">
+                <div className="overflow-x-auto">
+                  <h2 className="mb-2 font-medium">{t(`reports.bilan.${side}`)}</h2>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('fields.name')}</TableHead>
+                        <TableHead className="text-end">{t('reports.bilan.current')}</TableHead>
+                        <TableHead className="text-end">{t('reports.bilan.previous')}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {(side === 'actif' ? data.value.bilan.actif : data.value.bilan.passif).map((l, i) => (
+                        <TableRow key={l.key}>
+                          <TableCell>{t(`statements.bilan.${l.key}`)}</TableCell>
+                          <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
+                          <TableCell className="text-end tabular-nums">
+                            {data.value.previous ? fmt((side === 'actif' ? data.value.previous.bilan.actif : data.value.previous.bilan.passif)[i]!.amountCents) : ''}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+            </section>
+          ))}
+          <p className="text-sm md:col-span-2">
+            {data.value.bilan.balanced ? t('reports.bilan.balanced') : t('reports.bilan.notBalanced')}
+          </p>
+        </div>
+      ) : null}
+
+      {data.kind === 'tcr' ? (
+          <section className="app-panel flex flex-col gap-4 p-5">
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -244,83 +283,56 @@ export default async function ReportsPage({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {(side === 'actif' ? data.value.bilan.actif : data.value.bilan.passif).map((l, i) => (
-                    <TableRow key={l.key}>
-                      <TableCell>{t(`statements.bilan.${l.key}`)}</TableCell>
-                      <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
-                      <TableCell className="text-end tabular-nums">
-                        {data.value.previous ? fmt((side === 'actif' ? data.value.previous.bilan.actif : data.value.previous.bilan.passif)[i]!.amountCents) : ''}
-                      </TableCell>
+                  {[...data.value.tcr.produits, ...data.value.tcr.charges].map((l, i) => {
+                    const prevList = data.value.previous ? [...data.value.previous.tcr.produits, ...data.value.previous.tcr.charges] : [];
+                    return (
+                      <TableRow key={l.key}>
+                        <TableCell>{t(`statements.tcr.${l.key}`)}</TableCell>
+                        <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
+                        <TableCell className="text-end tabular-nums">{prevList[i] ? fmt(prevList[i]!.amountCents) : ''}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  <TableRow className="font-semibold">
+                    <TableCell>{t('reports.tcr.result')}</TableCell>
+                    <TableCell className="text-end tabular-nums">{fmt(data.value.tcr.resultCents)}</TableCell>
+                    <TableCell className="text-end tabular-nums">{data.value.previous ? fmt(data.value.previous.tcr.resultCents) : ''}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </section>
+      ) : null}
+
+      {data.kind === 'aging' ? (
+          <section className="app-panel flex flex-col gap-4 p-5">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('fields.partner')}</TableHead>
+                    {AGING_BUCKETS.map((b) => (
+                      <TableHead key={b} className="text-end">{t(`reports.aging.${b}`)}</TableHead>
+                    ))}
+                    <TableHead className="text-end">{t('reports.totals')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.value.map((r) => (
+                    <TableRow key={r.partnerId ?? r.partnerName}>
+                      <TableCell>{r.partnerName}</TableCell>
+                      {AGING_BUCKETS.map((b) => (
+                        <TableCell key={b} className="text-end tabular-nums">{fmt(r.buckets[b])}</TableCell>
+                      ))}
+                      <TableCell className="text-end tabular-nums">{fmt(r.totalCents)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
-          ))}
-          <p className="text-sm md:col-span-2">
-            {data.value.bilan.balanced ? t('reports.bilan.balanced') : t('reports.bilan.notBalanced')}
-          </p>
-        </div>
+          </section>
       ) : null}
 
-      {data.kind === 'tcr' ? (
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('fields.name')}</TableHead>
-                <TableHead className="text-end">{t('reports.bilan.current')}</TableHead>
-                <TableHead className="text-end">{t('reports.bilan.previous')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {[...data.value.tcr.produits, ...data.value.tcr.charges].map((l, i) => {
-                const prevList = data.value.previous ? [...data.value.previous.tcr.produits, ...data.value.previous.tcr.charges] : [];
-                return (
-                  <TableRow key={l.key}>
-                    <TableCell>{t(`statements.tcr.${l.key}`)}</TableCell>
-                    <TableCell className="text-end tabular-nums">{fmt(l.amountCents)}</TableCell>
-                    <TableCell className="text-end tabular-nums">{prevList[i] ? fmt(prevList[i]!.amountCents) : ''}</TableCell>
-                  </TableRow>
-                );
-              })}
-              <TableRow className="font-semibold">
-                <TableCell>{t('reports.tcr.result')}</TableCell>
-                <TableCell className="text-end tabular-nums">{fmt(data.value.tcr.resultCents)}</TableCell>
-                <TableCell className="text-end tabular-nums">{data.value.previous ? fmt(data.value.previous.tcr.resultCents) : ''}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      ) : null}
-
-      {data.kind === 'aging' ? (
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('fields.partner')}</TableHead>
-                {AGING_BUCKETS.map((b) => (
-                  <TableHead key={b} className="text-end">{t(`reports.aging.${b}`)}</TableHead>
-                ))}
-                <TableHead className="text-end">{t('reports.totals')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.value.map((r) => (
-                <TableRow key={r.partnerId ?? r.partnerName}>
-                  <TableCell>{r.partnerName}</TableCell>
-                  {AGING_BUCKETS.map((b) => (
-                    <TableCell key={b} className="text-end tabular-nums">{fmt(r.buckets[b])}</TableCell>
-                  ))}
-                  <TableCell className="text-end tabular-nums">{fmt(r.totalCents)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : null}
-
-    </main>
+    </div>
   );
 }

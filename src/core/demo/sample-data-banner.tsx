@@ -55,7 +55,7 @@ export function SampleDataBanner({
   return (
     <div
       role="status"
-      className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900"
+      className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-tint-warning px-4 py-2 text-sm text-tint-warning-fg"
     >
       <span>{realCompany ? t('banner.demoActive', { company: realCompany.name }) : t('banner.demoOnly')}</span>
       <span className="flex flex-wrap items-center gap-3">
@@ -67,7 +67,7 @@ export function SampleDataBanner({
         {confirming ? (
           <span className="flex flex-wrap items-center gap-3">
             <span>{t('banner.archiveConfirm')}</span>
-            <button type="button" onClick={archive} disabled={pending} className="font-medium text-red-800 hover:underline disabled:opacity-50">
+            <button type="button" onClick={archive} disabled={pending} className="font-medium text-danger hover:underline disabled:opacity-50">
               {t('banner.confirmAction')}
             </button>
             <button type="button" onClick={() => setConfirming(false)} disabled={pending} className="font-medium hover:underline">
@@ -81,7 +81,7 @@ export function SampleDataBanner({
         )}
       </span>
       {failed && (
-        <span role="alert" className="w-full text-red-800">
+        <span role="alert" className="w-full text-danger">
           {t('banner.failed')}
         </span>
       )}

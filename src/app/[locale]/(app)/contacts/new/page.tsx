@@ -14,11 +14,11 @@ export default async function NewContactPage({ params }: { params: Promise<{ loc
   const t = await getTranslations('contacts');
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('partner.new')}</h1>
       <div className="max-w-2xl">
         <RecordForm entity={PARTNER_FORM_ENTITY} action={createPartnerForm} submitLabel={t('partner.new')} />
       </div>
-    </main>
+    </div>
   );
 }

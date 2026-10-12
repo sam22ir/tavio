@@ -38,7 +38,7 @@ export function ManualEntryForm({ accounts, journals }: { accounts: AccountOptio
         </div>
         <div className="flex flex-col gap-1">
           <Label htmlFor="journalCode">{t('fields.journal')}</Label>
-          <select id="journalCode" name="journalCode" required className="h-9 rounded-md border bg-background px-3 text-sm">
+          <select id="journalCode" name="journalCode" required className="text-sm">
             {journals.map((j) => (
               <option key={j.code} value={j.code}>{`${j.code} · ${j.name}`}</option>
             ))}
@@ -57,7 +57,7 @@ export function ManualEntryForm({ accounts, journals }: { accounts: AccountOptio
               aria-label={t('fields.account')}
               value={line.accountCode}
               onChange={(e) => update(line.key, { accountCode: e.target.value })}
-              className="h-9 rounded-md border bg-background px-2 text-sm"
+              className="text-sm"
             >
               <option value="">{t('form.pickAccount')}</option>
               {accounts.map((a) => (

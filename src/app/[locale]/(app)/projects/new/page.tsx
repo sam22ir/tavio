@@ -16,7 +16,7 @@ export default async function NewProjectPage({ params }: { params: Promise<{ loc
   const partners = await searchPartnerOptions();
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('project.new')}</h1>
       <div className="max-w-2xl">
         <RecordForm
@@ -26,6 +26,6 @@ export default async function NewProjectPage({ params }: { params: Promise<{ loc
           relationOptions={{ partnerId: partners }}
         />
       </div>
-    </main>
+    </div>
   );
 }

@@ -71,6 +71,17 @@
       "wonThisMonth": "Gagnés ce mois-ci",
       "conversion": "Taux de conversion ce mois-ci",
       "overdueActivities": "Activités en retard"
+    },
+    "needsYou": "À traiter",
+    "assistant": {
+      "title": "Posez une question à l'assistant",
+      "hint": "Demandez des chiffres, des clients ou des échéances en langage naturel.",
+      "open": "Ouvrir l'assistant",
+      "prompts": {
+        "overdue": "Quels clients sont en retard ?",
+        "collected": "Résume les encaissements du mois",
+        "leads": "Quels prospects relancer aujourd'hui ?"
+      }
     }
   },
   "pillars": {

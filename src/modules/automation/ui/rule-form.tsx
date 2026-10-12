@@ -77,7 +77,7 @@ export function RuleForm({
         </select>
       </label>
       {kind === 'time' ? (
-        <fieldset className={`${field} sm:col-span-2 rounded-md border p-3`}>
+        <fieldset className={`${field} sm:col-span-2 rounded-2xl bg-surface-secondary p-3`}>
           <legend>{t('fields.whenDate')}</legend>
           <div className="grid gap-2 sm:grid-cols-3">
             <select name="timeEntity" defaultValue={defaults.timeEntity ?? TIME_ENTITIES[0]} className={input}>
@@ -88,7 +88,7 @@ export function RuleForm({
             <input name="dateField" placeholder="stage_entered_at" defaultValue={defaults.dateField} maxLength={60} className={input} />
             <input name="delayDays" type="number" min={0} max={3650} placeholder={t('fields.delayDays')} defaultValue={defaults.delayDays ?? 0} className={input} />
           </div>
-          <span className="text-xs text-muted-foreground">{t('hints.time')}</span>
+          <span className="text-xs text-muted">{t('hints.time')}</span>
           {err('timeConfig') ? <span role="alert" className="text-destructive">{t('errors.timeConfig')}</span> : null}
         </fieldset>
       ) : (
@@ -101,7 +101,7 @@ export function RuleForm({
           </select>
         </label>
       )}
-      <fieldset className={`${field} sm:col-span-2 rounded-md border p-3`}>
+      <fieldset className={`${field} sm:col-span-2 rounded-2xl bg-surface-secondary p-3`}>
         <legend>{t('fields.condition')}</legend>
         <div className="grid gap-2 sm:grid-cols-3">
           <input name="condField" placeholder={t('fields.condField')} defaultValue={defaults.condField} maxLength={100} className={input} />
@@ -112,7 +112,7 @@ export function RuleForm({
           </select>
           <input name="condValue" placeholder={t('fields.condValue')} defaultValue={defaults.condValue} maxLength={200} className={input} />
         </div>
-        <span className="text-xs text-muted-foreground">{t('hints.condition')}</span>
+        <span className="text-xs text-muted">{t('hints.condition')}</span>
       </fieldset>
       <label className={field}>
         {t('fields.action')}
@@ -182,21 +182,21 @@ export function RuleForm({
         <label className={`${field} sm:col-span-2`}>
           {t('fields.updates')}
           <textarea name="updates" rows={3} defaultValue={defaults.updates} className={input} />
-          <span className="text-xs text-muted-foreground">{t('hints.updates')}</span>
+          <span className="text-xs text-muted">{t('hints.updates')}</span>
         </label>
       ) : null}
       {chosenAction === 'multi' ? (
         <label className={`${field} sm:col-span-2`}>
           {t('fields.steps')}
           <textarea name="steps" rows={5} defaultValue={defaults.steps} className={`${input} font-mono`} />
-          <span className="text-xs text-muted-foreground">{t('hints.steps')}</span>
+          <span className="text-xs text-muted">{t('hints.steps')}</span>
         </label>
       ) : null}
       {chosenAction === 'post_note' ? (
         <label className={`${field} sm:col-span-2`}>
           {t('fields.body')}
           <textarea name="body" rows={3} maxLength={2000} defaultValue={defaults.body} className={input} />
-          <span className="text-xs text-muted-foreground">{t('hints.body')}</span>
+          <span className="text-xs text-muted">{t('hints.body')}</span>
         </label>
       ) : null}
       {chosenAction === 'webhook' ? (

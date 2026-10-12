@@ -27,7 +27,7 @@ export default async function CustomerInvoicePage({
   if (!data) notFound();
   const t = await getTranslations('invoicing');
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <RelatedLinks source="invoicing.invoice" id={id} />
       {data.invoice.state === 'posted' ? (
         <div className="flex flex-wrap gap-2">
@@ -41,6 +41,6 @@ export default async function CustomerInvoicePage({
         invoice={data.invoice} lines={data.lines} payments={data.payments} kind="customers" locale={locale}
         t={(k) => t(k as never)} error={error} partnerName={data.partnerName}
       />
-    </main>
+    </div>
   );
 }

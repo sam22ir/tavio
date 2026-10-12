@@ -6,8 +6,10 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Bell, LayoutGrid } from 'lucide-react';
 import { AccountMenu } from '@/ui/shell/account-menu';
 import { CommandSearch } from '@/ui/shell/command-search';
+import { currentAppFor } from '@/ui/shell/current-app';
 import type { ShellApp, ShellCompany } from '@/ui/shell/load-shell';
-import { Button } from '@/ui/primitives/button';
+
+export { currentAppFor };
 
 export interface TopBarProps {
   apps: ShellApp[];
@@ -16,19 +18,12 @@ export interface TopBarProps {
   email: string;
 }
 
-/** Finds the app whose menu link is the longest prefix of the current path. */
-export function currentAppFor(apps: ShellApp[], pathname: string): { app: ShellApp; activeHref: string } | null {
-  let best: { app: ShellApp; activeHref: string } | null = null;
-  for (const app of apps) {
-    for (const tab of app.tabs) {
-      const hit = pathname === tab.href || pathname.startsWith(`${tab.href}/`);
-      if (hit && (!best || tab.href.length > best.activeHref.length)) best = { app, activeHref: tab.href };
-    }
-  }
-  return best;
-}
+const PILL = 'flex h-11 items-center rounded-full bg-surface shadow-[0_1px_2px_rgb(20_23_28/0.04)]';
 
-/** Sticky top bar: launcher, brand, current app, search, notifications and the account menu, plus the app's tab row. */
+/**
+ * Top bar: the current app's name, its menu as a pill tab bar, then search, notifications and the account menu.
+ * Below md the rail is hidden, so a launcher button takes its place.
+ */
 export function TopBar({ apps, companies, activeCompanyId, email }: TopBarProps) {
   const t = useTranslations('shell');
   const tAll = useTranslations();
@@ -39,33 +34,20 @@ export function TopBar({ apps, companies, activeCompanyId, email }: TopBarProps)
   const dashboardHref = `/${locale}/dashboard`;
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-white">
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-2 px-4 md:px-6">
-        <Button asChild variant="ghost" size="icon" aria-label={t('nav.launcher')}>
-          <Link href={dashboardHref}>
-            <LayoutGrid aria-hidden="true" />
-          </Link>
-        </Button>
-        <Link href={dashboardHref} className="flex min-w-0 items-center gap-2 font-semibold">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/revora-mark-blue.svg" alt="" width={28} height={28} className="size-7 shrink-0" />
-          <span className="truncate">{current ? labelOf(current.app.label) : t('appName')}</span>
-        </Link>
-        <div className="ms-auto flex items-center gap-2">
-          <div className="w-40 md:w-64">
-            <CommandSearch />
-          </div>
-          <Button asChild variant="ghost" size="icon" aria-label={t('nav.notifications')}>
-            <Link href={dashboardHref}>
-              <Bell aria-hidden="true" />
-            </Link>
-          </Button>
-          <AccountMenu email={email} companies={companies} activeCompanyId={activeCompanyId} />
-        </div>
-      </div>
+    <header className="flex flex-wrap items-center gap-x-2 gap-y-3 md:gap-x-3 print:hidden">
+      <Link
+        href={dashboardHref}
+        aria-label={t('nav.launcher')}
+        className={`${PILL} size-11 justify-center text-muted hover:text-foreground md:hidden`}
+      >
+        <LayoutGrid aria-hidden="true" className="size-5" />
+      </Link>
+      <p className="me-2 truncate text-lg font-semibold tracking-tight md:text-xl">
+        {current ? labelOf(current.app.label) : t('appName')}
+      </p>
       {current ? (
-        <nav aria-label={t('nav.tabs')} className="border-t">
-          <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 md:px-6">
+        <nav aria-label={t('nav.tabs')} className={`${PILL} order-last max-w-full p-1 md:order-none`}>
+          <div className="flex gap-1 overflow-x-auto [scrollbar-width:none]">
             {current.app.tabs.map((tab) => {
               const active = tab.href === current.activeHref;
               return (
@@ -74,10 +56,8 @@ export function TopBar({ apps, companies, activeCompanyId, email }: TopBarProps)
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
                   className={
-                    'shrink-0 border-b-2 px-3 py-3 text-sm whitespace-nowrap transition-colors ' +
-                    (active
-                      ? 'border-primary font-medium text-primary'
-                      : 'border-transparent text-muted-foreground hover:text-foreground')
+                    'shrink-0 rounded-full px-4 py-1.5 text-sm whitespace-nowrap transition-colors ' +
+                    (active ? 'bg-accent font-medium text-accent-foreground' : 'text-muted hover:bg-default hover:text-foreground')
                   }
                 >
                   {labelOf(tab.label)}
@@ -87,6 +67,19 @@ export function TopBar({ apps, companies, activeCompanyId, email }: TopBarProps)
           </div>
         </nav>
       ) : null}
+      <div className="ms-auto flex items-center gap-2">
+        <div className="w-11 md:w-64">
+          <CommandSearch />
+        </div>
+        <Link
+          href={dashboardHref}
+          aria-label={t('nav.notifications')}
+          className={`${PILL} size-11 justify-center text-muted hover:text-foreground`}
+        >
+          <Bell aria-hidden="true" className="size-5" />
+        </Link>
+        <AccountMenu email={email} companies={companies} activeCompanyId={activeCompanyId} />
+      </div>
     </header>
   );
 }

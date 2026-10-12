@@ -1,3 +1,5 @@
+import { inputVariants } from '@heroui/styles';
+import { cn } from '@/ui/lib/cn';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ErrorToast } from '@/ui/feedback/error-toast';
 import { hasLocale } from 'next-intl';
@@ -46,11 +48,11 @@ export default async function AttendancePage({
   const checkedIn = data.open?.ok && data.open.value !== null;
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failed ? <ErrorToast message={tViews('error')} /> : null}
       <h1 className="text-xl font-semibold">{t('attendance.title')}</h1>
 
-      <section aria-labelledby="attendance-self" className="flex flex-col items-start gap-3 rounded-md border p-4">
+      <section aria-labelledby="attendance-self" className="flex flex-col items-start gap-3 rounded-2xl bg-surface-secondary p-4">
         <h2 id="attendance-self" className="text-base font-semibold">
           {t('attendance.mine')}
         </h2>
@@ -69,7 +71,7 @@ export default async function AttendancePage({
             </form>
           )
         ) : (
-          <p className="text-sm text-muted-foreground">{t('attendance.noEmployee')}</p>
+          <p className="text-sm text-muted">{t('attendance.noEmployee')}</p>
         )}
       </section>
 
@@ -79,9 +81,9 @@ export default async function AttendancePage({
             {t('attendance.summary')}
           </h2>
           <form method="get" className="flex items-end gap-2">
-            <label className="flex flex-col text-xs text-muted-foreground">
+            <label className="flex flex-col text-xs text-muted">
               {t('attendance.month')}
-              <input type="month" name="month" defaultValue={month} className="h-9 rounded-md border bg-transparent px-2 text-sm" />
+              <input type="month" name="month" defaultValue={month} className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full px-4 text-sm')} />
             </label>
             <Button type="submit" variant="outline" size="sm">
               {t('actions.show')}
@@ -89,28 +91,30 @@ export default async function AttendancePage({
           </form>
         </div>
         {data.summary.ok ? (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('fields.employee')}</TableHead>
-                  <TableHead>{t('attendance.daysPresent')}</TableHead>
-                  <TableHead>{t('attendance.hours')}</TableHead>
-                  <TableHead>{t('attendance.open')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.summary.value.map((row) => (
-                  <TableRow key={row.employeeId}>
-                    <TableCell className="break-words">{names.get(row.employeeId) ?? '–'}</TableCell>
-                    <TableCell>{row.daysPresent}</TableCell>
-                    <TableCell>{minutesToHours(row.minutes)}</TableCell>
-                    <TableCell>{row.openCount}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+            <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('fields.employee')}</TableHead>
+                      <TableHead>{t('attendance.daysPresent')}</TableHead>
+                      <TableHead>{t('attendance.hours')}</TableHead>
+                      <TableHead>{t('attendance.open')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.summary.value.map((row) => (
+                      <TableRow key={row.employeeId}>
+                        <TableCell className="break-words">{names.get(row.employeeId) ?? '–'}</TableCell>
+                        <TableCell>{row.daysPresent}</TableCell>
+                        <TableCell>{minutesToHours(row.minutes)}</TableCell>
+                        <TableCell>{row.openCount}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </section>
         ) : (
           <p role="alert" className="text-sm text-destructive">
             {t('attendance.error')}
@@ -127,7 +131,7 @@ export default async function AttendancePage({
             {data.spans.value.slice(0, 50).map((s) => (
               <li key={s.id} className="flex flex-wrap justify-between gap-2 p-3 text-sm">
                 <span className="break-words">{s.employeeName}</span>
-                <span className="text-muted-foreground">
+                <span className="text-muted">
                   {s.checkIn.toLocaleString(locale)}
                   {' – '}
                   {s.checkOut ? s.checkOut.toLocaleString(locale) : t('attendance.open')}
@@ -141,6 +145,6 @@ export default async function AttendancePage({
           </p>
         )}
       </section>
-    </main>
+    </div>
   );
 }

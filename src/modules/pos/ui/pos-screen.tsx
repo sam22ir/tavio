@@ -168,7 +168,7 @@ export function PosScreen({
           className="min-h-11"
         />
         {visible.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('sale.empty')}</p>
+          <p className="text-sm text-muted">{t('sale.empty')}</p>
         ) : (
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {visible.map((p) => (
@@ -176,10 +176,10 @@ export function PosScreen({
                 <button
                   type="button"
                   onClick={() => bump(p.id, 1)}
-                  className="flex min-h-11 w-full flex-col items-start gap-1 rounded-md border bg-card p-3 text-start"
+                  className="flex min-h-11 w-full flex-col items-start gap-1 rounded-2xl bg-surface-secondary p-3 text-start"
                 >
                   <span className="line-clamp-2 text-sm font-medium">{p.name}</span>
-                  <span className="text-sm tabular-nums text-muted-foreground">
+                  <span className="text-sm tabular-nums text-muted">
                     {money(BigInt(p.priceCents))}
                   </span>
                 </button>
@@ -189,7 +189,7 @@ export function PosScreen({
         )}
       </section>
 
-      <aside className="flex w-full flex-col gap-3 rounded-md border bg-card p-3 md:w-80 md:shrink-0">
+      <aside className="flex w-full flex-col gap-3 rounded-2xl bg-surface-secondary p-3 md:w-80 md:shrink-0">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold">{t('sale.cart')}</h2>
           {cartLines.length > 0 ? (
@@ -200,7 +200,7 @@ export function PosScreen({
         </div>
 
         {cartLines.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('sale.cartEmpty')}</p>
+          <p className="text-sm text-muted">{t('sale.cartEmpty')}</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {cartLines.map((l) => (
@@ -261,7 +261,7 @@ export function PosScreen({
         ) : null}
 
         {receipt ? (
-          <div className="flex flex-col gap-2 rounded-md border p-3">
+          <div className="flex flex-col gap-2 rounded-2xl bg-surface-secondary p-3">
             <p className="text-sm font-medium">{t('sale.paid')}</p>
             <Button type="button" variant="outline" className="min-h-11" onClick={() => window.print()}>
               {t('sale.print')}

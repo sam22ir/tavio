@@ -20,7 +20,7 @@ export async function InvoiceOriginLink({
   return (
     <Link
       href={`/${locale}/${path}/${sourceId}`}
-      className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-background px-3 text-sm hover:bg-muted"
+      className="inline-flex min-h-11 items-center gap-2 rounded-full border bg-background px-3 text-sm hover:bg-default"
     >
       {t(path === 'sales' ? 'invoice.saleOrder' : 'invoice.purchaseOrder')}
     </Link>

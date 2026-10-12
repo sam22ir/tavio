@@ -16,13 +16,13 @@ export default async function AccountEditPage({ params }: { params: Promise<{ lo
   const currentLocale = await getLocale();
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="font-mono text-xl font-semibold">{`${account.code} · ${account.name}`}</h1>
       {account.archived ? <p className="text-sm">{t('accounts.archived')}</p> : null}
       <AccountForm
         locale={currentLocale}
         account={{ id: account.id, code: account.code, name: account.name, type: account.type as AccountType, reconcilable: account.reconcilable, archived: account.archived }}
       />
-    </main>
+    </div>
   );
 }

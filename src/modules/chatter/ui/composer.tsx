@@ -42,7 +42,7 @@ export function Composer({ entity, recordId }: Common) {
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border p-3">
-      <div role="tablist" className="flex gap-1 rounded-lg bg-muted p-1">
+      <div role="tablist" className="flex gap-1 rounded-lg bg-default p-1">
         <button type="button" role="tab" aria-selected={mode === 'comment'} className={tabClass(mode === 'comment')} onClick={() => setMode('comment')}>
           {t('tabMessage')}
         </button>

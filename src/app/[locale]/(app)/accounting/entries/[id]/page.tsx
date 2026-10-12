@@ -76,35 +76,37 @@ export default async function EntryDetailPage({
         {canReverse ? <ReverseButton entryId={entry.id} /> : null}
       </header>
 
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('fields.account')}</TableHead>
-              <TableHead>{t('fields.partner')}</TableHead>
-              <TableHead>{t('fields.label')}</TableHead>
-              <TableHead className="text-end">{t('fields.debit')}</TableHead>
-              <TableHead className="text-end">{t('fields.credit')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {lines.map((l) => (
-              <TableRow key={l.id}>
-                <TableCell className="font-mono">{`${l.accountCode} · ${l.accountName}`}</TableCell>
-                <TableCell>{l.partnerName ?? '—'}</TableCell>
-                <TableCell>{l.label ?? ''}</TableCell>
-                <TableCell className="text-end tabular-nums">{l.debitCents > BigInt(0) ? fmt(l.debitCents) : ''}</TableCell>
-                <TableCell className="text-end tabular-nums">{l.creditCents > BigInt(0) ? fmt(l.creditCents) : ''}</TableCell>
-              </TableRow>
-            ))}
-            <TableRow className="font-semibold">
-              <TableCell colSpan={3}>{t('detail.total')}</TableCell>
-              <TableCell className="text-end tabular-nums">{fmt(totalDebit)}</TableCell>
-              <TableCell className="text-end tabular-nums">{fmt(totalCredit)}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+        <section className="app-panel flex flex-col gap-4 p-5">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('fields.account')}</TableHead>
+                  <TableHead>{t('fields.partner')}</TableHead>
+                  <TableHead>{t('fields.label')}</TableHead>
+                  <TableHead className="text-end">{t('fields.debit')}</TableHead>
+                  <TableHead className="text-end">{t('fields.credit')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {lines.map((l) => (
+                  <TableRow key={l.id}>
+                    <TableCell className="font-mono">{`${l.accountCode} · ${l.accountName}`}</TableCell>
+                    <TableCell>{l.partnerName ?? '—'}</TableCell>
+                    <TableCell>{l.label ?? ''}</TableCell>
+                    <TableCell className="text-end tabular-nums">{l.debitCents > BigInt(0) ? fmt(l.debitCents) : ''}</TableCell>
+                    <TableCell className="text-end tabular-nums">{l.creditCents > BigInt(0) ? fmt(l.creditCents) : ''}</TableCell>
+                  </TableRow>
+                ))}
+                <TableRow className="font-semibold">
+                  <TableCell colSpan={3}>{t('detail.total')}</TableCell>
+                  <TableCell className="text-end tabular-nums">{fmt(totalDebit)}</TableCell>
+                  <TableCell className="text-end tabular-nums">{fmt(totalCredit)}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </section>
 
       <Chatter entity="accounting.journal_entry" recordId={entry.id} />
     </section>

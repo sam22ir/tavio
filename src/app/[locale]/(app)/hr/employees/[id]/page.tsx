@@ -34,11 +34,11 @@ export default async function EmployeeDetailPage({
   if (!data.emp.ok) {
     if (data.emp.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">
           {t('employee.error')}
         </p>
-      </main>
+      </div>
     );
   }
   const emp = data.emp.value;
@@ -46,14 +46,14 @@ export default async function EmployeeDetailPage({
   const people = data.people?.ok ? data.people.value : [];
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
+      <Link href={listHref} className="text-sm text-muted hover:underline">
         ← {t('employee.title')}
       </Link>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold break-words">{emp.displayName}</h1>
-          <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+          <div className="flex flex-wrap gap-2 text-sm text-muted">
             {emp.jobTitle ? <span>{emp.jobTitle}</span> : null}
             {emp.departmentName ? <span>· {emp.departmentName}</span> : null}
             {emp.active ? null : <span className="text-destructive">{t('fields.archived')}</span>}
@@ -89,6 +89,6 @@ export default async function EmployeeDetailPage({
         </h2>
         <Chatter entity="hr.employee" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }

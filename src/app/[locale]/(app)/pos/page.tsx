@@ -28,10 +28,11 @@ export default async function PosSessionsPage({
   const currentLocale = (await getLocale()) as 'fr' | 'ar' | 'en';
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('sessions.title')}</h1>
 
-      <form action={openSessionForm} className="flex flex-col gap-2 rounded-md border p-4 sm:max-w-sm">
+            <section className="app-panel flex flex-col gap-4 p-5">
+ <form action={openSessionForm} className="flex flex-col gap-2 sm:max-w-sm">
         <label className="flex flex-col gap-1 text-sm">
           {t('sessions.openingCash')}
           <Input name="openingCash" inputMode="decimal" required className="min-h-11" />
@@ -48,17 +49,18 @@ export default async function PosSessionsPage({
           </>
         ) : null}
       </form>
+      </section>
 
       {result.ok ? (
         result.value.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('sessions.none')}</p>
+          <p className="text-sm text-muted">{t('sessions.none')}</p>
         ) : (
           <ul className="flex flex-col divide-y rounded-md border">
             {result.value.map((s) => (
               <li key={s.id}>
                 <Link
                   href={`/${locale}/pos/session/${s.id}`}
-                  className="flex min-h-11 items-center justify-between gap-3 p-3 hover:bg-muted"
+                  className="flex min-h-11 items-center justify-between gap-3 p-3 hover:bg-default"
                 >
                   <span className="text-sm">
                     {s.openedAt.toLocaleString(currentLocale === 'ar' ? 'ar-DZ' : `${currentLocale}-DZ`)}
@@ -77,6 +79,6 @@ export default async function PosSessionsPage({
           {t('errors.failed')}
         </p>
       )}
-    </main>
+    </div>
   );
 }
