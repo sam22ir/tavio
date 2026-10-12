@@ -138,7 +138,7 @@ describe("DropdownMenu", () => {
         <DropdownMenuContent>
           <DropdownMenuItem onSelect={onSelect}>Do it</DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <a href="/fr/settings">Settings</a>
+            <a href="https://example.test/settings">Settings</a>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -147,7 +147,7 @@ describe("DropdownMenu", () => {
     expect(trigger.getAttribute("type")).toBe("button")
     fireEvent.click(trigger)
     const link = await screen.findByRole("menuitem", { name: "Settings" })
-    expect(link.getAttribute("href")).toBe("/fr/settings")
+    expect(link.getAttribute("href")).toBe("https://example.test/settings")
     fireEvent.click(screen.getByRole("menuitem", { name: "Do it" }))
     await waitFor(() => expect(onSelect).toHaveBeenCalledTimes(1))
   })
