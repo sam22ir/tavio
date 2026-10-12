@@ -53,7 +53,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex flex-col gap-1">
             <Label>{t('draft.tone.label')}</Label>
-            <Select value={tone} onValueChange={(v) => setTone(v as ReminderTone)}>
+            <Select value={tone} onValueChange={(v) => setTone(v as ReminderTone)} aria-label={t('draft.tone.label')}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="polite">{t('draft.tone.polite')}</SelectItem>
@@ -63,7 +63,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
           </div>
           <div className="flex flex-col gap-1">
             <Label>{t('draft.language.label')}</Label>
-            <Select value={language} onValueChange={(v) => setLanguage(v as ReminderLanguage)}>
+            <Select value={language} onValueChange={(v) => setLanguage(v as ReminderLanguage)} aria-label={t('draft.language.label')}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="fr">{t('draft.language.fr')}</SelectItem>

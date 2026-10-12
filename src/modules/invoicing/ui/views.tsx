@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { ErrorToast } from '@/ui/feedback/error-toast';
+import { toneForStatus } from '@/ui/blocks/status';
+import { StatusChip } from '@/ui/blocks/tint';
 import { formatDzd, type Cents } from '@/core/money';
 import type { Invoice, InvoiceLine, InvoicePayment } from '../schema';
 import { cancelInvoiceForm, postInvoiceForm, refundInvoiceForm, registerPaymentForm } from '../actions';
@@ -45,8 +47,8 @@ export function InvoiceList({ rows, kind, locale, t, newHref }: { rows: ListRow[
                   <td className="px-4 py-3">{r.date}</td>
                   <td className="px-4 py-3">{r.partnerName}</td>
                   <td className="px-4 py-3">{formatDzd(r.totalCents, locale as 'fr' | 'ar' | 'en')}</td>
-                  <td className="px-4 py-3">{t(`state.${r.state}`)}</td>
-                  <td className="px-4 py-3">{t(`payment.${r.paymentState}`)}</td>
+                  <td className="px-4 py-3"><StatusChip tint={toneForStatus(r.state)}>{t(`state.${r.state}`)}</StatusChip></td>
+                  <td className="px-4 py-3"><StatusChip tint={toneForStatus(r.paymentState)}>{t(`payment.${r.paymentState}`)}</StatusChip></td>
                 </tr>
               ))}
             </tbody>
@@ -79,7 +81,7 @@ export function InvoiceDetail({
           <h1 className="text-xl font-semibold">{invoice.number ?? t('detail.title')}</h1>
           <p className="text-sm text-muted">{t(`type.${invoice.type}`)} · {partnerName} · {invoice.date}</p>
           {sellerLabel ? <p className="text-xs text-muted">{sellerLabel}</p> : null}
-          <p className="text-sm">{t(`state.${invoice.state}`)} · {t(`payment.${invoice.paymentState}`)}</p>
+          <p className="flex flex-wrap items-center gap-2 text-sm"><StatusChip tint={toneForStatus(invoice.state)}>{t(`state.${invoice.state}`)}</StatusChip><StatusChip tint={toneForStatus(invoice.paymentState)}>{t(`payment.${invoice.paymentState}`)}</StatusChip></p>
         </div>
         <div className="flex flex-wrap gap-2">
           {isDraft && isInvoice ? <Link href={`/${locale}/invoicing/${kind}/${invoice.id}/edit`} className={ghostCls}>{t('detail.edit')}</Link> : null}

@@ -115,7 +115,7 @@ export function RecordPaymentButton({
           </div>
           <div className="flex flex-col gap-2">
             <Label>{t('payment.method')}</Label>
-            <Select value={method} onValueChange={(v) => setMethod(v as (typeof METHODS)[number])}>
+            <Select value={method} onValueChange={(v) => setMethod(v as (typeof METHODS)[number])} aria-label={t('payment.method')}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
