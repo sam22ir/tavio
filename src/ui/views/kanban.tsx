@@ -101,16 +101,19 @@ export function Kanban({ entity, columns, rows, onMove, rowHref }: KanbanProps) 
                 if (id) move(id, col.id)
               }}
               className={cn(
-                "min-w-0 flex-col gap-2 rounded-lg border bg-default/40 p-2 md:flex md:w-72 md:shrink-0",
+                "min-w-0 flex-col gap-2 rounded-3xl bg-surface-secondary p-3 md:flex md:w-72 md:shrink-0",
                 isActive ? "flex" : "hidden",
                 dragOver === col.id && "ring-2 ring-ring",
               )}
             >
-              <h3 className="px-1 text-sm font-semibold">
-                {col.label} <span className="text-muted-foreground">({cards.length})</span>
+              <h3 className="flex items-center gap-2 px-1 text-sm font-semibold">
+                {col.label}
+                <span className="rounded-full bg-tint-neutral px-2 py-0.5 text-xs text-tint-neutral-fg tabular-nums">
+                  {cards.length}
+                </span>
               </h3>
               {cards.length === 0 ? (
-                <p className="px-1 py-4 text-center text-sm text-muted-foreground">
+                <p className="px-1 py-4 text-center text-sm text-muted">
                   {t("kanban.empty_column")}
                 </p>
               ) : (
@@ -126,13 +129,13 @@ export function Kanban({ entity, columns, rows, onMove, rowHref }: KanbanProps) 
                       onDragEnd={() => {
                         dragIdRef.current = null
                       }}
-                      className="flex flex-col gap-2 rounded-md border bg-card p-3 text-card-foreground shadow-xs"
+                      className="flex flex-col gap-2 rounded-2xl bg-surface p-3 shadow-[0_1px_2px_rgb(20_23_28/0.04)]"
                     >
                       <Link href={rowHref(row)} className="font-medium hover:underline">
                         {text(row[titleField], row.id)}
                       </Link>
                       {subtitleField && row[subtitleField] != null ? (
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-muted">
                           {text(row[subtitleField], "")}
                         </span>
                       ) : null}

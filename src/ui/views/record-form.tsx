@@ -39,7 +39,7 @@ export function RecordForm({
   const fields = entity.fields.filter((f) => f.form !== false && !f.readonly)
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
+    <form action={formAction} className="app-panel flex flex-col gap-5 p-6">
       {hidden
         ? Object.entries(hidden).map(([name, value]) => (
             <input key={name} type="hidden" name={name} value={value} />
@@ -62,7 +62,7 @@ export function RecordForm({
       ))}
 
       {state.message ? (
-        <p role={state.ok ? "status" : "alert"} className="text-sm">
+        <p role={state.ok ? "status" : "alert"} className={state.ok ? "text-sm text-muted" : "text-sm text-danger"}>
           {state.message}
         </p>
       ) : null}

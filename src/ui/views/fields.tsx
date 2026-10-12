@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import type { FieldDef } from "@/core/entities/types"
+import { inputVariants } from "@heroui/styles"
+import { cn } from "@/ui/lib/cn"
 import { Input } from "@/ui/primitives/input"
 import { Label } from "@/ui/primitives/label"
 import { Textarea } from "@/ui/primitives/textarea"
@@ -77,7 +79,7 @@ export function FieldWidget({ field, label, defaultValue, error, options }: Fiel
         defaultValue={toInputValue(defaultValue)}
         aria-describedby={describedBy}
         aria-invalid={error ? true : undefined}
-        className="border-input bg-background min-h-11 w-full rounded-md border px-3 text-base"
+        className={cn(inputVariants({ variant: "primary" }), "min-h-11 w-full pe-8")}
       >
         <option value="" />
         {opts.map((o) => (
@@ -105,13 +107,13 @@ export function FieldWidget({ field, label, defaultValue, error, options }: Fiel
 
   return (
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id}>
+      <Label htmlFor={id} className="text-sm font-medium">
         {label}
         {required ? <span aria-hidden="true"> *</span> : null}
       </Label>
       {control}
       {error ? (
-        <p id={errorId} role="alert" className="text-destructive text-sm">
+        <p id={errorId} role="alert" className="text-xs text-danger">
           {error}
         </p>
       ) : null}
