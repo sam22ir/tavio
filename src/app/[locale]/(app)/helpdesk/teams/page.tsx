@@ -21,7 +21,7 @@ export default async function TeamsPage({ params }: { params: Promise<{ locale: 
       <h1 className="text-xl font-semibold">{t('team.title')}</h1>
       {teams.ok ? (
         <ul className="divide-y rounded-md border">
-          {teams.value.length === 0 ? <li className="p-3 text-sm text-muted-foreground">{t('team.empty')}</li> : null}
+          {teams.value.length === 0 ? <li className="p-3 text-sm text-muted">{t('team.empty')}</li> : null}
           {teams.value.map((team) => (
             <li key={team.id} className="p-3 text-sm">{team.name}</li>
           ))}

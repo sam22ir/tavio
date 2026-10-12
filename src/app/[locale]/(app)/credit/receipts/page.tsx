@@ -25,7 +25,7 @@ export default async function ReceiptsPage({
     <section className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold">{t.receipt}</h1>
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">—</p>
+        <p className="text-sm text-muted">—</p>
       ) : (
         <ul className="divide-y rounded-lg border">
           {rows.map((r) => (
@@ -34,7 +34,7 @@ export default async function ReceiptsPage({
                 <span className="font-medium">
                   {t.number} {r.number} · {r.partnerName}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-muted">
                   {formatDate(r.issuedAt, locale as Locale)}
                   {r.state === 'voided' ? ` · ${t.voided}` : ''}
                 </span>

@@ -51,13 +51,13 @@ export default async function TaskDetailPage({
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={`/${currentLocale}/projects/${task.projectId}`} className="text-sm text-muted-foreground hover:underline">
+      <Link href={`/${currentLocale}/projects/${task.projectId}`} className="text-sm text-muted hover:underline">
         ← {t('project.title')}
       </Link>
 
       <header className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold break-words">{task.name}</h1>
-        <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+        <div className="flex flex-wrap gap-2 text-sm text-muted">
           <span>{t(`options.priority.${task.priority}`)}</span>
           {task.deadline ? <span>{t('task.due', { date: task.deadline })}</span> : null}
         </div>
@@ -66,31 +66,33 @@ export default async function TaskDetailPage({
 
       <section aria-labelledby="timesheets" className="flex flex-col gap-3">
         <h2 id="timesheets" className="text-base font-semibold">
-          {t('task.timesheets')} <span className="text-muted-foreground">({t('task.totalHours', { hours: totalHours })})</span>
+          {t('task.timesheets')} <span className="text-muted">({t('task.totalHours', { hours: totalHours })})</span>
         </h2>
         {timesheets.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('task.noTimesheets')}</p>
+          <p className="text-sm text-muted">{t('task.noTimesheets')}</p>
         ) : (
-          <div className="overflow-x-auto rounded-md border">
-            <table className="w-full text-sm">
-              <thead className="text-start">
-                <tr>
-                  <th className="p-2 text-start">{t('fields.date')}</th>
-                  <th className="p-2 text-start">{t('fields.hours')}</th>
-                  <th className="p-2 text-start">{t('fields.description')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {timesheets.map((row) => (
-                  <tr key={row.id} className="border-t">
-                    <td className="p-2">{formatCell(timesheetEntity.fields[0]!, row.date, currentLocale as Locale)}</td>
-                    <td className="p-2">{row.hours}</td>
-                    <td className="p-2">{row.description ?? '–'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="text-start">
+                    <tr>
+                      <th className="p-2 text-start">{t('fields.date')}</th>
+                      <th className="p-2 text-start">{t('fields.hours')}</th>
+                      <th className="p-2 text-start">{t('fields.description')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {timesheets.map((row) => (
+                      <tr key={row.id} className="border-t">
+                        <td className="p-2">{formatCell(timesheetEntity.fields[0]!, row.date, currentLocale as Locale)}</td>
+                        <td className="p-2">{row.hours}</td>
+                        <td className="p-2">{row.description ?? '–'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+          </section>
         )}
         <div className="max-w-xl">
           <RecordForm

@@ -10,7 +10,7 @@ import { Input } from '@/ui/primitives/input';
 import { Label } from '@/ui/primitives/label';
 
 const SELECT_CLASS =
-  'h-11 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/50 md:h-9';
+  'w-full text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
 const METHODS = ['cash', 'ccp', 'transfer', 'cib', 'edahabia', 'cheque'] as const;
 const SLOTS = 6;
 
@@ -34,7 +34,7 @@ export function RegimeForm({ initial }: { initial: 'reel' | 'ifu' }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm text-muted-foreground">{t('regime.help')}</p>
+      <p className="text-sm text-muted">{t('regime.help')}</p>
       <div className="flex flex-col gap-2 sm:max-w-sm">
         <Label htmlFor="tax-regime">{t('regime.label')}</Label>
         <select id="tax-regime" className={SELECT_CLASS} value={regime} onChange={(e) => setRegime(e.target.value as 'reel' | 'ifu')}>
@@ -93,7 +93,7 @@ export function StampSettingsForm({ methods, rows }: { methods: string[]; rows: 
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground">{t('stamp.help')}</p>
+      <p className="text-sm text-muted">{t('stamp.help')}</p>
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-2 text-sm font-medium">{t('stamp.methods')}</legend>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -114,7 +114,7 @@ export function StampSettingsForm({ methods, rows }: { methods: string[]; rows: 
       </fieldset>
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium">{t('stamp.tiers')}</p>
-        <p className="text-xs text-muted-foreground">{t('stamp.tiers_help')}</p>
+        <p className="text-xs text-muted">{t('stamp.tiers_help')}</p>
         {draft.map((row, i) => (
           <div key={i} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_9rem_1fr]">
             <div className="flex flex-col gap-1">

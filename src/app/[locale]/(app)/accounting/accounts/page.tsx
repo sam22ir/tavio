@@ -35,7 +35,7 @@ export default async function AccountsPage({
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('accounts.title')}</h1>
-      <p role="note" className="text-sm text-muted-foreground">{t('accounts.verifyNote')}</p>
+      <p role="note" className="text-sm text-muted">{t('accounts.verifyNote')}</p>
       <section className="flex flex-col gap-3">
         <h2 className="font-medium">{t('accounts.new')}</h2>
         <AccountForm locale={currentLocale} />

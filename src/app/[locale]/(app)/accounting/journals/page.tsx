@@ -27,28 +27,30 @@ export default async function JournalsPage({ params }: { params: Promise<{ local
         <h2 className="font-medium">{t('journals.new')}</h2>
         <JournalForm />
       </section>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('fields.code')}</TableHead>
-              <TableHead>{t('fields.name')}</TableHead>
-              <TableHead>{t('fields.type')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {journals.map((j) => (
-              <TableRow key={j.id}>
-                <TableCell className="font-mono">
-                  <Link href={`/${currentLocale}/accounting/journals/${j.id}`} className="hover:underline">{j.code}</Link>
-                </TableCell>
-                <TableCell>{j.name}</TableCell>
-                <TableCell>{t(`options.journalType.${j.type}`)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+        <section className="app-panel flex flex-col gap-4 p-5">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('fields.code')}</TableHead>
+                  <TableHead>{t('fields.name')}</TableHead>
+                  <TableHead>{t('fields.type')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {journals.map((j) => (
+                  <TableRow key={j.id}>
+                    <TableCell className="font-mono">
+                      <Link href={`/${currentLocale}/accounting/journals/${j.id}`} className="hover:underline">{j.code}</Link>
+                    </TableCell>
+                    <TableCell>{j.name}</TableCell>
+                    <TableCell>{t(`options.journalType.${j.type}`)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
     </div>
   );
 }

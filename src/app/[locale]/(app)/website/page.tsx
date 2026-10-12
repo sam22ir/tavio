@@ -44,7 +44,7 @@ export default async function WebsiteSettingsPage({ params }: { params: Promise<
           </Link>
         </div>
       </header>
-      <p className="max-w-2xl text-sm text-muted-foreground">{t('settings.hint')}</p>
+      <p className="max-w-2xl text-sm text-muted">{t('settings.hint')}</p>
       <div className="max-w-2xl">
         <RecordForm
           entity={websiteSettingsEntity}

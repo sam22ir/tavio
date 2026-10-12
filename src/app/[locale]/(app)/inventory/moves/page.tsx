@@ -36,49 +36,51 @@ export default async function MovesPage({
       </header>
       {result.ok ? (
         result.value.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('common.empty')}</p>
+          <p className="text-sm text-muted">{t('common.empty')}</p>
         ) : (
-          <div className="overflow-x-auto rounded-md border">
-            <table className="w-full text-sm">
-              <thead className="bg-default/50">
-                <tr>
-                  <th className="p-3 text-start font-medium">{t('fields.reference')}</th>
-                  <th className="p-3 text-start font-medium">{t('fields.product')}</th>
-                  <th className="p-3 text-end font-medium">{t('fields.quantity')}</th>
-                  <th className="p-3 text-start font-medium">{t('fields.from')} → {t('fields.to')}</th>
-                  <th className="p-3 text-start font-medium">{t('fields.state')}</th>
-                  <th className="p-3 text-start font-medium" />
-                </tr>
-              </thead>
-              <tbody>
-                {result.value.map((row) => (
-                  <tr key={row.id} className="border-t">
-                    <td className="p-3">
-                      <Link href={`/${currentLocale}/inventory/moves/${row.id}`} className="hover:underline">
-                        {row.reference}
-                      </Link>
-                    </td>
-                    <td className="p-3 break-words">{row.productName}</td>
-                    <td className="p-3 text-end tabular-nums">{row.quantity}</td>
-                    <td className="p-3 break-words">
-                      {row.fromLocationName} → {row.toLocationName}
-                    </td>
-                    <td className="p-3">{t(`options.state.${row.state}`)}</td>
-                    <td className="p-3">
-                      {row.state === 'draft' ? (
-                        <form action={validateMoveForm}>
-                          <input type="hidden" name="id" value={row.id} />
-                          <Button type="submit" variant="outline" size="sm">
-                            {t('moves.validate')}
-                          </Button>
-                        </form>
-                      ) : null}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-default/50">
+                    <tr>
+                      <th className="p-3 text-start font-medium">{t('fields.reference')}</th>
+                      <th className="p-3 text-start font-medium">{t('fields.product')}</th>
+                      <th className="p-3 text-end font-medium">{t('fields.quantity')}</th>
+                      <th className="p-3 text-start font-medium">{t('fields.from')} → {t('fields.to')}</th>
+                      <th className="p-3 text-start font-medium">{t('fields.state')}</th>
+                      <th className="p-3 text-start font-medium" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.value.map((row) => (
+                      <tr key={row.id} className="border-t">
+                        <td className="p-3">
+                          <Link href={`/${currentLocale}/inventory/moves/${row.id}`} className="hover:underline">
+                            {row.reference}
+                          </Link>
+                        </td>
+                        <td className="p-3 break-words">{row.productName}</td>
+                        <td className="p-3 text-end tabular-nums">{row.quantity}</td>
+                        <td className="p-3 break-words">
+                          {row.fromLocationName} → {row.toLocationName}
+                        </td>
+                        <td className="p-3">{t(`options.state.${row.state}`)}</td>
+                        <td className="p-3">
+                          {row.state === 'draft' ? (
+                            <form action={validateMoveForm}>
+                              <input type="hidden" name="id" value={row.id} />
+                              <Button type="submit" variant="outline" size="sm">
+                                {t('moves.validate')}
+                              </Button>
+                            </form>
+                          ) : null}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+          </section>
         )
       ) : (
         <p role="alert" className="text-sm text-destructive">

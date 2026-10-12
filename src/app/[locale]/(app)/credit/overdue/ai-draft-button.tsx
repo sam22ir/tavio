@@ -83,7 +83,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
           rows={6}
           aria-label={t('draft.text_label')}
         />
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
           <span>{source ? t(`draft.source.${source}`) : null}</span>
           <span>{text.length}/400</span>
         </div>
@@ -92,7 +92,7 @@ export function AiDraftButton({ contractId, phone }: Props) {
             {t('draft.open_whatsapp')}
           </a>
         ) : (
-          <p className="text-sm text-muted-foreground">{phone ? null : t('draft.no_phone')}</p>
+          <p className="text-sm text-muted">{phone ? null : t('draft.no_phone')}</p>
         )}
       </DialogContent>
     </Dialog>

@@ -47,7 +47,7 @@ export default async function NewLeadPage({
         <>
           <form method="get" className="flex items-center gap-2 text-sm">
             <label htmlFor="pipeline-select">{t('pipelineFilter')}</label>
-            <select id="pipeline-select" name="pipeline" defaultValue={pipeline.pipelineId} className="h-9 rounded-md border bg-background px-3">
+            <select id="pipeline-select" name="pipeline" defaultValue={pipeline.pipelineId}>
               {pipeline.pipelines.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}

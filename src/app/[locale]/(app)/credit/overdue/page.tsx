@@ -66,12 +66,12 @@ export default async function OverduePage({ params }: { params: Promise<{ locale
   const renderRow = (r: OverdueRow, phone: string | null, partnerName: string) => {
     const wa = reminderFor(r, phone, partnerName);
     return (
-      <li key={r.installmentId} className="flex flex-col gap-2 rounded-md border p-3 sm:flex-row sm:items-center sm:justify-between">
+      <li key={r.installmentId} className="flex flex-col gap-2 rounded-2xl bg-surface-secondary p-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col text-sm">
           <Link href={`/credit/contracts/${r.contractId}`} className="font-medium underline">
             {r.contractNumber} · #{r.seq}
           </Link>
-          <span className="text-muted-foreground">
+          <span className="text-muted">
             {r.dueDate} · {t('overdue.days_late', { days: r.daysLate })}
           </span>
         </div>
@@ -100,7 +100,7 @@ export default async function OverduePage({ params }: { params: Promise<{ locale
       <div className="flex flex-col gap-4">
         <h2 className="font-medium">{t('overdue.title')}</h2>
         {groups.length === 0 ? (
-          <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">
+          <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted">
             {t('overdue.empty')}
           </p>
         ) : (

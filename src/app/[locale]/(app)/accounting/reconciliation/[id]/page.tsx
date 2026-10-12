@@ -18,7 +18,7 @@ export default async function StatementPage({ params }: { params: Promise<{ loca
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{`${dto.name} · ${dto.accountCode}`}</h1>
-      <p className="text-sm text-muted-foreground">{`${dto.dateFrom} → ${dto.dateTo}`}</p>
+      <p className="text-sm text-muted">{`${dto.dateFrom} → ${dto.dateTo}`}</p>
       <StatementWorkbench statement={dto} />
     </div>
   );

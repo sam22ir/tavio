@@ -53,52 +53,54 @@ export default async function G50Page({
         </div>
       </header>
 
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t('g50.month')}</TableHead>
-              <TableHead>{t('g50.status')}</TableHead>
-              <TableHead className="text-end">{t('g50.collected')}</TableHead>
-              <TableHead className="text-end">{t('g50.deductible')}</TableHead>
-              <TableHead className="text-end">{t('g50.net')}</TableHead>
-              <TableHead className="text-end">{t('g50.stamp')}</TableHead>
-              <TableHead>{t('g50.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => {
-              const row = byMonth.get(month);
-              const state = row ? (row.state as 'draft' | 'validated') : 'none';
-              const fig = row ? figureCents(row.figures) : null;
-              return (
-                <TableRow key={month}>
-                  <TableCell>{String(month).padStart(2, '0')}/{year}</TableCell>
-                  <TableCell>
-                    <Badge variant={state === 'validated' ? 'default' : 'secondary'}>
-                      {state === 'none' ? t('g50.status_none') : state === 'draft' ? t('g50.status_draft') : t('g50.status_validated')}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.collected, locale as Locale) : '—'}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.deductible, locale as Locale) : '—'}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.net, locale as Locale) : '—'}</TableCell>
-                  <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.stamp, locale as Locale) : '—'}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-2">
-                      <G50Actions year={year} month={month} state={state} />
-                      {row ? (
-                        <Link className="inline-flex min-h-11 items-center underline underline-offset-4 md:min-h-9" href={`/settings/taxes/g50/${year}/${month}/print`}>
-                          {t('g50.print')}
-                        </Link>
-                      ) : null}
-                    </div>
-                  </TableCell>
+        <section className="app-panel flex flex-col gap-4 p-5">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('g50.month')}</TableHead>
+                  <TableHead>{t('g50.status')}</TableHead>
+                  <TableHead className="text-end">{t('g50.collected')}</TableHead>
+                  <TableHead className="text-end">{t('g50.deductible')}</TableHead>
+                  <TableHead className="text-end">{t('g50.net')}</TableHead>
+                  <TableHead className="text-end">{t('g50.stamp')}</TableHead>
+                  <TableHead>{t('g50.actions')}</TableHead>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => {
+                  const row = byMonth.get(month);
+                  const state = row ? (row.state as 'draft' | 'validated') : 'none';
+                  const fig = row ? figureCents(row.figures) : null;
+                  return (
+                    <TableRow key={month}>
+                      <TableCell>{String(month).padStart(2, '0')}/{year}</TableCell>
+                      <TableCell>
+                        <Badge variant={state === 'validated' ? 'default' : 'secondary'}>
+                          {state === 'none' ? t('g50.status_none') : state === 'draft' ? t('g50.status_draft') : t('g50.status_validated')}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.collected, locale as Locale) : '—'}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.deductible, locale as Locale) : '—'}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.net, locale as Locale) : '—'}</TableCell>
+                      <TableCell className="text-end tabular-nums">{fig ? formatDzd(fig.stamp, locale as Locale) : '—'}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-2">
+                          <G50Actions year={year} month={month} state={state} />
+                          {row ? (
+                            <Link className="inline-flex min-h-11 items-center underline underline-offset-4 md:min-h-9" href={`/settings/taxes/g50/${year}/${month}/print`}>
+                              {t('g50.print')}
+                            </Link>
+                          ) : null}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
     </div>
   );
 }

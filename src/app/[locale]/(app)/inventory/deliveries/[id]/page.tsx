@@ -1,3 +1,5 @@
+import { inputVariants } from '@heroui/styles';
+import { cn } from '@/ui/lib/cn';
 import Link from 'next/link';
 import { ErrorToast } from '@/ui/feedback/error-toast';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -68,13 +70,13 @@ export default async function DeliveryDetailPage({
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       {failureMessage ? <ErrorToast message={failureMessage} /> : null}
-      <Link href={`/${currentLocale}/inventory/deliveries`} className="text-sm text-muted-foreground hover:underline">
+      <Link href={`/${currentLocale}/inventory/deliveries`} className="text-sm text-muted hover:underline">
         ← {t('deliveries.title')}
       </Link>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold break-words">{delivery.number}</h1>
-          <span className="text-sm text-muted-foreground">{t(`options.delivery_state.${delivery.state}`)}</span>
+          <span className="text-sm text-muted">{t(`options.delivery_state.${delivery.state}`)}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
@@ -86,13 +88,13 @@ export default async function DeliveryDetailPage({
         </div>
       </header>
 
-      <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-md border p-4 sm:grid-cols-2">
+      <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-2xl bg-surface-secondary p-4 sm:grid-cols-2">
         <Item label={t('fields.partner')} value={partnerName} />
         <Item label={t('fields.scheduled_date')} value={delivery.scheduledDate ?? '–'} />
         <Item label={t('fields.delivered_at')} value={delivery.deliveredAt ? delivery.deliveredAt.slice(0, 10) : '–'} />
         {delivery.originDeliveryId ? (
           <div className="flex flex-col gap-0.5">
-            <dt className="text-xs text-muted-foreground">{t('deliveries.backorder_of')}</dt>
+            <dt className="text-xs text-muted">{t('deliveries.backorder_of')}</dt>
             <dd className="text-sm">
               <Link href={`/${currentLocale}/inventory/deliveries/${delivery.originDeliveryId}`} className="underline">
                 {delivery.originNumber ?? '–'}
@@ -101,7 +103,7 @@ export default async function DeliveryDetailPage({
           </div>
         ) : null}
         <div className="flex flex-col gap-0.5">
-          <dt className="text-xs text-muted-foreground">{t('deliveries.source_contract')}</dt>
+          <dt className="text-xs text-muted">{t('deliveries.source_contract')}</dt>
           <dd className="text-sm">
             {contractHref ? (
               <Link href={contractHref} className="underline">{t('deliveries.view_contract')}</Link>
@@ -117,42 +119,44 @@ export default async function DeliveryDetailPage({
         <input type="hidden" name="returnTo" value="detail" />
         <section className="flex flex-col gap-3">
           <h2 className="text-base font-semibold">{t('deliveries.lines_title')}</h2>
-          <div className="overflow-x-auto rounded-md border">
-            <table className="w-full text-sm">
-              <thead className="bg-default/50">
-                <tr>
-                  <th className="p-3 text-start font-medium">{t('fields.product')}</th>
-                  <th className="p-3 text-end font-medium">{t('deliveries.ordered')}</th>
-                  <th className="p-3 text-end font-medium">{t('deliveries.delivered_qty')}</th>
-                  <th className="p-3 text-end font-medium">{t('deliveries.remaining')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {delivery.lines.map((line) => (
-                  <tr key={line.id} className="border-t">
-                    <td className="p-3 break-words">{line.productName}</td>
-                    <td className="p-3 text-end tabular-nums">{toMilliText(line.quantity)}</td>
-                    <td className="p-3 text-end tabular-nums">
-                      {open ? (
-                        <label className="flex flex-col items-end gap-1">
-                          <span className="sr-only">{t('deliveries.edit_qty')}</span>
-                          <input
-                            name={`qty_${line.id}`}
-                            inputMode="decimal"
-                            defaultValue={remainingOf(line.quantity, line.deliveredQty)}
-                            className="min-h-11 w-28 rounded-md border p-2 text-end"
-                          />
-                        </label>
-                      ) : (
-                        toMilliText(line.deliveredQty)
-                      )}
-                    </td>
-                    <td className="p-3 text-end tabular-nums">{remainingOf(line.quantity, line.deliveredQty)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-default/50">
+                    <tr>
+                      <th className="p-3 text-start font-medium">{t('fields.product')}</th>
+                      <th className="p-3 text-end font-medium">{t('deliveries.ordered')}</th>
+                      <th className="p-3 text-end font-medium">{t('deliveries.delivered_qty')}</th>
+                      <th className="p-3 text-end font-medium">{t('deliveries.remaining')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {delivery.lines.map((line) => (
+                      <tr key={line.id} className="border-t">
+                        <td className="p-3 break-words">{line.productName}</td>
+                        <td className="p-3 text-end tabular-nums">{toMilliText(line.quantity)}</td>
+                        <td className="p-3 text-end tabular-nums">
+                          {open ? (
+                            <label className="flex flex-col items-end gap-1">
+                              <span className="sr-only">{t('deliveries.edit_qty')}</span>
+                              <input
+                                name={`qty_${line.id}`}
+                                inputMode="decimal"
+                                defaultValue={remainingOf(line.quantity, line.deliveredQty)}
+                                className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 w-28 rounded-full px-4 text-end')}
+                              />
+                            </label>
+                          ) : (
+                            toMilliText(line.deliveredQty)
+                          )}
+                        </td>
+                        <td className="p-3 text-end tabular-nums">{remainingOf(line.quantity, line.deliveredQty)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+          </section>
           {open ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <label className="flex min-h-11 items-center gap-2 text-sm">
@@ -162,11 +166,11 @@ export default async function DeliveryDetailPage({
               <Button type="submit">{t('deliveries.validate')}</Button>
             </div>
           ) : null}
-          {open ? <p className="text-xs text-muted-foreground">{t('deliveries.backorder_hint')}</p> : null}
+          {open ? <p className="text-xs text-muted">{t('deliveries.backorder_hint')}</p> : null}
         </section>
       </form>
 
-      <section className="flex flex-col gap-3 rounded-md border p-4">
+      <section className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-4">
         <h2 className="text-base font-semibold">{t('deliveries.receipt_title')}</h2>
         <form action={saveDeliverySignedByForm} className="flex flex-col gap-2 sm:flex-row sm:items-end">
           <input type="hidden" name="id" value={delivery.id} />
@@ -178,14 +182,14 @@ export default async function DeliveryDetailPage({
               maxLength={200}
               disabled={!open}
               required
-              className="rounded-md border p-2"
+              className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full px-4')}
             />
           </label>
           {open ? (
             <Button type="submit" variant="outline">{t('deliveries.save')}</Button>
           ) : null}
         </form>
-        {!delivery.signedByName ? <p className="text-xs text-muted-foreground">{t('deliveries.signed_by_hint')}</p> : null}
+        {!delivery.signedByName ? <p className="text-xs text-muted">{t('deliveries.signed_by_hint')}</p> : null}
 
         <FileSlot
           label={t('deliveries.signature')}
@@ -243,7 +247,7 @@ function FileSlot({
     <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
       <div className="flex flex-1 flex-col gap-1 text-sm">
         <span>{label}</span>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-xs text-muted">
           {hasFile ? uploadedLabel : missingLabel}
           {url ? (
             <>
@@ -274,7 +278,7 @@ function FileSlot({
 function Item({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dt className="text-xs text-muted">{label}</dt>
       <dd className="break-words text-sm">{value}</dd>
     </div>
   );

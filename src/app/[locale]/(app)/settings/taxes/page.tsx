@@ -51,40 +51,42 @@ export default async function TaxesSettingsPage({
           {t('tax.title')}
         </h2>
         {rows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('taxes.empty')}</p>
+          <p className="text-sm text-muted">{t('taxes.empty')}</p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('fields.code')}</TableHead>
-                <TableHead>{t('fields.name')}</TableHead>
-                <TableHead>{t('fields.kind')}</TableHead>
-                <TableHead className="text-end">{t('fields.rate')}</TableHead>
-                <TableHead>{t('fields.scope')}</TableHead>
-                <TableHead>{t('fields.validFrom')}</TableHead>
-                <TableHead>{t('fields.active')}</TableHead>
-                <TableHead />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rows.map((r) => (
-                <TableRow key={r.id}>
-                  <TableCell className="font-mono">{r.code}</TableCell>
-                  <TableCell>{r.name}</TableCell>
-                  <TableCell>{t(`options.kind.${r.kind}`)}</TableCell>
-                  <TableCell className="text-end tabular-nums">{Number(r.rate)}%</TableCell>
-                  <TableCell>{t(`options.scope.${r.scope}`)}</TableCell>
-                  <TableCell>{r.validFrom}</TableCell>
-                  <TableCell>
-                    <Badge variant={r.active ? 'default' : 'secondary'}>
-                      {r.active ? t('taxes.status_active') : t('taxes.status_inactive')}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{r.active ? <ArchiveTaxButton id={r.id} /> : null}</TableCell>
+          <section className="app-panel flex flex-col gap-4 p-5">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('fields.code')}</TableHead>
+                  <TableHead>{t('fields.name')}</TableHead>
+                  <TableHead>{t('fields.kind')}</TableHead>
+                  <TableHead className="text-end">{t('fields.rate')}</TableHead>
+                  <TableHead>{t('fields.scope')}</TableHead>
+                  <TableHead>{t('fields.validFrom')}</TableHead>
+                  <TableHead>{t('fields.active')}</TableHead>
+                  <TableHead />
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {rows.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="font-mono">{r.code}</TableCell>
+                    <TableCell>{r.name}</TableCell>
+                    <TableCell>{t(`options.kind.${r.kind}`)}</TableCell>
+                    <TableCell className="text-end tabular-nums">{Number(r.rate)}%</TableCell>
+                    <TableCell>{t(`options.scope.${r.scope}`)}</TableCell>
+                    <TableCell>{r.validFrom}</TableCell>
+                    <TableCell>
+                      <Badge variant={r.active ? 'default' : 'secondary'}>
+                        {r.active ? t('taxes.status_active') : t('taxes.status_inactive')}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{r.active ? <ArchiveTaxButton id={r.id} /> : null}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </section>
         )}
       </section>
 
@@ -100,7 +102,7 @@ export default async function TaxesSettingsPage({
 
       <section aria-labelledby="g50-link-title" className="flex flex-col gap-2">
         <h2 id="g50-link-title" className="text-lg font-medium">{t('g50.title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('g50.intro')}</p>
+        <p className="text-sm text-muted">{t('g50.intro')}</p>
         <Link href="/settings/taxes/g50" className="text-sm font-medium underline underline-offset-4">
           {t('g50.open')}
         </Link>

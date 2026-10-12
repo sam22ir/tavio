@@ -41,34 +41,36 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
         <BankStatementImport accounts={data.accounts.map((a) => ({ id: a.id, code: a.code, name: a.name }))} />
         <h2 className="font-medium">{t('statementsTitle')}</h2>
         {data.statements.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('noStatements')}</p>
+          <p className="text-sm text-muted">{t('noStatements')}</p>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('columns.name')}</TableHead>
-                  <TableHead>{t('columns.account')}</TableHead>
-                  <TableHead>{t('columns.period')}</TableHead>
-                  <TableHead>{t('columns.closing')}</TableHead>
-                  <TableHead>{t('columns.state')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.statements.map((s) => (
-                  <TableRow key={s.id}>
-                    <TableCell>
-                      <Link href={`/${currentLocale}/accounting/reconciliation/${s.id}`} className="hover:underline">{s.name}</Link>
-                    </TableCell>
-                    <TableCell className="font-mono">{s.accountCode}</TableCell>
-                    <TableCell>{`${s.dateFrom} → ${s.dateTo}`}</TableCell>
-                    <TableCell className="font-mono">{formatDzd(s.closingBalanceCents, locale as 'fr' | 'ar' | 'en')}</TableCell>
-                    <TableCell>{t(`state.${s.state}`)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+            <section className="app-panel flex flex-col gap-4 p-5">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('columns.name')}</TableHead>
+                      <TableHead>{t('columns.account')}</TableHead>
+                      <TableHead>{t('columns.period')}</TableHead>
+                      <TableHead>{t('columns.closing')}</TableHead>
+                      <TableHead>{t('columns.state')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.statements.map((s) => (
+                      <TableRow key={s.id}>
+                        <TableCell>
+                          <Link href={`/${currentLocale}/accounting/reconciliation/${s.id}`} className="hover:underline">{s.name}</Link>
+                        </TableCell>
+                        <TableCell className="font-mono">{s.accountCode}</TableCell>
+                        <TableCell>{`${s.dateFrom} → ${s.dateTo}`}</TableCell>
+                        <TableCell className="font-mono">{formatDzd(s.closingBalanceCents, locale as 'fr' | 'ar' | 'en')}</TableCell>
+                        <TableCell>{t(`state.${s.state}`)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </section>
         )}
       </section>
 
@@ -76,7 +78,7 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
         {data.cash ? (
           <CashCountForm accountId={data.cash.id} bookBalance={(data.cashBook ?? BigInt(0)).toString()} today={today} />
         ) : (
-          <p className="text-sm text-muted-foreground">{t('cash.title')}</p>
+          <p className="text-sm text-muted">{t('cash.title')}</p>
         )}
       </section>
     </div>

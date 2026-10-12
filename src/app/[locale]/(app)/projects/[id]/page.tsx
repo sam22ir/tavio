@@ -56,14 +56,14 @@ export default async function ProjectDetailPage({
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={`/${currentLocale}/projects`} className="text-sm text-muted-foreground hover:underline">
+      <Link href={`/${currentLocale}/projects`} className="text-sm text-muted hover:underline">
         ← {t('project.title')}
       </Link>
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold break-words">{project.name}</h1>
-          <span className="text-sm text-muted-foreground">{t(`options.state.${project.state}`)}</span>
+          <span className="text-sm text-muted">{t(`options.state.${project.state}`)}</span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {(['active', 'done', 'archived'] as const)

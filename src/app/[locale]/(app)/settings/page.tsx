@@ -49,7 +49,7 @@ export default async function SettingsPage({
       <Link href={`/${locale}/settings/messages`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
         {tm('messagesLog')}
       </Link>
-      <div className="rounded-lg border p-4">
+      <div className="rounded-2xl bg-surface-secondary p-4">
         <h2 className="mb-4 font-medium">{tc('title')}</h2>
         {company ? (
           <CompanyForm
@@ -70,7 +70,7 @@ export default async function SettingsPage({
             }}
           />
         ) : (
-          <p className="text-sm text-muted-foreground">{tc('notFound')}</p>
+          <p className="text-sm text-muted">{tc('notFound')}</p>
         )}
       </div>
     </section>

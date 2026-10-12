@@ -72,7 +72,7 @@ export default async function CrmTeamsPage({
       ) : (
         <>
           {query.template === 'applied' ? (
-            <p role="status" className="rounded-md border p-4 text-sm">
+            <p role="status" className="rounded-2xl bg-surface-secondary p-4 text-sm">
               {t('mourabahaApplied')}
               {query.skipped ? ` ${t('mourabahaSkipped', { steps: skippedLabels(query.skipped, t) })}` : ''}
             </p>
@@ -82,9 +82,9 @@ export default async function CrmTeamsPage({
               {t('mourabahaFailed')}
             </p>
           ) : null}
-          <section className="flex flex-col gap-2 rounded-md border p-4">
+          <section className="flex flex-col gap-2 rounded-2xl bg-surface-secondary p-4">
             <h2 className="text-base font-semibold">{t('visibilityTitle')}</h2>
-            <p className="text-sm text-muted-foreground">{t('restrictVisibilityHint')}</p>
+            <p className="text-sm text-muted">{t('restrictVisibilityHint')}</p>
             {data.canManage ? (
               <form action={setLeadVisibilityAction} className="flex items-center gap-3">
                 <label className="flex items-center gap-2 text-sm">
@@ -100,9 +100,9 @@ export default async function CrmTeamsPage({
             )}
           </section>
           {data.canManage ? (
-            <section className="flex flex-col gap-2 rounded-md border p-4">
+            <section className="flex flex-col gap-2 rounded-2xl bg-surface-secondary p-4">
               <h2 className="text-base font-semibold">{t('mourabahaTitle')}</h2>
-              <p className="text-sm text-muted-foreground">{t('mourabahaHint')}</p>
+              <p className="text-sm text-muted">{t('mourabahaHint')}</p>
               <form action={applyMourabahaAction}>
                 <Button type="submit" size="sm" variant="outline">
                   {t('applyMourabaha')}
@@ -110,13 +110,13 @@ export default async function CrmTeamsPage({
               </form>
             </section>
           ) : null}
-          {data.teams.length === 0 ? <p className="text-sm text-muted-foreground">{t('noTeams')}</p> : null}
+          {data.teams.length === 0 ? <p className="text-sm text-muted">{t('noTeams')}</p> : null}
           {data.canManage
             ? data.teams.map((team) => (
                 <TeamForm key={team.id} team={team} members={data.members} action={saveTeamFormAction} />
               ))
             : data.teams.map((team) => (
-                <div key={team.id} className="rounded-md border p-4 text-sm">
+                <div key={team.id} className="rounded-2xl bg-surface-secondary p-4 text-sm">
                   {team.name}
                 </div>
               ))}

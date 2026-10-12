@@ -24,7 +24,7 @@ export default async function ScanVendorBill({ params }: { params: Promise<{ loc
       {visionReady ? (
         <ScanForm lookups={lookups} today={today()} />
       ) : (
-        <p className="rounded-md border p-4 text-sm">{t('scan.noVision')}</p>
+        <p className="rounded-2xl bg-surface-secondary p-4 text-sm">{t('scan.noVision')}</p>
       )}
     </div>
   );

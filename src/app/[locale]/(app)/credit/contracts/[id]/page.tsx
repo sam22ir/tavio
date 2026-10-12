@@ -147,14 +147,14 @@ export default async function ContractDetailPage({
             {t('contract.delivery.title')}: {t(`contract.delivery.status.${deliveryRes.value.status}`)}
           </h2>
           {deliveryRes.value.deliveries.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('contract.delivery.none')}</p>
+            <p className="text-sm text-muted">{t('contract.delivery.none')}</p>
           ) : (
             <ul className="flex flex-col gap-1 text-sm">
               {deliveryRes.value.deliveries.map((d) => (
                 <li key={d.id} className="flex flex-wrap items-center gap-2">
                   <Link href={`/${locale}/inventory/deliveries/${d.id}`} className="underline">{d.number}</Link>
-                  <span className="text-muted-foreground">{tInv(`options.delivery_state.${d.state}`)}</span>
-                  {d.deliveredAt ? <span className="text-muted-foreground">{d.deliveredAt.slice(0, 10)}</span> : null}
+                  <span className="text-muted">{tInv(`options.delivery_state.${d.state}`)}</span>
+                  {d.deliveredAt ? <span className="text-muted">{d.deliveredAt.slice(0, 10)}</span> : null}
                 </li>
               ))}
             </ul>
@@ -203,7 +203,7 @@ export default async function ContractDetailPage({
       <section className="flex flex-col gap-2">
         <h2 className="font-medium">{t('payment.title')}</h2>
         {payments.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('payment.empty')}</p>
+          <p className="text-sm text-muted">{t('payment.empty')}</p>
         ) : (
           <ul className="divide-y rounded-md border">
             {payments.map((p) => {

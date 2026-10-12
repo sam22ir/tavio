@@ -39,7 +39,7 @@ export default async function WebOrdersPage({
       ) : (
         <p role="alert" className="text-sm text-destructive">{t('orders.error')}</p>
       )}
-      <Link href={`/${currentLocale}/website`} className="text-sm text-muted-foreground hover:underline">
+      <Link href={`/${currentLocale}/website`} className="text-sm text-muted hover:underline">
         ← {t('settings.title')}
       </Link>
     </div>

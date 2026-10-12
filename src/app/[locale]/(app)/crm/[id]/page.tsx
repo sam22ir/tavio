@@ -73,7 +73,7 @@ export default async function LeadPage({
   return (
     <section className="flex flex-col gap-6">
       <header className="flex flex-col gap-3">
-        <Link href={`/${locale}/crm`} className="text-sm text-muted-foreground hover:underline">
+        <Link href={`/${locale}/crm`} className="text-sm text-muted hover:underline">
           {t('back')}
         </Link>
         <h1 className="text-xl font-semibold break-words">{String(lead.name)}</h1>
@@ -84,17 +84,17 @@ export default async function LeadPage({
           </Link>
         ) : null}
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-3">
-          <dt className="text-muted-foreground">{t('stage')}</dt>
+          <dt className="text-muted">{t('stage')}</dt>
           <dd>{stageName ?? '—'}</dd>
-          <dt className="text-muted-foreground">{t('status')}</dt>
+          <dt className="text-muted">{t('status')}</dt>
           <dd>{String(lead.status ?? '—')}</dd>
-          <dt className="text-muted-foreground">{t('expected')}</dt>
+          <dt className="text-muted">{t('expected')}</dt>
           <dd>{amount}</dd>
         </dl>
         {requirements ? (
           <div className="rounded-md border bg-default/40 p-3 text-sm">
             <p className="font-medium">{t('stageRequirements')}</p>
-            <p className="whitespace-pre-line text-muted-foreground">{requirements}</p>
+            <p className="whitespace-pre-line text-muted">{requirements}</p>
           </div>
         ) : null}
         <LeadStatusActions

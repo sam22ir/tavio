@@ -68,7 +68,7 @@ export default async function CrmListPage({
 
       <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
         <label htmlFor="pipeline-filter">{t('pipelineFilter')}</label>
-        <select id="pipeline-filter" name="pipeline" defaultValue={data.pipelineId} className="h-9 rounded-md border bg-background px-3">
+        <select id="pipeline-filter" name="pipeline" defaultValue={data.pipelineId}>
           {data.pipelines.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
@@ -76,7 +76,7 @@ export default async function CrmListPage({
           ))}
         </select>
         <label htmlFor="team-filter">{t('teamFilter')}</label>
-        <select id="team-filter" name="teamId" defaultValue={teamParam} className="h-9 rounded-md border bg-background px-3">
+        <select id="team-filter" name="teamId" defaultValue={teamParam}>
           <option value="">{t('allTeams')}</option>
           {data.teams.map((team) => (
             <option key={team.id} value={team.id}>

@@ -72,7 +72,7 @@ export default async function CrmPage({
       {'error' in board ? null : (
         <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
           <label htmlFor="pipeline-filter">{t('pipelineFilter')}</label>
-          <select id="pipeline-filter" name="pipeline" defaultValue={board.pipelineId} className="h-9 rounded-md border bg-background px-3">
+          <select id="pipeline-filter" name="pipeline" defaultValue={board.pipelineId}>
             {board.pipelines.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
@@ -80,7 +80,7 @@ export default async function CrmPage({
             ))}
           </select>
           <label htmlFor="team-filter">{t('teamFilter')}</label>
-          <select id="team-filter" name="teamId" defaultValue={teamId ?? ''} className="h-9 rounded-md border bg-background px-3">
+          <select id="team-filter" name="teamId" defaultValue={teamId ?? ''}>
             <option value="">{t('allTeams')}</option>
             {board.teams.map((team) => (
               <option key={team.id} value={team.id}>

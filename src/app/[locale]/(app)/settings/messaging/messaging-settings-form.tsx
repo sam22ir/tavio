@@ -84,12 +84,12 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
 
   return (
     <div className="flex flex-col gap-8">
-      <section className="flex flex-col gap-4 rounded-lg border p-4">
+      <section className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
         <h2 className="font-medium">{t('templates')}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="tpl-key">{t('templates')}</Label>
-            <select id="tpl-key" className="h-11 rounded-md border bg-background px-3 text-sm" value={keyIdx} onChange={(e) => setKeyIdx(Number(e.target.value))}>
+            <select id="tpl-key" className="text-sm" value={keyIdx} onChange={(e) => setKeyIdx(Number(e.target.value))}>
               {templates.filter((x) => x.locale === 'fr').map((x, i) => (
                 <option key={x.key} value={i}>{t(`keys.${x.key}`)}</option>
               ))}
@@ -97,13 +97,13 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="tpl-locale">{t('locale.fr')} / {t('locale.ar')}</Label>
-            <select id="tpl-locale" className="h-11 rounded-md border bg-background px-3 text-sm" value={locale} onChange={(e) => setLocale(e.target.value as MessageLocale)}>
+            <select id="tpl-locale" className="text-sm" value={locale} onChange={(e) => setLocale(e.target.value as MessageLocale)}>
               <option value="fr">{t('locale.fr')}</option>
               <option value="ar">{t('locale.ar')}</option>
             </select>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted">
           {current?.isDefault ? t('isDefault') : t('custom')} · {t('variables', { vars: (current?.variables ?? []).map((v) => `{${v}}`).join(' ') })}
         </p>
         <div className="flex flex-col gap-1.5">
@@ -119,7 +119,7 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
         ) : null}
         <div className="flex flex-col gap-2 rounded-md bg-default/40 p-3">
           <h3 className="text-sm font-medium">{t('preview')}</h3>
-          <p className="text-xs text-muted-foreground">{t('previewHelp')}</p>
+          <p className="text-xs text-muted">{t('previewHelp')}</p>
           <p dir="auto" className="text-sm font-semibold">{preview.subject}</p>
           <div dir="auto" className="whitespace-pre-line text-sm">{preview.text}</div>
         </div>
@@ -130,7 +130,7 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
         </div>
       </section>
 
-      <section className="flex flex-col gap-4 rounded-lg border p-4">
+      <section className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
         <h2 className="font-medium">{t('reminders')}</h2>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" className="size-4" checked={remindersEnabled} onChange={(e) => setRemindersEnabled(e.target.checked)} />
@@ -144,7 +144,7 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="overdue-days">{t('overdueDays')}</Label>
             <Input id="overdue-days" value={overdueDays} onChange={(e) => setOverdueDays(e.target.value)} />
-            <span className="text-xs text-muted-foreground">{t('overdueHelp')}</span>
+            <span className="text-xs text-muted">{t('overdueHelp')}</span>
           </div>
         </div>
         <div>

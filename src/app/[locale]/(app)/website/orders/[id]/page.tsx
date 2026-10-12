@@ -47,14 +47,14 @@ export default async function WebOrderDetailPage({
   return (
     <div className="flex flex-col gap-6">
       {error ? <ErrorToast message={t('orders.error')} /> : null}
-      <Link href={`/${currentLocale}/website/orders`} className="text-sm text-muted-foreground hover:underline">
+      <Link href={`/${currentLocale}/website/orders`} className="text-sm text-muted hover:underline">
         ← {t('orders.title')}
       </Link>
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-semibold break-words">{order.number}</h1>
-          <span className="text-sm text-muted-foreground">{t(`options.state.${order.state}`)}</span>
+          <span className="text-sm text-muted">{t(`options.state.${order.state}`)}</span>
         </div>
         {isNew ? (
           <div className="flex flex-wrap gap-3">
@@ -70,47 +70,49 @@ export default async function WebOrderDetailPage({
         ) : null}
       </header>
 
-      <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-md border p-4 sm:grid-cols-2">
+      <dl className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-2xl bg-surface-secondary p-4 sm:grid-cols-2">
         <Item label={t('fields.customerName')} value={order.customerName} />
         <Item label={t('fields.phone')} value={order.phone} />
         <Item label={t('fields.wilayaCode')} value={order.wilayaCode} />
         <Item label={t('fields.address')} value={order.address} />
       </dl>
 
-      <div className="overflow-x-auto rounded-md border">
-        <table className="w-full min-w-[360px] text-sm">
-          <thead className="bg-default text-start">
-            <tr>
-              <th className="p-2 text-start">{t('orders.line.product')}</th>
-              <th className="p-2 text-end">{t('orders.line.quantity')}</th>
-              <th className="p-2 text-end">{t('orders.line.subtotal')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.lines.map((line) => (
-              <tr key={line.productId} className="border-t">
-                <td className="p-2 break-words">{line.name}</td>
-                <td className="p-2 text-end tabular-nums">{line.quantity}</td>
-                <td className="p-2 text-end tabular-nums">{formatDzd(BigInt(line.subtotalCents), currentLocale)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="border-t font-semibold">
-              <td className="p-2" colSpan={2}>{t('fields.totalCents')}</td>
-              <td className="p-2 text-end tabular-nums">{formatDzd(BigInt(order.totalCents), currentLocale)}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      <section className="app-panel flex flex-col gap-4 p-5">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[360px] text-sm">
+              <thead className="bg-default text-start">
+                <tr>
+                  <th className="p-2 text-start">{t('orders.line.product')}</th>
+                  <th className="p-2 text-end">{t('orders.line.quantity')}</th>
+                  <th className="p-2 text-end">{t('orders.line.subtotal')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {order.lines.map((line) => (
+                  <tr key={line.productId} className="border-t">
+                    <td className="p-2 break-words">{line.name}</td>
+                    <td className="p-2 text-end tabular-nums">{line.quantity}</td>
+                    <td className="p-2 text-end tabular-nums">{formatDzd(BigInt(line.subtotalCents), currentLocale)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t font-semibold">
+                  <td className="p-2" colSpan={2}>{t('fields.totalCents')}</td>
+                  <td className="p-2 text-end tabular-nums">{formatDzd(BigInt(order.totalCents), currentLocale)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+      </section>
 
       <section aria-labelledby="order-sales" className="flex flex-col gap-3">
         <h2 id="order-sales" className="text-base font-semibold">{t('orders.linked.title')}</h2>
         {sale ? (
-          <div className="flex flex-col gap-3 rounded-md border p-4 text-sm">
+          <div className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-4 text-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground">{t('orders.linked.sale')}</span>
+                <span className="text-xs text-muted">{t('orders.linked.sale')}</span>
                 <span className="break-words">{sale.number ?? t('orders.linked.draft')} · {t(`orders.linked.state.${sale.state}`)}</span>
               </div>
               <Link href={`/${currentLocale}/sales/${sale.id}`} className={cn(buttonVariants({ variant: 'outline' }), 'min-h-11')}>
@@ -118,7 +120,7 @@ export default async function WebOrderDetailPage({
               </Link>
             </div>
             {sale.invoices.length === 0 ? (
-              <p className="text-muted-foreground">{t('orders.linked.no_invoice')}</p>
+              <p className="text-muted">{t('orders.linked.no_invoice')}</p>
             ) : (
               <ul className="flex flex-col gap-2">
                 {sale.invoices.map((inv) => (
@@ -135,7 +137,7 @@ export default async function WebOrderDetailPage({
             )}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">{t('orders.linked.none')}</p>
+          <p className="text-sm text-muted">{t('orders.linked.none')}</p>
         )}
       </section>
 
@@ -150,7 +152,7 @@ export default async function WebOrderDetailPage({
 function Item({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col">
-      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dt className="text-xs text-muted">{label}</dt>
       <dd className="break-words text-sm">{value}</dd>
     </div>
   );

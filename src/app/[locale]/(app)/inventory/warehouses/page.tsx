@@ -18,26 +18,28 @@ export default async function WarehousesPage({ params }: { params: Promise<{ loc
     <div className="flex flex-col gap-8 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('warehouses.title')}</h1>
       {result.ok ? (
-        <div className="overflow-x-auto rounded-md border">
-          <table className="w-full text-sm">
-            <thead className="bg-default/50">
-              <tr>
-                <th className="p-3 text-start font-medium">{t('fields.code')}</th>
-                <th className="p-3 text-start font-medium">{t('fields.name')}</th>
-                <th className="p-3 text-start font-medium">{t('fields.wilaya_code')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.value.map((w) => (
-                <tr key={w.id} className="border-t">
-                  <td className="p-3">{w.code}</td>
-                  <td className="p-3 break-words">{w.name}</td>
-                  <td className="p-3">{w.wilayaCode ?? '–'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <section className="app-panel flex flex-col gap-4 p-5">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-default/50">
+                  <tr>
+                    <th className="p-3 text-start font-medium">{t('fields.code')}</th>
+                    <th className="p-3 text-start font-medium">{t('fields.name')}</th>
+                    <th className="p-3 text-start font-medium">{t('fields.wilaya_code')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.value.map((w) => (
+                    <tr key={w.id} className="border-t">
+                      <td className="p-3">{w.code}</td>
+                      <td className="p-3 break-words">{w.name}</td>
+                      <td className="p-3">{w.wilayaCode ?? '–'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+        </section>
       ) : (
         <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
       )}

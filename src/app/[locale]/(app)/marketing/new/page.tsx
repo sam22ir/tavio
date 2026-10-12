@@ -17,11 +17,11 @@ export default async function NewCampaignPage({ params }: { params: Promise<{ lo
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
-      <Link href={`/${currentLocale}/marketing`} className="text-sm text-muted-foreground hover:underline">
+      <Link href={`/${currentLocale}/marketing`} className="text-sm text-muted hover:underline">
         ← {t('page.title')}
       </Link>
       <h1 className="text-xl font-semibold">{t('page.new')}</h1>
-      <p className="text-sm text-muted-foreground">{t('editor.placeholdersHint')}</p>
+      <p className="text-sm text-muted">{t('editor.placeholdersHint')}</p>
       <div className="max-w-2xl">
         <RecordForm entity={campaignEntity} action={createCampaignForm} submitLabel={t('editor.create')} />
       </div>

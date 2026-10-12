@@ -1,5 +1,7 @@
 'use client';
 
+import { inputVariants } from '@heroui/styles';
+import { cn } from '@/ui/lib/cn';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
@@ -7,7 +9,7 @@ import { toast } from 'sonner';
 import { confirmVendorBillAction, scanVendorBillAction } from '@/modules/ai_features/ocr/actions';
 import { errorKey } from '@/modules/ai_features/errors';
 
-const INPUT = 'min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm';
+const INPUT = cn(inputVariants({ variant: 'primary' }), 'min-h-11 w-full rounded-full px-4 text-sm');
 const MAX_BYTES = 5 * 1024 * 1024;
 const TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
@@ -84,7 +86,7 @@ export function ScanForm({ lookups, today }: {
   return (
     <div className="flex flex-col gap-6">
       <section className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">{t('scan.hint')}</p>
+        <p className="text-sm text-muted">{t('scan.hint')}</p>
         <input type="file" accept={TYPES.join(',')} capture="environment" onChange={(e) => pick(e.target.files?.[0])} className="text-sm" />
         {file ? <p className="text-sm">{file.name}</p> : null}
         <button type="button" disabled={!file || pending} onClick={scan} className="min-h-11 rounded-md bg-primary px-4 text-primary-foreground disabled:opacity-50">
@@ -97,7 +99,7 @@ export function ScanForm({ lookups, today }: {
           <h2 className="font-medium">{t('scan.review')}</h2>
           <label className="flex flex-col gap-1 text-sm">
             {t('scan.supplier')}
-            <select className={INPUT} value={supplierId} onChange={(e) => setSupplierId(e.target.value)}>
+            <select className="min-h-11 w-full text-sm" value={supplierId} onChange={(e) => setSupplierId(e.target.value)}>
               <option value="">—</option>
               {lookups.partners.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
@@ -113,11 +115,11 @@ export function ScanForm({ lookups, today }: {
             </label>
           </div>
           {lines.map((l, i) => (
-            <div key={i} className="grid gap-2 rounded-md border p-3 md:grid-cols-[2fr_1fr_1fr_1fr]">
+            <div key={i} className="grid gap-2 rounded-2xl bg-surface-secondary p-3 md:grid-cols-[2fr_1fr_1fr_1fr]">
               <input className={INPUT} aria-label={t('scan.description')} value={l.description} onChange={(e) => patchLine(i, { description: e.target.value })} />
               <input className={INPUT} aria-label={t('scan.qty')} inputMode="decimal" value={l.quantity} onChange={(e) => patchLine(i, { quantity: e.target.value })} />
               <input className={INPUT} aria-label={t('scan.unitPrice')} inputMode="decimal" value={l.unitPrice} onChange={(e) => patchLine(i, { unitPrice: e.target.value })} />
-              <select className={INPUT} aria-label={t('scan.tax')} value={l.taxId} onChange={(e) => patchLine(i, { taxId: e.target.value })}>
+              <select className="min-h-11 w-full text-sm" aria-label={t('scan.tax')} value={l.taxId} onChange={(e) => patchLine(i, { taxId: e.target.value })}>
                 <option value="">—</option>
                 {lookups.taxes.map((tx) => <option key={tx.id} value={tx.id}>{tx.name}</option>)}
               </select>
