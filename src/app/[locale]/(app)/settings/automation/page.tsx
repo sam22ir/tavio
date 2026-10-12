@@ -19,11 +19,11 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
     return perm.ok ? listRules(ctx) : null;
   });
   if (!rules) {
-    return <main className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></main>;
+    return <div className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></div>;
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('title')}</h1>
       {rules.length === 0 ? <p className="text-sm text-muted-foreground">{t('empty')}</p> : null}
       <div className="flex flex-col gap-4">
@@ -73,6 +73,6 @@ export default async function AutomationPage({ params }: { params: Promise<{ loc
         <h2 className="font-medium">{t('new')}</h2>
         <RuleForm action={createRuleForm} />
       </section>
-    </main>
+    </div>
   );
 }

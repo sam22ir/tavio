@@ -34,11 +34,11 @@ export default async function EmployeeDetailPage({
   if (!data.emp.ok) {
     if (data.emp.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">
           {t('employee.error')}
         </p>
-      </main>
+      </div>
     );
   }
   const emp = data.emp.value;
@@ -46,7 +46,7 @@ export default async function EmployeeDetailPage({
   const people = data.people?.ok ? data.people.value : [];
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
         ← {t('employee.title')}
       </Link>
@@ -89,6 +89,6 @@ export default async function EmployeeDetailPage({
         </h2>
         <Chatter entity="hr.employee" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }

@@ -18,9 +18,9 @@ export default async function VendorsPage({ params, searchParams }: { params: Pr
   const t = await getTranslations('invoicing');
   const current = await getLocale();
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('list.vendors')}</h1>
       <InvoiceList rows={rows} kind="vendors" locale={current} t={(k) => t(k as never)} newHref={`/${current}/invoicing/vendors/new`} />
-    </main>
+    </div>
   );
 }

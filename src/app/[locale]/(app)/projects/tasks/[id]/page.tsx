@@ -42,15 +42,15 @@ export default async function TaskDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('task.error')}</p>
-      </main>
+      </div>
     );
   }
   const { task, timesheets, totalHours } = result.value;
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={`/${currentLocale}/projects/${task.projectId}`} className="text-sm text-muted-foreground hover:underline">
         ← {t('project.title')}
       </Link>
@@ -106,6 +106,6 @@ export default async function TaskDetailPage({
         <h2 id="task-activity" className="text-base font-semibold">{t('task.activity')}</h2>
         <Chatter entity="projects.task" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }

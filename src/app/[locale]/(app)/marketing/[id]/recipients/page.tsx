@@ -27,18 +27,18 @@ export default async function CampaignRecipientsPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">
           {t('page.error')}
         </p>
-      </main>
+      </div>
     );
   }
   const { campaign, rows } = result.value;
   const sent = rows.filter((r) => r.status === 'sent').length;
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failure ? <ErrorToast message={tViews('error')} /> : null}
       <Link href={`/${currentLocale}/marketing/${id}`} className="text-sm text-muted-foreground hover:underline">
         ← {campaign.name}
@@ -51,6 +51,6 @@ export default async function CampaignRecipientsPage({
         <p className="text-sm text-muted-foreground">{t('recipients.noBulkNote')}</p>
       </header>
       <RecipientsTable campaignId={id} channel={campaign.channel} rows={rows} />
-    </main>
+    </div>
   );
 }

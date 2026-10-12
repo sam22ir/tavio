@@ -15,18 +15,18 @@ export default async function ActivitySettingsPage({ params }: { params: Promise
 
   if (!allowed) {
     return (
-      <main className="flex flex-col gap-6 p-4 md:p-6">
+      <div className="flex flex-col gap-6 p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('forbidden')}</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold">{t('pageTitle')}</h1>
       </div>
       <ActivitySettings />
-    </main>
+    </div>
   );
 }

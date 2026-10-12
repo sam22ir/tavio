@@ -33,7 +33,7 @@ export default async function EntriesPage({
   const currentLocale = await getLocale();
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('entries.title')}</h1>
       <DataList
         entity={entryEntity}
@@ -52,6 +52,6 @@ export default async function EntriesPage({
           </>
         }
       />
-    </main>
+    </div>
   );
 }

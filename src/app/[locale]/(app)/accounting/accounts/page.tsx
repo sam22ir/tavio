@@ -33,7 +33,7 @@ export default async function AccountsPage({
   const currentLocale = await getLocale();
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('accounts.title')}</h1>
       <p role="note" className="text-sm text-muted-foreground">{t('accounts.verifyNote')}</p>
       <section className="flex flex-col gap-3">
@@ -51,6 +51,6 @@ export default async function AccountsPage({
           </Link>
         }
       />
-    </main>
+    </div>
   );
 }

@@ -49,7 +49,7 @@ export default async function LeavePage({
   const stateLabel = (s: string) => t(`options.leaveState.${s}`);
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failed ? <ErrorToast message={tViews('error')} /> : null}
       <h1 className="text-xl font-semibold">{t('leave.title')}</h1>
 
@@ -155,6 +155,6 @@ export default async function LeavePage({
           {t('leave.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

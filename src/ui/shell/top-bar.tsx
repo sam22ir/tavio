@@ -34,7 +34,7 @@ export function TopBar({ apps, companies, activeCompanyId, email }: TopBarProps)
   const dashboardHref = `/${locale}/dashboard`;
 
   return (
-    <header className="flex flex-wrap items-center gap-x-3 gap-y-3 print:hidden">
+    <header className="flex flex-wrap items-center gap-x-2 gap-y-3 md:gap-x-3 print:hidden">
       <Link
         href={dashboardHref}
         aria-label={t('nav.launcher')}
@@ -68,7 +68,7 @@ export function TopBar({ apps, companies, activeCompanyId, email }: TopBarProps)
         </nav>
       ) : null}
       <div className="ms-auto flex items-center gap-2">
-        <div className="w-40 md:w-64">
+        <div className="w-11 md:w-64">
           <CommandSearch />
         </div>
         <Link

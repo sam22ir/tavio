@@ -21,7 +21,7 @@ export default async function JournalsPage({ params }: { params: Promise<{ local
   const currentLocale = await getLocale();
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('journals.title')}</h1>
       <section className="flex flex-col gap-3">
         <h2 className="font-medium">{t('journals.new')}</h2>
@@ -49,6 +49,6 @@ export default async function JournalsPage({ params }: { params: Promise<{ local
           </TableBody>
         </Table>
       </div>
-    </main>
+    </div>
   );
 }

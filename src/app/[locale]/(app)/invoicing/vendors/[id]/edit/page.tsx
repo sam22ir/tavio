@@ -40,9 +40,9 @@ export default async function EditVendorInvoice({ params }: { params: Promise<{ 
   };
   const t = await getTranslations('invoicing');
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('editor.editTitle')}</h1>
       <DraftForm kind="vendors" locale={locale} lookups={lookups} initial={initial} />
-    </main>
+    </div>
   );
 }

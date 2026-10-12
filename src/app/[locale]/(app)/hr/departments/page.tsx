@@ -17,7 +17,7 @@ export default async function DepartmentsPage({ params }: { params: Promise<{ lo
   const result = await withPageCtx((ctx) => listDepartments(ctx));
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('department.title')}</h1>
       <DepartmentForm action={createDepartmentForm} />
       {result.ok ? (
@@ -42,6 +42,6 @@ export default async function DepartmentsPage({ params }: { params: Promise<{ lo
           {t('department.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

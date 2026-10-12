@@ -15,10 +15,10 @@ export default async function JournalEditPage({ params }: { params: Promise<{ lo
   const t = await getTranslations('accounting');
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{`${journal.code} · ${journal.name}`}</h1>
       <p className="text-sm text-muted-foreground">{t('journals.codeFixed')}</p>
       <JournalForm journal={{ id: journal.id, code: journal.code, name: journal.name, type: journal.type as 'sale' | 'purchase' | 'cash' | 'bank' | 'misc' | 'general' }} />
-    </main>
+    </div>
   );
 }

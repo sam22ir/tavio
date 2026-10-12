@@ -26,7 +26,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
   });
 
   if (!current) {
-    return <main className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></main>;
+    return <div className="p-4 md:p-6"><p role="alert" className="text-sm text-destructive">{t('forbidden')}</p></div>;
   }
 
   // No row means the company is on the Free plan.
@@ -38,7 +38,7 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
   const monthly = formatDzd(monthlyTotalCents(seedPlan, seats), currentLocale);
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('title')}</h1>
       <section className="grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
         <div>
@@ -76,6 +76,6 @@ export default async function BillingPage({ params }: { params: Promise<{ locale
         <p className="text-sm">{t('payment.transfer')}</p>
         <p className="text-sm text-muted-foreground">{t('payment.reference')}</p>
       </section>
-    </main>
+    </div>
   );
 }

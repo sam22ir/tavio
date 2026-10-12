@@ -27,9 +27,9 @@ export default async function TicketDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('ticket.error')}</p>
-      </main>
+      </div>
     );
   }
   const ticket = result.value;
@@ -37,7 +37,7 @@ export default async function TicketDetailPage({
   const targets = TICKET_STAGES.filter((s) => canTransition(stage, s));
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={`/${currentLocale}/helpdesk`} className="text-sm text-muted-foreground hover:underline">
         ← {t('ticket.title')}
       </Link>
@@ -83,6 +83,6 @@ export default async function TicketDetailPage({
         <h2 id="ticket-activity" className="text-base font-semibold">{t('ticket.activity')}</h2>
         <Chatter entity="helpdesk.ticket" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }

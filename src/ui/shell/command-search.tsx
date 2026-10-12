@@ -58,11 +58,11 @@ export function CommandSearch() {
       <Button
         variant="ghost"
         size="sm"
-        className="h-11 w-full justify-start gap-2 rounded-full bg-surface font-normal text-muted shadow-[0_1px_2px_rgb(20_23_28/0.04)]"
+        className="size-11 w-11 justify-center gap-2 rounded-full bg-surface p-0 font-normal text-muted shadow-[0_1px_2px_rgb(20_23_28/0.04)] md:h-11 md:w-full md:justify-start md:px-4"
         onClick={() => setOpen(true)}
       >
         <Search aria-hidden="true" className="size-4 shrink-0" />
-        <span className="truncate">{t('palette.button')}</span>
+        <span className="hidden truncate md:inline">{t('palette.button')}</span><span className="sr-only md:hidden">{t('palette.button')}</span>
         <kbd className="ms-auto hidden rounded-md bg-default px-1.5 py-0.5 text-[11px] text-muted md:inline">⌘K</kbd>
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>

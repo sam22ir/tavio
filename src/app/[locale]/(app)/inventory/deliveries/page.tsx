@@ -32,7 +32,7 @@ export default async function DeliveriesPage({
     failure === SIGNED_BY_REQUIRED ? t(`errors.${SIGNED_BY_REQUIRED}`) : failure ? tViews('error') : null;
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failureMessage ? <ErrorToast message={failureMessage} /> : null}
       <h1 className="text-xl font-semibold">{t('deliveries.title')}</h1>
       {result.ok ? (
@@ -96,6 +96,6 @@ export default async function DeliveriesPage({
           {t('common.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

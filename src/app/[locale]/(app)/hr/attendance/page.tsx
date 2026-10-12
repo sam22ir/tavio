@@ -46,7 +46,7 @@ export default async function AttendancePage({
   const checkedIn = data.open?.ok && data.open.value !== null;
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failed ? <ErrorToast message={tViews('error')} /> : null}
       <h1 className="text-xl font-semibold">{t('attendance.title')}</h1>
 
@@ -141,6 +141,6 @@ export default async function AttendancePage({
           </p>
         )}
       </section>
-    </main>
+    </div>
   );
 }

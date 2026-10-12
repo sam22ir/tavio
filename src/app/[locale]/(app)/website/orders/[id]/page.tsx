@@ -33,9 +33,9 @@ export default async function WebOrderDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <p role="alert" className="text-sm text-destructive">{t('orders.error')}</p>
-      </main>
+      </div>
     );
   }
   const order = result.value;
@@ -45,7 +45,7 @@ export default async function WebOrderDetailPage({
   const sale = linked?.ok ? linked.value : null;
 
   return (
-    <main className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       {error ? <ErrorToast message={t('orders.error')} /> : null}
       <Link href={`/${currentLocale}/website/orders`} className="text-sm text-muted-foreground hover:underline">
         ← {t('orders.title')}
@@ -143,7 +143,7 @@ export default async function WebOrderDetailPage({
         <h2 id="order-activity" className="text-base font-semibold">{t('orders.activity')}</h2>
         <Chatter entity="website.web_order" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }
 

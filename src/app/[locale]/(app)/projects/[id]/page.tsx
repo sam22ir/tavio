@@ -46,16 +46,16 @@ export default async function ProjectDetailPage({
   if (!board.ok) {
     if (board.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('project.error')}</p>
-      </main>
+      </div>
     );
   }
   const { project, stages, tasks } = board.value;
   const nextState = project.state === 'active' ? 'done' : 'active';
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={`/${currentLocale}/projects`} className="text-sm text-muted-foreground hover:underline">
         ← {t('project.title')}
       </Link>
@@ -106,6 +106,6 @@ export default async function ProjectDetailPage({
         <h2 id="project-activity" className="text-base font-semibold">{t('project.activity')}</h2>
         <Chatter entity="projects.project" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }

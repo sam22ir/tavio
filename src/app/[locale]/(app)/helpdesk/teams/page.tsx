@@ -17,7 +17,7 @@ export default async function TeamsPage({ params }: { params: Promise<{ locale: 
   const teams = await withPageCtx((ctx) => listTeams(ctx));
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('team.title')}</h1>
       {teams.ok ? (
         <ul className="divide-y rounded-md border">
@@ -33,6 +33,6 @@ export default async function TeamsPage({ params }: { params: Promise<{ locale: 
         <h2 className="mb-3 text-base font-semibold">{t('team.new')}</h2>
         <RecordForm entity={teamEntity} action={createTeamForm} submitLabel={t('team.new')} />
       </div>
-    </main>
+    </div>
   );
 }

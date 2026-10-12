@@ -34,7 +34,7 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
   const currentLocale = await getLocale();
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('title')}</h1>
 
       <section id="statements" className="flex flex-col gap-4">
@@ -79,6 +79,6 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
           <p className="text-sm text-muted-foreground">{t('cash.title')}</p>
         )}
       </section>
-    </main>
+    </div>
   );
 }

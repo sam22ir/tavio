@@ -40,9 +40,9 @@ export default async function PurchaseOrderDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('errors.internal')}</p>
-      </main>
+      </div>
     );
   }
   const { order, partnerName, lines, bills } = result.value;
@@ -50,7 +50,7 @@ export default async function PurchaseOrderDetailPage({
   const dateFmt = new Intl.DateTimeFormat(currentLocale, { dateStyle: 'medium', timeZone: 'Africa/Algiers' });
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
         ← {t('order.title')}
       </Link>
@@ -203,6 +203,6 @@ export default async function PurchaseOrderDetailPage({
       ) : null}
 
       <Chatter entity="purchases.order" recordId={id} />
-    </main>
+    </div>
   );
 }

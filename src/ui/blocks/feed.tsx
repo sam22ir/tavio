@@ -47,14 +47,14 @@ export function FeedRow({
 }) {
   return (
     <li>
-      <Link href={href} className="flex items-center gap-3 rounded-2xl p-2 transition-colors hover:bg-default/60">
+      <Link href={href} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl p-2 transition-colors hover:bg-default/60">
         <TintIcon icon={icon} tint={tint} />
-        <span className="flex min-w-0 flex-1 flex-col">
+        <span className="flex min-w-[8rem] flex-1 flex-col">
           <span className="truncate text-sm font-medium">{title}</span>
           {subtitle ? <span className="truncate text-xs text-muted">{subtitle}</span> : null}
         </span>
-        {meta ? <span className="flex shrink-0 items-center gap-2 text-sm tabular-nums">{meta}</span> : null}
-        <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-muted rtl:rotate-180" />
+        {meta ? <span className="ms-auto flex shrink-0 items-center gap-2 text-sm tabular-nums max-sm:order-last max-sm:w-full max-sm:ps-[3.25rem]">{meta}</span> : null}
+        <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-muted max-sm:ms-auto rtl:rotate-180" />
       </Link>
     </li>
   );

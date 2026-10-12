@@ -33,11 +33,11 @@ export default async function CampaignDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">
           {t('page.error')}
         </p>
-      </main>
+      </div>
     );
   }
   const campaign = result.value;
@@ -49,7 +49,7 @@ export default async function CampaignDetailPage({
   const sampleName = t('editor.sampleName');
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
         ← {t('page.title')}
       </Link>
@@ -108,7 +108,7 @@ export default async function CampaignDetailPage({
       </section>
 
       <Chatter entity="marketing.campaign" recordId={id} />
-    </main>
+    </div>
   );
 }
 

@@ -26,7 +26,7 @@ export default async function WebOrdersPage({
   const currentLocale = await getLocale();
 
   return (
-    <main className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold">{t('orders.title')}</h1>
       {result.ok ? (
         <DataList
@@ -42,6 +42,6 @@ export default async function WebOrdersPage({
       <Link href={`/${currentLocale}/website`} className="text-sm text-muted-foreground hover:underline">
         ← {t('settings.title')}
       </Link>
-    </main>
+    </div>
   );
 }

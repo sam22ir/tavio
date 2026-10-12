@@ -29,7 +29,7 @@ export default async function ContactsPage({
   const ioT = await getTranslations('io.import');
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('partner.title')}</h1>
       {result.ok ? (
         <DataList
@@ -54,6 +54,6 @@ export default async function ContactsPage({
           {t('partner.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

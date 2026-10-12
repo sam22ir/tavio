@@ -16,7 +16,7 @@ export default async function NewCampaignPage({ params }: { params: Promise<{ lo
   const currentLocale = await getLocale();
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={`/${currentLocale}/marketing`} className="text-sm text-muted-foreground hover:underline">
         ← {t('page.title')}
       </Link>
@@ -25,6 +25,6 @@ export default async function NewCampaignPage({ params }: { params: Promise<{ lo
       <div className="max-w-2xl">
         <RecordForm entity={campaignEntity} action={createCampaignForm} submitLabel={t('editor.create')} />
       </div>
-    </main>
+    </div>
   );
 }

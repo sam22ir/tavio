@@ -15,7 +15,7 @@ export default async function WarehousesPage({ params }: { params: Promise<{ loc
   const result = await withPageCtx((ctx) => listWarehouses(ctx));
 
   return (
-    <main className="flex flex-col gap-8 p-4 md:p-6">
+    <div className="flex flex-col gap-8 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('warehouses.title')}</h1>
       {result.ok ? (
         <div className="overflow-x-auto rounded-md border">
@@ -54,6 +54,6 @@ export default async function WarehousesPage({ params }: { params: Promise<{ loc
           ]}
         />
       </section>
-    </main>
+    </div>
   );
 }

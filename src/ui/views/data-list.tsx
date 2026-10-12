@@ -57,7 +57,7 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <SearchBar entity={entity} query={query} />
         {actions || exportable ? (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {actions}
             {exportable ? <ExportMenu entityName={entity.name} query={query} locale={locale} /> : null}
           </div>

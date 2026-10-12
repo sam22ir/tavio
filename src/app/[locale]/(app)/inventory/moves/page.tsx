@@ -27,7 +27,7 @@ export default async function MovesPage({
   );
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-semibold">{t('moves.title')}</h1>
         <Link href={`/${currentLocale}/inventory/moves/new`} className={cn(buttonVariants())}>
@@ -85,6 +85,6 @@ export default async function MovesPage({
           {t('common.error')}
         </p>
       )}
-    </main>
+    </div>
   );
 }

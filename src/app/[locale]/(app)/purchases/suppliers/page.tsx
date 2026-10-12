@@ -33,14 +33,14 @@ export default async function PurchaseSuppliersPage({
   ]);
   if (!rows.ok || !options.ok) {
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('errors.internal')}</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-xl font-semibold">{t('suppliers.title')}</h1>
       {errorCode ? (
         <p role="alert" className="text-sm text-destructive">
@@ -93,6 +93,6 @@ export default async function PurchaseSuppliersPage({
         </label>
         <Button type="submit" className="min-h-11 sm:w-fit">{t('suppliers.save')}</Button>
       </form>
-    </main>
+    </div>
   );
 }

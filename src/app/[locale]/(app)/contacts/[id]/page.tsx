@@ -44,11 +44,11 @@ export default async function ContactDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">
           {t('contacts.partner.error')}
         </p>
-      </main>
+      </div>
     );
   }
   const partner: PartnerRow = result.value;
@@ -88,7 +88,7 @@ export default async function ContactDetailPage({
   );
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <PortalShareButton mode="invite" partnerId={partner.id} />
       <Link href={listHref} className="text-sm text-muted-foreground hover:underline">
         ← {t('contacts.partner.title')}
@@ -147,7 +147,7 @@ export default async function ContactDetailPage({
         </h2>
         <Chatter entity="contacts.partner" recordId={id} />
       </section>
-    </main>
+    </div>
   );
 }
 

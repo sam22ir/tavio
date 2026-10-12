@@ -22,15 +22,15 @@ export default async function WebsiteSettingsPage({ params }: { params: Promise<
 
   if (!result.ok) {
     return (
-      <main className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <p role="alert" className="text-sm text-destructive">{t('settings.error')}</p>
-      </main>
+      </div>
     );
   }
   const row = result.value;
 
   return (
-    <main className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-semibold">{t('settings.title')}</h1>
         <div className="flex flex-wrap gap-3">
@@ -65,6 +65,6 @@ export default async function WebsiteSettingsPage({ params }: { params: Promise<
           }
         />
       </div>
-    </main>
+    </div>
   );
 }

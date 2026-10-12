@@ -28,16 +28,16 @@ export default async function MoveDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
-      </main>
+      </div>
     );
   }
   const move = result.value;
   const doneAt = move.doneAt ? new Date(move.doneAt).toLocaleString(currentLocale) : '–';
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failure ? <ErrorToast message={tViews('error')} /> : null}
       <Link href={`/${currentLocale}/inventory/moves`} className="text-sm text-muted-foreground hover:underline">
         ← {t('moves.title')}
@@ -68,7 +68,7 @@ export default async function MoveDetailPage({
         <Item label={t('fields.done_at')} value={doneAt} />
       </dl>
       <Chatter entity="inventory.move" recordId={move.id} />
-    </main>
+    </div>
   );
 }
 

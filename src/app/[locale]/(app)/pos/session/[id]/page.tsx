@@ -40,7 +40,7 @@ export default async function PosSessionPage({
   if (data.open) {
     if (!data.company) notFound();
     return (
-      <main className="min-h-dvh">
+      <div className="min-h-dvh">
         <PosScreen
           sessionId={id}
           company={data.company}
@@ -51,7 +51,7 @@ export default async function PosSessionPage({
             taxRate: p.taxRate,
           }))}
         />
-      </main>
+      </div>
     );
   }
 
@@ -59,7 +59,7 @@ export default async function PosSessionPage({
   const money = (c: bigint | null): string => (c === null ? '-' : formatDzd(c, currentLocale));
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <Link href={`/${locale}/pos`} className={cn(buttonVariants({ variant: 'outline' }), 'min-h-11 w-fit')}>
         {t('session.back')}
       </Link>
@@ -82,6 +82,6 @@ export default async function PosSessionPage({
           <dd className="tabular-nums">{money(r.differenceCents)}</dd>
         </dl>
       ) : null}
-    </main>
+    </div>
   );
 }

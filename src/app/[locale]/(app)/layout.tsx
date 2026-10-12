@@ -26,7 +26,7 @@ export default async function AppLayout({
   const shell = await loadShell(locale as Locale);
 
   return (
-    <div className="app-shell min-h-dvh p-3 md:p-4 print:p-0">
+    <div className="app-shell min-h-dvh p-1.5 sm:p-3 md:p-4 print:p-0">
       <div className="mx-auto flex min-h-[calc(100dvh-1.5rem)] max-w-[1600px] gap-3 rounded-[28px] bg-surface-secondary p-3 shadow-[0_1px_2px_rgb(20_23_28/0.04),0_16px_40px_-20px_rgb(20_23_28/0.18)] md:min-h-[calc(100dvh-2rem)] md:p-4 print:block print:min-h-0 print:max-w-none print:rounded-none print:bg-transparent print:p-0 print:shadow-none">
         <AppRail apps={shell.apps} />
         <div className="flex min-w-0 flex-1 flex-col gap-6">

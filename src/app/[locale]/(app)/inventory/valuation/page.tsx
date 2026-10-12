@@ -27,7 +27,7 @@ export default async function ValuationPage({
   ]);
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold">{t('valuation.title')}</h1>
         <p className="text-sm text-muted-foreground">{t('valuation.help')}</p>
@@ -85,6 +85,6 @@ export default async function ValuationPage({
       ) : (
         <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
       )}
-    </main>
+    </div>
   );
 }

@@ -145,6 +145,22 @@ body {
     0 8px 24px -12px rgb(20 23 28 / 0.1);
 }
 
+/* Native controls inside the app: the same pill fields and accent as the HeroUI ones. HeroUI's hidden form select is aria-hidden and left alone. */
+.app-shell select:not([aria-hidden="true"]) {
+  min-height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--field-border);
+  background-color: var(--field-background);
+  color: var(--field-foreground);
+  padding-inline: 1rem 2rem;
+}
+.app-shell input[type="checkbox"],
+.app-shell input[type="radio"] {
+  accent-color: var(--accent);
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
 @media print {
   .app-shell {
     background: #fff;

@@ -70,7 +70,7 @@ export default async function CrmPage({
       </div>
 
       {'error' in board ? null : (
-        <form method="get" className="flex items-center gap-2 text-sm">
+        <form method="get" className="flex flex-wrap items-center gap-2 text-sm">
           <label htmlFor="pipeline-filter">{t('pipelineFilter')}</label>
           <select id="pipeline-filter" name="pipeline" defaultValue={board.pipelineId} className="h-9 rounded-md border bg-background px-3">
             {board.pipelines.map((p) => (

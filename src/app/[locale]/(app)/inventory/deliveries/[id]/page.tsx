@@ -43,9 +43,9 @@ export default async function DeliveryDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <main className="p-4 md:p-6">
+      <div className="p-4 md:p-6">
         <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
-      </main>
+      </div>
     );
   }
   const delivery = result.value;
@@ -66,7 +66,7 @@ export default async function DeliveryDetailPage({
       : null;
 
   return (
-    <main className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       {failureMessage ? <ErrorToast message={failureMessage} /> : null}
       <Link href={`/${currentLocale}/inventory/deliveries`} className="text-sm text-muted-foreground hover:underline">
         ← {t('deliveries.title')}
@@ -212,7 +212,7 @@ export default async function DeliveryDetailPage({
           open={open}
         />
       </section>
-    </main>
+    </div>
   );
 }
 

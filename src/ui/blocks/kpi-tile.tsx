@@ -24,11 +24,11 @@ export function KpiTile({
         <span className="text-sm text-muted">{label}</span>
         <TintIcon icon={icon} tint={tint} className="size-9" />
       </div>
-      <span className="text-3xl font-semibold tracking-tight tabular-nums">{value}</span>
+      <span className="text-xl font-semibold tracking-tight tabular-nums sm:text-3xl">{value}</span>
       {hint ? <span className="text-xs text-muted">{hint}</span> : null}
     </>
   );
-  const cls = 'app-panel flex flex-col gap-2 rounded-3xl p-5';
+  const cls = 'app-panel flex min-w-0 flex-col gap-2 rounded-3xl p-4 sm:p-5';
   return href ? (
     <Link href={href} className={`${cls} transition-shadow hover:shadow-md`}>
       {body}
