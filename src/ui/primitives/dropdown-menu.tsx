@@ -30,8 +30,8 @@ function DropdownMenuContent({
   children: React.ReactNode
 }) {
   return (
-    <Dropdown.Popover placement={align === "end" ? "bottom end" : "bottom start"} className={cn("min-w-48", className)}>
-      <Dropdown.Menu data-slot="dropdown-menu-content">{children}</Dropdown.Menu>
+    <Dropdown.Popover placement={align === "end" ? "bottom end" : "bottom start"} className={cn("min-w-48 rounded-2xl", className)}>
+      <Dropdown.Menu data-slot="dropdown-menu-content" className="outline-none">{children}</Dropdown.Menu>
     </Dropdown.Popover>
   )
 }

@@ -7,7 +7,8 @@ import { cn } from '@/ui/lib/cn';
 import { SearchBar } from './search-bar';
 import { Pagination } from './pagination';
 import { isStatusField, toneForStatus } from '@/ui/blocks/status';
-import { StatusChip } from '@/ui/blocks/tint';
+import { StatusChip, TintIcon } from '@/ui/blocks/tint';
+import { Inbox } from 'lucide-react';
 import { formatCell } from './format';
 import { isExportableEntity } from './io-columns';
 import { buttonVariants } from '@/ui/primitives/button';
@@ -77,9 +78,10 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
       </div>
 
       {isEmpty ? (
-        <p className="rounded-2xl bg-surface-secondary p-8 text-center text-sm text-muted">
-          {t('views.empty')}
-        </p>
+        <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface-secondary p-10 text-center">
+          <TintIcon icon={Inbox} tint="neutral" className="size-12" />
+          <p className="text-sm text-muted">{t('views.empty')}</p>
+        </div>
       ) : (
         <>
           {/* Desktop: table with sortable headers */}
