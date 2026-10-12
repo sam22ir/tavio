@@ -1,6 +1,7 @@
 'use client';
 
 import { toast } from 'sonner';
+import { WILAYA_CODE_PATTERN } from '@/core/tenancy/wilayas';
 import Link from 'next/link';
 import { useMemo, useState, useSyncExternalStore, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
@@ -96,7 +97,7 @@ export function CheckoutForm({ slug, shopHref }: CheckoutFormProps) {
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="wilayaCode">{t('checkout.fields.wilayaCode')}</Label>
-        <Input id="wilayaCode" name="wilayaCode" inputMode="numeric" pattern="0[1-9]|[1-4][0-9]|5[0-8]" placeholder="16" required maxLength={2} dir="ltr" />
+        <Input id="wilayaCode" name="wilayaCode" inputMode="numeric" pattern={WILAYA_CODE_PATTERN} placeholder="16" required maxLength={2} dir="ltr" />
         <p className="text-xs text-muted">{t('checkout.wilaya_hint')}</p>
       </div>
       <div className="flex flex-col gap-2">

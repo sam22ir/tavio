@@ -13,10 +13,11 @@ describe('leadInput', () => {
     expect(r.data.type).toBe('lead');
   });
 
-  it('rejects an empty name, an unknown source and a wilaya outside 01-58', () => {
+  it('rejects an empty name, an unknown source and a wilaya outside 01-69', () => {
     expect(leadInput.safeParse({ name: '' }).success).toBe(false);
     expect(leadInput.safeParse({ name: 'x', source: 'tv' }).success).toBe(false);
-    expect(leadInput.safeParse({ name: 'x', wilayaCode: '59' }).success).toBe(false);
+    expect(leadInput.safeParse({ name: 'x', wilayaCode: '70' }).success).toBe(false);
+    expect(leadInput.safeParse({ name: 'x', wilayaCode: '59' }).success).toBe(true);
     expect(leadInput.safeParse({ name: 'x', wilayaCode: '16' }).success).toBe(true);
   });
 

@@ -24,9 +24,10 @@ describe('campaignInput', () => {
     expect(parsed.segmentHasOverdue).toBe(true);
   });
 
-  it('rejects an unknown channel and a wilaya outside 01-58', () => {
+  it('rejects an unknown channel and a wilaya outside 01-69', () => {
     expect(() => base({ channel: 'fax' })).toThrow();
-    expect(() => base({ segmentWilaya: '59' })).toThrow();
+    expect(() => base({ segmentWilaya: '70' })).toThrow();
+    expect(() => base({ segmentWilaya: '59' })).not.toThrow();
   });
 });
 

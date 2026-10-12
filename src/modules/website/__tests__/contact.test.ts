@@ -24,7 +24,7 @@ describe('contactInput', () => {
   });
 
   it('rejects a bad wilaya, a short message and a bad email', () => {
-    expect(contactInput.safeParse({ ...valid, wilayaCode: '59' }).success).toBe(false);
+    expect(contactInput.safeParse({ ...valid, wilayaCode: '70' }).success).toBe(false);
     expect(contactInput.safeParse({ ...valid, message: 'hi' }).success).toBe(false);
     expect(contactInput.safeParse({ ...valid, email: 'not-an-email' }).success).toBe(false);
   });

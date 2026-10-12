@@ -1,4 +1,5 @@
 import { and, asc, count, eq, ilike, sql, type SQL } from 'drizzle-orm';
+import { WILAYA_CODE_RE } from '@/core/tenancy/wilayas';
 import { z } from 'zod';
 import { audit } from '@/core/audit';
 import type { Ctx } from '@/core/ctx';
@@ -16,7 +17,7 @@ import {
 } from './message';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const WILAYA_RE = /^(0[1-9]|[1-4]\d|5[0-8])$/;
+const WILAYA_RE = WILAYA_CODE_RE;
 const MAX_PAGE_SIZE = 100;
 const MAX_MESSAGE = 1000;
 const READ = 'marketing.campaign.read';

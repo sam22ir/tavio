@@ -2,7 +2,7 @@
 import type { Cents } from '@/core/money';
 
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-export const WILAYA_RE = /^(0[1-9]|[1-4]\d|5[0-8])$/;
+export { WILAYA_CODE_RE as WILAYA_RE } from '@/core/tenancy/wilayas';
 const E164_RE = /^\+[1-9]\d{7,14}$/;
 
 export const RATE_LIMIT_MAX_ORDERS = 5;

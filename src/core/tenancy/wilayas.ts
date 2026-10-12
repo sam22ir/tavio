@@ -1,4 +1,7 @@
-// The 58 wilayas, code and French name. Codes match the '01' to '58' values stored on companies.
+// The 69 wilayas, code and French name. Codes match the '01' to '69' values stored on companies, contacts, leads and warehouses.
+// Law 26-06 of 4 April 2026 created wilayas 59 to 69 (names and numbers fixed by the presidential decree in JO n° 40, June 2026).
+// Companies and records in the mother wilayas keep their code: the mother wilayas keep their powers until the new executives are
+// installed (transfer by 31 December 2026), so nothing is re-assigned automatically.
 export interface Wilaya { code: string; name: string }
 
 export const WILAYAS: readonly Wilaya[] = [
@@ -22,7 +25,17 @@ export const WILAYAS: readonly Wilaya[] = [
   { code: '52', name: 'Béni Abbès' }, { code: '53', name: 'In Salah' }, { code: '54', name: 'In Guezzam' },
   { code: '55', name: 'Touggourt' }, { code: '56', name: 'Djanet' }, { code: '57', name: "El M'Ghair" },
   { code: '58', name: 'El Meniaa' },
+  { code: '59', name: 'Aflou' }, { code: '60', name: 'Barika' }, { code: '61', name: 'El Kantara' },
+  { code: '62', name: 'Bir El Ater' }, { code: '63', name: 'El Aricha' }, { code: '64', name: 'Ksar Chellala' },
+  { code: '65', name: 'Aïn Oussara' }, { code: '66', name: 'Messaad' }, { code: '67', name: 'Ksar El Boukhari' },
+  { code: '68', name: 'Bou Saâda' }, { code: '69', name: 'El Abiodh Sidi Cheikh' },
 ];
+
+/** Matches exactly the codes in WILAYAS. The one place the valid range is defined; validators import this. */
+export const WILAYA_CODE_RE = new RegExp(`^(${WILAYAS.map((w) => w.code).join('|')})$`);
+
+/** The same set as an HTML `pattern` attribute (the browser anchors it). */
+export const WILAYA_CODE_PATTERN = WILAYAS.map((w) => w.code).join('|');
 
 export function isWilayaCode(value: string): boolean {
   return WILAYAS.some((w) => w.code === value);

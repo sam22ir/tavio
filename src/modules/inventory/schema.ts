@@ -34,7 +34,7 @@ export const warehouses = pgTable(
       .references(() => companies.id),
     code: text('code').notNull(),
     name: text('name').notNull(),
-    // '01' to '58', from wilayas seed (l10n_dz)
+    // '01' to '69', from wilayas seed (l10n_dz)
     wilayaCode: text('wilaya_code'),
     active: boolean('active').notNull().default(true),
   },
