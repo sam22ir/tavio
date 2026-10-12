@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { sql } from 'drizzle-orm';
+import { AlertTriangle, CalendarClock, ListTodo, Target, Wallet } from 'lucide-react';
 import { routing, type Locale } from '@/i18n/routing';
 import { withPageCtx } from '@/core/actions/page-ctx';
 import { dashboardKpis } from '@/core/dashboard/kpis';
@@ -11,6 +12,10 @@ import { enabledModules } from '@/core/tenancy/service';
 import { formatDzd } from '@/core/money';
 import { loadShell } from '@/ui/shell/load-shell';
 import { AppTiles } from '@/ui/shell/app-tiles';
+import { AssistantPanel } from '@/ui/blocks/assistant-panel';
+import { FeedRow, Panel } from '@/ui/blocks/feed';
+import { KpiTile } from '@/ui/blocks/kpi-tile';
+import { StatusChip } from '@/ui/blocks/tint';
 import { myOpenActivities } from '@/modules/chatter/service';
 import { MyActivities } from '@/modules/chatter/ui/my-activities';
 import { parseActivityFilter } from '@/modules/chatter/ui/activity-filter';
@@ -67,11 +72,54 @@ export default async function DashboardPage({
   const money = (c: bigint) => formatDzd(c, locale);
   const activityFilter = parseActivityFilter(typeof rawFilter === 'string' ? rawFilter : undefined);
 
+  const hasAssistant = shell.apps.some((a) => a.id === 'ai_features');
+  const tiles = [
+    ...(creditOn
+      ? [
+          <KpiTile
+            key="due"
+            label={t('kpi.dueToday')}
+            value={String(kpis.dueTodayCount)}
+            hint={money(kpis.dueTodayCents)}
+            icon={CalendarClock}
+            tint="info"
+            href={`/${locale}/credit/overdue`}
+          />,
+          <KpiTile
+            key="overdue"
+            label={t('kpi.overdue')}
+            value={String(kpis.overdueCount)}
+            hint={money(kpis.overdueCents)}
+            icon={AlertTriangle}
+            tint={kpis.overdueCount > 0 ? 'danger' : 'success'}
+            href={`/${locale}/credit/overdue`}
+          />,
+          <KpiTile
+            key="collected"
+            label={t('kpi.collectedThisMonth')}
+            value={money(kpis.collectedThisMonthCents)}
+            icon={Wallet}
+            tint="success"
+          />,
+        ]
+      : []),
+    ...(crmOn
+      ? [<KpiTile key="leads" label={t('kpi.openLeads')} value={String(kpis.openLeads)} icon={Target} tint="violet" href={`/${locale}/crm`} />]
+      : []),
+    <KpiTile
+      key="activities"
+      label={t('pipeline.overdueActivities')}
+      value={String(kpis.overdueActivities)}
+      icon={ListTodo}
+      tint={kpis.overdueActivities > 0 ? 'warning' : 'neutral'}
+    />,
+  ].slice(0, 4);
+
   return (
-    <section className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('hello', { name })}</h1>
-        <p className="text-sm text-muted-foreground">{dateLabel}</p>
+        <h1 className="text-3xl font-light tracking-tight md:text-4xl">{t('hello', { name })}</h1>
+        <p className="text-sm text-muted">{dateLabel}</p>
       </header>
 
       <SampleDataBanner
@@ -80,82 +128,78 @@ export default async function DashboardPage({
         realCompany={home ? { id: home.id, name: home.name } : null}
       />
 
-      <section className="app-panel flex flex-col gap-5 p-5">
-        <h2 className="text-lg font-semibold">{t('today')}</h2>
-        <div className="flex flex-wrap gap-2">
-          <Chip label={t('chips.dueToday')} value={String(kpis.dueTodayCount)} />
-          <Chip label={t('chips.overdue')} value={String(kpis.overdueCount)} danger={kpis.overdueCount > 0} />
-          <Chip label={t('chips.activities')} value={String(activities.length)} />
-        </div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{tiles}</div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Panel title={t('needsYou')} count={t('chips.dueToday') + ' · ' + kpis.dueTodayCount} className="lg:col-span-2">
           {creditOn ? (
-            <div className="flex min-w-0 flex-col gap-1">
+            <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="text-sm font-semibold">{t('lists.due')}</h3>
-                <Link href={`/${locale}/credit/overdue`} className="text-xs font-medium text-primary hover:underline">
+                <Link href={`/${locale}/credit/overdue`} className="text-xs font-medium text-accent hover:underline">
                   {t('viewAll')}
                 </Link>
               </div>
               {due.length === 0 ? (
-                <p className="py-2 text-sm text-muted-foreground">{t('due.empty')}</p>
+                <p className="py-2 text-sm text-muted">{t('due.empty')}</p>
               ) : (
-                <ul className="flex flex-col divide-y">
+                <ul className="flex flex-col">
                   {due.map((d) => (
-                    <li key={`${d.contractId}-${d.seq}`}>
-                      <Link
-                        href={`/${locale}/credit/contracts/${d.contractId}`}
-                        className="flex items-center justify-between gap-3 py-2 text-sm hover:underline"
-                      >
-                        <span className="min-w-0 truncate">
-                          <span className="font-medium">{d.contractReference}</span>
-                          {d.clientName ? <span className="text-muted-foreground"> · {d.clientName}</span> : null}
-                        </span>
-                        <span className="flex shrink-0 items-center gap-2 tabular-nums">
+                    <FeedRow
+                      key={`${d.contractId}-${d.seq}`}
+                      href={`/${locale}/credit/contracts/${d.contractId}`}
+                      icon={CalendarClock}
+                      tint={d.daysLate > 0 ? 'danger' : 'info'}
+                      title={d.contractReference}
+                      subtitle={d.clientName}
+                      meta={
+                        <>
                           <span>{money(d.remainingCents)}</span>
-                          {d.daysLate > 0 ? (
-                            <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive">
-                              {t('due.late', { days: d.daysLate })}
-                            </span>
-                          ) : null}
-                        </span>
-                      </Link>
-                    </li>
+                          {d.daysLate > 0 ? <StatusChip tint="danger">{t('due.late', { days: d.daysLate })}</StatusChip> : null}
+                        </>
+                      }
+                    />
                   ))}
                 </ul>
               )}
             </div>
           ) : null}
-
           <div className="min-w-0">
             <MyActivities rows={activities} limit={5} filter={activityFilter} basePath={`/${locale}/dashboard`} />
           </div>
-        </div>
-      </section>
+        </Panel>
 
-      <section className="app-panel flex flex-col gap-5 p-5">
-        <h2 className="text-lg font-semibold">{t('pipeline.title')}</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <KpiTile label={t('pipeline.overdueActivities')} value={String(kpis.overdueActivities)} danger={kpis.overdueActivities > 0} />
-          {crmOn ? (
-            <>
-              <KpiTile label={t('pipeline.withoutActivity')} value={String(kpis.leads.openWithoutActivity)} danger={kpis.leads.openWithoutActivity > 0} />
-              <KpiTile label={t('pipeline.avgDays')} value={kpis.leads.avgDaysInStage.toFixed(1)} />
-              <KpiTile label={t('pipeline.wonThisMonth')} value={String(kpis.leads.wonThisMonth)} />
-              <KpiTile
-                label={t('pipeline.conversion')}
-                value={kpis.leads.conversionRate === null ? '—' : `${Math.round(kpis.leads.conversionRate * 100)}%`}
-              />
-            </>
+        <div className="flex min-w-0 flex-col gap-4">
+          {hasAssistant ? (
+            <AssistantPanel
+              href={`/${locale}/assistant`}
+              title={t('assistant.title')}
+              hint={t('assistant.hint')}
+              openLabel={t('assistant.open')}
+              prompts={[t('assistant.prompts.overdue'), t('assistant.prompts.collected'), t('assistant.prompts.leads')]}
+            />
           ) : null}
+          {!demo && <GettingStartedChecklist locale={locale} />}
         </div>
-        {crmOn ? (
+      </div>
+
+      {crmOn ? (
+        <Panel title={t('pipeline.title')}>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCell label={t('pipeline.withoutActivity')} value={String(kpis.leads.openWithoutActivity)} danger={kpis.leads.openWithoutActivity > 0} />
+            <StatCell label={t('pipeline.avgDays')} value={kpis.leads.avgDaysInStage.toFixed(1)} />
+            <StatCell label={t('pipeline.wonThisMonth')} value={String(kpis.leads.wonThisMonth)} />
+            <StatCell
+              label={t('pipeline.conversion')}
+              value={kpis.leads.conversionRate === null ? '—' : `${Math.round(kpis.leads.conversionRate * 100)}%`}
+            />
+          </div>
           <div className="flex flex-col gap-1">
             <h3 className="text-sm font-semibold">{t('pipeline.openByStage')}</h3>
             {kpis.leads.openByStage.length === 0 ? (
-              <p className="py-2 text-sm text-muted-foreground">{t('pipeline.noStages')}</p>
+              <p className="py-2 text-sm text-muted">{t('pipeline.noStages')}</p>
             ) : (
-              <ul className="flex flex-col divide-y">
+              <ul className="flex flex-col divide-y divide-separator">
                 {kpis.leads.openByStage.map((s) => (
                   <li key={s.stageId} className="flex items-center justify-between gap-3 py-2 text-sm">
                     <span className="min-w-0 truncate">{s.name}</span>
@@ -165,15 +209,13 @@ export default async function DashboardPage({
               </ul>
             )}
           </div>
-        ) : null}
-      </section>
-
-      {!demo && <GettingStartedChecklist locale={locale} />}
+        </Panel>
+      ) : null}
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold">{t('applications')}</h2>
+        <h2 className="text-lg font-semibold tracking-tight">{t('applications')}</h2>
         {shell.apps.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t('applicationsEmpty')}</p>
+          <p className="text-sm text-muted">{t('applicationsEmpty')}</p>
         ) : (
           <AppTiles
             apps={shell.apps}
@@ -182,28 +224,15 @@ export default async function DashboardPage({
           />
         )}
       </section>
-    </section>
-  );
-}
-
-function KpiTile({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
-  return (
-    <div className="flex flex-col gap-1 rounded-lg border p-4">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <span className={`text-2xl font-semibold tabular-nums ${danger ? 'text-destructive' : ''}`}>{value}</span>
     </div>
   );
 }
 
-function Chip({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
+function StatCell({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
   return (
-    <span
-      className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ${
-        danger ? 'bg-destructive/10 text-destructive' : 'bg-default text-foreground'
-      }`}
-    >
-      <span className="font-semibold tabular-nums">{value}</span>
-      <span className="text-muted-foreground">{label}</span>
-    </span>
+    <div className="flex flex-col gap-1 rounded-2xl bg-surface-secondary p-4">
+      <span className="text-xs text-muted">{label}</span>
+      <span className={`text-2xl font-semibold tabular-nums ${danger ? 'text-danger' : ''}`}>{value}</span>
+    </div>
   );
 }

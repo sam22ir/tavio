@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
+import { Search } from 'lucide-react';
 import { Button } from '@/ui/primitives/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/ui/primitives/dialog';
 import { Input } from '@/ui/primitives/input';
@@ -54,9 +55,15 @@ export function CommandSearch() {
 
   return (
     <>
-      <Button variant="outline" size="sm" className="w-full justify-start" onClick={() => setOpen(true)}>
-        {t('palette.button')}
-        <kbd className="ms-auto text-xs text-muted-foreground">Ctrl K</kbd>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-11 w-full justify-start gap-2 rounded-full bg-surface font-normal text-muted shadow-[0_1px_2px_rgb(20_23_28/0.04)]"
+        onClick={() => setOpen(true)}
+      >
+        <Search aria-hidden="true" className="size-4 shrink-0" />
+        <span className="truncate">{t('palette.button')}</span>
+        <kbd className="ms-auto hidden rounded-md bg-default px-1.5 py-0.5 text-[11px] text-muted md:inline">⌘K</kbd>
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-lg">
