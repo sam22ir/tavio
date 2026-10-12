@@ -3,10 +3,10 @@ import { withPageCtx } from '@/core/actions/page-ctx';
 import { latestScore } from '../service/scoring';
 
 const TONE: Record<string, string> = {
-  A: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200',
-  B: 'bg-lime-100 text-lime-800 dark:bg-lime-950 dark:text-lime-200',
-  C: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200',
-  D: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200',
+  A: 'bg-tint-success text-tint-success-fg',
+  B: 'bg-tint-success text-tint-success-fg',
+  C: 'bg-tint-warning text-tint-warning-fg',
+  D: 'bg-tint-danger text-tint-danger-fg',
   new: 'bg-default text-muted-foreground',
 };
 

@@ -14,9 +14,9 @@ import { Chatter } from '@/modules/chatter/ui/chatter';
 import { toMilliText } from '@/modules/inventory/service/delivery-view';
 
 const TONE: Record<'warn' | 'info' | 'ok', string> = {
-  warn: 'bg-amber-100 text-amber-900',
+  warn: 'bg-tint-warning text-tint-warning-fg',
   info: 'bg-sky-100 text-sky-900',
-  ok: 'bg-emerald-100 text-emerald-900',
+  ok: 'bg-tint-success text-tint-success-fg',
 };
 
 export default async function SaleOrderPage({ params }: { params: Promise<{ locale: string; id: string }> }) {

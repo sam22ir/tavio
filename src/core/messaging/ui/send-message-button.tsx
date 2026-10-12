@@ -113,7 +113,7 @@ export function SendMessageButton({ entity, recordId, partnerId, templateKey, in
           </div>
 
           {optedOut && channel === 'email' ? (
-            <p role="alert" className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">{t('optedOut')}</p>
+            <p role="alert" className="rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">{t('optedOut')}</p>
           ) : null}
           {!loading && !to ? <p className="text-sm text-muted-foreground">{t('noRecipient')}</p> : null}
 

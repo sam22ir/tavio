@@ -48,8 +48,8 @@ describe('deadlineTone and DEADLINE_CLASS', () => {
   });
 
   it('gives each tone its own colour class', () => {
-    expect(DEADLINE_CLASS.overdue).toContain('text-red-600');
-    expect(DEADLINE_CLASS.today).toContain('text-amber-600');
-    expect(DEADLINE_CLASS.planned).toContain('text-emerald-600');
+    expect(DEADLINE_CLASS.overdue).toContain('text-danger');
+    expect(DEADLINE_CLASS.today).toContain('text-tint-warning-fg');
+    expect(DEADLINE_CLASS.planned).toContain('text-tint-success-fg');
   });
 });

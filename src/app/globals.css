@@ -3,6 +3,9 @@
 @import "@heroui/styles";
 @source "../../node_modules/@heroui/react/dist";
 
+/* Light only: dark: utilities follow the .dark class (as HeroUI does), never the OS setting. */
+@custom-variant dark (&:is(.dark *));
+
 /*
  * Revora theme on HeroUI's token names (cool gray canvas, white surfaces, Revora blue accent). Light only.
  * HeroUI derives -hover, -soft and -soft-foreground variants from these, so only the base values are set.

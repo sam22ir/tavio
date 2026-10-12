@@ -55,7 +55,7 @@ const SELECT_CLASS =
 function StatusLine({ status }: { status: Status }) {
   if (!status) return null;
   return (
-    <p role={status.kind === 'error' ? 'alert' : 'status'} className={status.kind === 'error' ? 'text-sm text-destructive' : 'text-sm text-emerald-700 dark:text-emerald-400'}>
+    <p role={status.kind === 'error' ? 'alert' : 'status'} className={status.kind === 'error' ? 'text-sm text-destructive' : 'text-sm text-tint-success-fg'}>
       {status.text}
     </p>
   );
@@ -240,7 +240,7 @@ function ApiKeysSection({ keys }: { keys: KeyRow[] }) {
       <h2 id="keys-title" className="text-lg font-medium">{t('keys.title')}</h2>
       <p className="text-sm text-muted-foreground">{t('keys.intro')}</p>
       {revealed ? (
-        <div role="alert" className="flex flex-col gap-2 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+        <div role="alert" className="flex flex-col gap-2 rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
           <p className="font-medium">{t('keys.shown_once')}</p>
           <code dir="ltr" className="break-all rounded bg-background p-2 font-mono text-xs">{revealed}</code>
           <Button type="button" variant="outline" className="min-h-11 self-start" onClick={() => setRevealed(null)}>
@@ -344,7 +344,7 @@ function WebhooksSection({ hooks }: { hooks: HookRow[] }) {
       <h2 id="hooks-title" className="text-lg font-medium">{t('hooks.title')}</h2>
       <p className="text-sm text-muted-foreground">{t('hooks.intro')}</p>
       {revealed ? (
-        <div role="alert" className="flex flex-col gap-2 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+        <div role="alert" className="flex flex-col gap-2 rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
           <p className="font-medium">{t('hooks.secret_once')}</p>
           <code dir="ltr" className="break-all rounded bg-background p-2 font-mono text-xs">{revealed}</code>
           <Button type="button" variant="outline" className="min-h-11 self-start" onClick={() => setRevealed(null)}>

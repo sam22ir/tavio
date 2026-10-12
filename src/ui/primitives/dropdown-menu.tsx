@@ -13,7 +13,10 @@ function DropdownMenu({ children }: { children: React.ReactNode }) {
 
 function DropdownMenuTrigger({ asChild = false, children, className }: { asChild?: boolean; children: React.ReactNode; className?: string }) {
   // With asChild the child is already a pressable HeroUI Button: the menu trigger context reaches it without a wrapper.
-  if (asChild) return <>{children}</>
+  if (asChild && React.isValidElement<{ type?: string }>(children)) {
+    // Same as Radix: the trigger never submits an enclosing form.
+    return <>{React.cloneElement(children, { type: "button" })}</>
+  }
   return <Dropdown.Trigger className={className}>{children}</Dropdown.Trigger>
 }
 

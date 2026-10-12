@@ -80,7 +80,7 @@ export function PortalShareButton(props: Props) {
       >
         {pending ? t('creating') : label}
       </button>
-      {error ? <p role="alert" className="text-sm text-red-700">{error}</p> : null}
+      {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
       {props.mode === 'document' && links ? (
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium">{t('existingLinks')}</p>

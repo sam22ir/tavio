@@ -131,7 +131,7 @@ export default async function DashboardPage({
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{tiles}</div>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Panel title={t('needsYou')} count={t('chips.dueToday') + ' · ' + kpis.dueTodayCount} className="lg:col-span-2">
+        <Panel title={t('needsYou')} className="lg:col-span-2">
           {creditOn ? (
             <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between gap-2">

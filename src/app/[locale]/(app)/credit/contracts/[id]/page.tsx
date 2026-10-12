@@ -104,7 +104,7 @@ export default async function ContractDetailPage({
         </Card>
         <Card>
           <CardHeader><CardTitle className="text-sm font-medium">{t('totals.late')}</CardTitle></CardHeader>
-          <CardContent className="text-lg font-semibold tabular-nums text-red-700 dark:text-red-300">{fmt(totals.lateCents)}</CardContent>
+          <CardContent className="text-lg font-semibold tabular-nums text-danger">{fmt(totals.lateCents)}</CardContent>
         </Card>
       </div>
 

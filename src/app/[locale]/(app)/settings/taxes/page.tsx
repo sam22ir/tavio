@@ -40,7 +40,7 @@ export default async function TaxesSettingsPage({
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-6">
       <header className="flex flex-col gap-3">
         <h1 className="text-2xl font-semibold">{t('taxes.title')}</h1>
-        <p role="note" className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+        <p role="note" className="rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
           {t('taxes.warning')}
         </p>
         <LoadDefaultsButton />

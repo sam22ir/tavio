@@ -55,7 +55,8 @@ function DialogTrigger({
   return (
     <Comp
       data-slot="dialog-trigger"
-      {...(asChild ? {} : { type: "button" })}
+      // Radix sets type="button" on the trigger (child included); without it a trigger inside a form would submit that form.
+      type="button"
       {...props}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(event)

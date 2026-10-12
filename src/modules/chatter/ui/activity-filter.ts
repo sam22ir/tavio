@@ -27,7 +27,7 @@ export function deadlineTone(dueDate: string, today: string): DeadlineTone {
 }
 
 export const DEADLINE_CLASS: Record<DeadlineTone, string> = {
-  overdue: 'font-medium text-red-600 dark:text-red-400',
-  today: 'font-medium text-amber-600 dark:text-amber-400',
-  planned: 'text-emerald-600 dark:text-emerald-400',
+  overdue: 'font-medium text-danger',
+  today: 'font-medium text-tint-warning-fg',
+  planned: 'text-tint-success-fg',
 };

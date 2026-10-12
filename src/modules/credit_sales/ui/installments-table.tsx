@@ -13,9 +13,9 @@ export interface InstallmentRow {
 
 const STATUS_CLASS: Record<InstallmentStatus, string> = {
   upcoming: 'bg-default text-muted-foreground',
-  partial: 'bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100',
-  paid: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/40 dark:text-emerald-100',
-  late: 'bg-red-100 text-red-900 dark:bg-red-900/40 dark:text-red-100',
+  partial: 'bg-tint-warning text-tint-warning-fg',
+  paid: 'bg-tint-success text-tint-success-fg',
+  late: 'bg-tint-danger text-tint-danger-fg',
 };
 
 interface Props {

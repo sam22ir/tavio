@@ -157,7 +157,7 @@ export function OnboardingWizard() {
       </ol>
 
       {errorKey && (
-        <p role="alert" className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="mb-4 rounded-xl bg-tint-danger px-4 py-3 text-sm text-tint-danger-fg">
           {t(errorKey)}
         </p>
       )}
@@ -388,7 +388,7 @@ export function OnboardingWizard() {
                 {invites.map((r) => (
                   <li key={r.email} className="flex flex-col gap-1">
                     {r.status === 'sent' && <span>{t('team.sentEmail', { email: r.email })}</span>}
-                    {r.status === 'failed' && <span className="text-red-800">{t('team.failed', { email: r.email })}</span>}
+                    {r.status === 'failed' && <span className="text-danger">{t('team.failed', { email: r.email })}</span>}
                     {r.status === 'link' && r.url && (
                       <>
                         <span>{t('team.createdLink', { email: r.email })}</span>

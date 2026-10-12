@@ -43,7 +43,7 @@ export function CompanyForm({ values }: { values: CompanyFormValues }) {
         <div className="flex flex-col gap-2 text-sm">
           <p role="status">{t('saved')}</p>
           {state.warnings.length > 0 ? (
-            <ul className="list-disc ps-5 text-amber-700">
+            <ul className="list-disc ps-5 text-tint-warning-fg">
               {state.warnings.map((w) => (
                 <li key={w}>{t(`warnings.${w}`)}</li>
               ))}
