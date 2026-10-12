@@ -6,6 +6,8 @@ import { toSearchParams } from '@/core/entities/list-query';
 import { cn } from '@/ui/lib/cn';
 import { SearchBar } from './search-bar';
 import { Pagination } from './pagination';
+import { isStatusField, toneForStatus } from '@/ui/blocks/status';
+import { StatusChip } from '@/ui/blocks/tint';
 import { formatCell } from './format';
 import { isExportableEntity } from './io-columns';
 import { buttonVariants } from '@/ui/primitives/button';
@@ -40,6 +42,16 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
   const secondary = listFields.filter((f) => f.name !== entity.labelField).slice(0, 2);
   const isEmpty = result.rows.length === 0;
   const exportable = isExportableEntity(entity.name);
+
+  // Status-like select fields render as a pastel chip; everything else stays plain text.
+  const cell = (field: FieldDef, row: Row): ReactNode => {
+    const raw = cellValue(field, row);
+    const text = formatCell(field, raw, locale);
+    if (field.type === 'select' && isStatusField(field.name) && raw) {
+      return <StatusChip tint={toneForStatus(String(raw))}>{text}</StatusChip>;
+    }
+    return text;
+  };
 
   const titleFor = (row: Row) => {
     const value = labelField ? formatCell(labelField, cellValue(labelField, row), locale) : String(row.id);
@@ -99,10 +111,10 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
                       <td key={field.name} className="px-4 py-3 text-start tabular-nums">
                         {i === 0 && rowHref ? (
                           <Link href={rowHref(row)} className="hover:underline">
-                            {formatCell(field, cellValue(field, row), locale)}
+                            {cell(field, row)}
                           </Link>
                         ) : (
-                          formatCell(field, cellValue(field, row), locale)
+                          cell(field, row)
                         )}
                       </td>
                     ))}
@@ -123,7 +135,7 @@ export async function DataList({ entity, result, query, basePath, rowHref, actio
                       <div key={field.name} className="contents">
                         <dt className="text-muted">{t(field.label)}</dt>
                         <dd className="text-end tabular-nums">
-                          {formatCell(field, cellValue(field, row), locale)}
+                          {cell(field, row)}
                         </dd>
                       </div>
                     ))}

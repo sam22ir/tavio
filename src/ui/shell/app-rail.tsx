@@ -24,6 +24,28 @@ export function AppRail({ apps }: { apps: ShellApp[] }) {
   const current = currentAppFor(apps, pathname);
   const dashboardHref = `/${locale}/dashboard`;
   const onHome = pathname === dashboardHref;
+  // Configuration apps live under /settings; they sit in their own group at the bottom of the rail.
+  const isSettings = (a: ShellApp) => a.href.includes('/settings/');
+  const main = apps.filter((a) => !isSettings(a));
+  const config = apps.filter(isSettings);
+
+  const renderItem = (app: ShellApp) => {
+    const Icon = appIcon(app.icon);
+    const active = current?.app.id === app.id;
+    const label = labelOf(app.label);
+    return (
+      <Link
+        key={app.id}
+        href={app.href}
+        aria-label={label}
+        title={label}
+        aria-current={active ? 'page' : undefined}
+        className={`${ITEM} ${active ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-default'}`}
+      >
+        <Icon aria-hidden="true" className="size-5" />
+      </Link>
+    );
+  };
 
   return (
     <aside
@@ -45,24 +67,16 @@ export function AppRail({ apps }: { apps: ShellApp[] }) {
       </Link>
       <div aria-hidden="true" className="my-1 h-px w-8 bg-separator" />
       <nav className="flex min-h-0 flex-1 flex-col items-center gap-1.5 overflow-y-auto [scrollbar-width:none]">
-        {apps.map((app) => {
-          const Icon = appIcon(app.icon);
-          const active = current?.app.id === app.id;
-          const label = labelOf(app.label);
-          return (
-            <Link
-              key={app.id}
-              href={app.href}
-              aria-label={label}
-              title={label}
-              aria-current={active ? 'page' : undefined}
-              className={`${ITEM} ${active ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-default'}`}
-            >
-              <Icon aria-hidden="true" className="size-5" />
-            </Link>
-          );
-        })}
+        {main.map((app) => renderItem(app))}
       </nav>
+      {config.length > 0 ? (
+        <>
+          <div aria-hidden="true" className="my-1 h-px w-8 bg-separator" />
+          <nav aria-label={t('nav.settings')} className="flex flex-col items-center gap-1.5">
+            {config.map((app) => renderItem(app))}
+          </nav>
+        </>
+      ) : null}
     </aside>
   );
 }
