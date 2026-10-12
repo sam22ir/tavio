@@ -488,3 +488,103 @@ export type CreditGuarantor = typeof creditGuarantors.$inferSelect;
 export type NewCreditGuarantor = typeof creditGuarantors.$inferInsert;
 export type CreditClientScore = typeof creditClientScores.$inferSelect;
 export type NewCreditClientScore = typeof creditClientScores.$inferInsert;
+
+// 4.9 debit mandates. CCP direct debit: the customer's signed authorization to debit their CCP account, one per contract.
+// Kept apart from credit_contracts so contracts keep working without it, and so a mandate can be signed after activation.
+export const creditDebitMandates = pgTable(
+  'debit_mandates',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => creditContracts.id, { onDelete: 'cascade' }),
+    // FK → partners.id (added by integrator)
+    partnerId: uuid('partner_id').notNull(),
+    // Digits only. Format is checked; the CCP/RIP key check is not implemented (algorithm unverified).
+    ccpAccount: text('ccp_account').notNull(),
+    signedOn: date('signed_on', { mode: 'string' }).notNull(),
+    active: boolean('active').notNull().default(true),
+  },
+  (t) => [
+    uniqueIndex('credit_sales_debit_mandates_contract_key').on(t.contractId),
+    index('credit_sales_debit_mandates_company_partner_idx').on(t.companyId, t.partnerId),
+    check('credit_sales_debit_mandates_account_check', sql`${t.ccpAccount} ~ '^[0-9]{10,20}$'`),
+  ],
+);
+
+// 4.10 debit batches (bordereaux): one monthly list of installments to debit.
+export const creditDebitBatches = pgTable(
+  'debit_batches',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    number: text('number').notNull(),
+    // First day of the month the batch collects for (YYYY-MM-01).
+    periodMonth: date('period_month', { mode: 'string' }).notNull(),
+    status: text('status').notNull().default('draft'),
+    totalCents: bigint('total_cents', { mode: 'bigint' }).notNull().default(sql`0`),
+    exportedAt: timestamp('exported_at', { withTimezone: true }),
+    closedAt: timestamp('closed_at', { withTimezone: true }),
+    cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex('credit_sales_debit_batches_company_number_key').on(t.companyId, t.number),
+    index('credit_sales_debit_batches_company_status_idx').on(t.companyId, t.status),
+    check(
+      'credit_sales_debit_batches_status_check',
+      sql`${t.status} in ('draft', 'exported', 'closed', 'cancelled')`,
+    ),
+    check('credit_sales_debit_batches_total_check', sql`${t.totalCents} >= 0`),
+  ],
+);
+
+// 4.11 debit items: one installment in one batch. pending and needs_review hold the installment so it cannot be debited twice.
+export const creditDebitItems = pgTable(
+  'debit_items',
+  {
+    ...commonColumns(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id),
+    batchId: uuid('batch_id')
+      .notNull()
+      .references(() => creditDebitBatches.id, { onDelete: 'cascade' }),
+    installmentId: uuid('installment_id')
+      .notNull()
+      .references(() => creditInstallments.id),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => creditContracts.id),
+    // FK → partners.id (added by integrator)
+    partnerId: uuid('partner_id').notNull(),
+    // Batch number + sequence, e.g. PRV-2026-00001-007. Unique per company: it is the key a result file refers to.
+    reference: text('reference').notNull(),
+    // Snapshots taken when the batch is built.
+    amountCents: bigint('amount_cents', { mode: 'bigint' }).notNull(),
+    ccpAccount: text('ccp_account').notNull(),
+    status: text('status').notNull().default('pending'),
+    // Reject reason, or why a debit that went through could not be posted (needs_review).
+    reason: text('reason'),
+    paymentId: uuid('payment_id').references(() => creditPayments.id),
+    // The day the money moved (or the debit was refused), not the day someone typed it in.
+    settledOn: date('settled_on', { mode: 'string' }),
+  },
+  (t) => [
+    uniqueIndex('credit_sales_debit_items_company_reference_key').on(t.companyId, t.reference),
+    uniqueIndex('credit_sales_debit_items_installment_open_key')
+      .on(t.installmentId)
+      .where(sql`${t.status} in ('pending', 'needs_review')`),
+    index('credit_sales_debit_items_company_batch_idx').on(t.companyId, t.batchId),
+    index('credit_sales_debit_items_company_contract_idx').on(t.companyId, t.contractId),
+    check(
+      'credit_sales_debit_items_status_check',
+      sql`${t.status} in ('pending', 'paid', 'rejected', 'needs_review', 'cancelled')`,
+    ),
+    check('credit_sales_debit_items_amount_check', sql`${t.amountCents} > 0`),
+  ],
+);

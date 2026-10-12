@@ -141,6 +141,13 @@
       "when": 1791735308947,
       "tag": "0019_w16_deliveries_portal_messaging",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1791837130113,
+      "tag": "0020_w17_ccp_direct_debit",
+      "breakpoints": true
     }
   ]
 }

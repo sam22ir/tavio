@@ -22,6 +22,7 @@ export const manifest = defineModule({
     { label: 'credit.menu.contracts', href: '/credit/contracts', perm: 'credit_sales.contract.read', order: 30 },
     { label: 'credit.menu.payments', href: '/credit/payments', perm: 'credit_sales.payment.read', order: 31 },
     { label: 'credit.menu.overdue', href: '/credit/overdue', perm: 'credit_sales.contract.read', order: 32 },
+    { label: 'credit.menu.debits', href: '/credit/debits', perm: 'credit_sales.payment.read', order: 32.5 },
     { label: 'credit.menu.requirements', href: '/credit/requirements', perm: 'credit_sales.contract.write', order: 33 },
     { label: 'credit.menu.clauses', href: '/credit/clauses', perm: 'credit_sales.contract.write', order: 34 },
   ],

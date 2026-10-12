@@ -32,11 +32,14 @@ export function RecordPaymentButton({
   contractId,
   remainingCents,
   nextDueCents,
+  openDebits = 0,
 }: {
   contractId: string;
   remainingCents: string;
   /** Optional: amount of the next due installment, used as the default amount. */
   nextDueCents?: string;
+  /** CCP debits still waiting for a result on this contract: a payment recorded here may duplicate one. */
+  openDebits?: number;
 }) {
   const t = useTranslations('credit');
   const locale = useLocale() as Locale;
@@ -98,6 +101,11 @@ export function RecordPaymentButton({
         <DialogHeader>
           <DialogTitle>{t('payment.record')}</DialogTitle>
         </DialogHeader>
+        {openDebits > 0 ? (
+          <p role="note" className="rounded-2xl bg-tint-warning p-3 text-sm text-tint-warning-fg">
+            {t('payment.openDebitWarning', { count: openDebits })}
+          </p>
+        ) : null}
         <form onSubmit={submit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor={`pay-amount-${contractId}`}>{t('payment.amount')}</Label>
