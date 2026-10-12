@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { stageLabel } from '@/modules/crm/stage-names';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -55,14 +56,15 @@ export default async function LeadPage({
     return {
       lead: lead.value,
       reasons: reasons.ok ? (reasons.value as { id: string; name: string }[]) : [],
-      stages: stages?.ok ? stages.value.map((s) => ({ id: s.id, name: s.name })) : [],
+      stages: stages?.ok ? stages.value.map((s) => ({ id: s.id, name: stageLabel(s.name, locale) })) : [],
       requirements,
     };
   });
   if (!data) notFound();
 
   const { lead, reasons, stages, requirements } = data;
-  const stageName = stages.find((s) => s.id === lead.stageId)?.name ?? (lead.stageName as string | undefined);
+  const rawStageName = stages.find((s) => s.id === lead.stageId)?.name ?? (lead.stageName as string | undefined);
+  const stageName = rawStageName ? stageLabel(rawStageName, locale) : undefined;
   const cents = lead.expectedCents;
   const amount = cents === null ? '—' : formatDzd(cents, loc);
   // The edit form takes the amount as a decimal string ("1500.50").
@@ -145,7 +147,7 @@ export default async function LeadPage({
           values={{ ...lead, expectedRevenueCents: expectedInput }}
           hidden={{ id }}
           relationOptions={{
-            stageId: stages.map((s) => ({ value: s.id, label: s.name })),
+            stageId: stages.map((s) => ({ value: s.id, label: stageLabel(s.name, locale) })),
           }}
         />
       </section>

@@ -63,7 +63,7 @@ function StatusLine({ status }: { status: Status }) {
 
 export function PlatformSettings({ fields, keys, hooks }: { fields: FieldRow[]; keys: KeyRow[]; hooks: HookRow[] }) {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex max-w-3xl flex-col gap-10">
       <CustomFieldsSection fields={fields} />
       <ApiKeysSection keys={keys} />
       <WebhooksSection hooks={hooks} />

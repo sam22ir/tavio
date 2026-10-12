@@ -16,6 +16,7 @@ import { AssistantPanel } from '@/ui/blocks/assistant-panel';
 import { FeedRow, Panel } from '@/ui/blocks/feed';
 import { KpiTile } from '@/ui/blocks/kpi-tile';
 import { StatusChip } from '@/ui/blocks/tint';
+import { stageLabel } from '@/modules/crm/stage-names';
 import { myOpenActivities } from '@/modules/chatter/service';
 import { MyActivities } from '@/modules/chatter/ui/my-activities';
 import { parseActivityFilter } from '@/modules/chatter/ui/activity-filter';
@@ -202,7 +203,7 @@ export default async function DashboardPage({
               <ul className="flex flex-col divide-y divide-separator">
                 {kpis.leads.openByStage.map((s) => (
                   <li key={s.stageId} className="flex items-center justify-between gap-3 py-2 text-sm">
-                    <span className="min-w-0 truncate">{s.name}</span>
+                    <span className="min-w-0 truncate">{stageLabel(s.name, locale)}</span>
                     <span className="shrink-0 font-semibold tabular-nums">{s.count}</span>
                   </li>
                 ))}

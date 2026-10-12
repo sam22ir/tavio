@@ -39,7 +39,7 @@ export function RecordForm({
   const fields = entity.fields.filter((f) => f.form !== false && !f.readonly)
 
   return (
-    <form action={formAction} className="app-panel flex flex-col gap-5 p-6">
+    <form action={formAction} className="app-panel flex w-full max-w-3xl flex-col gap-5 p-6">
       {hidden
         ? Object.entries(hidden).map(([name, value]) => (
             <input key={name} type="hidden" name={name} value={value} />

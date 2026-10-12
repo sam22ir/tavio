@@ -71,7 +71,7 @@ export function SearchBar({ entity, query }: SearchBarProps) {
         className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full px-4 sm:w-64 sm:shrink-0')}
       />
       {filterFields.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible [scrollbar-width:none]">
           <span className="sr-only sm:not-sr-only text-sm text-muted">{t('views.filters')}</span>
           {filterFields.map((field) => (
             <select
@@ -79,7 +79,7 @@ export function SearchBar({ entity, query }: SearchBarProps) {
               aria-label={t(field.label)}
               value={query.filters[field.name] ?? ''}
               onChange={(e) => onFilterChange(field.name, e.target.value)}
-              className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 rounded-full ps-4 pe-8 text-sm')}
+              className={cn(inputVariants({ variant: 'primary' }), 'min-h-11 shrink-0 rounded-full ps-4 pe-8 text-sm')}
             >
               <option value="">{t(field.label)}</option>
               {(field.options ?? []).map((opt) => (

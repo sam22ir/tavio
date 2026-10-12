@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { stageLabel } from '@/modules/crm/stage-names';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -41,7 +42,7 @@ export default async function CrmPage({
     return {
       pipelineId: selected.id,
       pipelines: pipelines.value,
-      columns: stages.value.map((s) => ({ id: s.id, label: s.name })),
+      columns: stages.value.map((s) => ({ id: s.id, label: stageLabel(s.name, locale) })),
       rows: groups.value.flatMap((g) => g.leads),
       teams: teams.ok ? teams.value : [],
     };

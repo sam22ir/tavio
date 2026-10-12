@@ -122,7 +122,8 @@
         "delivered": "Livré"
       },
       "none": "Aucune livraison"
-    }
+    },
+    "more": "Plus"
   },
   "payment": {
     "title": "Paiements",

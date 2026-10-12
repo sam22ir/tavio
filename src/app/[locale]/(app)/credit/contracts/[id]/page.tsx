@@ -14,6 +14,7 @@ import { CONTRACT_SOURCE_ENTITY, sourceDeliveryStatus } from '@/modules/inventor
 import { ContractWorkflowSections } from '@/modules/credit_sales/ui/contract-workflow-sections';
 import { GuarantorsSection } from '@/modules/credit_sales/ui/guarantors-section';
 import { WorkflowBar } from '@/modules/credit_sales/ui/workflow-bar';
+import { MoreActions } from '@/ui/blocks/more-actions';
 import { ScoreBadge } from '@/modules/credit_sales/ui/score-badge';
 import { RecordPaymentButton } from '@/modules/credit_sales/ui/record-payment';
 import { InstallmentsTable } from '@/modules/credit_sales/ui/installments-table';
@@ -75,16 +76,18 @@ export default async function ContractDetailPage({
         </div>
         <div className="flex flex-wrap gap-2">
           <ContractActions contractId={contract.id} state={contract.state} />
-          {contract.state !== 'draft' ? <PortalShareButton mode="document" kind="contract" id={contract.id} /> : null}
-          {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="contract_sent" /> : null}
-          {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="portal_invite" invite /> : null}
           <WorkflowBar contractId={contract.id} state={contract.state} />
           {contract.state === 'active' ? (
             <RecordPaymentButton contractId={contract.id} remainingCents={totals.remainingCents.toString()} />
           ) : null}
-          <Button asChild variant="outline">
-            <Link href={`${base}/${contract.id}/print`}>{t('contract.print')}</Link>
-          </Button>
+          <MoreActions label={t('contract.more')}>
+            {contract.state !== 'draft' ? <PortalShareButton mode="document" kind="contract" id={contract.id} /> : null}
+            {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="contract_sent" /> : null}
+            {contract.state !== 'draft' ? <SendMessageButton entity="credit_sales.contract" recordId={contract.id} partnerId={contract.partnerId} templateKey="portal_invite" invite /> : null}
+            <Button asChild variant="outline">
+              <Link href={`${base}/${contract.id}/print`}>{t('contract.print')}</Link>
+            </Button>
+          </MoreActions>
         </div>
       </header>
       <RelatedLinks source="credit_sales.contract" id={id} />
