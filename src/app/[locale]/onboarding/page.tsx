@@ -17,7 +17,7 @@ export default async function OnboardingPage({ params }: { params: Promise<{ loc
   if (!session) redirect(`/${locale}/login`);
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-[#F4F1EA] p-4">
+    <main className="flex min-h-dvh items-center justify-center bg-background p-4">
       <OnboardingWizard />
     </main>
   );
