@@ -20,7 +20,7 @@ export function ChecklistHideButton() {
   }
 
   return (
-    <button type="button" onClick={hide} className="shrink-0 text-xs font-medium text-muted-foreground hover:underline">
+    <button type="button" onClick={hide} className="shrink-0 text-xs font-medium text-muted hover:underline">
       {t('hide')}
     </button>
   );

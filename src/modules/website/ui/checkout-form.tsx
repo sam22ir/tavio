@@ -73,7 +73,7 @@ export function CheckoutForm({ slug, shopHref }: CheckoutFormProps) {
   if (items.length === 0) {
     return (
       <div className="flex flex-col gap-4">
-        <p className="text-sm text-muted-foreground">{t('cart.empty')}</p>
+        <p className="text-sm text-muted">{t('cart.empty')}</p>
         <Link href={shopHref} className={cn(buttonVariants({ variant: 'outline' }), 'min-h-11 w-fit')}>
           {t('cart.continue_shopping')}
         </Link>
@@ -85,7 +85,7 @@ export function CheckoutForm({ slug, shopHref }: CheckoutFormProps) {
 
   return (
     <form onSubmit={onSubmit} className="flex max-w-xl flex-col gap-4">
-      <p className="text-sm text-muted-foreground">{t('checkout.cod_note')}</p>
+      <p className="text-sm text-muted">{t('checkout.cod_note')}</p>
       <div className="flex flex-col gap-2">
         <Label htmlFor="customerName">{t('checkout.fields.customerName')}</Label>
         <Input id="customerName" name="customerName" autoComplete="name" required minLength={2} maxLength={100} />
@@ -97,7 +97,7 @@ export function CheckoutForm({ slug, shopHref }: CheckoutFormProps) {
       <div className="flex flex-col gap-2">
         <Label htmlFor="wilayaCode">{t('checkout.fields.wilayaCode')}</Label>
         <Input id="wilayaCode" name="wilayaCode" inputMode="numeric" pattern="0[1-9]|[1-4][0-9]|5[0-8]" placeholder="16" required maxLength={2} dir="ltr" />
-        <p className="text-xs text-muted-foreground">{t('checkout.wilaya_hint')}</p>
+        <p className="text-xs text-muted">{t('checkout.wilaya_hint')}</p>
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="address">{t('checkout.fields.address')}</Label>

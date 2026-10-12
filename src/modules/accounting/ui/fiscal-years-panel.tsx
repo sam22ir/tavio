@@ -41,9 +41,9 @@ export function FiscalYearsPanel({ years, lockDate }: { years: FiscalYearView[];
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-medium">{t('list')}</h2>
         <ul className="flex flex-col gap-2">
-          {years.length === 0 ? <li className="text-sm text-muted-foreground">{t('empty')}</li> : null}
+          {years.length === 0 ? <li className="text-sm text-muted">{t('empty')}</li> : null}
           {years.map((y) => (
-            <li key={y.id} className="flex flex-wrap items-center gap-3 rounded-md border p-3">
+            <li key={y.id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-surface-secondary p-3">
               <span className="font-medium">{y.name}</span>
               <span className="text-sm tabular-nums">{y.startDate} → {y.endDate}</span>
               <span className="text-sm">{t(`state.${y.state}`)}</span>
@@ -90,7 +90,7 @@ export function FiscalYearsPanel({ years, lockDate }: { years: FiscalYearView[];
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-medium">{t('lock')}</h2>
-        <p className="text-sm text-muted-foreground">{t('lockHelp')}</p>
+        <p className="text-sm text-muted">{t('lockHelp')}</p>
         <form action={lockAction} className="flex flex-wrap items-end gap-3">
           <div className="flex flex-col gap-1">
             <Label htmlFor="lock-date">{t('lockDate')}</Label>

@@ -66,14 +66,14 @@ export function ClauseSettingsForm({ initial, defaults, variables }: Props) {
         <Label htmlFor="clauses-fr">{t('fr')}</Label>
         <Textarea id="clauses-fr" rows={18} dir="ltr" value={values.clausesFr} placeholder={defaults.fr}
           onChange={set('clausesFr')} />
-        <p className="text-xs text-muted-foreground">{t('defaultHint')}</p>
+        <p className="text-xs text-muted">{t('defaultHint')}</p>
       </div>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="clauses-ar">{t('ar')}</Label>
         <Textarea id="clauses-ar" rows={18} dir="rtl" value={values.clausesAr} placeholder={defaults.ar}
           onChange={set('clausesAr')} />
-        <p className="text-xs text-muted-foreground">{t('defaultHint')}</p>
+        <p className="text-xs text-muted">{t('defaultHint')}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -90,7 +90,7 @@ export function ClauseSettingsForm({ initial, defaults, variables }: Props) {
           <Label htmlFor="clauses-guarantor">{t('guarantorThreshold')}</Label>
           <Input id="clauses-guarantor" inputMode="decimal" dir="ltr" value={values.guarantorRequiredAboveDzd}
             placeholder="50000.00" onChange={set('guarantorRequiredAboveDzd')} />
-          <p className="text-xs text-muted-foreground">{t('guarantorThresholdHelp')}</p>
+          <p className="text-xs text-muted">{t('guarantorThresholdHelp')}</p>
         </div>
       </div>
 

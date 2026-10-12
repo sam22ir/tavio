@@ -15,7 +15,7 @@ export async function SourceContractLink({
   if (sourceEntity !== 'credit_sales.contract' || sourceId === null) return null;
   const t = await getTranslations('purchases');
   return (
-    <p className="text-sm text-muted-foreground">
+    <p className="text-sm text-muted">
       {t('order.sourceContract')}:{' '}
       <Link href={`/${locale}/credit/contracts/${sourceId}`} className="text-primary underline-offset-4 hover:underline">
         {t('order.openContract')}

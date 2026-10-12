@@ -12,7 +12,7 @@ export async function ShopHeader({ shop, locale }: { shop: ShopPublic; locale: s
         <Link href={home} className="break-words text-lg font-semibold">
           {shop.title}
         </Link>
-        <span className="text-sm text-muted-foreground">{shop.companyName}</span>
+        <span className="text-sm text-muted">{shop.companyName}</span>
       </div>
       <nav className="flex gap-4 text-sm">
         <Link href={home} className="inline-flex min-h-11 items-center hover:underline">

@@ -61,7 +61,7 @@ export async function GettingStartedChecklist({ locale }: { locale: Locale }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1">
           <h2 className="text-base font-semibold">{t('checklist.title')}</h2>
-          <p className="text-sm text-muted-foreground">{t('checklist.progress', { done, total: items.length })}</p>
+          <p className="text-sm text-muted">{t('checklist.progress', { done, total: items.length })}</p>
         </div>
         <ChecklistHideButton />
       </div>
@@ -75,7 +75,7 @@ export async function GettingStartedChecklist({ locale }: { locale: Locale }) {
                   item.done ? 'border-primary bg-primary' : 'border-muted-foreground/40'
                 }`}
               />
-              <span className={item.done ? 'text-muted-foreground line-through' : ''}>{t(`checklist.${item.key}`)}</span>
+              <span className={item.done ? 'text-muted line-through' : ''}>{t(`checklist.${item.key}`)}</span>
             </Link>
           </li>
         ))}

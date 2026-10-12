@@ -12,7 +12,7 @@ export interface InstallmentRow {
 }
 
 const STATUS_CLASS: Record<InstallmentStatus, string> = {
-  upcoming: 'bg-default text-muted-foreground',
+  upcoming: 'bg-default text-muted',
   partial: 'bg-tint-warning text-tint-warning-fg',
   paid: 'bg-tint-success text-tint-success-fg',
   late: 'bg-tint-danger text-tint-danger-fg',
@@ -33,27 +33,27 @@ interface Props {
 }
 
 export function InstallmentsTable({ rows, locale, labels }: Props) {
-  if (rows.length === 0) return <p className="text-sm text-muted-foreground">{labels.empty}</p>;
+  if (rows.length === 0) return <p className="text-sm text-muted">{labels.empty}</p>;
   return (
-    <div className="overflow-x-auto rounded-md border">
+    <div className="overflow-x-auto rounded-2xl bg-surface-secondary/60">
       <table className="w-full text-sm">
         <thead className="bg-default/50">
           <tr>
-            <th scope="col" className="px-3 py-2 text-start font-medium">{labels.seq}</th>
-            <th scope="col" className="px-3 py-2 text-start font-medium">{labels.dueDate}</th>
-            <th scope="col" className="px-3 py-2 text-end font-medium">{labels.amount}</th>
-            <th scope="col" className="px-3 py-2 text-end font-medium">{labels.paid}</th>
-            <th scope="col" className="px-3 py-2 text-start font-medium">{labels.statusHeader}</th>
+            <th scope="col" className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start font-medium">{labels.seq}</th>
+            <th scope="col" className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start font-medium">{labels.dueDate}</th>
+            <th scope="col" className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-end font-medium">{labels.amount}</th>
+            <th scope="col" className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-end font-medium">{labels.paid}</th>
+            <th scope="col" className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start font-medium">{labels.statusHeader}</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.id} className="border-t">
-              <td className="px-3 py-2">{r.seq}</td>
-              <td className="px-3 py-2 tabular-nums" dir="ltr">{r.dueDate}</td>
-              <td className="px-3 py-2 text-end tabular-nums">{formatDzd(r.amountCents as Cents, locale)}</td>
-              <td className="px-3 py-2 text-end tabular-nums">{formatDzd(r.paidCents as Cents, locale)}</td>
-              <td className="px-3 py-2">
+            <tr key={r.id} className="border-t border-separator">
+              <td className="px-4 py-3">{r.seq}</td>
+              <td className="px-4 py-3 tabular-nums" dir="ltr">{r.dueDate}</td>
+              <td className="px-4 py-3 text-end tabular-nums">{formatDzd(r.amountCents as Cents, locale)}</td>
+              <td className="px-4 py-3 text-end tabular-nums">{formatDzd(r.paidCents as Cents, locale)}</td>
+              <td className="px-4 py-3">
                 <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_CLASS[r.status]}`}>
                   {labels.status[r.status]}
                 </span>

@@ -38,7 +38,7 @@ export function CashCountForm({ accountId, bookBalance, today }: { accountId: st
   }
 
   return (
-    <section className="flex flex-col gap-4 rounded-lg border p-4">
+    <section className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
       <h2 className="font-medium">{t('cash.title')}</h2>
       <p className="text-sm">
         {t('cash.book')}: <span className="font-mono">{formatDzd(BigInt(bookBalance), locale)}</span>

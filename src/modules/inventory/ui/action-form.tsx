@@ -55,7 +55,7 @@ export function ActionForm({
                 id={id}
                 name={field.name}
                 required={field.required}
-                className="h-9 rounded-md border bg-background px-3 text-sm"
+                className="text-sm"
                 defaultValue=""
               >
                 <option value="" disabled>
@@ -77,7 +77,7 @@ export function ActionForm({
                 aria-invalid={error ? true : undefined}
               />
             )}
-            {field.hint ? <p className="text-xs text-muted-foreground">{field.hint}</p> : null}
+            {field.hint ? <p className="text-xs text-muted">{field.hint}</p> : null}
             {error ? <p className="text-xs text-destructive">{error}</p> : null}
           </div>
         );
@@ -88,7 +88,7 @@ export function ActionForm({
         </p>
       ) : null}
       {state.ok === true && !state.redirectTo && successMessage ? (
-        <p role="status" className="text-sm text-muted-foreground">
+        <p role="status" className="text-sm text-muted">
           {successMessage}
         </p>
       ) : null}

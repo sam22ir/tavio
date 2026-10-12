@@ -118,9 +118,9 @@ function CustomFieldsSection({ fields }: { fields: FieldRow[] }) {
   return (
     <section aria-labelledby="cf-title" className="flex flex-col gap-4">
       <h2 id="cf-title" className="text-lg font-medium">{t('custom.title')}</h2>
-      <p className="text-sm text-muted-foreground">{t('custom.intro')}</p>
+      <p className="text-sm text-muted">{t('custom.intro')}</p>
       <FieldTable fields={fields} onDelete={onDelete} pending={pending} />
-      <form ref={formRef} onSubmit={onSubmit} className="grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
+      <form ref={formRef} onSubmit={onSubmit} className="grid gap-4 rounded-2xl bg-surface-secondary p-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="cf-key">{t('custom.fields.key')}</Label>
           <Input id="cf-key" name="key" required pattern="[a-z][a-z0-9_]{0,39}" dir="ltr" className="min-h-11" />
@@ -170,7 +170,7 @@ function CustomFieldsSection({ fields }: { fields: FieldRow[] }) {
 
 function FieldTable({ fields, onDelete, pending }: { fields: FieldRow[]; onDelete: (id: string) => void; pending: boolean }) {
   const t = useTranslations('platform');
-  if (fields.length === 0) return <p className="text-sm text-muted-foreground">{t('custom.empty')}</p>;
+  if (fields.length === 0) return <p className="text-sm text-muted">{t('custom.empty')}</p>;
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -238,7 +238,7 @@ function ApiKeysSection({ keys }: { keys: KeyRow[] }) {
   return (
     <section aria-labelledby="keys-title" className="flex flex-col gap-4">
       <h2 id="keys-title" className="text-lg font-medium">{t('keys.title')}</h2>
-      <p className="text-sm text-muted-foreground">{t('keys.intro')}</p>
+      <p className="text-sm text-muted">{t('keys.intro')}</p>
       {revealed ? (
         <div role="alert" className="flex flex-col gap-2 rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
           <p className="font-medium">{t('keys.shown_once')}</p>
@@ -249,7 +249,7 @@ function ApiKeysSection({ keys }: { keys: KeyRow[] }) {
         </div>
       ) : null}
       {keys.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('keys.empty')}</p>
+        <p className="text-sm text-muted">{t('keys.empty')}</p>
       ) : (
         <div className="overflow-x-auto">
           <Table>
@@ -286,7 +286,7 @@ function ApiKeysSection({ keys }: { keys: KeyRow[] }) {
           </Table>
         </div>
       )}
-      <form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-4 rounded-lg border p-4">
+      <form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
         <div className="flex flex-col gap-2">
           <Label htmlFor="key-name">{t('keys.name')}</Label>
           <Input id="key-name" name="name" required maxLength={100} className="min-h-11" />
@@ -342,7 +342,7 @@ function WebhooksSection({ hooks }: { hooks: HookRow[] }) {
   return (
     <section aria-labelledby="hooks-title" className="flex flex-col gap-4">
       <h2 id="hooks-title" className="text-lg font-medium">{t('hooks.title')}</h2>
-      <p className="text-sm text-muted-foreground">{t('hooks.intro')}</p>
+      <p className="text-sm text-muted">{t('hooks.intro')}</p>
       {revealed ? (
         <div role="alert" className="flex flex-col gap-2 rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
           <p className="font-medium">{t('hooks.secret_once')}</p>
@@ -353,7 +353,7 @@ function WebhooksSection({ hooks }: { hooks: HookRow[] }) {
         </div>
       ) : null}
       {hooks.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('hooks.empty')}</p>
+        <p className="text-sm text-muted">{t('hooks.empty')}</p>
       ) : (
         <div className="overflow-x-auto">
           <Table>
@@ -386,7 +386,7 @@ function WebhooksSection({ hooks }: { hooks: HookRow[] }) {
           </Table>
         </div>
       )}
-      <form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-4 rounded-lg border p-4">
+      <form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-4 rounded-2xl bg-surface-secondary p-4">
         <div className="flex flex-col gap-2">
           <Label htmlFor="hook-url">{t('hooks.url')}</Label>
           <Input id="hook-url" name="url" type="url" required dir="ltr" placeholder="https://" className="min-h-11" />

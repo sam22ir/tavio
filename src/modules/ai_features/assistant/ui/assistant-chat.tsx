@@ -6,8 +6,10 @@ import { toast } from 'sonner';
 import { askAssistantAction } from '../actions';
 import { errorKey } from '../../errors';
 import type { AssistantTable } from '../tools';
+import { inputVariants } from '@heroui/styles';
+import { cn } from '@/ui/lib/cn';
 
-const INPUT = 'min-h-11 flex-1 rounded-md border border-input bg-background px-3 text-sm';
+const INPUT = cn(inputVariants({ variant: 'primary' }), 'min-h-11 flex-1 rounded-full px-4 text-sm');
 
 interface Turn { question: string; answer?: string; tables?: AssistantTable[] }
 
@@ -38,17 +40,17 @@ export function AssistantChat() {
         {turns.map((turn, i) => (
           <li key={i} className="flex flex-col gap-2">
             <p className="self-end rounded-md bg-default px-3 py-2 text-sm">{turn.question}</p>
-            {turn.answer ? <p className="text-sm">{turn.answer}</p> : <p className="text-sm text-muted-foreground">{t('assistant.thinking')}</p>}
+            {turn.answer ? <p className="text-sm">{turn.answer}</p> : <p className="text-sm text-muted">{t('assistant.thinking')}</p>}
             {turn.tables?.map((tbl, j) => (
-              <div key={j} className="overflow-x-auto rounded-md border">
+              <div key={j} className="overflow-x-auto rounded-2xl bg-surface-secondary/60">
                 <p className="px-3 py-2 text-xs font-medium">{tbl.title}</p>
                 <table className="w-full text-sm">
-                  <thead><tr>{tbl.columns.map((c) => <th key={c} className="px-3 py-1 text-start font-medium">{c}</th>)}</tr></thead>
+                  <thead><tr>{tbl.columns.map((c) => <th key={c} className="px-4 py-3 text-xs uppercase tracking-wide text-muted text-start font-medium">{c}</th>)}</tr></thead>
                   <tbody>
                     {tbl.rows.length === 0 ? (
-                      <tr><td className="px-3 py-1" colSpan={tbl.columns.length}>{t('assistant.empty')}</td></tr>
+                      <tr><td className="px-4 py-3" colSpan={tbl.columns.length}>{t('assistant.empty')}</td></tr>
                     ) : tbl.rows.map((r, k) => (
-                      <tr key={k}>{r.map((cell, c) => <td key={c} className="px-3 py-1">{cell}</td>)}</tr>
+                      <tr key={k}>{r.map((cell, c) => <td key={c} className="px-4 py-3">{cell}</td>)}</tr>
                     ))}
                   </tbody>
                 </table>

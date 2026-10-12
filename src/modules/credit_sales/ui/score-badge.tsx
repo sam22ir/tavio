@@ -7,7 +7,7 @@ const TONE: Record<string, string> = {
   B: 'bg-tint-success text-tint-success-fg',
   C: 'bg-tint-warning text-tint-warning-fg',
   D: 'bg-tint-danger text-tint-danger-fg',
-  new: 'bg-default text-muted-foreground',
+  new: 'bg-default text-muted',
 };
 
 // Server component: shows the partner's latest risk grade. Heuristic, not a credit bureau score.

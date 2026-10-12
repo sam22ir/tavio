@@ -109,7 +109,7 @@ export function RecordPaymentButton({
               onChange={(e) => setAmount(e.target.value)}
               required
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted">
               {formatDzd(BigInt(remainingCents) as Cents, locale)}
             </p>
           </div>

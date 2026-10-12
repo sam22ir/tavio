@@ -86,13 +86,13 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
   return (
     <div className="flex flex-col gap-6">
       <dl className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-        <div><dt className="text-xs text-muted-foreground">{t('workbench.opening')}</dt><dd className="font-mono">{money(statement.opening)}</dd></div>
-        <div><dt className="text-xs text-muted-foreground">{t('workbench.closing')}</dt><dd className="font-mono">{money(statement.closing)}</dd></div>
+        <div><dt className="text-xs text-muted">{t('workbench.opening')}</dt><dd className="font-mono">{money(statement.opening)}</dd></div>
+        <div><dt className="text-xs text-muted">{t('workbench.closing')}</dt><dd className="font-mono">{money(statement.closing)}</dd></div>
         <div>
-          <dt className="text-xs text-muted-foreground">{t('workbench.gap')}</dt>
+          <dt className="text-xs text-muted">{t('workbench.gap')}</dt>
           <dd className={`font-mono ${gap === BigInt(0) ? '' : 'text-destructive'}`}>{money(statement.gap)}</dd>
         </div>
-        <div><dt className="text-xs text-muted-foreground">{t('workbench.toMatch')}</dt><dd className="font-mono">{unmatchedCount}</dd></div>
+        <div><dt className="text-xs text-muted">{t('workbench.toMatch')}</dt><dd className="font-mono">{unmatchedCount}</dd></div>
         <div className="flex items-end">
           {isOpen ? (
             <Button
@@ -109,7 +109,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
           )}
         </div>
       </dl>
-      <p className="text-xs text-muted-foreground">{t('workbench.gapHint')}</p>
+      <p className="text-xs text-muted">{t('workbench.gapHint')}</p>
       {message && (
         <p role={message.kind === 'error' ? 'alert' : 'status'} className={`text-sm ${message.kind === 'error' ? 'text-destructive' : ''}`}>
           {message.text}
@@ -128,13 +128,13 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
                   <button
                     type="button"
                     onClick={() => setActiveId(l.id)}
-                    className={`flex w-full flex-col gap-1 rounded-md border p-3 text-start ${isActive ? 'border-primary' : ''}`}
+                    className={`flex w-full flex-col gap-1 rounded-2xl bg-surface-secondary p-3 text-start ${isActive ? 'ring-1 ring-primary' : ''}`}
                   >
                     <span className="flex items-center justify-between gap-2">
                       <span className="text-sm">{l.date} · {l.label}{l.reference ? ` · ${l.reference}` : ''}</span>
                       <span className={`font-mono text-sm ${amount < BigInt(0) ? 'text-destructive' : ''}`}>{money(l.amount)}</span>
                     </span>
-                    <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-2 text-xs text-muted">
                       <Badge>{l.state === 'unmatched' ? t('workbench.toMatch') : l.state === 'matched' ? t('workbench.matchedTo') : t('workbench.ignore')}</Badge>
                       {l.matches.map((m) => m.entryNumber).join(', ')}
                       {l.state === 'unmatched' && proposalFor(statement.proposals[l.id]) && (
@@ -148,7 +148,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
           </ul>
 
           {active && isOpen && active.state === 'unmatched' && (
-            <div className="flex flex-col gap-3 rounded-md border p-3">
+            <div className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-3">
               {best && (
                 <Button
                   type="button"
@@ -178,7 +178,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
                 <Label htmlFor="counter-account">{t('workbench.counterAccount')}</Label>
                 <select
                   id="counter-account"
-                  className="h-11 rounded-md border bg-background px-3 text-sm"
+                  className="text-sm"
                   value={counterId}
                   onChange={(e) => setCounterId(e.target.value)}
                 >
@@ -215,7 +215,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
 
           {isOpen && (
             <form
-              className="grid gap-3 rounded-md border p-3 sm:grid-cols-2"
+              className="grid gap-3 rounded-2xl bg-surface-secondary p-3 sm:grid-cols-2"
               onSubmit={(e) => {
                 e.preventDefault();
                 const f = new FormData(e.currentTarget);
@@ -243,7 +243,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
               <div className="flex flex-col gap-1"><Label htmlFor="ml-amount">{t('workbench.amount')}</Label><Input id="ml-amount" name="amount" inputMode="decimal" required /></div>
               <div className="flex flex-col gap-1">
                 <Label htmlFor="ml-sign">{t('workbench.in')} / {t('workbench.out')}</Label>
-                <select id="ml-sign" name="sign" className="h-11 rounded-md border bg-background px-3 text-sm">
+                <select id="ml-sign" name="sign" className="text-sm">
                   <option value="in">{t('workbench.in')}</option>
                   <option value="out">{t('workbench.out')}</option>
                 </select>
@@ -263,7 +263,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
             className="min-h-11"
           />
           {candidates.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('workbench.empty')}</p>
+            <p className="text-sm text-muted">{t('workbench.empty')}</p>
           ) : (
             <ul className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto pe-1">
               {candidates.map((c) => (
@@ -317,7 +317,7 @@ function CandidateRow({
 }) {
   const t = useTranslations('accounting.reconciliation');
   return (
-    <li className={`flex items-start gap-3 rounded-md border p-3 ${proposed ? 'border-primary' : ''}`}>
+    <li className={`flex items-start gap-3 rounded-2xl bg-surface-secondary p-3 ${proposed ? 'ring-1 ring-primary' : ''}`}>
       <input
         type="checkbox"
         className="mt-1 size-5"
@@ -331,7 +331,7 @@ function CandidateRow({
           <span className="font-mono text-sm">{candidate.entryNumber}</span>
           <span className="font-mono text-sm">{money}</span>
         </div>
-        <span className="truncate text-xs text-muted-foreground">
+        <span className="truncate text-xs text-muted">
           {candidate.date} · {candidate.lineLabel ?? candidate.entryRef ?? ''}
         </span>
         {score !== undefined && <span className="text-xs">{`${t('workbench.score')} ${score}`}</span>}

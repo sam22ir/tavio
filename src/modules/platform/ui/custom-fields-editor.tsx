@@ -55,7 +55,7 @@ export function CustomFieldsEditor({
     });
   }
 
-  if (fields.length === 0) return <p className="text-sm text-muted-foreground">{t('custom.empty')}</p>;
+  if (fields.length === 0) return <p className="text-sm text-muted">{t('custom.empty')}</p>;
 
   return (
     <form onSubmit={onSave} className="grid gap-4 sm:grid-cols-2">

@@ -20,7 +20,7 @@ export async function RecipientsTable({
   const t = await getTranslations('marketing');
 
   if (rows.length === 0) {
-    return <p className="text-sm text-muted-foreground">{t('recipients.empty')}</p>;
+    return <p className="text-sm text-muted">{t('recipients.empty')}</p>;
   }
 
   return (
@@ -29,11 +29,11 @@ export async function RecipientsTable({
         const link = channel === 'whatsapp' ? whatsappLink(row.phone, row.message) : null;
         const sent = row.status === 'sent';
         return (
-          <li key={row.id} className="flex flex-col gap-3 rounded-md border p-4">
+          <li key={row.id} className="flex flex-col gap-3 rounded-2xl bg-surface-secondary p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex min-w-0 flex-col">
                 <span className="truncate font-medium">{row.partnerName}</span>
-                <span dir="ltr" className="text-sm text-muted-foreground">
+                <span dir="ltr" className="text-sm text-muted">
                   {row.phone}
                 </span>
               </div>

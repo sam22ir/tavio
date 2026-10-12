@@ -13,6 +13,8 @@ import type { Locale } from '@/core/ctx';
 import { buildSchedule, type ScheduleLine } from '../service/schedule';
 import { createDraft, updateDraft } from '../actions/contracts';
 import { SchedulePreview } from './schedule-preview';
+import { textAreaVariants } from '@heroui/styles';
+import { cn } from '@/ui/lib/cn';
 
 export interface PartnerOption { value: string; label: string }
 export interface ProductOption { value: string; label: string; unitPriceCents: string }
@@ -173,7 +175,7 @@ export function ContractForm({ partners, products, initial }: Props) {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <select
               id="partnerId"
-              className="h-9 w-full rounded-md border bg-background px-3 text-sm"
+              className="w-full text-sm"
               value={partnerId}
               onChange={(e) => setPartnerId(e.target.value)}
               required
@@ -192,10 +194,10 @@ export function ContractForm({ partners, products, initial }: Props) {
         <section className="flex flex-col gap-3">
           <h2 className="font-medium">{t('contract.form.lines')}</h2>
           {lines.map((l) => (
-            <div key={l.key} className="grid grid-cols-1 gap-2 rounded-md border p-3 sm:grid-cols-12">
+            <div key={l.key} className="grid grid-cols-1 gap-2 rounded-2xl bg-surface-secondary p-3 sm:grid-cols-12">
               <select
                 aria-label={t('contract.form.product')}
-                className="h-11 rounded-md border bg-background px-2 text-sm sm:col-span-3 sm:h-9"
+                className="text-sm sm:col-span-3"
                 value={l.productId}
                 onChange={(e) => pickProduct(l.key, e.target.value)}
               >
@@ -262,7 +264,7 @@ export function ContractForm({ partners, products, initial }: Props) {
             <Label htmlFor="frequency">{t('fields.frequency')}</Label>
             <select
               id="frequency"
-              className="h-9 rounded-md border bg-background px-3 text-sm"
+              className="text-sm"
               value={frequency}
               onChange={(e) => setFrequency(e.target.value as 'monthly' | 'weekly')}
             >
@@ -278,7 +280,7 @@ export function ContractForm({ partners, products, initial }: Props) {
             <Label htmlFor="notes">{t('fields.notes')}</Label>
             <textarea
               id="notes"
-              className="min-h-20 rounded-md border bg-background p-2 text-sm"
+              className={cn(textAreaVariants({ variant: 'primary' }), 'min-h-20 rounded-2xl p-2 text-sm')}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
@@ -294,7 +296,7 @@ export function ContractForm({ partners, products, initial }: Props) {
       </div>
 
       <aside className="flex flex-col gap-4 lg:sticky lg:top-4 lg:self-start">
-        <div className="rounded-md border p-4 text-sm">
+        <div className="rounded-2xl bg-surface-secondary p-4 text-sm">
           <dl className="grid grid-cols-2 gap-y-2">
             <dt>{t('contract.form.cash')}</dt><dd className="text-end tabular-nums">{fmt(totals.cash)}</dd>
             <dt>{t('fields.markupCents')}</dt><dd className="text-end tabular-nums">{fmt(totals.markup)}</dd>
