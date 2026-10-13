@@ -51,7 +51,8 @@
       "lines_total_mismatch": "The line amounts do not add up to the total (tolerance 1 DZD).",
       "missing_supplier": "No supplier matched. Choose one before saving.",
       "missing_number": "The bill number could not be read."
-    }
+    },
+    "poNotice": "Linking only attaches this bill to the order. It does not mark the order's quantities as billed, so do not also use “Bill from order” for the same goods."
   },
   "assistant": {
     "title": "Business assistant",

@@ -51,7 +51,8 @@
       "lines_total_mismatch": "Les montants des lignes ne correspondent pas au total (tolérance 1 DZD).",
       "missing_supplier": "Aucun fournisseur reconnu. Choisissez-en un avant d’enregistrer.",
       "missing_number": "Le numéro de facture n’a pas pu être lu."
-    }
+    },
+    "poNotice": "Le lien rattache seulement cette facture à la commande. Il ne marque pas les quantités comme facturées : n’utilisez pas aussi « Facturer la commande » pour les mêmes marchandises."
   },
   "assistant": {
     "title": "Assistant d'entreprise",

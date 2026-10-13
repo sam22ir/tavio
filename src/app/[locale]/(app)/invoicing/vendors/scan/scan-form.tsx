@@ -213,6 +213,9 @@ export function ScanForm({ lookups, today }: {
             </select>
           </label>
           {poId ? (
+            <p role="note" className="text-xs text-muted">{t('scan.poNotice')}</p>
+          ) : null}
+          {poId ? (
             <ul className="flex flex-col gap-1 text-xs text-muted">
               {(poCandidates.find((p) => p.id === poId)?.lineDiffs ?? []).map((d) => (
                 <li key={d.lineIndex}>
