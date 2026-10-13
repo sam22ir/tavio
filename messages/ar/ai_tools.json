@@ -41,5 +41,49 @@
     "too_big": "حجم الصورة يتجاوز 5 ميغابايت.",
     "no_vision": "لا يوجد نموذج رؤية مُعد.",
     "invalid_amount": "أدخل مبلغًا صالحًا."
+  },
+  "actions": {
+    "kind": {
+      "reminder_batch": "تذكيرات لإعدادها",
+      "draft_invoice": "مسودة فاتورة"
+    },
+    "confirm": "تأكيد",
+    "reject": "رفض",
+    "pending": "جارٍ…",
+    "confirmed": "تم",
+    "rejected": "مرفوض",
+    "failed": "لم يتم",
+    "prepared": "جاهز",
+    "preparedHint": "راجع كل رسالة ثم افتحها في واتساب لترسلها بنفسك.",
+    "whatsapp": "فتح في واتساب",
+    "copy": "نسخ",
+    "copied": "تم النسخ",
+    "copyFailed": "تعذّر النسخ",
+    "openInvoice": "فتح المسودة",
+    "unavailable": "المعاينة غير متاحة.",
+    "unsupported": "نوع الإجراء غير مدعوم.",
+    "summary": {
+      "customer": "العميل",
+      "contract": "العقد",
+      "daysLate": "أيام التأخير",
+      "amount": "المبلغ",
+      "stage": "المرحلة",
+      "description": "البيان",
+      "quantity": "الكمية",
+      "unitPrice": "سعر الوحدة",
+      "total": "المجموع",
+      "untaxed": "قبل الضريبة",
+      "tax": "الضريبة"
+    },
+    "stage": {
+      "polite": "ودية",
+      "firm": "حازمة",
+      "final": "آخر تذكير"
+    },
+    "errors": {
+      "conflict": "تغيرت البيانات منذ الاقتراح. أعد السؤال.",
+      "invalid": "لم يعد هذا الإجراء صالحًا.",
+      "generic": "حدث خطأ. حاول مرة أخرى."
+    }
   }
 }

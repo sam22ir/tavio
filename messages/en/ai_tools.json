@@ -41,5 +41,49 @@
     "too_big": "The image is larger than 5 MB.",
     "no_vision": "No vision model is configured.",
     "invalid_amount": "Enter a valid amount."
+  },
+  "actions": {
+    "kind": {
+      "reminder_batch": "Reminders to prepare",
+      "draft_invoice": "Draft invoice"
+    },
+    "confirm": "Confirm",
+    "reject": "Reject",
+    "pending": "Working…",
+    "confirmed": "Done",
+    "rejected": "Rejected",
+    "failed": "Not done",
+    "prepared": "Prepared",
+    "preparedHint": "Review each message, then open it in WhatsApp to send it yourself.",
+    "whatsapp": "Open in WhatsApp",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Could not copy",
+    "openInvoice": "Open the draft invoice",
+    "unavailable": "Preview unavailable.",
+    "unsupported": "This action type is not supported.",
+    "summary": {
+      "customer": "Customer",
+      "contract": "Contract",
+      "daysLate": "Days late",
+      "amount": "Amount",
+      "stage": "Stage",
+      "description": "Description",
+      "quantity": "Quantity",
+      "unitPrice": "Unit price",
+      "total": "Total",
+      "untaxed": "Untaxed",
+      "tax": "Tax"
+    },
+    "stage": {
+      "polite": "Friendly",
+      "firm": "Firm",
+      "final": "Final notice"
+    },
+    "errors": {
+      "conflict": "The data changed since this was proposed. Ask again.",
+      "invalid": "This action is no longer valid.",
+      "generic": "Something went wrong. Try again."
+    }
   }
 }

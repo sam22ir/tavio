@@ -41,5 +41,49 @@
     "too_big": "L'image dépasse 5 Mo.",
     "no_vision": "Aucun modèle de vision n'est configuré.",
     "invalid_amount": "Saisissez un montant valide."
+  },
+  "actions": {
+    "kind": {
+      "reminder_batch": "Relances à préparer",
+      "draft_invoice": "Brouillon de facture"
+    },
+    "confirm": "Confirmer",
+    "reject": "Refuser",
+    "pending": "En cours…",
+    "confirmed": "Terminé",
+    "rejected": "Refusé",
+    "failed": "Non effectué",
+    "prepared": "Préparé",
+    "preparedHint": "Relisez chaque message, puis ouvrez-le dans WhatsApp pour l’envoyer vous-même.",
+    "whatsapp": "Ouvrir dans WhatsApp",
+    "copy": "Copier",
+    "copied": "Copié",
+    "copyFailed": "Copie impossible",
+    "openInvoice": "Ouvrir le brouillon",
+    "unavailable": "Aperçu indisponible.",
+    "unsupported": "Ce type d’action n’est pas pris en charge.",
+    "summary": {
+      "customer": "Client",
+      "contract": "Contrat",
+      "daysLate": "Jours de retard",
+      "amount": "Montant",
+      "stage": "Étape",
+      "description": "Désignation",
+      "quantity": "Quantité",
+      "unitPrice": "Prix unitaire",
+      "total": "Total",
+      "untaxed": "HT",
+      "tax": "TVA"
+    },
+    "stage": {
+      "polite": "Courtoise",
+      "firm": "Ferme",
+      "final": "Dernier rappel"
+    },
+    "errors": {
+      "conflict": "Les données ont changé depuis la proposition. Reposez la question.",
+      "invalid": "Cette action n’est plus valable.",
+      "generic": "Une erreur est survenue. Réessayez."
+    }
   }
 }

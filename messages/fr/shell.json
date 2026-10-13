@@ -79,6 +79,7 @@
       "open": "Ouvrir l'assistant",
       "prompts": {
         "overdue": "Quels clients sont en retard ?",
+        "collections": "Qui relancer en priorité ?",
         "collected": "Résume les encaissements du mois",
         "leads": "Quels prospects relancer aujourd'hui ?"
       }
