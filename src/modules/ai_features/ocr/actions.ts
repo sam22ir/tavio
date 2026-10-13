@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { defineAction } from '@/core/actions/define-action';
 import { parseDzd } from '@/core/money';
 import { err, ok } from '@/core/result';
-import { confirmVendorBill, OCR_TYPES, scanVendorBill } from './service';
+import { billChecks, confirmVendorBill, OCR_TYPES, scanVendorBill } from './service';
 
 const base64Image = z.string().min(1).max(7_000_000); // about 5 MB decoded
 const contentType = z.enum(OCR_TYPES);
@@ -47,6 +47,8 @@ export const confirmVendorBillAction = defineAction(
       fileName: z.string().trim().min(1).max(200),
       contentType,
       dataBase64: base64Image,
+      poId: z.uuid().nullable().optional(),
+      acknowledgeDuplicate: z.boolean(),
     }),
   },
   async (ctx, input) => {
@@ -66,7 +68,35 @@ export const confirmVendorBillAction = defineAction(
       fileName: input.fileName,
       contentType: input.contentType,
       bytes,
+      poId: input.poId ?? null,
+      acknowledgeDuplicate: input.acknowledgeDuplicate,
     });
     return res.ok ? ok(res.value) : res;
   },
+);
+
+/** Re-runs the PO and duplicate checks when the user changes the supplier or the bill fields. */
+export const checkVendorBillAction = defineAction(
+  {
+    perm: 'ai_features.ocr.use',
+    schema: z.object({
+      supplierId: z.uuid().nullable(),
+      number: z.string().trim().max(100).nullable(),
+      poReference: z.string().trim().max(100).nullable(),
+      date: dayString,
+      total: z.number().nonnegative().nullable(),
+      lines: z.array(z.object({ productId: z.uuid().nullable(), quantity: z.number().positive(), unitPrice: z.number().nonnegative(), taxRate: z.number() })).max(200),
+    }),
+  },
+  async (ctx, input) =>
+    ok(
+      await billChecks(ctx, {
+        supplierId: input.supplierId,
+        number: input.number,
+        poReference: input.poReference,
+        date: input.date ?? null,
+        total: input.total,
+        lines: input.lines.map((l) => ({ ...l, description: '', taxId: null })),
+      }),
+    ),
 );

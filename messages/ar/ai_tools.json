@@ -23,7 +23,35 @@
     "success": "تم إنشاء مسودة الفاتورة",
     "badType": "استخدم صورة بصيغة JPEG أو PNG أو WebP.",
     "tooBig": "حجم الصورة يتجاوز 5 ميغابايت.",
-    "noVision": "اضبط نموذج رؤية (AI_VISION_MODEL أو مزود Anthropic) لمسح الفواتير."
+    "noVision": "اضبط نموذج رؤية (AI_VISION_MODEL أو مزود Anthropic) لمسح الفواتير.",
+    "matchedBy": "تم التعرف على المورد عبر {by}",
+    "matchKind": {
+      "nif": "رقم التعريف الجبائي",
+      "nis": "رقم الإحصاء",
+      "rc": "السجل التجاري",
+      "article": "المادة الجبائية",
+      "name": "الاسم"
+    },
+    "candidates": "قد يطابق أكثر من مورد. اختر واحدًا:",
+    "purchaseOrder": "أمر الشراء",
+    "noPurchaseOrder": "بدون أمر شراء",
+    "diff": "فارق {amount} دج",
+    "byReference": "مرجع مطابق",
+    "lineDiff": "السطر {line}: مطلوب {orderedQty} بسعر {orderedUnit}، مفوتر {scannedQty} بسعر {scannedUnit}",
+    "duplicate": {
+      "title": "قد تكون هذه الفاتورة مسجلة من قبل.",
+      "reason": {
+        "origin": "رقم المورد نفسه",
+        "purchase_order": "أمر شراء مفوتر سابقًا",
+        "date_total": "التاريخ والمجموع نفسهما"
+      }
+    },
+    "notDuplicate": "أؤكد أنها ليست فاتورة مكررة",
+    "warnings": {
+      "lines_total_mismatch": "مجموع الأسطر لا يطابق المجموع الكلي (هامش 1 دج).",
+      "missing_supplier": "لم يتم التعرف على مورد. اختر واحدًا قبل الحفظ.",
+      "missing_number": "تعذّرت قراءة رقم الفاتورة."
+    }
   },
   "assistant": {
     "title": "المساعد التجاري",
@@ -40,7 +68,9 @@
     "invalid_bill": "تعذر قراءة الفاتورة. جرّب صورة أوضح.",
     "too_big": "حجم الصورة يتجاوز 5 ميغابايت.",
     "no_vision": "لا يوجد نموذج رؤية مُعد.",
-    "invalid_amount": "أدخل مبلغًا صالحًا."
+    "invalid_amount": "أدخل مبلغًا صالحًا.",
+    "duplicate_bill": "توجد فاتورة مشابهة. ضع علامة التأكيد للحفظ على أي حال.",
+    "po_invalid": "أمر الشراء هذا لا يخص هذا المورد أو مغلق."
   },
   "actions": {
     "kind": {

@@ -23,7 +23,35 @@
     "success": "Draft bill created",
     "badType": "Use a JPEG, PNG or WebP image.",
     "tooBig": "The image is larger than 5 MB.",
-    "noVision": "Configure a vision model (AI_VISION_MODEL or an Anthropic provider) to scan bills."
+    "noVision": "Configure a vision model (AI_VISION_MODEL or an Anthropic provider) to scan bills.",
+    "matchedBy": "Matched by {by}",
+    "matchKind": {
+      "nif": "tax ID (NIF)",
+      "nis": "statistical ID (NIS)",
+      "rc": "trade register (RC)",
+      "article": "tax article",
+      "name": "name"
+    },
+    "candidates": "Several suppliers may match. Pick one:",
+    "purchaseOrder": "Purchase order",
+    "noPurchaseOrder": "No purchase order",
+    "diff": "difference {amount} DZD",
+    "byReference": "matching reference",
+    "lineDiff": "Line {line}: ordered {orderedQty} at {orderedUnit}, billed {scannedQty} at {scannedUnit}",
+    "duplicate": {
+      "title": "This bill may already be recorded.",
+      "reason": {
+        "origin": "same supplier number",
+        "purchase_order": "purchase order already billed",
+        "date_total": "same date and total"
+      }
+    },
+    "notDuplicate": "I confirm this is not a duplicate",
+    "warnings": {
+      "lines_total_mismatch": "The line amounts do not add up to the total (tolerance 1 DZD).",
+      "missing_supplier": "No supplier matched. Choose one before saving.",
+      "missing_number": "The bill number could not be read."
+    }
   },
   "assistant": {
     "title": "Business assistant",
@@ -40,7 +68,9 @@
     "invalid_bill": "The bill could not be read. Try a clearer photo.",
     "too_big": "The image is larger than 5 MB.",
     "no_vision": "No vision model is configured.",
-    "invalid_amount": "Enter a valid amount."
+    "invalid_amount": "Enter a valid amount.",
+    "duplicate_bill": "A bill like this already exists. Tick the confirmation to save anyway.",
+    "po_invalid": "This purchase order does not belong to the supplier or is closed."
   },
   "actions": {
     "kind": {
