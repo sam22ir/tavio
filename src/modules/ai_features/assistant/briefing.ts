@@ -75,7 +75,7 @@ async function writeBriefing(ctx: Ctx, tables: AssistantTable[], useAi: boolean)
         { role: 'system', content: msg.system },
         { role: 'user', content: msg.user },
       ],
-      { maxTokens: 400, temperature: 0.2, feature: BRIEFING_FEATURE },
+      { maxTokens: 700, temperature: 0.2, feature: BRIEFING_FEATURE },
     );
   } catch {
     return '';
