@@ -104,7 +104,7 @@ async function reminderCandidates(ctx: Ctx, contractIds: string[], now: Date): P
     // Only reminders prepared for this late episode count. Older episodes neither block nor escalate it.
     const episodeStart = new Date(`${earliest.dueDate}T00:00:00Z`);
     const history = await ctx.tx
-      .select({ stage: aiReminderLog.stage })
+      .select({ stage: aiReminderLog.stage, createdAt: aiReminderLog.createdAt })
       .from(aiReminderLog)
       .where(
         and(
@@ -114,7 +114,9 @@ async function reminderCandidates(ctx: Ctx, contractIds: string[], now: Date): P
         ),
       )
       .orderBy(asc(aiReminderLog.createdAt));
-    const stage = nextReminderStage(daysLate, history.map((h) => h.stage as ReminderStage));
+    const lastAt = history[history.length - 1]?.createdAt;
+    const daysSinceLast = lastAt ? Math.floor((now.getTime() - lastAt.getTime()) / 86_400_000) : undefined;
+    const stage = nextReminderStage(daysLate, history.map((h) => h.stage as ReminderStage), daysSinceLast);
     if (!stage) continue;
 
     out.push({

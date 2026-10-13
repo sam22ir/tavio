@@ -21,6 +21,8 @@ export const DRAFT_INVOICE_MAX_LINES = 20;
 export type ReminderStage = 'polite' | 'firm' | 'final';
 export const FIRM_AFTER_DAYS = 7;
 export const FINAL_AFTER_DAYS = 14;
+/** Minimum days between two prepared reminders for the same contract. */
+export const MIN_GAP_DAYS = 3;
 
 /**
  * Stage of the next reminder for a contract that is late, or null when nothing is due yet.
@@ -30,10 +32,15 @@ export const FINAL_AFTER_DAYS = 14;
  *  - last firm and at least FINAL_AFTER_DAYS late: final, otherwise null (wait)
  *  - last final: null, the batch does not escalate further on its own
  */
-export function nextReminderStage(daysLate: number, history: readonly ReminderStage[]): ReminderStage | null {
+export function nextReminderStage(
+  daysLate: number,
+  history: readonly ReminderStage[],
+  daysSinceLast: number = Number.POSITIVE_INFINITY,
+): ReminderStage | null {
   if (daysLate <= 0) return null;
   const last = history[history.length - 1];
   if (last === undefined) return 'polite';
+  if (daysSinceLast < MIN_GAP_DAYS) return null;
   if (last === 'polite') return daysLate >= FIRM_AFTER_DAYS ? 'firm' : null;
   if (last === 'firm') return daysLate >= FINAL_AFTER_DAYS ? 'final' : null;
   return null;

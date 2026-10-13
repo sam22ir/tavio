@@ -4,6 +4,7 @@ import {
   FIRM_AFTER_DAYS,
   invoiceLineSchema,
   nextReminderStage,
+  MIN_GAP_DAYS,
   parseProposals,
   parseStoredPayload,
   proposalSchema,
@@ -120,5 +121,15 @@ describe('parseStoredPayload', () => {
       kind: 'reminder_batch',
       contractIds: [uuid(1)],
     });
+  });
+});
+
+describe('nextReminderStage gap', () => {
+  it('waits MIN_GAP_DAYS after the last prepared reminder', () => {
+    expect(nextReminderStage(20, ['polite'], 0)).toBeNull();
+    expect(nextReminderStage(20, ['polite'], MIN_GAP_DAYS - 1)).toBeNull();
+    expect(nextReminderStage(20, ['polite'], MIN_GAP_DAYS)).toBe('firm');
+    expect(nextReminderStage(20, ['polite', 'firm'], 1)).toBeNull();
+    expect(nextReminderStage(20, ['polite', 'firm'], MIN_GAP_DAYS)).toBe('final');
   });
 });
