@@ -37,7 +37,7 @@ const ALGIERS_DAY = new Intl.DateTimeFormat('en-CA', {
   day: '2-digit',
 });
 
-function daysLateSince(dueDate: string, now: Date): number {
+export function daysLateSince(dueDate: string, now: Date): number {
   const today = Date.parse(ALGIERS_DAY.format(now));
   return Math.max(0, Math.round((today - Date.parse(dueDate)) / 86_400_000));
 }

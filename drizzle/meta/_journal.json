@@ -148,6 +148,13 @@
       "when": 1791837130113,
       "tag": "0020_w17_ccp_direct_debit",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1791917610426,
+      "tag": "0021_ai_actions",
+      "breakpoints": true
     }
   ]
 }
