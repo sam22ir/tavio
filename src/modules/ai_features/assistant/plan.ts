@@ -62,3 +62,8 @@ export const TOOL_DESCRIPTIONS: Record<AssistantToolName, string> = {
   unpaid_invoices: 'unpaid and partly paid posted sales invoices, total outstanding and count',
   collections_queue: 'overdue customers ranked by days late then amount, with their latest risk grade (A to D, or new when unscored)',
 };
+
+/** Extra permission a tool needs on top of ai_features.assistant.use. */
+export const TOOL_PERMS: Partial<Record<AssistantToolName, string>> = {
+  collections_queue: 'credit_sales.contract.read',
+};

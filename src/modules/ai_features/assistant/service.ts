@@ -5,7 +5,7 @@ import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { ACTION_KINDS, type ActionKind } from '../actions/rules';
 import { propose, type ActionProposal } from '../actions/service';
-import { planActionKinds, planActionProposals, planToolCalls, TOOL_DESCRIPTIONS, ASSISTANT_TOOL_NAMES, type AssistantToolName } from './plan';
+import { planActionKinds, planActionProposals, planToolCalls, TOOL_DESCRIPTIONS, TOOL_PERMS, ASSISTANT_TOOL_NAMES, type AssistantToolName } from './plan';
 import { runAssistantTool, type AssistantTable } from './tools';
 
 export interface AssistantAnswer { answer: string; tables: AssistantTable[]; proposals: ActionProposal[] }
@@ -34,7 +34,12 @@ export async function askAssistant(ctx: Ctx, question: string): Promise<Result<A
   const quota = await assertAiQuota(ctx);
   if (!quota.ok) return quota;
 
-  const toolList = ASSISTANT_TOOL_NAMES.map((n) => `- ${n}: ${TOOL_DESCRIPTIONS[n]}`).join('\n');
+  // Offer only the tools this role may run, so a missing permission narrows the choice instead of failing the answer.
+  const available = ASSISTANT_TOOL_NAMES.filter((n) => {
+    const needed = TOOL_PERMS[n];
+    return !needed || requirePerm(ctx, needed).ok;
+  });
+  const toolList = available.map((n) => `- ${n}: ${TOOL_DESCRIPTIONS[n]}`).join('\n');
   const planFeature = 'ai_features.assistant.plan';
   const plan = await ai.complete(
     [
@@ -48,7 +53,7 @@ export async function askAssistant(ctx: Ctx, question: string): Promise<Result<A
   );
   await recordAiUsage(ctx, plan, planFeature);
 
-  const names: AssistantToolName[] = planToolCalls(plan.text);
+  const names: AssistantToolName[] = planToolCalls(plan.text, available);
   if (names.length === 0) return err('VALIDATION', 'no tool matched the question', { messageKey: 'errors.no_tool' });
 
   const tables: AssistantTable[] = [];
