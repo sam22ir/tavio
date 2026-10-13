@@ -287,7 +287,7 @@ function ProposalCard({ proposal, decision, onDecide }: ProposalCardProps) {
 
       {decision?.state === 'pending' ? <p className="text-sm text-muted">{t('actions.pending')}</p> : null}
       {decision?.state === 'rejected' ? <p className="text-sm text-muted">{t('actions.rejected')}</p> : null}
-      {decision?.state === 'failed' ? <p role="alert" className="text-sm text-danger">{t('actions.failed')}: {decision.message}</p> : null}
+      {decision?.state === 'failed' ? <p role="alert" className="text-sm text-destructive">{t('actions.failed')}: {decision.message}</p> : null}
 
       {decision?.state === 'confirmed' ? (
         <div className="flex flex-col gap-3">
