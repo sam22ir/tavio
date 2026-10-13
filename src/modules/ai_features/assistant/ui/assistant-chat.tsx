@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -17,7 +17,7 @@ const INPUT = cn(inputVariants({ variant: 'primary' }), 'min-h-11 flex-1 rounded
 
 /** A proposal as the server returns it. Kept loose: the summary is parsed defensively before rendering. */
 interface ProposalView { id: string; kind: string; summary: unknown }
-interface Turn { question: string; answer?: string; tables?: AssistantTable[]; proposals?: ProposalView[] }
+interface Turn { id: number; question: string; answer?: string; tables?: AssistantTable[]; proposals?: ProposalView[] }
 
 /** Local state of one proposal after the user acted on it. */
 type Decision =
@@ -94,35 +94,38 @@ export function AssistantChat() {
   const [briefingPending, startBriefing] = useTransition();
   const [question, setQuestion] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
+  const nextId = useRef(0);
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
 
   function ask(override?: string) {
     const q = (override ?? question).trim();
     if (q.length < 3) return;
     setQuestion('');
-    setTurns((cur) => [...cur, { question: q }]);
+    const id = nextId.current++;
+    setTurns((cur) => [...cur, { id, question: q }]);
     start(async () => {
       const res = await askAssistantAction({ question: q });
       if (!res.ok) {
-        setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: t(errorKey(res.error.details)) } : x)));
+        setTurns((cur) => cur.map((x) => (x.id === id ? { ...x, answer: t(errorKey(res.error.details)) } : x)));
         toast.error(t(errorKey(res.error.details))); return;
       }
-      setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: res.value.answer, tables: res.value.tables, proposals: res.value.proposals } : x)));
+      setTurns((cur) => cur.map((x) => (x.id === id ? { ...x, answer: res.value.answer, tables: res.value.tables, proposals: res.value.proposals } : x)));
     });
   }
 
   /** Morning briefing: appends a turn labelled with the briefing, then fills it from the server. */
   function briefing() {
-    setTurns((cur) => [...cur, { question: t('briefing.label') }]);
+    const id = nextId.current++;
+    setTurns((cur) => [...cur, { id, question: t('briefing.label') }]);
     startBriefing(async () => {
       const res = await morningBriefingAction({});
       if (!res.ok) {
         const message = t(errorKey(res.error.details));
-        setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: message } : x)));
+        setTurns((cur) => cur.map((x) => (x.id === id ? { ...x, answer: message } : x)));
         toast.error(message);
         return;
       }
-      setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: res.value.answer, tables: res.value.tables, proposals: res.value.proposals } : x)));
+      setTurns((cur) => cur.map((x) => (x.id === id ? { ...x, answer: res.value.answer, tables: res.value.tables, proposals: res.value.proposals } : x)));
     });
   }
 
