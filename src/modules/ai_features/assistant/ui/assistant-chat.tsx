@@ -4,11 +4,11 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { askAssistantAction, confirmAiAction, rejectAiAction } from '../actions';
+import { askAssistantAction, confirmAiAction, morningBriefingAction, rejectAiAction } from '../actions';
 import { errorKey } from '../../errors';
 import type { AssistantTable } from '../tools';
 import { inputVariants } from '@heroui/styles';
-import { ArrowUp, Sparkles } from 'lucide-react';
+import { ArrowUp, Sparkles, Sunrise } from 'lucide-react';
 import { cn } from '@/ui/lib/cn';
 import { Button } from '@/ui/primitives/button';
 import { TintIcon } from '@/ui/blocks/tint';
@@ -91,6 +91,7 @@ export function AssistantChat() {
   const tShell = useTranslations('shell.dashboard.assistant');
   const [pending, start] = useTransition();
   const [, startAction] = useTransition();
+  const [briefingPending, startBriefing] = useTransition();
   const [question, setQuestion] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
@@ -105,6 +106,21 @@ export function AssistantChat() {
       if (!res.ok) {
         setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: t(errorKey(res.error.details)) } : x)));
         toast.error(t(errorKey(res.error.details))); return;
+      }
+      setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: res.value.answer, tables: res.value.tables, proposals: res.value.proposals } : x)));
+    });
+  }
+
+  /** Morning briefing: appends a turn labelled with the briefing, then fills it from the server. */
+  function briefing() {
+    setTurns((cur) => [...cur, { question: t('briefing.label') }]);
+    startBriefing(async () => {
+      const res = await morningBriefingAction({});
+      if (!res.ok) {
+        const message = t(errorKey(res.error.details));
+        setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: message } : x)));
+        toast.error(message);
+        return;
       }
       setTurns((cur) => cur.map((x, i) => (i === cur.length - 1 ? { ...x, answer: res.value.answer, tables: res.value.tables, proposals: res.value.proposals } : x)));
     });
@@ -147,6 +163,13 @@ export function AssistantChat() {
               <Sparkles className="size-6" />
             </span>
             <p className="text-sm text-muted">{tShell('hint')}</p>
+            <div className="flex w-full flex-col gap-2">
+              <Button size="lg" disabled={briefingPending || pending} onClick={briefing} className="w-full gap-2 rounded-2xl">
+                <Sunrise aria-hidden="true" className="size-5 shrink-0" />
+                {t('briefing.label')}
+              </Button>
+              <p className="text-xs text-muted">{t('briefing.hint')}</p>
+            </div>
             <ul className="flex w-full flex-col gap-2">
               {starters.map((q) => (
                 <li key={q}>
@@ -159,6 +182,13 @@ export function AssistantChat() {
             </ul>
           </div>
         ) : (
+          <>
+          <div className="flex justify-end">
+            <Button size="sm" variant="outline" disabled={briefingPending || pending} onClick={briefing} className="gap-2 rounded-full">
+              <Sunrise aria-hidden="true" className="size-4 shrink-0" />
+              {t('briefing.label')}
+            </Button>
+          </div>
           <ol className="flex flex-col gap-5">
             {turns.map((turn, i) => (
               <li key={i} className="flex flex-col gap-3">
@@ -166,7 +196,7 @@ export function AssistantChat() {
                 <div className="flex items-start gap-3">
                   <TintIcon icon={Sparkles} tint="info" className="size-8" />
                   <div className="flex min-w-0 flex-1 flex-col gap-3">
-                    {turn.answer ? <p className="text-sm leading-relaxed">{turn.answer}</p> : <p className="text-sm text-muted">{t('assistant.thinking')}</p>}
+                    {turn.answer === undefined ? <p className="text-sm text-muted">{t('assistant.thinking')}</p> : turn.answer ? <p className="text-sm leading-relaxed">{turn.answer}</p> : !turn.tables?.length && !turn.proposals?.length ? <p className="text-sm text-muted">{t('briefing.unavailable')}</p> : null}
                     {turn.tables?.map((tbl, j) => (
                       <div key={j} className="overflow-x-auto rounded-2xl bg-surface-secondary/60">
                         <p className="px-4 pt-3 text-xs font-medium">{tbl.title}</p>
@@ -190,6 +220,7 @@ export function AssistantChat() {
               </li>
             ))}
           </ol>
+          </>
         )}
       </div>
       <form className="flex items-center gap-2" onSubmit={(e) => { e.preventDefault(); if (!pending) ask(); }}>

@@ -85,5 +85,10 @@
       "invalid": "This action is no longer valid.",
       "generic": "Something went wrong. Try again."
     }
+  },
+  "briefing": {
+    "label": "Morning briefing",
+    "hint": "What needs attention today, who to chase first, and what to reorder.",
+    "unavailable": "Nothing to brief for your role yet."
   }
 }

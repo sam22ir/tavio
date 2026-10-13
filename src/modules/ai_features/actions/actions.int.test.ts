@@ -12,6 +12,7 @@ import { creditContracts, creditInstallments } from '@/modules/credit_sales/sche
 import { recordPayment } from '@/modules/credit_sales/service/payments';
 import { invoices } from '@/modules/invoicing/schema';
 import { confirm, propose, reject } from './service';
+import { morningBriefing } from '../assistant/briefing';
 
 loadDevEnv();
 
@@ -257,6 +258,33 @@ describe('AI actions confirm path', { timeout: 120_000 }, () => {
     expect(denied.ok).toBe(false);
     if (!denied.ok) expect(denied.error.code).toBe('FORBIDDEN');
     expect((await actionRow(f.companyId, p.id)).state).toBe('proposed');
+    expect(await reminderLogs(f.companyId, f.contractId)).toHaveLength(0);
+  });
+});
+
+describe('morning briefing', { timeout: 120_000 }, () => {
+  it('proposes a reminder batch for a company with a late contract, without AI', async () => {
+    const f = await fixture({ amounts: [BigInt(50000)], startDate: '2026-01-05' });
+    const res = okValue(
+      await withTenant(args(f, [ASSIST, READ]), (c) => morningBriefing(c, { ai: false }), db),
+    );
+    expect(res.answer).toBe('');
+    expect(res.tables.map((t) => t.title)).toContain('Collections queue');
+    expect(res.proposals).toHaveLength(1);
+    const proposal = res.proposals[0];
+    expect(proposal?.kind).toBe('reminder_batch');
+    const row = await actionRow(f.companyId, proposal!.id);
+    expect(row.state).toBe('proposed');
+    expect(JSON.stringify(row.summary)).toContain(f.contractId);
+  });
+
+  it('for a role without credit read: no queue table, no proposal, and no error', async () => {
+    const f = await fixture({ amounts: [BigInt(50000)], startDate: '2026-01-05' });
+    const res = okValue(
+      await withTenant(args(f, [ASSIST]), (c) => morningBriefing(c, { ai: false }), db),
+    );
+    expect(res.tables.map((t) => t.title)).not.toContain('Collections queue');
+    expect(res.proposals).toEqual([]);
     expect(await reminderLogs(f.companyId, f.contractId)).toHaveLength(0);
   });
 });

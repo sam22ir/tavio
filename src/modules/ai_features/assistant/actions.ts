@@ -7,6 +7,7 @@ import { requireUser } from '@/core/auth/session';
 import { listMyCompanies } from '@/core/tenancy/service';
 import { confirm, reject } from '../actions/service';
 import { askAssistant } from './service';
+import { morningBriefing } from './briefing';
 
 const PERM = 'ai_features.assistant.use';
 
@@ -37,4 +38,10 @@ export const confirmAiAction = defineAction(
 export const rejectAiAction = defineAction(
   { perm: PERM, schema: actionIdSchema },
   (ctx, input) => reject(ctx, input.actionId),
+);
+
+/** Deterministic morning briefing: fixed read-only tools, one AI summary, and a reminder proposal from the queue. */
+export const morningBriefingAction = defineAction(
+  { perm: PERM, schema: z.object({}) },
+  (ctx) => morningBriefing(ctx),
 );

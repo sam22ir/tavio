@@ -85,5 +85,10 @@
       "invalid": "Cette action n’est plus valable.",
       "generic": "Une erreur est survenue. Réessayez."
     }
+  },
+  "briefing": {
+    "label": "Briefing du matin",
+    "hint": "Ce qui demande votre attention aujourd’hui, qui relancer en premier et quoi réassortir.",
+    "unavailable": "Rien à résumer pour votre rôle pour l’instant."
   }
 }
