@@ -40,6 +40,7 @@ export const OCR_PROMPT = `Extract this vendor invoice. Reply with one JSON obje
  "poReference": string|null, "lines": [{"description": string, "quantity": number, "unitPrice": number, "taxRate": number}],
  "subtotal": number|null, "taxTotal": number|null, "total": number|null}
 Rules:
+- The supplier is the ISSUER of the bill: the seller (vendeur, fournisseur, البائع, المورد), usually the letterhead or the party that carries the NIF, RC and bank details. NEVER use the buyer (client, destinataire, acheteur, المشتري, الزبون, « Facturé à », « Bill to ») as the supplier, and ignore the buyer's identifiers. If the issuer cannot be identified, return null for every supplier field.
 - Bills can mix Arabic and French, and digits can be Arabic-Indic (٠١٢٣٤٥٦٧٨٩). Write every number as ASCII digits in JSON.
 - Copy supplierName, supplierNif, supplierNis, supplierRc, supplierArticle, supplierInvoiceNumber and poReference exactly as printed, in their original script.
 - supplierNif is the tax identifier (NIF), supplierNis the statistical identifier (NIS), supplierRc the trade register number (RC), supplierArticle the tax article (Article d'imposition).

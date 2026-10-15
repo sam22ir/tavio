@@ -2,7 +2,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { AiError } from './errors';
 import type { AiContent, AiMessage } from './types';
 
-export const AI_TIMEOUT_MS = 30_000;
+export const AI_TIMEOUT_MS = 60_000;
 
 export type AiEnv = Record<string, string | undefined>;
 
