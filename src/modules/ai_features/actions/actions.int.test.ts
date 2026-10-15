@@ -127,6 +127,18 @@ afterAll(async () => {
 });
 
 describe('AI actions confirm path', { timeout: 120_000 }, () => {
+  it('0. a new reminder proposal supersedes the open one for the same contract', async () => {
+    const f = await fixture({ amounts: [BigInt(50000)], startDate: '2026-01-05' });
+    const a = await proposeReminder(f);
+    const b = await proposeReminder(f);
+
+    expect((await actionRow(f.companyId, a.id)).state).toBe('rejected');
+    expect((await actionRow(f.companyId, b.id)).state).toBe('proposed');
+    const stale = await withTenant(args(f, [ASSIST, READ]), (c) => confirm(c, a.id), db);
+    expect(stale.ok).toBe(false);
+    expect((await reminderLogs(f.companyId, f.contractId)).length).toBe(0);
+  });
+
   it('1. a second confirm writes nothing: one reminder log row and state stays confirmed', async () => {
     const f = await fixture({ amounts: [BigInt(50000)], startDate: '2026-01-05' });
     const p = await proposeReminder(f);

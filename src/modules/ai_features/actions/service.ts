@@ -184,6 +184,33 @@ async function draftInvoiceSummary(
 }
 
 /**
+ * A new reminder proposal replaces this user's still-open ones that cover any of the same contracts, so the
+ * same debtor is never chased from two live cards. Older cards then answer STATE instead of sending twice.
+ */
+async function supersedeOpenReminders(ctx: Ctx, contractIds: string[], now: Date) {
+  const open = await ctx.tx
+    .select({ id: aiActions.id, payload: aiActions.payload })
+    .from(aiActions)
+    .where(
+      and(
+        eq(aiActions.companyId, ctx.companyId),
+        eq(aiActions.userId, ctx.userId),
+        eq(aiActions.kind, 'reminder_batch'),
+        eq(aiActions.state, 'proposed'),
+      ),
+    );
+  const wanted = new Set(contractIds);
+  for (const row of open) {
+    const ids = (row.payload as { contractIds?: string[] } | null)?.contractIds ?? [];
+    if (!ids.some((id) => wanted.has(id))) continue;
+    await ctx.tx
+      .update(aiActions)
+      .set({ state: 'rejected', decidedAt: now })
+      .where(and(eq(aiActions.id, row.id), eq(aiActions.state, 'proposed')));
+  }
+}
+
+/**
  * Stores a proposal. Re-validates every ID against the tenant and builds the summary the user will confirm.
  * Caps are enforced by the zod schema in rules.ts.
  */
@@ -215,6 +242,8 @@ export async function propose(ctx: Ctx, proposal: Proposal, now = new Date()): P
     if (!built.ok) return built;
     summary = built.value;
   }
+
+  if (proposal.kind === 'reminder_batch') await supersedeOpenReminders(ctx, proposal.contractIds, now);
 
   const [row] = await ctx.tx
     .insert(aiActions)
