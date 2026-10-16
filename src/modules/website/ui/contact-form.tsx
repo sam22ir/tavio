@@ -84,7 +84,7 @@ export function ContactForm({ slug }: { slug: string }) {
       </div>
 
       {phase.kind === 'error' ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t(`contact.errors.${phase.reason}`)}
         </p>
       ) : null}

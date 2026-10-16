@@ -33,8 +33,8 @@ export default async function CampaignDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">
+      <div>
+        <p role="alert" className="text-sm text-danger">
           {t('page.error')}
         </p>
       </div>
@@ -49,13 +49,13 @@ export default async function CampaignDetailPage({
   const sampleName = t('editor.sampleName');
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <Link href={listHref} className="text-sm text-muted hover:underline">
         ← {t('page.title')}
       </Link>
 
       <header className="flex flex-col gap-2">
-        <h1 className="text-xl font-semibold break-words">{campaign.name}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight break-words">{campaign.name}</h1>
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
           <Badge variant="secondary">{t(`options.channel.${campaign.channel}`)}</Badge>
           <Badge variant="outline">{t(`options.state.${campaign.state}`)}</Badge>

@@ -34,7 +34,7 @@ export default async function EntryDetailPage({
     });
     const fullLines = editor.lines.ok ? editor.lines.value.lines : [];
     return (
-      <section className="flex flex-col gap-6 p-4 md:p-6">
+      <section className="flex flex-col gap-6">
         <h1 className="font-mono text-2xl font-semibold">{t('entries.draftTitle')}</h1>
         <DraftEntryForm
           accounts={editor.accounts.map((a) => ({ code: a.code, name: a.name }))}
@@ -62,7 +62,7 @@ export default async function EntryDetailPage({
   const canReverse = entry.state === 'posted' && !entry.reversedById;
 
   return (
-    <section className="flex flex-col gap-6 p-4 md:p-6">
+    <section className="flex flex-col gap-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="font-mono text-2xl font-semibold">{entry.number}</h1>

@@ -24,7 +24,7 @@ export interface EmployeeFormValues {
 }
 
 const SELECT_CLASS =
-  'h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+  'h-9 w-full rounded-xl border border-separator bg-surface px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
 /** Create and edit form for an employee. The action returns FormState; redirects happen in the action. */
 export function EmployeeForm({
@@ -67,7 +67,7 @@ export function EmployeeForm({
         {t('fields.active')}
       </label>
       {state.ok === false && state.message ? (
-        <p role="alert" className="text-sm text-destructive sm:col-span-2">
+        <p role="alert" className="text-sm text-danger sm:col-span-2">
           {state.message}
         </p>
       ) : null}
@@ -99,7 +99,7 @@ function Field({
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={name}>{label}</Label>
       <Input id={name} name={name} type={type} defaultValue={defaultValue} required={required} aria-invalid={error ? true : undefined} />
-      {error ? <p className="text-xs text-destructive">{error}</p> : null}
+      {error ? <p className="text-xs text-danger">{error}</p> : null}
     </div>
   );
 }

@@ -34,8 +34,8 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
   const currentLocale = await getLocale();
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
 
       <section id="statements" className="flex flex-col gap-4">
         <BankStatementImport accounts={data.accounts.map((a) => ({ id: a.id, code: a.code, name: a.name }))} />

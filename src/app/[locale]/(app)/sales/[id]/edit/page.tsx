@@ -24,8 +24,8 @@ export default async function EditSaleOrderPage({ params }: { params: Promise<{ 
   if (order.state !== 'draft' && order.state !== 'sent') notFound();
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1 className="text-xl font-semibold">{t('title.edit')}</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('title.edit')}</h1>
       <OrderForm
         lookups={data.lookups}
         today={todayAlgiers()}

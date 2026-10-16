@@ -29,8 +29,8 @@ export default async function SalesPage({
   if (!result.ok) throw new Error(result.error.code);
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1 className="text-xl font-semibold">{t('title.list')}</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('title.list')}</h1>
       <DataList
         entity={saleOrderEntity}
         result={result.value}

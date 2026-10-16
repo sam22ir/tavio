@@ -115,7 +115,7 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
           <Textarea id="tpl-body" dir="auto" rows={8} value={values.body} onChange={(e) => setField('body', e.target.value)} />
         </div>
         {unknown.length > 0 ? (
-          <p role="alert" className="text-sm text-destructive">{t('unknownVar', { vars: unknown.map((v) => `{${v}}`).join(' ') })}</p>
+          <p role="alert" className="text-sm text-danger">{t('unknownVar', { vars: unknown.map((v) => `{${v}}`).join(' ') })}</p>
         ) : null}
         <div className="flex flex-col gap-2 rounded-md bg-default/40 p-3">
           <h3 className="text-sm font-medium">{t('preview')}</h3>
@@ -123,7 +123,7 @@ export function MessagingSettingsForm({ templates, settings }: { templates: Temp
           <p dir="auto" className="text-sm font-semibold">{preview.subject}</p>
           <div dir="auto" className="whitespace-pre-line text-sm">{preview.text}</div>
         </div>
-        {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+        {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
         <div className="flex flex-wrap gap-2">
           <Button type="button" onClick={save} disabled={pending || unknown.length > 0} className="min-h-11">{t('save')}</Button>
           <Button type="button" variant="outline" onClick={reset} disabled={pending} className="min-h-11">{t('reset')}</Button>

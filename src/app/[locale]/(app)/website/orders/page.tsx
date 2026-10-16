@@ -27,7 +27,7 @@ export default async function WebOrdersPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold">{t('orders.title')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('orders.title')}</h1>
       {result.ok ? (
         <DataList
           entity={webOrderEntity}
@@ -37,7 +37,7 @@ export default async function WebOrdersPage({
           rowHref={(row) => `/${currentLocale}/website/orders/${row.id}`}
         />
       ) : (
-        <p role="alert" className="text-sm text-destructive">{t('orders.error')}</p>
+        <p role="alert" className="text-sm text-danger">{t('orders.error')}</p>
       )}
       <Link href={`/${currentLocale}/website`} className="text-sm text-muted hover:underline">
         ← {t('settings.title')}

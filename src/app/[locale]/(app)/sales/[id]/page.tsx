@@ -34,9 +34,9 @@ export default async function SaleOrderPage({ params }: { params: Promise<{ loca
   const invoiceBadge = INVOICE_BADGE[progress.invoiceStatus];
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold">{order.number ? String(order.number) : t('title.new')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{order.number ? String(order.number) : t('title.new')}</h1>
       <RelatedLinks source="sales.order" id={id} />
         <p className="text-sm text-muted">
           {partnerName} · {t(`options.state.${String(order.state)}` as 'options.state.draft')}
@@ -124,7 +124,7 @@ export default async function SaleOrderPage({ params }: { params: Promise<{ loca
           {deliveries.length === 0 ? (
             <p className="text-sm text-muted">{t('sections.noDeliveries')}</p>
           ) : (
-            <ul className="divide-y rounded-md border text-sm">
+            <ul className="divide-y rounded-2xl border border-separator text-sm">
               {deliveries.map((d) => (
                 <li key={d.id} className="flex items-center justify-between gap-2 p-2">
                   <Link href={`/${locale}/inventory/deliveries/${d.id}`} className="underline break-all">
@@ -143,7 +143,7 @@ export default async function SaleOrderPage({ params }: { params: Promise<{ loca
         {invoices.length === 0 ? (
           <p className="text-sm text-muted">{t('sections.noInvoices')}</p>
         ) : (
-          <ul className="divide-y rounded-md border text-sm">
+          <ul className="divide-y rounded-2xl border border-separator text-sm">
             {invoices.map((inv) => (
               <li key={inv.id} className="flex items-center justify-between gap-2 p-2">
                 <Link href={`/${locale}/invoicing/customers/${inv.id}`} className="underline break-all">

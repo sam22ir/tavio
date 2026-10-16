@@ -41,8 +41,8 @@ export default async function EditProductPage({
   if (selectedCategory) values.categoryId = selectedCategory;
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1 className="text-xl font-semibold">{t('product.edit')}</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('product.edit')}</h1>
       <RelatedLinks source="products.product" id={id} />
       <AddCategoryForm />
       <RecordForm

@@ -23,7 +23,7 @@ export default async function ReceiptsPage({
 
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t.receipt}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t.receipt}</h1>
       {rows.length === 0 ? (
         <p className="text-sm text-muted">—</p>
       ) : (

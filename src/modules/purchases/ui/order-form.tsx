@@ -162,12 +162,12 @@ export function OrderForm({ action, partners, products, taxes }: OrderFormProps)
       </fieldset>
 
       {state.message ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {tr(state.message)}
         </p>
       ) : null}
       {fieldError('partnerId') ? (
-        <p className="text-sm text-destructive">{t('errors.validation')}</p>
+        <p className="text-sm text-danger">{t('errors.validation')}</p>
       ) : null}
 
       <div>

@@ -19,8 +19,8 @@ export default async function ScanVendorBill({ params }: { params: Promise<{ loc
     taxes: await taxOptionsFor(ctx, 'vendors'),
   }));
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('scan.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('scan.title')}</h1>
       {visionReady ? (
         <ScanForm lookups={lookups} today={today()} />
       ) : (

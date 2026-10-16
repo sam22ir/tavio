@@ -17,17 +17,17 @@ export default async function TeamsPage({ params }: { params: Promise<{ locale: 
   const teams = await withPageCtx((ctx) => listTeams(ctx));
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('team.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('team.title')}</h1>
       {teams.ok ? (
-        <ul className="divide-y rounded-md border">
+        <ul className="divide-y rounded-2xl border border-separator">
           {teams.value.length === 0 ? <li className="p-3 text-sm text-muted">{t('team.empty')}</li> : null}
           {teams.value.map((team) => (
             <li key={team.id} className="p-3 text-sm">{team.name}</li>
           ))}
         </ul>
       ) : (
-        <p role="alert" className="text-sm text-destructive">{t('team.error')}</p>
+        <p role="alert" className="text-sm text-danger">{t('team.error')}</p>
       )}
       <div className="max-w-md">
         <h2 className="mb-3 text-base font-semibold">{t('team.new')}</h2>

@@ -39,7 +39,7 @@ export default async function NewContractPage({ params }: { params: Promise<{ lo
 
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t('contract.new')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('contract.new')}</h1>
       <ContractForm partners={partnerOptions} products={productOptions} />
     </section>
   );

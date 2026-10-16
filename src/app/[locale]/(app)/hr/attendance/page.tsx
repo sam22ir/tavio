@@ -48,9 +48,9 @@ export default async function AttendancePage({
   const checkedIn = data.open?.ok && data.open.value !== null;
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       {failed ? <ErrorToast message={tViews('error')} /> : null}
-      <h1 className="text-xl font-semibold">{t('attendance.title')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('attendance.title')}</h1>
 
       <section aria-labelledby="attendance-self" className="flex flex-col items-start gap-3 rounded-2xl bg-surface-secondary p-4">
         <h2 id="attendance-self" className="text-base font-semibold">
@@ -116,7 +116,7 @@ export default async function AttendancePage({
               </div>
             </section>
         ) : (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="text-sm text-danger">
             {t('attendance.error')}
           </p>
         )}
@@ -127,7 +127,7 @@ export default async function AttendancePage({
           {t('attendance.recent')}
         </h2>
         {data.spans.ok ? (
-          <ul className="flex flex-col divide-y rounded-md border">
+          <ul className="flex flex-col divide-y rounded-2xl border border-separator">
             {data.spans.value.slice(0, 50).map((s) => (
               <li key={s.id} className="flex flex-wrap justify-between gap-2 p-3 text-sm">
                 <span className="break-words">{s.employeeName}</span>
@@ -140,7 +140,7 @@ export default async function AttendancePage({
             ))}
           </ul>
         ) : (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="text-sm text-danger">
             {t('attendance.error')}
           </p>
         )}

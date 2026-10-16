@@ -59,14 +59,14 @@ export default async function CrmTeamsPage({
   return (
     <section className="flex max-w-2xl flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">{t('teamsTitle')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('teamsTitle')}</h1>
         <Link href={`/${locale}/crm/list`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
           {t('back')}
         </Link>
       </div>
 
       {!data ? (
-        <p role="alert" className="rounded-md border p-4 text-sm text-destructive">
+        <p role="alert" className="rounded-2xl bg-tint-danger p-4 text-sm text-tint-danger-fg">
           {t('loadError')}
         </p>
       ) : (
@@ -78,7 +78,7 @@ export default async function CrmTeamsPage({
             </p>
           ) : null}
           {query.template === 'failed' ? (
-            <p role="alert" className="rounded-md border p-4 text-sm text-destructive">
+            <p role="alert" className="rounded-2xl bg-tint-danger p-4 text-sm text-tint-danger-fg">
               {t('mourabahaFailed')}
             </p>
           ) : null}

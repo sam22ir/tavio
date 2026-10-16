@@ -84,7 +84,7 @@ export function FiscalYearsPanel({ years, lockDate }: { years: FiscalYearView[];
             <Button type="submit" disabled={creating} className="min-h-11">{t('createSubmit')}</Button>
           </div>
         </form>
-        {createState.ok === false ? <p role="alert" className="text-sm text-destructive">{t('errors.generic')}</p> : null}
+        {createState.ok === false ? <p role="alert" className="text-sm text-danger">{t('errors.generic')}</p> : null}
         {createState.ok ? <p className="text-sm">{t('created')}</p> : null}
       </section>
 
@@ -98,7 +98,7 @@ export function FiscalYearsPanel({ years, lockDate }: { years: FiscalYearView[];
           </div>
           <Button type="submit" disabled={locking} className="min-h-11">{t('lockSubmit')}</Button>
         </form>
-        {lockState.ok === false ? <p role="alert" className="text-sm text-destructive">{t('errors.generic')}</p> : null}
+        {lockState.ok === false ? <p role="alert" className="text-sm text-danger">{t('errors.generic')}</p> : null}
       </section>
     </div>
   );

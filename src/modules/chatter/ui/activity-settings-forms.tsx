@@ -14,10 +14,10 @@ type Labelled = ActivityType & { label: string };
 type Option = { id: string; label: string };
 type Assignee = { id: string; name: string };
 
-const selectClass = 'h-9 rounded-md border bg-background px-3 text-sm';
+const selectClass = 'h-11 rounded-xl border border-separator bg-surface px-3 text-sm';
 
 function ErrorLine({ message }: { message: string | null }) {
-  return message ? <p role="alert" className="text-sm text-destructive">{message}</p> : null;
+  return message ? <p role="alert" className="text-sm text-danger">{message}</p> : null;
 }
 
 /** Activity types: list, then create or edit one. */

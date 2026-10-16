@@ -40,7 +40,7 @@ export function CompanyForm({ values }: { values: CompanyFormValues }) {
         <section className="app-panel flex flex-col gap-4 p-5">
     <form action={action} className="flex flex-col gap-6">
       {state.status === 'error' ? (
-        <p role="alert" className="text-sm text-destructive">{t(state.key.replace(/^errors\./, 'errors.'))}</p>
+        <p role="alert" className="text-sm text-danger">{t(state.key.replace(/^errors\./, 'errors.'))}</p>
       ) : null}
       {state.status === 'saved' ? (
         <div className="flex flex-col gap-2 text-sm">

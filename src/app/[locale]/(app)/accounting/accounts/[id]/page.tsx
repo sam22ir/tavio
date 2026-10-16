@@ -16,7 +16,7 @@ export default async function AccountEditPage({ params }: { params: Promise<{ lo
   const currentLocale = await getLocale();
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <h1 className="font-mono text-xl font-semibold">{`${account.code} · ${account.name}`}</h1>
       {account.archived ? <p className="text-sm">{t('accounts.archived')}</p> : null}
       <AccountForm

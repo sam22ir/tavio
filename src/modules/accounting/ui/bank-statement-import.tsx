@@ -157,7 +157,7 @@ export function BankStatementImport({ accounts }: { accounts: StatementAccountOp
           </div>
         </form>
       )}
-      {message && <p role="alert" className="text-sm text-destructive">{message}</p>}
+      {message && <p role="alert" className="text-sm text-danger">{message}</p>}
     </section>
   );
 }

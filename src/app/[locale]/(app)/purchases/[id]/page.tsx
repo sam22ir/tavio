@@ -40,8 +40,8 @@ export default async function PurchaseOrderDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">{t('errors.internal')}</p>
+      <div>
+        <p role="alert" className="text-sm text-danger">{t('errors.internal')}</p>
       </div>
     );
   }
@@ -50,13 +50,13 @@ export default async function PurchaseOrderDetailPage({
   const dateFmt = new Intl.DateTimeFormat(currentLocale, { dateStyle: 'medium', timeZone: 'Africa/Algiers' });
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <Link href={listHref} className="text-sm text-muted hover:underline">
         ← {t('order.title')}
       </Link>
 
       <header className="flex flex-col gap-2">
-        <h1 className="text-xl font-semibold break-words">{order.number ?? t('order.draft')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight break-words">{order.number ?? t('order.draft')}</h1>
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
           <span>{partnerName}</span>
           <span>·</span>
@@ -76,7 +76,7 @@ export default async function PurchaseOrderDetailPage({
 
       {errorCode ? (
         <>
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="text-sm text-danger">
             {tr(`purchases.errors.${errorCode.toLowerCase()}`)}
           </p>
           <ErrorToast message={tr(`purchases.errors.${errorCode.toLowerCase()}`)} />

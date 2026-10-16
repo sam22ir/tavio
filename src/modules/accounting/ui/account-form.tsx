@@ -46,7 +46,7 @@ export function AccountForm({ account, locale }: { account?: AccountFormValues; 
         <div className="flex flex-col gap-1">
           <Label htmlFor="acc-code">{t('fields.code')}</Label>
           <Input id="acc-code" name="code" defaultValue={account?.code ?? ''} disabled={!!account} required={!account} inputMode="numeric" className="tabular-nums" />
-          {state.fieldErrors?.code ? <p className="text-sm text-destructive">{state.fieldErrors.code}</p> : null}
+          {state.fieldErrors?.code ? <p className="text-sm text-danger">{state.fieldErrors.code}</p> : null}
         </div>
         <div className="flex flex-col gap-1">
           <Label htmlFor="acc-name">{t('fields.name')}</Label>
@@ -82,7 +82,7 @@ export function AccountForm({ account, locale }: { account?: AccountFormValues; 
         </div>
       </form>
       {state.ok === false ? (
-        <p role="alert" className="text-sm text-destructive">{state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')}</p>
+        <p role="alert" className="text-sm text-danger">{state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')}</p>
       ) : null}
       {state.ok && !account ? <p className="text-sm">{t('form.created')}</p> : null}
       {state.ok && account ? <p className="text-sm">{t('form.saved')}</p> : null}

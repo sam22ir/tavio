@@ -42,21 +42,21 @@ export default async function TaskDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">{t('task.error')}</p>
+      <div>
+        <p role="alert" className="text-sm text-danger">{t('task.error')}</p>
       </div>
     );
   }
   const { task, timesheets, totalHours } = result.value;
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <Link href={`/${currentLocale}/projects/${task.projectId}`} className="text-sm text-muted hover:underline">
         ← {t('project.title')}
       </Link>
 
       <header className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold break-words">{task.name}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight break-words">{task.name}</h1>
         <div className="flex flex-wrap gap-2 text-sm text-muted">
           <span>{t(`options.priority.${task.priority}`)}</span>
           {task.deadline ? <span>{t('task.due', { date: task.deadline })}</span> : null}

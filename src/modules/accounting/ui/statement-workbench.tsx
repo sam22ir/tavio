@@ -90,7 +90,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
         <div><dt className="text-xs text-muted">{t('workbench.closing')}</dt><dd className="font-mono">{money(statement.closing)}</dd></div>
         <div>
           <dt className="text-xs text-muted">{t('workbench.gap')}</dt>
-          <dd className={`font-mono ${gap === BigInt(0) ? '' : 'text-destructive'}`}>{money(statement.gap)}</dd>
+          <dd className={`font-mono ${gap === BigInt(0) ? '' : 'text-danger'}`}>{money(statement.gap)}</dd>
         </div>
         <div><dt className="text-xs text-muted">{t('workbench.toMatch')}</dt><dd className="font-mono">{unmatchedCount}</dd></div>
         <div className="flex items-end">
@@ -111,7 +111,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
       </dl>
       <p className="text-xs text-muted">{t('workbench.gapHint')}</p>
       {message && (
-        <p role={message.kind === 'error' ? 'alert' : 'status'} className={`text-sm ${message.kind === 'error' ? 'text-destructive' : ''}`}>
+        <p role={message.kind === 'error' ? 'alert' : 'status'} className={`text-sm ${message.kind === 'error' ? 'text-danger' : ''}`}>
           {message.text}
         </p>
       )}
@@ -132,7 +132,7 @@ export function StatementWorkbench({ statement }: { statement: StatementDto }) {
                   >
                     <span className="flex items-center justify-between gap-2">
                       <span className="text-sm">{l.date} · {l.label}{l.reference ? ` · ${l.reference}` : ''}</span>
-                      <span className={`font-mono text-sm ${amount < BigInt(0) ? 'text-destructive' : ''}`}>{money(l.amount)}</span>
+                      <span className={`font-mono text-sm ${amount < BigInt(0) ? 'text-danger' : ''}`}>{money(l.amount)}</span>
                     </span>
                     <span className="flex items-center gap-2 text-xs text-muted">
                       <Badge>{l.state === 'unmatched' ? t('workbench.toMatch') : l.state === 'matched' ? t('workbench.matchedTo') : t('workbench.ignore')}</Badge>

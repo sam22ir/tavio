@@ -10,8 +10,8 @@ export default async function AssistantPage({ params }: { params: Promise<{ loca
   setRequestLocale(locale);
   const t = await getTranslations('ai_tools');
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('assistant.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('assistant.title')}</h1>
       <AssistantChat />
     </div>
   );

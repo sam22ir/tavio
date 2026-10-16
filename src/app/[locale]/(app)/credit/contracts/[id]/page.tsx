@@ -82,7 +82,7 @@ export default async function ContractDetailPage({
     <section className="flex flex-col gap-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold">{contract.reference}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{contract.reference}</h1>
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="rounded-full border px-2 py-0.5">{stateLabel}</span>
             <Link href={`/${locale}/contacts/${partner.id}`} className="underline">{partner.name}</Link>
@@ -249,7 +249,7 @@ export default async function ContractDetailPage({
         {payments.length === 0 ? (
           <p className="text-sm text-muted">{t('payment.empty')}</p>
         ) : (
-          <ul className="divide-y rounded-md border">
+          <ul className="divide-y rounded-2xl border border-separator">
             {payments.map((p) => {
               const receipt = receiptByPayment.get(p.id);
               return (

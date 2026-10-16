@@ -28,8 +28,8 @@ export default async function TicketListPage({
   const currentLocale = await getLocale();
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('ticket.list')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('ticket.list')}</h1>
       {result.ok ? (
         <DataList
           entity={ticketEntity}
@@ -44,7 +44,7 @@ export default async function TicketListPage({
           }
         />
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('ticket.error')}
         </p>
       )}

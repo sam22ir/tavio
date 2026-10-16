@@ -55,7 +55,7 @@ export function CashCountForm({ accountId, bookBalance, today }: { accountId: st
         <Button type="submit" className="min-h-11 self-end" disabled={pending}>{t('cash.count')}</Button>
       </form>
       {message && (
-        <p role={message.kind === 'error' ? 'alert' : 'status'} className={`text-sm ${message.kind === 'error' ? 'text-destructive' : ''}`}>
+        <p role={message.kind === 'error' ? 'alert' : 'status'} className={`text-sm ${message.kind === 'error' ? 'text-danger' : ''}`}>
           {message.text}
         </p>
       )}

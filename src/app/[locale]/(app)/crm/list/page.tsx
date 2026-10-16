@@ -43,13 +43,13 @@ export default async function CrmListPage({
     ]);
     return { result, teams: teams.ok ? teams.value : [], pipelines: pipelines.value, pipelineId: selected.id };
   });
-  if (!data) return <p role="alert" className="rounded-md border p-4 text-sm text-destructive">{t('loadError')}</p>;
+  if (!data) return <p role="alert" className="rounded-2xl bg-tint-danger p-4 text-sm text-tint-danger-fg">{t('loadError')}</p>;
   const result = data.result;
 
   return (
     <section className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">{t('title')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
         <nav aria-label={t('viewToggle')} className="flex gap-1">
           <Link href={`/${locale}/crm`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
             {t('kanban')}
@@ -103,7 +103,7 @@ export default async function CrmListPage({
           }
         />
       ) : (
-        <p role="alert" className="rounded-md border p-4 text-sm text-destructive">
+        <p role="alert" className="rounded-2xl bg-tint-danger p-4 text-sm text-tint-danger-fg">
           {t('loadError')}
         </p>
       )}

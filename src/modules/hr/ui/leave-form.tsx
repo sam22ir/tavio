@@ -10,7 +10,7 @@ import { Label } from '@/ui/primitives/label';
 export interface SelectOption { value: string; label: string }
 
 const SELECT_CLASS =
-  'h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+  'h-9 w-full rounded-xl border border-separator bg-surface px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
 /** New leave request. Days are computed by the server from the two dates. */
 export function LeaveRequestForm({
@@ -40,7 +40,7 @@ export function LeaveRequestForm({
             </option>
           ))}
         </select>
-        {err('employeeId') ? <p className="text-xs text-destructive">{err('employeeId')}</p> : null}
+        {err('employeeId') ? <p className="text-xs text-danger">{err('employeeId')}</p> : null}
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="typeId">{t('fields.leaveType')}</Label>
@@ -54,24 +54,24 @@ export function LeaveRequestForm({
             </option>
           ))}
         </select>
-        {err('typeId') ? <p className="text-xs text-destructive">{err('typeId')}</p> : null}
+        {err('typeId') ? <p className="text-xs text-danger">{err('typeId')}</p> : null}
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="fromDate">{t('fields.fromDate')}</Label>
         <Input id="fromDate" name="fromDate" type="date" required />
-        {err('fromDate') ? <p className="text-xs text-destructive">{err('fromDate')}</p> : null}
+        {err('fromDate') ? <p className="text-xs text-danger">{err('fromDate')}</p> : null}
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="toDate">{t('fields.toDate')}</Label>
         <Input id="toDate" name="toDate" type="date" required />
-        {err('toDate') ? <p className="text-xs text-destructive">{err('toDate')}</p> : null}
+        {err('toDate') ? <p className="text-xs text-danger">{err('toDate')}</p> : null}
       </div>
       <div className="flex flex-col gap-1.5 sm:col-span-2">
         <Label htmlFor="reason">{t('fields.reason')}</Label>
         <Input id="reason" name="reason" />
       </div>
       {state.ok === false && state.message ? (
-        <p role="alert" className="text-sm text-destructive sm:col-span-2">
+        <p role="alert" className="text-sm text-danger sm:col-span-2">
           {state.message}
         </p>
       ) : null}
@@ -103,7 +103,7 @@ export function LeaveTypeForm({
         {t('actions.addLeaveType')}
       </Button>
       {state.ok === false && state.message ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {state.message}
         </p>
       ) : null}

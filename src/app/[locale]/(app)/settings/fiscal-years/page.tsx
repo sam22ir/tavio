@@ -21,8 +21,8 @@ export default async function FiscalYearsPage({ params }: { params: Promise<{ lo
   const t = await getTranslations('accounting');
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('fiscalYears.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('fiscalYears.title')}</h1>
       <FiscalYearsPanel
         years={years.map((y) => ({ id: y.id, name: y.name, startDate: y.startDate, endDate: y.endDate, state: y.state === 'closed' ? 'closed' : 'open' }))}
         lockDate={lockDate}

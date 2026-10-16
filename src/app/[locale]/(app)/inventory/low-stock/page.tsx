@@ -19,8 +19,8 @@ export default async function LowStockPage({ params }: { params: Promise<{ local
   const warehouses = await withPageCtx((ctx) => listWarehouses(ctx));
 
   return (
-    <div className="flex flex-col gap-8 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('low_stock.title')}</h1>
+    <div className="flex flex-col gap-8">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('low_stock.title')}</h1>
       {low.ok ? (
         low.value.length === 0 ? (
           <p className="text-sm text-muted">{t('low_stock.empty')}</p>
@@ -53,7 +53,7 @@ export default async function LowStockPage({ params }: { params: Promise<{ local
           </section>
         )
       ) : (
-        <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
+        <p role="alert" className="text-sm text-danger">{t('common.error')}</p>
       )}
       <section className="flex flex-col gap-4">
         <h2 className="text-base font-semibold">{t('low_stock.new_rule')}</h2>
@@ -75,7 +75,7 @@ export default async function LowStockPage({ params }: { params: Promise<{ local
             ]}
           />
         ) : (
-          <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
+          <p role="alert" className="text-sm text-danger">{t('common.error')}</p>
         )}
       </section>
     </div>

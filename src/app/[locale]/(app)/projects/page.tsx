@@ -28,8 +28,8 @@ export default async function ProjectsPage({
   const currentLocale = await getLocale();
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('project.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('project.title')}</h1>
       {result.ok ? (
         <DataList
           entity={projectEntity}
@@ -44,7 +44,7 @@ export default async function ProjectsPage({
           }
         />
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('project.error')}
         </p>
       )}

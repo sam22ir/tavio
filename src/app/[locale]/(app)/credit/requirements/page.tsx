@@ -21,7 +21,7 @@ export default async function DocumentRequirementsPage({
 
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">{t('requirements.title')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('requirements.title')}</h1>
       <DocumentRequirementsSettings rows={res.value} />
     </section>
   );

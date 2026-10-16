@@ -29,8 +29,8 @@ export default async function ProductsPage({
   if (!result.ok) throw new Error(result.error.code);
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1 className="text-xl font-semibold">{t('product.title')}</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('product.title')}</h1>
       <DataList
         entity={productEntity}
         result={result.value}

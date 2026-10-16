@@ -41,8 +41,8 @@ export default async function MessagesLogPage({
   };
 
   return (
-    <section className="flex flex-col gap-4 p-4 md:p-6">
-      <h1 className="text-2xl font-semibold">{t('title')}</h1>
+    <section className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
       <form method="get" className="flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1 text-sm">
           {t('filter')}
@@ -55,11 +55,11 @@ export default async function MessagesLogPage({
             {CHANNELS.map((c) => <option key={c} value={c}>{t(`channel.${c}`)}</option>)}
           </select>
         </label>
-        <button type="submit" className="h-11 rounded-md border px-4 text-sm">{t('filter')}</button>
+        <button type="submit" className="h-11 rounded-2xl border border-separator px-4 text-sm">{t('filter')}</button>
       </form>
 
       {!res.ok ? (
-        <p className="text-sm text-destructive">{res.error.message}</p>
+        <p className="text-sm text-danger">{res.error.message}</p>
       ) : res.value.rows.length === 0 ? (
         <p className="text-sm text-muted">{t('empty')}</p>
       ) : (
@@ -93,7 +93,7 @@ export default async function MessagesLogPage({
                           ) : null}
                         </td>
                         <td className="p-2 tabular-nums">{r.attempts}</td>
-                        <td className="p-2 text-destructive">{r.state === 'failed' || r.lastError ? r.lastError : ''}</td>
+                        <td className="p-2 text-danger">{r.state === 'failed' || r.lastError ? r.lastError : ''}</td>
                       </tr>
                     ))}
                   </tbody>

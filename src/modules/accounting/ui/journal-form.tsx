@@ -32,7 +32,7 @@ export function JournalForm({ journal }: { journal?: JournalFormValues }) {
         <div className="flex flex-col gap-1">
           <Label htmlFor="j-code">{t('fields.code')}</Label>
           <Input id="j-code" name="code" defaultValue={journal?.code ?? ''} disabled={!!journal} required={!journal} maxLength={6} className="uppercase" />
-          {state.fieldErrors?.code ? <p className="text-sm text-destructive">{state.fieldErrors.code}</p> : null}
+          {state.fieldErrors?.code ? <p className="text-sm text-danger">{state.fieldErrors.code}</p> : null}
         </div>
         <div className="flex flex-col gap-1">
           <Label htmlFor="j-name">{t('fields.name')}</Label>
@@ -51,7 +51,7 @@ export function JournalForm({ journal }: { journal?: JournalFormValues }) {
         </div>
       </form>
       {state.ok === false ? (
-        <p role="alert" className="text-sm text-destructive">{state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')}</p>
+        <p role="alert" className="text-sm text-danger">{state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')}</p>
       ) : null}
     </div>
   );

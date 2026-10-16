@@ -44,9 +44,9 @@ export default async function AiSettingsPage({
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
       <header className="flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold">{t('title')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="text-sm text-muted">{t('description')}</p>
       </header>
 
@@ -118,7 +118,7 @@ export default async function AiSettingsPage({
           {t('setup.title')}
         </h2>
         <p className="text-sm text-muted">{t('setup.body')}</p>
-        <pre className="overflow-x-auto rounded-md border bg-default p-3 text-xs" dir="ltr">
+        <pre className="overflow-x-auto rounded-2xl border border-separator bg-default p-3 text-xs" dir="ltr">
 {`wrangler secret put AI_API_KEY
 wrangler secret put AI_BASE_URL
 wrangler secret put AI_MODEL

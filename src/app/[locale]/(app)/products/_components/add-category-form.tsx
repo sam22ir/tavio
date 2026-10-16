@@ -64,7 +64,7 @@ export function AddCategoryForm() {
         </Button>
       </div>
       {error ? (
-        <p role="alert" className="text-sm text-destructive sm:basis-full">
+        <p role="alert" className="text-sm text-danger sm:basis-full">
           {error}
         </p>
       ) : null}

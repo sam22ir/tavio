@@ -78,7 +78,7 @@ export default async function LeadPage({
         <Link href={`/${locale}/crm`} className="text-sm text-muted hover:underline">
           {t('back')}
         </Link>
-        <h1 className="text-xl font-semibold break-words">{String(lead.name)}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight break-words">{String(lead.name)}</h1>
         <RelatedLinks source="crm.lead" id={id} />
         {lead.partnerId ? (
           <Link href={`/${locale}/contacts/${lead.partnerId}`} className="text-sm text-primary underline-offset-4 hover:underline">
@@ -94,7 +94,7 @@ export default async function LeadPage({
           <dd>{amount}</dd>
         </dl>
         {requirements ? (
-          <div className="rounded-md border bg-default/40 p-3 text-sm">
+          <div className="rounded-2xl border border-separator bg-default/40 p-3 text-sm">
             <p className="font-medium">{t('stageRequirements')}</p>
             <p className="whitespace-pre-line text-muted">{requirements}</p>
           </div>

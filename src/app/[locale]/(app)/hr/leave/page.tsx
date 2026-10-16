@@ -49,9 +49,9 @@ export default async function LeavePage({
   const stateLabel = (s: string) => t(`options.leaveState.${s}`);
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       {failed ? <ErrorToast message={tViews('error')} /> : null}
-      <h1 className="text-xl font-semibold">{t('leave.title')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('leave.title')}</h1>
 
       {requests && types && people ? (
         <>
@@ -85,7 +85,7 @@ export default async function LeavePage({
                   key={s || 'all'}
                   href={s ? `?state=${s}` : '?'}
                   aria-current={(state ?? '') === s ? 'page' : undefined}
-                  className="rounded-md border px-3 py-1 hover:bg-default aria-[current=page]:bg-default"
+                  className="rounded-2xl border border-separator px-3 py-1 hover:bg-default aria-[current=page]:bg-default"
                 >
                   {s ? stateLabel(s) : t('leave.all')}
                 </a>
@@ -153,7 +153,7 @@ export default async function LeavePage({
           </section>
         </>
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('leave.error')}
         </p>
       )}

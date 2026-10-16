@@ -69,7 +69,7 @@ export function TeamForm({ team, members, action }: TeamFormProps) {
       </fieldset>
 
       {state.ok === false && state.message ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t("error")}
         </p>
       ) : null}

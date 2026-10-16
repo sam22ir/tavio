@@ -33,8 +33,8 @@ export default async function NewProductPage({
   });
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1 className="text-xl font-semibold">{t('product.new')}</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('product.new')}</h1>
       <AddCategoryForm />
       <RecordForm
         key={selectedCategory ?? 'none'}

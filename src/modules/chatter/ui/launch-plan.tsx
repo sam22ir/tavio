@@ -51,7 +51,7 @@ export function LaunchPlanForm({
           <Label htmlFor="plan-select">{t('plan')}</Label>
           <select
             id="plan-select"
-            className="h-9 rounded-md border bg-background px-3 text-sm"
+            className="h-11 rounded-xl border border-separator bg-surface px-3 text-sm"
             value={planId}
             onChange={(e) => setPlanId(e.target.value)}
           >
@@ -68,7 +68,7 @@ export function LaunchPlanForm({
           <Label htmlFor="plan-owner">{t('owner')}</Label>
           <select
             id="plan-owner"
-            className="h-9 rounded-md border bg-background px-3 text-sm"
+            className="h-11 rounded-xl border border-separator bg-surface px-3 text-sm"
             value={ownerId}
             onChange={(e) => setOwnerId(e.target.value)}
           >
@@ -82,7 +82,7 @@ export function LaunchPlanForm({
           {t('replaceOpen')}
         </label>
       </div>
-      {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
       <div className="flex justify-end">
         <Button type="button" onClick={submit} disabled={pending || !planId || !startDate}>
           {t('launch')}
