@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/*': ['./node_modules/.pnpm/pg-cloudflare@*/node_modules/pg-cloudflare/**/*'],
   },
+  // Vendor-bill photos go through a server action as base64 (up to ~7 MB for a 5 MB photo); the default limit is 1 MB.
+  experimental: { serverActions: { bodySizeLimit: '8mb' } },
   /* config options here */
   turbopack: {
     rules: {

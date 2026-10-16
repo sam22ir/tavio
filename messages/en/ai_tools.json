@@ -23,7 +23,36 @@
     "success": "Draft bill created",
     "badType": "Use a JPEG, PNG or WebP image.",
     "tooBig": "The image is larger than 5 MB.",
-    "noVision": "Configure a vision model (AI_VISION_MODEL or an Anthropic provider) to scan bills."
+    "noVision": "Configure a vision model (AI_VISION_MODEL or an Anthropic provider) to scan bills.",
+    "matchedBy": "Matched by {by}",
+    "matchKind": {
+      "nif": "tax ID (NIF)",
+      "nis": "statistical ID (NIS)",
+      "rc": "trade register (RC)",
+      "article": "tax article",
+      "name": "name"
+    },
+    "candidates": "Several suppliers may match. Pick one:",
+    "purchaseOrder": "Purchase order",
+    "noPurchaseOrder": "No purchase order",
+    "diff": "difference {amount} DZD",
+    "byReference": "matching reference",
+    "lineDiff": "Line {line}: ordered {orderedQty} at {orderedUnit}, billed {scannedQty} at {scannedUnit}",
+    "duplicate": {
+      "title": "This bill may already be recorded.",
+      "reason": {
+        "origin": "same supplier number",
+        "purchase_order": "purchase order already billed",
+        "date_total": "same date and total"
+      }
+    },
+    "notDuplicate": "I confirm this is not a duplicate",
+    "warnings": {
+      "lines_total_mismatch": "The line amounts do not add up to the total (tolerance 1 DZD).",
+      "missing_supplier": "No supplier matched. Choose one before saving.",
+      "missing_number": "The bill number could not be read."
+    },
+    "poNotice": "Linking only attaches this bill to the order. It does not mark the order's quantities as billed, so do not also use “Bill from order” for the same goods."
   },
   "assistant": {
     "title": "Business assistant",
@@ -40,6 +69,57 @@
     "invalid_bill": "The bill could not be read. Try a clearer photo.",
     "too_big": "The image is larger than 5 MB.",
     "no_vision": "No vision model is configured.",
-    "invalid_amount": "Enter a valid amount."
+    "invalid_amount": "Enter a valid amount.",
+    "duplicate_bill": "A bill like this already exists. Tick the confirmation to save anyway.",
+    "po_invalid": "This purchase order does not belong to the supplier or is closed."
+  },
+  "actions": {
+    "kind": {
+      "reminder_batch": "Reminders to prepare",
+      "draft_invoice": "Draft invoice"
+    },
+    "confirm": "Confirm",
+    "reject": "Reject",
+    "pending": "Working…",
+    "confirmed": "Done",
+    "rejected": "Rejected",
+    "failed": "Not done",
+    "prepared": "Prepared",
+    "preparedHint": "Review each message, then open it in WhatsApp to send it yourself.",
+    "whatsapp": "Open in WhatsApp",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Could not copy",
+    "openInvoice": "Open the draft invoice",
+    "unavailable": "Preview unavailable.",
+    "unsupported": "This action type is not supported.",
+    "summary": {
+      "customer": "Customer",
+      "contract": "Contract",
+      "daysLate": "Days late",
+      "amount": "Amount",
+      "stage": "Stage",
+      "description": "Description",
+      "quantity": "Quantity",
+      "unitPrice": "Unit price",
+      "total": "Total",
+      "untaxed": "Untaxed",
+      "tax": "Tax"
+    },
+    "stage": {
+      "polite": "Friendly",
+      "firm": "Firm",
+      "final": "Final notice"
+    },
+    "errors": {
+      "conflict": "The data changed since this was proposed. Ask again.",
+      "invalid": "This action is no longer valid.",
+      "generic": "Something went wrong. Try again."
+    }
+  },
+  "briefing": {
+    "label": "Morning briefing",
+    "hint": "What needs attention today, who to chase first, and what to reorder.",
+    "unavailable": "Nothing to brief for your role yet."
   }
 }

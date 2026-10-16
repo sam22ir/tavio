@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull } from 'drizzle-orm';
 import { getAi } from '@/core/adapters/ai';
 import { assertAiQuota, recordAiUsage } from '@/core/ai/usage';
 import type { Ctx } from '@/core/ctx';
@@ -6,10 +6,13 @@ import { requirePerm } from '@/core/perms';
 import { err, ok, type Result } from '@/core/result';
 import { partners } from '@/modules/contacts/schema';
 import { products } from '@/modules/products/schema';
+import { purchaseOrderLines, purchaseOrders } from '@/modules/purchases/schema';
 import { taxes } from '@/modules/l10n_dz/schema';
-import { createInvoice, type NewInvoiceLine } from '@/modules/invoicing/service/create';
+import { invoices } from '@/modules/invoicing/schema';
+import { createInvoice, planDraft, type NewInvoiceLine } from '@/modules/invoicing/service/create';
 import { uploadFile } from '@/core/files/service';
-import { matchProduct, matchSupplier } from './match';
+import { matchProduct, matchSupplier, type SupplierCandidate, type SupplierMatchedBy } from './match';
+import { billWarnings, duplicateHits, PO_SOURCE, poLineDiffs, suggestOrders, type BillWarning, type DuplicateHit, type ExistingBill, type PoLineDiff, type PoSuggestion } from './checks';
 import { OCR_PROMPT, parseOcrReply, type OcrBill } from './parse';
 
 export const OCR_MAX_BYTES = 5 * 1024 * 1024;
@@ -18,6 +21,10 @@ export type OcrContentType = (typeof OCR_TYPES)[number];
 
 const PERM = 'ai_features.ocr.use';
 const FEATURE = 'ai_features.ocr.extract';
+/** Up to 200 lines of JSON plus reasoning tokens. */
+const OCR_MAX_TOKENS = 4000;
+const OPEN_ORDER_STATES = ['confirmed', 'sent', 'received'] as const;
+const CENTS = 100;
 
 export interface ScannedLine {
   description: string;
@@ -28,13 +35,23 @@ export interface ScannedLine {
   productId: string | null;
 }
 
+export interface PoCandidate extends PoSuggestion { lineDiffs: PoLineDiff[] }
+
 export interface ScanResult {
   supplierId: string | null;
+  supplierMatchedBy: SupplierMatchedBy | null;
+  supplierCandidates: SupplierCandidate[];
   supplierName: string | null;
   number: string | null;
+  poReference: string | null;
   date: string | null;
+  subtotal: number | null;
+  taxTotal: number | null;
   total: number | null;
   lines: ScannedLine[];
+  poCandidates: PoCandidate[];
+  duplicates: DuplicateHit[];
+  warnings: BillWarning[];
 }
 
 /** Reads a vendor bill photo with a vision model and proposes matches. Writes nothing. */
@@ -64,7 +81,7 @@ export async function scanVendorBill(
         ],
       },
     ],
-    { json: true, maxTokens: 1500, temperature: 0, feature: FEATURE },
+    { json: true, maxTokens: OCR_MAX_TOKENS, temperature: 0, feature: FEATURE },
   );
   await recordAiUsage(ctx, reply, FEATURE);
 
@@ -73,9 +90,12 @@ export async function scanVendorBill(
   return ok(await matchBill(ctx, parsed.value));
 }
 
+/** DZD amount as integer cents. */
+const toCents = (dzd: number): bigint => BigInt(Math.round(dzd * CENTS));
+
 async function matchBill(ctx: Ctx, bill: OcrBill): Promise<ScanResult> {
   const supplierRows = await ctx.tx
-    .select({ id: partners.id, nif: partners.nif, name: partners.displayName })
+    .select({ id: partners.id, name: partners.displayName, nif: partners.nif, nis: partners.nis, rc: partners.rc, article: partners.ai })
     .from(partners)
     .where(and(eq(partners.companyId, ctx.companyId), eq(partners.isSupplier, true), eq(partners.active, true)));
   const productRows = await ctx.tx
@@ -87,7 +107,16 @@ async function matchBill(ctx: Ctx, bill: OcrBill): Promise<ScanResult> {
     .from(taxes)
     .where(eq(taxes.companyId, ctx.companyId));
 
-  const supplierId = matchSupplier(bill, supplierRows);
+  const supplier = matchSupplier(
+    {
+      supplierName: bill.supplierName,
+      supplierNif: bill.supplierNif,
+      supplierNis: bill.supplierNis,
+      supplierRc: bill.supplierRc,
+      supplierArticle: bill.supplierArticle,
+    },
+    supplierRows,
+  );
   const lines: ScannedLine[] = bill.lines.map((l) => ({
     description: l.description,
     quantity: l.quantity,
@@ -97,14 +126,122 @@ async function matchBill(ctx: Ctx, bill: OcrBill): Promise<ScanResult> {
     productId: matchProduct(l.description, productRows),
   }));
 
-  return {
-    supplierId,
-    supplierName: bill.supplierName ?? null,
-    number: bill.number ?? null,
+  const number = bill.supplierInvoiceNumber ?? bill.number ?? null;
+  const checks = await billChecks(ctx, {
+    supplierId: supplier.id,
+    number,
+    poReference: bill.poReference ?? null,
     date: bill.date ?? null,
     total: bill.total ?? null,
     lines,
+  });
+
+  return {
+    supplierId: supplier.id,
+    supplierMatchedBy: supplier.matchedBy,
+    supplierCandidates: supplier.candidates,
+    supplierName: bill.supplierName ?? null,
+    number,
+    poReference: bill.poReference ?? null,
+    date: bill.date ?? null,
+    subtotal: bill.subtotal ?? null,
+    taxTotal: bill.taxTotal ?? null,
+    total: bill.total ?? null,
+    lines,
+    poCandidates: checks.poCandidates,
+    duplicates: checks.duplicates,
+    warnings: billWarnings({ supplierId: supplier.id, number, total: bill.total ?? null, lines }),
   };
+}
+
+export interface BillCheckInput {
+  supplierId: string | null;
+  number: string | null;
+  poReference: string | null;
+  date: string | null;
+  total: number | null;
+  lines: readonly ScannedLine[];
+}
+
+/** Purchase order suggestions and duplicate hits for a supplier. Used after a scan and when the user changes the supplier. */
+export async function billChecks(
+  ctx: Ctx,
+  input: BillCheckInput,
+): Promise<{ poCandidates: PoCandidate[]; duplicates: DuplicateHit[] }> {
+  if (!input.supplierId) return { poCandidates: [], duplicates: [] };
+  const totalCents = input.total === null ? null : toCents(input.total);
+
+  const orders = await ctx.tx
+    .select({ id: purchaseOrders.id, number: purchaseOrders.number, totalCents: purchaseOrders.totalCents })
+    .from(purchaseOrders)
+    .where(
+      and(
+        eq(purchaseOrders.companyId, ctx.companyId),
+        eq(purchaseOrders.partnerId, input.supplierId),
+        inArray(purchaseOrders.state, [...OPEN_ORDER_STATES]),
+        isNotNull(purchaseOrders.number),
+      ),
+    );
+  const suggestions = suggestOrders({ poReference: input.poReference, totalCents }, orders);
+
+  const poCandidates: PoCandidate[] = [];
+  if (suggestions.length > 0) {
+    const lineRows = await ctx.tx
+      .select({
+        orderId: purchaseOrderLines.orderId,
+        productId: purchaseOrderLines.productId,
+        quantity: purchaseOrderLines.quantity,
+        unitPriceCents: purchaseOrderLines.unitPriceCents,
+      })
+      .from(purchaseOrderLines)
+      .where(and(eq(purchaseOrderLines.companyId, ctx.companyId), inArray(purchaseOrderLines.orderId, suggestions.map((s) => s.id))));
+    for (const s of suggestions) {
+      const rows = lineRows.filter((r) => r.orderId === s.id);
+      poCandidates.push({
+        ...s,
+        lineDiffs: poLineDiffs(
+          input.lines.map((l) => ({ productId: l.productId, quantity: l.quantity, unitPrice: l.unitPrice })),
+          rows.map((r) => ({ productId: r.productId, quantity: Number(r.quantity), unitPriceCents: r.unitPriceCents })),
+        ),
+      });
+    }
+  }
+
+  const duplicates = input.total === null || !input.date
+    ? []
+    : duplicateHits(
+        {
+          partnerId: input.supplierId,
+          origin: input.number,
+          sourceEntity: null,
+          sourceId: null,
+          date: input.date,
+          totalCents: toCents(input.total),
+        },
+        await loadVendorBills(ctx, input.supplierId),
+      );
+
+  return { poCandidates, duplicates };
+}
+
+/** Vendor bills of one supplier that could be duplicates. Cancelled bills are dropped by the predicate. */
+async function loadVendorBills(ctx: Ctx, partnerId: string): Promise<ExistingBill[]> {
+  const rows = await ctx.tx
+    .select({
+      id: invoices.id,
+      partnerId: invoices.partnerId,
+      origin: invoices.origin,
+      sourceEntity: invoices.sourceEntity,
+      sourceId: invoices.sourceId,
+      date: invoices.date,
+      totalCents: invoices.totalCents,
+      state: invoices.state,
+      number: invoices.number,
+    })
+    .from(invoices)
+    .where(and(eq(invoices.companyId, ctx.companyId), eq(invoices.type, 'in_invoice'), eq(invoices.partnerId, partnerId)))
+    .limit(500);
+  return rows.map((r) => ({ ...r, totalCents: BigInt(r.totalCents) }));
 }
 
 export interface ConfirmBillInput {
@@ -116,6 +253,10 @@ export interface ConfirmBillInput {
   fileName: string;
   contentType: OcrContentType;
   bytes: Uint8Array;
+  /** Purchase order the bill settles. Must belong to the same supplier and still be open. */
+  poId?: string | null;
+  /** Set when the user confirmed that a suspected duplicate is a different bill. */
+  acknowledgeDuplicate?: boolean;
 }
 
 /** Creates the vendor bill as a draft and links the photo. Never posts. */
@@ -123,14 +264,46 @@ export async function confirmVendorBill(ctx: Ctx, input: ConfirmBillInput): Prom
   const perm = requirePerm(ctx, PERM);
   if (!perm.ok) return perm;
 
-  const created = await createInvoice(ctx, {
-    type: 'in_invoice',
+  if (input.poId) {
+    const [po] = await ctx.tx
+      .select({ partnerId: purchaseOrders.partnerId, state: purchaseOrders.state })
+      .from(purchaseOrders)
+      .where(and(eq(purchaseOrders.companyId, ctx.companyId), eq(purchaseOrders.id, input.poId)));
+    if (!po || po.partnerId !== input.partnerId || !(OPEN_ORDER_STATES as readonly string[]).includes(po.state)) {
+      return err('VALIDATION', 'purchase order does not match this supplier', { messageKey: 'errors.po_invalid' });
+    }
+  }
+
+  // The duplicate check uses the values that will be saved: the planned date and total, not the scanned ones.
+  const newInvoice = {
+    type: 'in_invoice' as const,
     partnerId: input.partnerId,
     date: input.date,
     dueDate: input.dueDate,
     origin: input.origin,
+    sourceEntity: input.poId ? PO_SOURCE : undefined,
+    sourceId: input.poId ?? undefined,
     lines: input.lines,
-  });
+  };
+  const plan = await planDraft(ctx, newInvoice);
+  if (!plan.ok) return plan;
+  const totalCents = plan.value.untaxedCents + plan.value.taxCents;
+  const hits = duplicateHits(
+    {
+      partnerId: input.partnerId,
+      origin: input.origin ?? null,
+      sourceEntity: input.poId ? PO_SOURCE : null,
+      sourceId: input.poId ?? null,
+      date: plan.value.date,
+      totalCents,
+    },
+    await loadVendorBills(ctx, input.partnerId),
+  );
+  if (hits.length > 0 && !input.acknowledgeDuplicate) {
+    return err('CONFLICT', 'possible duplicate vendor bill', { messageKey: 'errors.duplicate_bill', duplicates: hits.length });
+  }
+
+  const created = await createInvoice(ctx, newInvoice);
   if (!created.ok) return created;
 
   const file = await uploadFile(ctx, {
@@ -139,7 +312,8 @@ export async function confirmVendorBill(ctx: Ctx, input: ConfirmBillInput): Prom
     fileName: input.fileName,
     contentType: input.contentType,
     bytes: input.bytes,
-    kind: 'vendor_bill_scan',
+    // files_kind_check only allows the kinds in core/db/schema/infra.ts, so the scan is stored as an attachment.
+    kind: 'attachment',
   });
   if (!file.ok) return file;
 

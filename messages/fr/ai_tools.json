@@ -23,7 +23,36 @@
     "success": "Brouillon de facture créé",
     "badType": "Utilisez une image JPEG, PNG ou WebP.",
     "tooBig": "L'image dépasse 5 Mo.",
-    "noVision": "Configurez un modèle de vision (AI_VISION_MODEL ou un fournisseur Anthropic) pour scanner les factures."
+    "noVision": "Configurez un modèle de vision (AI_VISION_MODEL ou un fournisseur Anthropic) pour scanner les factures.",
+    "matchedBy": "Fournisseur reconnu par {by}",
+    "matchKind": {
+      "nif": "NIF",
+      "nis": "NIS",
+      "rc": "RC",
+      "article": "article d’imposition",
+      "name": "nom"
+    },
+    "candidates": "Plusieurs fournisseurs correspondent. Choisissez-en un :",
+    "purchaseOrder": "Bon de commande",
+    "noPurchaseOrder": "Aucun bon de commande",
+    "diff": "écart {amount} DZD",
+    "byReference": "référence identique",
+    "lineDiff": "Ligne {line} : commandé {orderedQty} à {orderedUnit}, facturé {scannedQty} à {scannedUnit}",
+    "duplicate": {
+      "title": "Cette facture existe peut-être déjà.",
+      "reason": {
+        "origin": "même numéro fournisseur",
+        "purchase_order": "bon de commande déjà facturé",
+        "date_total": "même date et même total"
+      }
+    },
+    "notDuplicate": "Je confirme qu’il ne s’agit pas d’un doublon",
+    "warnings": {
+      "lines_total_mismatch": "Les montants des lignes ne correspondent pas au total (tolérance 1 DZD).",
+      "missing_supplier": "Aucun fournisseur reconnu. Choisissez-en un avant d’enregistrer.",
+      "missing_number": "Le numéro de facture n’a pas pu être lu."
+    },
+    "poNotice": "Le lien rattache seulement cette facture à la commande. Il ne marque pas les quantités comme facturées : n’utilisez pas aussi « Facturer la commande » pour les mêmes marchandises."
   },
   "assistant": {
     "title": "Assistant d'entreprise",
@@ -40,6 +69,57 @@
     "invalid_bill": "La facture n'a pas pu être lue. Essayez une photo plus nette.",
     "too_big": "L'image dépasse 5 Mo.",
     "no_vision": "Aucun modèle de vision n'est configuré.",
-    "invalid_amount": "Saisissez un montant valide."
+    "invalid_amount": "Saisissez un montant valide.",
+    "duplicate_bill": "Une facture semblable existe déjà. Cochez la confirmation pour enregistrer quand même.",
+    "po_invalid": "Ce bon de commande n’appartient pas à ce fournisseur ou est clos."
+  },
+  "actions": {
+    "kind": {
+      "reminder_batch": "Relances à préparer",
+      "draft_invoice": "Brouillon de facture"
+    },
+    "confirm": "Confirmer",
+    "reject": "Refuser",
+    "pending": "En cours…",
+    "confirmed": "Terminé",
+    "rejected": "Refusé",
+    "failed": "Non effectué",
+    "prepared": "Préparé",
+    "preparedHint": "Relisez chaque message, puis ouvrez-le dans WhatsApp pour l’envoyer vous-même.",
+    "whatsapp": "Ouvrir dans WhatsApp",
+    "copy": "Copier",
+    "copied": "Copié",
+    "copyFailed": "Copie impossible",
+    "openInvoice": "Ouvrir le brouillon",
+    "unavailable": "Aperçu indisponible.",
+    "unsupported": "Ce type d’action n’est pas pris en charge.",
+    "summary": {
+      "customer": "Client",
+      "contract": "Contrat",
+      "daysLate": "Jours de retard",
+      "amount": "Montant",
+      "stage": "Étape",
+      "description": "Désignation",
+      "quantity": "Quantité",
+      "unitPrice": "Prix unitaire",
+      "total": "Total",
+      "untaxed": "HT",
+      "tax": "TVA"
+    },
+    "stage": {
+      "polite": "Courtoise",
+      "firm": "Ferme",
+      "final": "Dernier rappel"
+    },
+    "errors": {
+      "conflict": "Les données ont changé depuis la proposition. Reposez la question.",
+      "invalid": "Cette action n’est plus valable.",
+      "generic": "Une erreur est survenue. Réessayez."
+    }
+  },
+  "briefing": {
+    "label": "Briefing du matin",
+    "hint": "Ce qui demande votre attention aujourd’hui, qui relancer en premier et quoi réassortir.",
+    "unavailable": "Rien à résumer pour votre rôle pour l’instant."
   }
 }

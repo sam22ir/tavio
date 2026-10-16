@@ -81,6 +81,7 @@
       "open": "Open assistant",
       "prompts": {
         "overdue": "Which customers are overdue?",
+        "collections": "Who should I chase first?",
         "collected": "Summarise this month's collections",
         "leads": "Which leads should I follow up today?"
       }

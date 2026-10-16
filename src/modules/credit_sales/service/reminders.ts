@@ -1,11 +1,13 @@
 import type { Locale } from '@/core/ctx';
 import { formatDzd } from '@/core/money';
 
-export interface ReminderData { partnerName: string; shopName: string; amountCents: bigint; dueDate: string; contractNumber: string; daysLate: number }
+/** `stage` is set only by AI reminder batches. Without it the existing dueSoon/overdue wording is used. */
+export interface ReminderData { partnerName: string; shopName: string; amountCents: bigint; dueDate: string; contractNumber: string; daysLate: number; stage?: 'polite' | 'firm' | 'final' }
 
 type Templates = {
   dueSoon: (d: ReminderData, amount: string) => string;
   overdue: (d: ReminderData, amount: string) => string;
+  final: (d: ReminderData, amount: string) => string;
 };
 
 // Heuristic wording only; no legal or credit-bureau meaning.
@@ -17,6 +19,10 @@ const TEMPLATES: Record<Locale, Templates> = {
     overdue: (d, amount) =>
       `Bonjour ${d.partnerName}, nous vous rappelons que le versement de ${amount} pour le contrat ${d.contractNumber} ` +
       `est en retard de ${d.daysLate} jour(s) (échéance le ${d.dueDate}). Merci de bien vouloir régulariser. ${d.shopName}`,
+    final: (d, amount) =>
+      `Dernier rappel de ${d.shopName} : le versement de ${amount} pour le contrat ${d.contractNumber} ` +
+      `est en retard de ${d.daysLate} jour(s) (échéance le ${d.dueDate}). Merci de régulariser sans délai ` +
+      `ou de nous contacter pour convenir d'un arrangement de paiement.`,
   },
   ar: {
     dueSoon: (d, amount) =>
@@ -25,6 +31,10 @@ const TEMPLATES: Record<Locale, Templates> = {
     overdue: (d, amount) =>
       `مرحباً ${d.partnerName}، نذكركم بأن القسط بقيمة ${amount} للعقد ${d.contractNumber} ` +
       `متأخر منذ ${d.daysLate} يوم (تاريخ الاستحقاق ${d.dueDate}). يرجى التسوية في أقرب وقت. ${d.shopName}`,
+    final: (d, amount) =>
+      `آخر تذكير من ${d.shopName}: القسط بقيمة ${amount} للعقد ${d.contractNumber} ` +
+      `متأخر منذ ${d.daysLate} يوم (تاريخ الاستحقاق ${d.dueDate}). يرجى التسوية فوراً ` +
+      `أو التواصل معنا لترتيب طريقة دفع مناسبة.`,
   },
   en: {
     dueSoon: (d, amount) =>
@@ -33,6 +43,9 @@ const TEMPLATES: Record<Locale, Templates> = {
     overdue: (d, amount) =>
       `Hello ${d.partnerName}, this is a reminder from ${d.shopName} that the installment of ${amount} ` +
       `for contract ${d.contractNumber} is ${d.daysLate} day(s) overdue (due ${d.dueDate}). Please settle it at your earliest convenience.`,
+    final: (d, amount) =>
+      `Final reminder from ${d.shopName}: the installment of ${amount} for contract ${d.contractNumber} ` +
+      `is ${d.daysLate} day(s) overdue (due ${d.dueDate}). Please settle it without delay or contact us to agree on a payment arrangement.`,
   },
 };
 
@@ -40,6 +53,7 @@ const TEMPLATES: Record<Locale, Templates> = {
 export function buildReminderMessage(locale: Locale, d: ReminderData): string {
   const amount = formatDzd(d.amountCents, locale);
   const t = TEMPLATES[locale];
+  if (d.stage === 'final') return t.final(d, amount);
   return d.daysLate > 0 ? t.overdue(d, amount) : t.dueSoon(d, amount);
 }
 
