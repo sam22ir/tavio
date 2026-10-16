@@ -17,7 +17,9 @@
     "title": "Pending invitations",
     "empty": "No pending invitations.",
     "expires": "expires {date}",
-    "revoke": "Revoke"
+    "revoke": "Revoke",
+    "resend": "Resend",
+    "expired": "expired"
   },
   "invite": {
     "title": "Invite a member",
@@ -53,7 +55,9 @@
     "signed_out": "Log in or create an account with the invited email address to accept.",
     "signup": "Sign up",
     "login": "Log in",
-    "signed_in_as": "Signed in as {email}."
+    "signed_in_as": "Signed in as {email}.",
+    "switch_account": "Switch account",
+    "wrong_account": "This invitation is for {email}. Sign in with that address to accept."
   },
   "errors": {
     "generic": "Something went wrong. Try again.",
@@ -70,6 +74,7 @@
     "wrong_email": "This invitation was sent to another email address.",
     "accepted": "This invitation has already been accepted.",
     "expired": "This invitation has expired.",
-    "revoked": "This invitation was revoked."
+    "revoked": "This invitation was revoked.",
+    "rate_limited": "Too many invitations sent recently. Try again later."
   }
 }

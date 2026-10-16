@@ -25,7 +25,7 @@ function errorKeyFor(mode: AuthMode, status: number | undefined, code: string | 
   return 'errors.generic';
 }
 
-export function AuthForm({ mode }: { mode: AuthMode }) {
+export function AuthForm({ mode, defaultEmail }: { mode: AuthMode; defaultEmail?: string }) {
   const t = useTranslations('auth');
   const locale = useLocale();
   const router = useRouter();
@@ -66,7 +66,7 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
       )}
       <div className="flex flex-col gap-2">
         <Label htmlFor="email">{t('fields.email')}</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" dir="ltr" required />
+        <Input id="email" name="email" type="email" autoComplete="email" dir="ltr" defaultValue={defaultEmail} required />
       </div>
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">

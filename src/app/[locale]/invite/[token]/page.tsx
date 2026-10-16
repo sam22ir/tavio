@@ -41,13 +41,13 @@ export default async function InvitePage({
         <p className="text-sm text-muted-foreground">{t('invite_page.signed_out')}</p>
         <div className="flex flex-col gap-2 sm:flex-row">
           <Link
-            href={`/${locale}/signup?next=${next}`}
+            href={`/${locale}/signup?next=${next}&email=${encodeURIComponent(invite.email)}`}
             className="inline-flex flex-1 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             {t('invite_page.signup')}
           </Link>
           <Link
-            href={`/${locale}/login?next=${next}`}
+            href={`/${locale}/login?next=${next}&email=${encodeURIComponent(invite.email)}`}
             className="inline-flex flex-1 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-default"
           >
             {t('invite_page.login')}
@@ -63,7 +63,7 @@ export default async function InvitePage({
       <p className="text-sm text-muted-foreground">
         {t('invite_page.signed_in_as', { email: session.email })}
       </p>
-      <AcceptButton token={token} />
+      <AcceptButton token={token} inviteEmail={invite.email} sessionEmail={session.email} />
     </Shell>
   );
 }

@@ -10,6 +10,7 @@ import {
   changeRoleAction,
   inviteMemberAction,
   removeMemberAction,
+  resendInvitationAction,
   revokeInvitationAction,
   type TeamActionResult,
 } from './actions';
@@ -27,6 +28,7 @@ export interface TeamInvitationView {
   email: string;
   roleKey: string;
   expiresAt: string;
+  expired: boolean;
 }
 
 const ROLE_KEYS = ['owner', 'admin', 'manager', 'staff'] as const;
@@ -93,6 +95,12 @@ export function TeamPanel({
     } catch {
       setError(t('errors.generic'));
     }
+  }
+
+  async function onResend(id: string) {
+    setCopied(false);
+    const result = await run(() => resendInvitationAction(id));
+    if (result.ok) setInvite(result.value as InviteResult);
   }
 
   const whatsappHref = invite
@@ -180,9 +188,21 @@ export function TeamPanel({
               <li key={inv.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
                 <span>
                   <span dir="ltr">{inv.email}</span> · {t(`roles.${inv.roleKey}`)} ·{' '}
-                  {t('invitations.expires', { date: new Date(inv.expiresAt).toLocaleDateString() })}
+                  {inv.expired
+                    ? t('invitations.expired')
+                    : t('invitations.expires', { date: new Date(inv.expiresAt).toLocaleDateString() })}
                 </span>
                 {canManage ? (
+                  <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={pending}
+                    onClick={() => void onResend(inv.id)}
+                  >
+                    {t('invitations.resend')}
+                  </Button>
                   <Button
                     type="button"
                     variant="outline"
@@ -192,6 +212,7 @@ export function TeamPanel({
                   >
                     {t('invitations.revoke')}
                   </Button>
+                  </div>
                 ) : null}
               </li>
             ))}

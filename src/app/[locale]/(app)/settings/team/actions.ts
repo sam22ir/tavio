@@ -8,7 +8,7 @@ import type { Locale } from '@/core/ctx';
 import { requireUser } from '@/core/auth/session';
 import { getActiveCompanyId, setActiveCompanyId } from '@/core/tenancy/active';
 import { listMyCompanies } from '@/core/tenancy/service';
-import { INVITABLE_ROLE_KEYS, acceptInvitation, createInvitation, revokeInvitation } from '@/core/tenancy/invitations';
+import { INVITABLE_ROLE_KEYS, acceptInvitation, createInvitation, resendInvitation, revokeInvitation } from '@/core/tenancy/invitations';
 import { changeRole, removeMember, MEMBER_ROLE_KEYS } from '@/core/tenancy/members';
 import type { AppError } from '@/core/result';
 
@@ -62,6 +62,21 @@ export async function inviteMemberAction(
   const locale = (await getLocale()) as Locale;
   const result = await createInvitation(scope.userId, scope.companyId, {
     ...parsed.data,
+    locale,
+    baseUrl: await requestOrigin(),
+  });
+  if (!result.ok) return { ok: false, key: errorKey(result.error) };
+  refresh();
+  return { ok: true, value: { url: result.value.url, emailSent: result.value.emailSent } };
+}
+
+export async function resendInvitationAction(
+  invitationId: string,
+): Promise<TeamActionResult<{ url: string; emailSent: boolean }>> {
+  const scope = await currentCompany();
+  if (!scope) return { ok: false, key: 'errors.unauthenticated' };
+  const locale = (await getLocale()) as Locale;
+  const result = await resendInvitation(scope.userId, scope.companyId, invitationId, {
     locale,
     baseUrl: await requestOrigin(),
   });
