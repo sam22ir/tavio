@@ -9,7 +9,9 @@
     "launcher": "Apps",
     "notifications": "Notifications",
     "tabs": "App menus",
-    "account": "Open account menu"
+    "account": "Open account menu",
+    "expand": "Expand menu",
+    "collapse": "Collapse menu"
   },
   "company": {
     "label": "Active company",
