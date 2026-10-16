@@ -34,7 +34,7 @@ export function ManualEntryForm({ accounts, journals }: { accounts: AccountOptio
         <div className="flex flex-col gap-1">
           <Label htmlFor="date">{t('fields.date')}</Label>
           <Input id="date" name="date" type="date" required />
-          {state.fieldErrors?.date ? <p className="text-sm text-destructive">{state.fieldErrors.date}</p> : null}
+          {state.fieldErrors?.date ? <p className="text-sm text-danger">{state.fieldErrors.date}</p> : null}
         </div>
         <div className="flex flex-col gap-1">
           <Label htmlFor="journalCode">{t('fields.journal')}</Label>
@@ -117,7 +117,7 @@ export function ManualEntryForm({ accounts, journals }: { accounts: AccountOptio
       />
 
       {state.ok === false ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')}
         </p>
       ) : null}

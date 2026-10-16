@@ -34,7 +34,7 @@ export default async function WebOrderDetailPage({
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
       <div className="flex flex-col gap-6">
-        <p role="alert" className="text-sm text-destructive">{t('orders.error')}</p>
+        <p role="alert" className="text-sm text-danger">{t('orders.error')}</p>
       </div>
     );
   }
@@ -53,7 +53,7 @@ export default async function WebOrderDetailPage({
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold break-words">{order.number}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight break-words">{order.number}</h1>
           <span className="text-sm text-muted">{t(`options.state.${order.state}`)}</span>
         </div>
         {isNew ? (

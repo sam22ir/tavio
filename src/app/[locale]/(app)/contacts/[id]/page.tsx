@@ -44,8 +44,8 @@ export default async function ContactDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">
+      <div>
+        <p role="alert" className="text-sm text-danger">
           {t('contacts.partner.error')}
         </p>
       </div>
@@ -88,7 +88,7 @@ export default async function ContactDetailPage({
   );
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <PortalShareButton mode="invite" partnerId={partner.id} />
       <Link href={listHref} className="text-sm text-muted hover:underline">
         ← {t('contacts.partner.title')}
@@ -96,11 +96,11 @@ export default async function ContactDetailPage({
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold break-words">{partner.displayName}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight break-words">{partner.displayName}</h1>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
             <span>{kindLabel}</span>
             {partner.active ? null : (
-              <span className="text-destructive">{t('contacts.partner.inactive')}</span>
+              <span className="text-danger">{t('contacts.partner.inactive')}</span>
             )}
           </div>
         </div>

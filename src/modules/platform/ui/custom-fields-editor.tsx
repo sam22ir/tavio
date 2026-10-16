@@ -20,7 +20,7 @@ export interface CustomFieldView {
 }
 
 const SELECT_CLASS =
-  'h-11 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
+  'h-11 w-full rounded-xl border border-separator bg-surface px-3 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
 
 /** Reads and writes a record's custom values. Mounted by the integrator on the contact detail page. */
 export function CustomFieldsEditor({
@@ -106,7 +106,7 @@ export function CustomFieldsEditor({
       <div className="sm:col-span-2 flex flex-col gap-2">
         <Button type="submit" disabled={pending} className="min-h-11 self-start">{t('custom.save')}</Button>
         {message ? (
-          <p role={message.kind === 'error' ? 'alert' : 'status'} className={message.kind === 'error' ? 'text-sm text-destructive' : 'text-sm'}>
+          <p role={message.kind === 'error' ? 'alert' : 'status'} className={message.kind === 'error' ? 'text-sm text-danger' : 'text-sm'}>
             {message.text}
           </p>
         ) : null}

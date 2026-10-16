@@ -21,9 +21,9 @@ export default async function HelpdeskBoardPage({ params }: { params: Promise<{ 
   const result = await withPageCtx((ctx) => listTicketsForBoard(ctx));
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">{t('ticket.title')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('ticket.title')}</h1>
         <nav aria-label={t('ticket.views')} className="flex flex-wrap gap-2">
           <Link href={`/${locale}/helpdesk/list`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
             {t('ticket.list')}
@@ -46,7 +46,7 @@ export default async function HelpdeskBoardPage({ params }: { params: Promise<{ 
           basePath={`/${locale}/helpdesk`}
         />
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('ticket.error')}
         </p>
       )}

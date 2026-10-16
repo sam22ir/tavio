@@ -58,7 +58,7 @@ export function CartView({ slug, locale, products, showPrices, whatsappNumber, c
 
   return (
     <div className="flex flex-col gap-6">
-      <ul className="flex flex-col divide-y rounded-md border">
+      <ul className="flex flex-col divide-y rounded-2xl border border-separator">
         {lines.map(({ item, product }) => (
           <li key={item.productId} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 flex-col">

@@ -29,8 +29,8 @@ export default async function ContactsPage({
   const ioT = await getTranslations('io.import');
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('partner.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('partner.title')}</h1>
       {result.ok ? (
         <DataList
           entity={partnerEntity}
@@ -50,7 +50,7 @@ export default async function ContactsPage({
           }
         />
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('partner.error')}
         </p>
       )}

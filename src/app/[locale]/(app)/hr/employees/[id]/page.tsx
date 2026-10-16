@@ -34,8 +34,8 @@ export default async function EmployeeDetailPage({
   if (!data.emp.ok) {
     if (data.emp.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">
+      <div>
+        <p role="alert" className="text-sm text-danger">
           {t('employee.error')}
         </p>
       </div>
@@ -46,17 +46,17 @@ export default async function EmployeeDetailPage({
   const people = data.people?.ok ? data.people.value : [];
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <Link href={listHref} className="text-sm text-muted hover:underline">
         ← {t('employee.title')}
       </Link>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold break-words">{emp.displayName}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight break-words">{emp.displayName}</h1>
           <div className="flex flex-wrap gap-2 text-sm text-muted">
             {emp.jobTitle ? <span>{emp.jobTitle}</span> : null}
             {emp.departmentName ? <span>· {emp.departmentName}</span> : null}
-            {emp.active ? null : <span className="text-destructive">{t('fields.archived')}</span>}
+            {emp.active ? null : <span className="text-danger">{t('fields.archived')}</span>}
           </div>
         </div>
         <form action={toggleEmployeeActiveForm}>

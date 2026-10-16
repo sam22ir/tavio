@@ -9,7 +9,7 @@ import { cancelOrderAction, confirmOrderAction, createInvoiceFromOrderAction, ma
 
 type Props = { id: string; state: string; invoiced: boolean; locale: string };
 
-const BUTTON = 'min-h-11 min-w-11 rounded-md border px-4 text-sm font-medium disabled:opacity-50';
+const BUTTON = 'min-h-11 min-w-11 rounded-2xl border border-separator px-4 text-sm font-medium disabled:opacity-50';
 
 // State actions on the order detail page. Each action is a server call; the page refreshes afterwards.
 export function OrderActions({ id, state, invoiced, locale }: Props) {
@@ -73,7 +73,7 @@ export function OrderActions({ id, state, invoiced, locale }: Props) {
           </button>
         ) : null}
         {canCancel ? (
-          <button type="button" disabled={pending} className={`${BUTTON} text-destructive`} onClick={() => run(cancelOrderAction)}>
+          <button type="button" disabled={pending} className={`${BUTTON} text-danger`} onClick={() => run(cancelOrderAction)}>
             {t('actions.cancel')}
           </button>
         ) : null}
@@ -82,7 +82,7 @@ export function OrderActions({ id, state, invoiced, locale }: Props) {
         </Link>
       </div>
       {error ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {error}
         </p>
       ) : null}

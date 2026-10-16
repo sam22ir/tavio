@@ -12,7 +12,7 @@ import { newLine, type OrderFormInitial, type OrderLineDraft } from './order-for
 import { textAreaVariants } from '@heroui/styles';
 import { cn } from '@/ui/lib/cn';
 
-const INPUT = 'min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm';
+const INPUT = 'min-h-11 w-full rounded-xl border border-separator bg-surface px-3 text-sm';
 
 export function OrderForm({
   lookups,
@@ -201,7 +201,7 @@ export function OrderForm({
             <div className="flex items-end sm:col-span-12">
               <button
                 type="button"
-                className="min-h-11 min-w-11 rounded-md px-3 text-sm text-destructive underline"
+                className="min-h-11 min-w-11 rounded-md px-3 text-sm text-danger underline"
                 onClick={() => setForm((f) => ({ ...f, lines: f.lines.filter((l) => l.key !== line.key) }))}
                 disabled={form.lines.length === 1}
               >
@@ -212,7 +212,7 @@ export function OrderForm({
         ))}
         <button
           type="button"
-          className="min-h-11 w-full rounded-md border border-dashed text-sm sm:w-auto sm:px-4"
+          className="min-h-11 w-full rounded-2xl border border-separator border-dashed text-sm sm:w-auto sm:px-4"
           onClick={() => setForm((f) => ({ ...f, lines: [...f.lines, newLine()] }))}
         >
           {t('actions.addLine')}
@@ -220,7 +220,7 @@ export function OrderForm({
       </div>
 
       {error ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {error}
         </p>
       ) : null}

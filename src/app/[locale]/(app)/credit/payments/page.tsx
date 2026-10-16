@@ -25,7 +25,7 @@ export default async function PaymentsPage({
 
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">{t('menu.payments')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('menu.payments')}</h1>
       <DataList
         entity={paymentEntity}
         result={result}

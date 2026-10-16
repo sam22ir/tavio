@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { createDraftAction, updateDraftAction } from '../actions';
 import { centsToDzdText, formatPreview, newDraftLine, previewDraftTotals, type DraftFormInitial, type DraftLineDraft, type DraftLookups } from './draft-form-defaults';
 
-const INPUT = 'min-h-11 w-full rounded-md border border-input bg-background px-3 text-sm';
+const INPUT = 'min-h-11 w-full rounded-xl border border-separator bg-surface px-3 text-sm';
 const KNOWN_ERRORS = ['VALIDATION', 'NOT_FOUND', 'FORBIDDEN', 'STATE', 'POSTED_IMMUTABLE'] as const;
 
 export function DraftForm({
@@ -148,7 +148,7 @@ export function DraftForm({
             <div className="flex items-end sm:col-span-12">
               <button
                 type="button"
-                className="min-h-11 min-w-11 rounded-md px-3 text-sm text-destructive underline"
+                className="min-h-11 min-w-11 rounded-md px-3 text-sm text-danger underline"
                 disabled={form.lines.length === 1}
                 onClick={() => setForm((f) => ({ ...f, lines: f.lines.filter((l) => l.key !== line.key) }))}
               >
@@ -159,7 +159,7 @@ export function DraftForm({
         ))}
         <button
           type="button"
-          className="min-h-11 w-full rounded-md border border-dashed text-sm sm:w-auto sm:px-4"
+          className="min-h-11 w-full rounded-2xl border border-separator border-dashed text-sm sm:w-auto sm:px-4"
           onClick={() => setForm((f) => ({ ...f, lines: [...f.lines, newDraftLine()] }))}
         >
           {t('editor.addLine')}
@@ -190,7 +190,7 @@ export function DraftForm({
         ) : null}
       </dl>
 
-      {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
 
       <div className="flex justify-end">
         <button

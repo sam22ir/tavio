@@ -59,7 +59,10 @@
     "crm_lead_won": "Lead won",
     "crm_lead_lost": "Lead lost",
     "chatter_activity_done": "Activity done",
-    "credit_sales_contract_state_changed": "Credit contract state changed"
+    "credit_sales_contract_state_changed": "Credit contract state changed",
+    "sales_order_cancelled": "Sales order cancelled",
+    "inventory_delivery_validated": "Delivery validated",
+    "inventory_move_posted": "Stock move posted"
   },
   "ops": {
     "eq": "equals",
@@ -92,5 +95,11 @@
     "lead": "Lead",
     "activity": "Activity",
     "credit_contract": "Credit contract"
-  }
+  },
+  "sections": {
+    "when": "When",
+    "if": "Only if",
+    "then": "Then"
+  },
+  "subtitle": "Rules run automatically when something happens in your workspace."
 }

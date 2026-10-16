@@ -1,6 +1,7 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { formatDzd } from '@/core/money';
 import { Kanban, type KanbanColumn } from '@/ui/views/kanban';
 import type { Result } from '@/core/result';
 import type { Row } from '@/core/entities/types';
@@ -15,6 +16,7 @@ interface KanbanBoardProps {
 
 export function KanbanBoard({ columns, rows, basePath, move }: KanbanBoardProps) {
   const t = useTranslations('crm.ui');
+  const locale = useLocale() as 'fr' | 'ar' | 'en';
   // Card subtitle: partner name and days spent in the current stage.
   const cards = rows.map((r) => {
     const days = typeof r.daysInStage === 'number' ? r.daysInStage : null;
@@ -31,6 +33,12 @@ export function KanbanBoard({ columns, rows, basePath, move }: KanbanBoardProps)
       rows={cards}
       onMove={(id, stageId) => move({ id, stageId })}
       rowHref={(r) => `${basePath}/${r.id}`}
+      cardMeta={(r) => {
+        const cents = r.expectedRevenueCents;
+        if (typeof cents !== 'bigint' && typeof cents !== 'number' && !(typeof cents === 'string' && /^\d+$/.test(cents))) return null;
+        if (typeof cents === 'bigint' ? cents === 0n : Number(cents) === 0) return null;
+        return <span className="text-sm font-semibold tabular-nums">{formatDzd(BigInt(cents), locale)}</span>;
+      }}
     />
   );
 }

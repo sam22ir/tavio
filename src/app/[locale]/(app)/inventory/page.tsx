@@ -13,9 +13,9 @@ export default async function StockPage({ params }: { params: Promise<{ locale: 
   const result = await withPageCtx((ctx) => stockLevels(ctx));
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold">{t('stock.title')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('stock.title')}</h1>
         <p className="text-sm text-muted">{t('stock.help')}</p>
       </div>
       {result.ok ? (
@@ -48,7 +48,7 @@ export default async function StockPage({ params }: { params: Promise<{ locale: 
           </section>
         )
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('common.error')}
         </p>
       )}

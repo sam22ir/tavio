@@ -59,11 +59,11 @@ export default async function PosSessionPage({
   const money = (c: bigint | null): string => (c === null ? '-' : formatDzd(c, currentLocale));
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <Link href={`/${locale}/pos`} className={cn(buttonVariants({ variant: 'outline' }), 'min-h-11 w-fit')}>
         {t('session.back')}
       </Link>
-      <h1 className="text-xl font-semibold">{t('session.closed')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('session.closed')}</h1>
       {r ? (
         <dl className="grid max-w-md grid-cols-2 gap-2 text-sm">
           <dt>{t('session.openingCash')}</dt>

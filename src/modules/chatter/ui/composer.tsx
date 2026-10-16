@@ -57,7 +57,7 @@ export function Composer({ entity, recordId }: Common) {
         rows={3}
         maxLength={10000}
       />
-      {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
       <div className="flex justify-end">
         <Button type="button" onClick={submit} disabled={pending || body.trim().length === 0}>
           {mode === 'comment' ? t('send') : t('logNote')}
@@ -116,7 +116,7 @@ export function ScheduleActivityForm({
           <Label htmlFor="activity-type">{t('type')}</Label>
           <select
             id="activity-type"
-            className="h-9 rounded-md border bg-background px-3 text-sm"
+            className="h-11 rounded-xl border border-separator bg-surface px-3 text-sm"
             value={activityTypeId}
             onChange={(e) => setActivityTypeId(e.target.value)}
           >
@@ -137,7 +137,7 @@ export function ScheduleActivityForm({
           <Label htmlFor="activity-assignee">{t('assignee')}</Label>
           <select
             id="activity-assignee"
-            className="h-9 rounded-md border bg-background px-3 text-sm"
+            className="h-11 rounded-xl border border-separator bg-surface px-3 text-sm"
             value={assigneeId}
             onChange={(e) => setAssigneeId(e.target.value)}
           >
@@ -147,7 +147,7 @@ export function ScheduleActivityForm({
           </select>
         </div>
       </div>
-      {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
       <div className="flex justify-end">
         <Button
           type="button"
@@ -259,7 +259,7 @@ export function ActivityActions({
           onChange={(e) => setFeedback(e.target.value)}
         />
       </div>
-      {error ? <p role="alert" className="text-xs text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="text-xs text-danger">{error}</p> : null}
       <div className="flex justify-end gap-2">
         <Button type="button" size="sm" variant="ghost" onClick={() => setExpanded(false)}>
           {t('cancel')}

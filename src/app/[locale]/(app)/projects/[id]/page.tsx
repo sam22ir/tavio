@@ -46,8 +46,8 @@ export default async function ProjectDetailPage({
   if (!board.ok) {
     if (board.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">{t('project.error')}</p>
+      <div>
+        <p role="alert" className="text-sm text-danger">{t('project.error')}</p>
       </div>
     );
   }
@@ -55,14 +55,14 @@ export default async function ProjectDetailPage({
   const nextState = project.state === 'active' ? 'done' : 'active';
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <Link href={`/${currentLocale}/projects`} className="text-sm text-muted hover:underline">
         ← {t('project.title')}
       </Link>
 
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold break-words">{project.name}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight break-words">{project.name}</h1>
           <span className="text-sm text-muted">{t(`options.state.${project.state}`)}</span>
         </div>
         <div className="flex flex-wrap items-center gap-3">

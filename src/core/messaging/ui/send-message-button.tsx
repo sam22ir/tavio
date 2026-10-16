@@ -113,7 +113,7 @@ export function SendMessageButton({ entity, recordId, partnerId, templateKey, in
           </div>
 
           {optedOut && channel === 'email' ? (
-            <p role="alert" className="rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">{t('optedOut')}</p>
+            <p role="alert" className="rounded-2xl bg-tint-warning p-3 text-sm text-tint-warning-fg">{t('optedOut')}</p>
           ) : null}
           {!loading && !to ? <p className="text-sm text-muted">{t('noRecipient')}</p> : null}
 
@@ -130,7 +130,7 @@ export function SendMessageButton({ entity, recordId, partnerId, templateKey, in
             <Textarea id="msg-body" rows={8} value={body} onChange={(e) => setBody(e.target.value)} disabled={loading || sending} />
           </div>
 
-          {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+          {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
           {waUrl ? (
             <a href={waUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary underline-offset-4 hover:underline">
               {t('openWhatsapp')}

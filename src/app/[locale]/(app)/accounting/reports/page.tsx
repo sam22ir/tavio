@@ -75,18 +75,18 @@ export default async function ReportsPage({
     : null;
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('reports.title')}</h1>
-      <a href={exportHref} className="w-fit rounded-md border px-3 py-1.5 text-sm">{t('reports.export')}</a>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('reports.title')}</h1>
+      <a href={exportHref} className="w-fit rounded-2xl border border-separator px-3 py-1.5 text-sm">{t('reports.export')}</a>
       {singleHref ? (
         <div className="flex flex-wrap gap-2 text-sm">
-          <a href={`${singleHref}&format=xlsx`} className="rounded-md border px-3 py-1.5">{t('reports.exportXlsx')}</a>
-          <a href={`${singleHref}&format=csv&sep=;`} className="rounded-md border px-3 py-1.5">{t('reports.exportCsv')}</a>
+          <a href={`${singleHref}&format=xlsx`} className="rounded-2xl border border-separator px-3 py-1.5">{t('reports.exportXlsx')}</a>
+          <a href={`${singleHref}&format=csv&sep=;`} className="rounded-2xl border border-separator px-3 py-1.5">{t('reports.exportCsv')}</a>
         </div>
       ) : null}
       <nav className="flex flex-wrap gap-2">
         {REPORTS.map((r) => (
-          <Link key={r} href={`${base}?report=${r}`} className={`rounded-md border px-3 py-1.5 text-sm ${r === report ? 'bg-default font-medium' : ''}`}>
+          <Link key={r} href={`${base}?report=${r}`} className={`rounded-2xl border border-separator px-3 py-1.5 text-sm ${r === report ? 'bg-default font-medium' : ''}`}>
             {t(`reports.tabs.${r}`)}
           </Link>
         ))}

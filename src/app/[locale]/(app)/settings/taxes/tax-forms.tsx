@@ -179,7 +179,7 @@ export function ArchiveTaxButton({ id }: { id: string }) {
 function StatusLine({ status }: { status: Status }) {
   if (!status) return null;
   return (
-    <p role="status" className={status.kind === 'ok' ? 'text-sm text-tint-success-fg' : 'text-sm text-destructive'}>
+    <p role="status" className={status.kind === 'ok' ? 'text-sm text-tint-success-fg' : 'text-sm text-danger'}>
       {status.text}
     </p>
   );

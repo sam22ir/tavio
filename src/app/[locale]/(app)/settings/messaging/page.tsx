@@ -22,12 +22,12 @@ export default async function MessagingSettingsPage({ params }: { params: Promis
   });
 
   return (
-    <section className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-2xl font-semibold">{t('title')}</h1>
+    <section className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
       {data.templates.ok ? (
         <MessagingSettingsForm templates={data.templates.value} settings={data.settings} />
       ) : (
-        <p className="text-sm text-destructive">{data.templates.error.message}</p>
+        <p className="text-sm text-danger">{data.templates.error.message}</p>
       )}
     </section>
   );

@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { Bell, LayoutGrid } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import { MobileNav } from '@/ui/shell/mobile-nav';
 import { AccountMenu } from '@/ui/shell/account-menu';
 import { CommandSearch } from '@/ui/shell/command-search';
 import { currentAppFor } from '@/ui/shell/current-app';
@@ -35,13 +36,7 @@ export function TopBar({ apps, companies, activeCompanyId, email }: TopBarProps)
 
   return (
     <header className="flex flex-wrap items-center gap-x-2 gap-y-3 md:gap-x-3 print:hidden">
-      <Link
-        href={dashboardHref}
-        aria-label={t('nav.launcher')}
-        className={`${PILL} size-11 justify-center text-muted hover:text-foreground md:hidden`}
-      >
-        <LayoutGrid aria-hidden="true" className="size-5" />
-      </Link>
+      <MobileNav apps={apps} className="md:hidden" />
       <p className="me-2 truncate text-lg font-semibold tracking-tight md:text-xl">
         {current ? labelOf(current.app.label) : t('appName')}
       </p>

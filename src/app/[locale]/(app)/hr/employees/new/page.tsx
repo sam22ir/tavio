@@ -18,11 +18,11 @@ export default async function NewEmployeePage({ params }: { params: Promise<{ lo
   const [depts, people] = await withPageCtx(async (ctx) => [await listDepartments(ctx), await employeeOptions(ctx)] as const);
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <Link href={`/${currentLocale}/hr/employees`} className="text-sm text-muted hover:underline">
         ← {t('employee.title')}
       </Link>
-      <h1 className="text-xl font-semibold">{t('employee.new')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('employee.new')}</h1>
       {depts.ok && people.ok ? (
         <div className="max-w-2xl">
           <EmployeeForm
@@ -32,7 +32,7 @@ export default async function NewEmployeePage({ params }: { params: Promise<{ lo
           />
         </div>
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('employee.error')}
         </p>
       )}

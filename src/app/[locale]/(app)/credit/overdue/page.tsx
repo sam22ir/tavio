@@ -95,12 +95,12 @@ export default async function OverduePage({ params }: { params: Promise<{ locale
 
   return (
     <section className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold">{t('menu.overdue')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('menu.overdue')}</h1>
 
       <div className="flex flex-col gap-4">
         <h2 className="font-medium">{t('overdue.title')}</h2>
         {groups.length === 0 ? (
-          <p className="rounded-md border border-dashed p-6 text-center text-sm text-muted">
+          <p className="rounded-2xl border border-separator border-dashed p-6 text-center text-sm text-muted">
             {t('overdue.empty')}
           </p>
         ) : (

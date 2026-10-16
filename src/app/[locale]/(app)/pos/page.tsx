@@ -28,8 +28,8 @@ export default async function PosSessionsPage({
   const currentLocale = (await getLocale()) as 'fr' | 'ar' | 'en';
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('sessions.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('sessions.title')}</h1>
 
             <section className="app-panel flex flex-col gap-4 p-5">
  <form action={openSessionForm} className="flex flex-col gap-2 sm:max-w-sm">
@@ -42,7 +42,7 @@ export default async function PosSessionsPage({
         </Button>
         {query.error ? (
           <>
-            <p role="alert" className="text-sm text-destructive">
+            <p role="alert" className="text-sm text-danger">
               {t('errors.failed')}
             </p>
             <ErrorToast message={t('errors.failed')} />
@@ -55,7 +55,7 @@ export default async function PosSessionsPage({
         result.value.length === 0 ? (
           <p className="text-sm text-muted">{t('sessions.none')}</p>
         ) : (
-          <ul className="flex flex-col divide-y rounded-md border">
+          <ul className="flex flex-col divide-y rounded-2xl border border-separator">
             {result.value.map((s) => (
               <li key={s.id}>
                 <Link
@@ -75,7 +75,7 @@ export default async function PosSessionsPage({
           </ul>
         )
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('errors.failed')}
         </p>
       )}

@@ -20,8 +20,8 @@ export default async function NewTicketPage({ params }: { params: Promise<{ loca
   const teamOptions = teams.ok ? teams.value.map((team) => ({ value: team.id, label: team.name })) : [];
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('ticket.new')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('ticket.new')}</h1>
       <div className="max-w-2xl">
         <RecordForm
           entity={TICKET_FORM_ENTITY}

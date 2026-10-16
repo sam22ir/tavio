@@ -78,12 +78,12 @@ export function ActionForm({
               />
             )}
             {field.hint ? <p className="text-xs text-muted">{field.hint}</p> : null}
-            {error ? <p className="text-xs text-destructive">{error}</p> : null}
+            {error ? <p className="text-xs text-danger">{error}</p> : null}
           </div>
         );
       })}
       {state.ok === false && (!state.fieldErrors || state.fieldErrors._form) ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('common.error')}
         </p>
       ) : null}

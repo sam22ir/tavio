@@ -59,7 +59,10 @@
     "crm_lead_won": "Prospect gagné",
     "crm_lead_lost": "Prospect perdu",
     "chatter_activity_done": "Activité terminée",
-    "credit_sales_contract_state_changed": "État du contrat de crédit modifié"
+    "credit_sales_contract_state_changed": "État du contrat de crédit modifié",
+    "sales_order_cancelled": "Commande client annulée",
+    "inventory_delivery_validated": "Livraison validée",
+    "inventory_move_posted": "Mouvement de stock comptabilisé"
   },
   "ops": {
     "eq": "égal à",
@@ -92,5 +95,11 @@
     "lead": "Prospect",
     "activity": "Activité",
     "credit_contract": "Contrat de crédit"
-  }
+  },
+  "sections": {
+    "when": "Quand",
+    "if": "Seulement si",
+    "then": "Alors"
+  },
+  "subtitle": "Les règles s’exécutent automatiquement quand un événement survient dans votre espace."
 }

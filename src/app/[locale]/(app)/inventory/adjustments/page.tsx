@@ -21,9 +21,9 @@ export default async function AdjustmentsPage({ params }: { params: Promise<{ lo
   const locations = await withPageCtx((ctx) => listLocations(ctx));
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold">{t('adjustments.title')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('adjustments.title')}</h1>
         <p className="text-sm text-muted">{t('adjustments.intro')}</p>
         <Link href={`/${locale}/import/inventory.opening_stock`} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'w-fit')}>
           {ioT('button')}
@@ -48,7 +48,7 @@ export default async function AdjustmentsPage({ params }: { params: Promise<{ lo
           ]}
         />
       ) : (
-        <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
+        <p role="alert" className="text-sm text-danger">{t('common.error')}</p>
       )}
     </div>
   );

@@ -10,9 +10,9 @@ import { formatPercent, hasLineDiscount, netPayableCents, residualPayableCents }
 
 type T = (key: string) => string;
 export type Kind = 'customers' | 'vendors';
-const inputCls = 'w-full rounded-md border border-input bg-background px-3 py-2 text-sm';
+const inputCls = 'w-full rounded-xl border border-separator bg-surface px-3 py-2 text-sm';
 const btnCls = 'rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground min-h-11';
-const ghostCls = 'rounded-md border px-4 py-2 text-sm min-h-11 inline-flex items-center';
+const ghostCls = 'rounded-2xl border border-separator px-4 py-2 text-sm min-h-11 inline-flex items-center';
 
 export interface ListRow {
   id: string; number: string | null; date: string; partnerName: string; totalCents: Cents; state: string; paymentState: string; type: string;
@@ -97,7 +97,7 @@ export function InvoiceDetail({
           {isPosted ? <Link href={`/${locale}/invoicing/print/${invoice.id}`} className={ghostCls}>{t('detail.print')}</Link> : null}
         </div>
       </div>
-      {error ? <><p role="alert" className="text-sm text-destructive">{t(`error.${error}`)}</p><ErrorToast message={t(`error.${error}`)} /></> : null}
+      {error ? <><p role="alert" className="text-sm text-danger">{t(`error.${error}`)}</p><ErrorToast message={t(`error.${error}`)} /></> : null}
 
       <div className="overflow-x-auto rounded-2xl bg-surface-secondary/60">
         <table className="w-full text-sm">

@@ -135,7 +135,7 @@ export function ContractWorkflowSections({ data }: { data: ContractWorkflowData 
           <Input id="decision-reason" value={reason} onChange={(e) => setReason(e.target.value)} />
           <Label htmlFor="decision-next">{t('decision.nextAction')}</Label>
           <Input id="decision-next" value={nextAction} onChange={(e) => setNextAction(e.target.value)} />
-          {reasonError ? <p className="text-destructive text-sm">{reasonError}</p> : null}
+          {reasonError ? <p className="text-danger text-sm">{reasonError}</p> : null}
         </div>
         {data.state === 'under_review' ? (
           <div className="flex gap-2">

@@ -50,12 +50,12 @@ export interface HookRow {
 type Status = { kind: 'ok' | 'error'; text: string } | null;
 
 const SELECT_CLASS =
-  'h-11 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
+  'h-11 w-full rounded-xl border border-separator bg-surface px-3 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
 
 function StatusLine({ status }: { status: Status }) {
   if (!status) return null;
   return (
-    <p role={status.kind === 'error' ? 'alert' : 'status'} className={status.kind === 'error' ? 'text-sm text-destructive' : 'text-sm text-tint-success-fg'}>
+    <p role={status.kind === 'error' ? 'alert' : 'status'} className={status.kind === 'error' ? 'text-sm text-danger' : 'text-sm text-tint-success-fg'}>
       {status.text}
     </p>
   );
@@ -240,7 +240,7 @@ function ApiKeysSection({ keys }: { keys: KeyRow[] }) {
       <h2 id="keys-title" className="text-lg font-medium">{t('keys.title')}</h2>
       <p className="text-sm text-muted">{t('keys.intro')}</p>
       {revealed ? (
-        <div role="alert" className="flex flex-col gap-2 rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
+        <div role="alert" className="flex flex-col gap-2 rounded-2xl bg-tint-warning p-3 text-sm text-tint-warning-fg">
           <p className="font-medium">{t('keys.shown_once')}</p>
           <code dir="ltr" className="break-all rounded bg-background p-2 font-mono text-xs">{revealed}</code>
           <Button type="button" variant="outline" className="min-h-11 self-start" onClick={() => setRevealed(null)}>
@@ -344,7 +344,7 @@ function WebhooksSection({ hooks }: { hooks: HookRow[] }) {
       <h2 id="hooks-title" className="text-lg font-medium">{t('hooks.title')}</h2>
       <p className="text-sm text-muted">{t('hooks.intro')}</p>
       {revealed ? (
-        <div role="alert" className="flex flex-col gap-2 rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
+        <div role="alert" className="flex flex-col gap-2 rounded-2xl bg-tint-warning p-3 text-sm text-tint-warning-fg">
           <p className="font-medium">{t('hooks.secret_once')}</p>
           <code dir="ltr" className="break-all rounded bg-background p-2 font-mono text-xs">{revealed}</code>
           <Button type="button" variant="outline" className="min-h-11 self-start" onClick={() => setRevealed(null)}>

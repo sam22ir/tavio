@@ -28,8 +28,8 @@ export default async function MoveDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
+      <div>
+        <p role="alert" className="text-sm text-danger">{t('common.error')}</p>
       </div>
     );
   }
@@ -37,14 +37,14 @@ export default async function MoveDetailPage({
   const doneAt = move.doneAt ? new Date(move.doneAt).toLocaleString(currentLocale) : '–';
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       {failure ? <ErrorToast message={tViews('error')} /> : null}
       <Link href={`/${currentLocale}/inventory/moves`} className="text-sm text-muted hover:underline">
         ← {t('moves.title')}
       </Link>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold break-words">{move.reference}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight break-words">{move.reference}</h1>
           <span className="text-sm text-muted">{t(`options.state.${move.state}`)}</span>
         </div>
         {move.state === 'draft' ? (

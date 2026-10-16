@@ -19,8 +19,8 @@ export default async function NewSaleOrderPage({ params }: { params: Promise<{ l
   const today = todayAlgiers();
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1 className="text-xl font-semibold">{t('title.new')}</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('title.new')}</h1>
       <OrderForm lookups={lookups.value} initial={emptyOrderForm(today)} today={today} locale={locale} />
     </div>
   );

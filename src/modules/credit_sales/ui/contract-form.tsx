@@ -287,7 +287,7 @@ export function ContractForm({ partners, products, initial }: Props) {
           </div>
         </section>
 
-        {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
+        {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
 
         <div className="flex gap-2">
           <Button type="submit" disabled={pending}>{t('contract.form.saveDraft')}</Button>

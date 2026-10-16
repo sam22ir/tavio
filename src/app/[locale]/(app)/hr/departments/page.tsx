@@ -17,8 +17,8 @@ export default async function DepartmentsPage({ params }: { params: Promise<{ lo
   const result = await withPageCtx((ctx) => listDepartments(ctx));
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('department.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('department.title')}</h1>
       <DepartmentForm action={createDepartmentForm} />
       {result.ok ? (
         <section className="app-panel flex flex-col gap-4 p-5">
@@ -40,7 +40,7 @@ export default async function DepartmentsPage({ params }: { params: Promise<{ lo
           </Table>
         </section>
       ) : (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t('department.error')}
         </p>
       )}

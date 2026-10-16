@@ -15,8 +15,8 @@ export default async function NewVendorInvoice({ params }: { params: Promise<{ l
   const lookups = await withPageCtx((ctx) => draftLookupsFor(ctx, 'vendors'));
   const t = await getTranslations('invoicing');
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('list.newVendor')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('list.newVendor')}</h1>
       <DraftForm kind="vendors" locale={locale} lookups={lookups} initial={emptyDraftForm(today())} />
     </div>
   );

@@ -37,10 +37,10 @@ export default async function TaxesSettingsPage({
   }));
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
       <header className="flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold">{t('taxes.title')}</h1>
-        <p role="note" className="rounded-md border bg-tint-warning p-3 text-sm text-tint-warning-fg">
+        <h1 className="text-2xl font-semibold tracking-tight">{t('taxes.title')}</h1>
+        <p role="note" className="rounded-2xl bg-tint-warning p-3 text-sm text-tint-warning-fg">
           {t('taxes.warning')}
         </p>
         <LoadDefaultsButton />

@@ -27,9 +27,9 @@ export default async function ValuationPage({
   ]);
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold">{t('valuation.title')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('valuation.title')}</h1>
         <p className="text-sm text-muted">{t('valuation.help')}</p>
       </div>
       <form method="get" className="flex flex-wrap items-end gap-3">
@@ -45,7 +45,7 @@ export default async function ValuationPage({
               ))}
           </select>
         </label>
-        <button type="submit" className="min-h-11 rounded-md border px-4 text-sm">
+        <button type="submit" className="min-h-11 rounded-2xl border border-separator px-4 text-sm">
           {t('valuation.filter')}
         </button>
       </form>
@@ -85,7 +85,7 @@ export default async function ValuationPage({
           </section>
         )
       ) : (
-        <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
+        <p role="alert" className="text-sm text-danger">{t('common.error')}</p>
       )}
     </div>
   );

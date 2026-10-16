@@ -36,7 +36,7 @@ export default async function SettingsPage({
 
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">{t('title')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
       <Link href={`/${locale}/settings/team`} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
         {tt('settings_link')}
       </Link>

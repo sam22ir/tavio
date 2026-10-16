@@ -171,7 +171,7 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
   return (
     <section className="flex flex-col gap-6">
       {error ? (
-        <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+        <p role="alert" className="rounded-2xl bg-tint-danger p-3 text-sm text-tint-danger-fg">
           {error}
         </p>
       ) : null}
@@ -222,7 +222,7 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
             ))}
           </div>
           {missing.length > 0 ? (
-            <p className="text-sm text-destructive">
+            <p className="text-sm text-danger">
               {t('required_missing', { fields: missing.map(mappedLabel).join(', ') })}
             </p>
           ) : null}
@@ -261,11 +261,11 @@ export function ImportWizard({ entityName, fields, duplicateRule, backHref, whol
                     {preview.map((p) => (
                       <tr key={p.line} className="border-t">
                         <td className="px-3 py-2 tabular-nums">{p.line}</td>
-                        <td className={cn('px-3 py-2', p.status === 'error' && 'text-destructive')}>
+                        <td className={cn('px-3 py-2', p.status === 'error' && 'text-danger')}>
                           {p.status === 'ok' ? t('status_ok') : p.status === 'duplicate' ? t('status_duplicate') : t('status_error')}
                         </td>
                         <td className="px-3 py-2">{p.values[0] ?? ''}</td>
-                        <td className="px-3 py-2 text-destructive">{p.messages.join(' · ')}</td>
+                        <td className="px-3 py-2 text-danger">{p.messages.join(' · ')}</td>
                       </tr>
                     ))}
                   </tbody>

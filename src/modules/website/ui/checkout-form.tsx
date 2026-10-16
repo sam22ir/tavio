@@ -106,7 +106,7 @@ export function CheckoutForm({ slug, shopHref }: CheckoutFormProps) {
       </div>
 
       {phase.kind === 'error' ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {t(`checkout.errors.${phase.reason}`)}
         </p>
       ) : null}

@@ -69,12 +69,12 @@ export async function Chatter({ entity, recordId }: { entity: string; recordId: 
             return (
               <li
                 key={`a-${a.id}`}
-                className={`flex flex-col gap-2 rounded-lg border p-3 ${overdue ? 'border-destructive' : ''}`}
+                className={`flex flex-col gap-2 rounded-lg border p-3 ${overdue ? 'border-danger' : ''}`}
               >
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                   <span className="font-medium">{typeLabel(item.typeName)}</span>
                   <span>{ta('dueOn', { date: a.dueDate })}</span>
-                  {overdue ? <span className="font-medium text-destructive">{ta('overdue')}</span> : null}
+                  {overdue ? <span className="font-medium text-danger">{ta('overdue')}</span> : null}
                   {!open ? <span>{ta('done')}</span> : null}
                   {!open && a.result ? <span>{ta('resultLabel', { result: a.result })}</span> : null}
                 </div>

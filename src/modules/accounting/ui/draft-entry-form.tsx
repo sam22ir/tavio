@@ -91,7 +91,7 @@ export function DraftEntryForm({
         <div className="flex flex-col gap-1">
           <Label htmlFor="date">{t('fields.date')}</Label>
           <Input id="date" name="date" type="date" required defaultValue={draft?.date ?? ''} />
-          {state.fieldErrors?.date ? <p className="text-sm text-destructive">{state.fieldErrors.date}</p> : null}
+          {state.fieldErrors?.date ? <p className="text-sm text-danger">{state.fieldErrors.date}</p> : null}
         </div>
         <div className="flex flex-col gap-1">
           <Label htmlFor="journalCode">{t('fields.journal')}</Label>
@@ -155,14 +155,14 @@ export function DraftEntryForm({
         </div>
       </div>
 
-      <p role="status" className={`text-sm tabular-nums ${balanced ? '' : 'text-destructive'}`}>
+      <p role="status" className={`text-sm tabular-nums ${balanced ? '' : 'text-danger'}`}>
         {t('form.totals', { debit: fmt(totalDebit), credit: fmt(totalCredit) })} · {balanced ? t('form.balancedOk') : t('form.notBalanced')}
       </p>
 
       <input type="hidden" name="linesJson" value={JSON.stringify(lines.map((l) => ({ accountCode: l.accountCode, label: l.label, debit: l.debit, credit: l.credit })))} />
 
       {state.ok === false ? (
-        <p role="alert" className="text-sm text-destructive">{state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')}</p>
+        <p role="alert" className="text-sm text-danger">{state.message && t.has(`errors.${state.message}`) ? t(`errors.${state.message}`) : t('errors.generic')}</p>
       ) : null}
 
       <div className="flex flex-wrap gap-2">

@@ -33,22 +33,22 @@ export default async function PurchaseSuppliersPage({
   ]);
   if (!rows.ok || !options.ok) {
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">{t('errors.internal')}</p>
+      <div>
+        <p role="alert" className="text-sm text-danger">{t('errors.internal')}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('suppliers.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('suppliers.title')}</h1>
       {errorCode ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {tr(`purchases.errors.${errorCode.toLowerCase()}`)}
         </p>
       ) : null}
 
-      <div className="overflow-x-auto rounded-md border">
+      <div className="overflow-x-auto rounded-2xl border border-separator">
         <table className="w-full min-w-[28rem] text-sm">
           <thead className="bg-default/50 text-start">
             <tr>

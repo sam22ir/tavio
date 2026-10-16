@@ -102,7 +102,7 @@ export function TeamPanel({
   return (
     <div className="flex flex-col gap-6">
       {error ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {error}
         </p>
       ) : null}

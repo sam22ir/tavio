@@ -23,7 +23,7 @@ export default async function WebsiteSettingsPage({ params }: { params: Promise<
   if (!result.ok) {
     return (
       <div className="flex flex-col gap-6">
-        <p role="alert" className="text-sm text-destructive">{t('settings.error')}</p>
+        <p role="alert" className="text-sm text-danger">{t('settings.error')}</p>
       </div>
     );
   }
@@ -32,7 +32,7 @@ export default async function WebsiteSettingsPage({ params }: { params: Promise<
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-xl font-semibold">{t('settings.title')}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('settings.title')}</h1>
         <div className="flex flex-wrap gap-3">
           {row ? (
             <Link href={`/${currentLocale}/shop/${row.slug}`} target="_blank" className={cn(buttonVariants({ variant: 'outline' }), 'min-h-11')}>

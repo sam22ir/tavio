@@ -18,8 +18,8 @@ export default async function CustomersPage({ params, searchParams }: { params: 
   const t = await getTranslations('invoicing');
   const current = await getLocale();
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('list.customers')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('list.customers')}</h1>
       <InvoiceList rows={rows} kind="customers" locale={current} t={(k) => t(k as never)} newHref={`/${current}/invoicing/customers/new`} />
     </div>
   );

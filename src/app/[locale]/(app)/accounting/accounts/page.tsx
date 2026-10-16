@@ -33,8 +33,8 @@ export default async function AccountsPage({
   const currentLocale = await getLocale();
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <h1 className="text-xl font-semibold">{t('accounts.title')}</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{t('accounts.title')}</h1>
       <p role="note" className="text-sm text-muted">{t('accounts.verifyNote')}</p>
       <section className="flex flex-col gap-3">
         <h2 className="font-medium">{t('accounts.new')}</h2>

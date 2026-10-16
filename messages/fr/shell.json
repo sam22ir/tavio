@@ -9,7 +9,9 @@
     "launcher": "Applications",
     "notifications": "Notifications",
     "tabs": "Menus de l'application",
-    "account": "Ouvrir le menu du compte"
+    "account": "Ouvrir le menu du compte",
+    "expand": "Développer le menu",
+    "collapse": "Réduire le menu"
   },
   "company": {
     "label": "Entreprise active",

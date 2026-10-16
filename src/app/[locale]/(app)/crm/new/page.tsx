@@ -42,7 +42,7 @@ export default async function NewLeadPage({
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-xl font-semibold">{t('newTitle')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{t('newTitle')}</h1>
       {pipeline ? (
         <>
           <form method="get" className="flex items-center gap-2 text-sm">
@@ -54,7 +54,7 @@ export default async function NewLeadPage({
                 </option>
               ))}
             </select>
-            <button type="submit" className="h-9 rounded-md border px-3">
+            <button type="submit" className="h-9 rounded-2xl border border-separator px-3">
               {t('applyFilter')}
             </button>
           </form>
@@ -68,7 +68,7 @@ export default async function NewLeadPage({
         />
         </>
       ) : (
-        <p role="alert" className="rounded-md border p-4 text-sm text-destructive">
+        <p role="alert" className="rounded-2xl bg-tint-danger p-4 text-sm text-tint-danger-fg">
           {t('loadError')}
         </p>
       )}

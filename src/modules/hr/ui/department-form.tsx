@@ -21,13 +21,13 @@ export function DepartmentForm({
       <div className="flex flex-1 flex-col gap-1.5">
         <Label htmlFor="department-name">{t('fields.departmentName')}</Label>
         <Input id="department-name" name="name" required aria-invalid={state.fieldErrors?.name ? true : undefined} />
-        {state.fieldErrors?.name ? <p className="text-xs text-destructive">{state.fieldErrors.name}</p> : null}
+        {state.fieldErrors?.name ? <p className="text-xs text-danger">{state.fieldErrors.name}</p> : null}
       </div>
       <Button type="submit" disabled={pending}>
         {t('actions.addDepartment')}
       </Button>
       {state.ok === false && state.message ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-danger">
           {state.message}
         </p>
       ) : null}

@@ -45,8 +45,8 @@ export default async function DeliveryDetailPage({
   if (!result.ok) {
     if (result.error.code === 'NOT_FOUND') notFound();
     return (
-      <div className="p-4 md:p-6">
-        <p role="alert" className="text-sm text-destructive">{t('common.error')}</p>
+      <div>
+        <p role="alert" className="text-sm text-danger">{t('common.error')}</p>
       </div>
     );
   }
@@ -68,20 +68,20 @@ export default async function DeliveryDetailPage({
       : null;
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-col gap-6">
       {failureMessage ? <ErrorToast message={failureMessage} /> : null}
       <Link href={`/${currentLocale}/inventory/deliveries`} className="text-sm text-muted hover:underline">
         ← {t('deliveries.title')}
       </Link>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold break-words">{delivery.number}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight break-words">{delivery.number}</h1>
           <span className="text-sm text-muted">{t(`options.delivery_state.${delivery.state}`)}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
             href={`/${currentLocale}/inventory/deliveries/${delivery.id}/print`}
-            className="inline-flex min-h-11 items-center rounded-md border px-4 text-sm font-medium"
+            className="inline-flex min-h-11 items-center rounded-2xl border border-separator px-4 text-sm font-medium"
           >
             {t('deliveries.print')}
           </Link>
