@@ -57,7 +57,7 @@ export default async function DashboardPage({
       .from(sql`member_directory`)
       .where(sql`member_directory.user_id = ${ctx.userId} and member_directory.company_id = ${ctx.companyId}`);
     return {
-      name: member?.name?.trim() || shell.email.split('@')[0] || shell.email,
+      name: displayName(member?.name?.trim() || shell.email.split('@')[0] || shell.email, locale),
       kpis: await dashboardKpis(ctx),
       due: creditOn ? await dueTodayAndOverdue(ctx, 5) : [],
       activities: await myOpenActivities(ctx, 100),
@@ -186,7 +186,7 @@ export default async function DashboardPage({
 
       {crmOn ? (
         <Panel title={t('pipeline.title')}>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             <StatCell label={t('pipeline.withoutActivity')} value={String(kpis.leads.openWithoutActivity)} danger={kpis.leads.openWithoutActivity > 0} />
             <StatCell label={t('pipeline.avgDays')} value={kpis.leads.avgDaysInStage.toFixed(1)} />
             <StatCell label={t('pipeline.wonThisMonth')} value={String(kpis.leads.wonThisMonth)} />
@@ -200,13 +200,21 @@ export default async function DashboardPage({
             {kpis.leads.openByStage.length === 0 ? (
               <p className="py-2 text-sm text-muted">{t('pipeline.noStages')}</p>
             ) : (
-              <ul className="flex flex-col divide-y divide-separator">
-                {kpis.leads.openByStage.map((s) => (
-                  <li key={s.stageId} className="flex items-center justify-between gap-3 py-2 text-sm">
-                    <span className="min-w-0 truncate">{stageLabel(s.name, locale)}</span>
-                    <span className="shrink-0 font-semibold tabular-nums">{s.count}</span>
-                  </li>
-                ))}
+              <ul className="flex flex-col gap-3 pt-1">
+                {kpis.leads.openByStage.map((s) => {
+                  const max = Math.max(...kpis.leads.openByStage.map((x) => x.count), 1);
+                  return (
+                    <li key={s.stageId} className="flex flex-col gap-1.5 text-sm">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="min-w-0 truncate">{stageLabel(s.name, locale)}</span>
+                        <span className="shrink-0 font-semibold tabular-nums">{s.count}</span>
+                      </div>
+                      <div className="h-1.5 overflow-hidden rounded-full bg-default" aria-hidden="true">
+                        <div className="h-full rounded-full bg-accent" style={{ width: `${Math.max((s.count / max) * 100, s.count > 0 ? 6 : 0)}%` }} />
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
@@ -229,9 +237,17 @@ export default async function DashboardPage({
   );
 }
 
+/** Names typed in capitals ("SAMIR SAADI") read as shouting in a greeting; title-case them. */
+function displayName(raw: string, locale: string): string {
+  if (raw !== raw.toLocaleUpperCase(locale) || raw === raw.toLocaleLowerCase(locale)) return raw;
+  return raw
+    .toLocaleLowerCase(locale)
+    .replace(/(^|[\s'’-])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toLocaleUpperCase(locale));
+}
+
 function StatCell({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
   return (
-    <div className="flex flex-col gap-1 rounded-2xl bg-surface-secondary p-4">
+    <div className="flex flex-col gap-1 rounded-2xl bg-surface-secondary p-3 sm:p-4">
       <span className="text-xs text-muted">{label}</span>
       <span className={`text-2xl font-semibold tabular-nums ${danger ? 'text-danger' : ''}`}>{value}</span>
     </div>

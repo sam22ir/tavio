@@ -65,7 +65,7 @@ export async function MyActivities({
       {sorted.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t('noActivities')}</p>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col divide-y divide-separator">
           {sorted.map((r) => {
             const tone = deadlineTone(r.dueDate, today);
             const href = entityPath(r.entity, r.recordId);
@@ -80,7 +80,7 @@ export async function MyActivities({
               </>
             );
             return (
-              <li key={r.id} className="min-h-11 rounded-lg border p-3">
+              <li key={r.id} className="min-h-11 px-2 py-3">
                 {href ? (
                   <Link href={href} className="flex flex-col gap-1 hover:underline">
                     {body}

@@ -24,8 +24,8 @@ export function KpiTile({
         <span className="text-sm text-muted">{label}</span>
         <TintIcon icon={icon} tint={tint} className="size-9" />
       </div>
-      <span className="text-xl font-semibold tracking-tight tabular-nums sm:text-3xl">{value}</span>
-      {hint ? <span className="text-xs text-muted">{hint}</span> : null}
+      <span className="mt-auto pt-2 text-2xl font-semibold tracking-tight tabular-nums sm:text-3xl">{value}</span>
+      <span className="min-h-4 text-xs text-muted">{hint}</span>
     </>
   );
   const cls = 'app-panel flex min-w-0 flex-col gap-2 rounded-3xl p-4 sm:p-5';
