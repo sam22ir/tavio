@@ -38,7 +38,23 @@ export interface RuleDefaults {
 }
 
 const field = 'flex flex-col gap-1 text-sm';
-const input = 'rounded-md border bg-background px-3 py-2 text-sm';
+const input =
+  'min-h-11 w-full rounded-xl border border-separator bg-surface px-3 py-2 text-sm placeholder:text-muted focus-visible:outline-2 focus-visible:outline-focus';
+const section = 'flex flex-col gap-3 rounded-2xl bg-surface-secondary p-4 sm:col-span-2';
+const sectionGrid = 'grid gap-3 sm:grid-cols-2';
+
+function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+  return (
+    <fieldset className={section}>
+      <legend className="sr-only">{title}</legend>
+      <h3 className="flex items-center gap-2 text-sm font-semibold" aria-hidden="true">
+        <span className="flex size-6 items-center justify-center rounded-full bg-accent text-xs text-accent-foreground">{n}</span>
+        {title}
+      </h3>
+      <div className={sectionGrid}>{children}</div>
+    </fieldset>
+  );
+}
 
 export function RuleForm({
   action,
@@ -67,8 +83,9 @@ export function RuleForm({
       <label className={`${field} sm:col-span-2`}>
         {t('fields.name')}
         <input name="name" required maxLength={120} defaultValue={defaults.name} className={input} />
-        {err('name') ? <span role="alert" className="text-destructive">{err('name')}</span> : null}
+        {err('name') ? <span role="alert" className="text-danger">{err('name')}</span> : null}
       </label>
+      <Section n={1} title={t('sections.when')}>
       <label className={field}>
         {t('fields.kind')}
         <select name="kind" value={kind} onChange={(e) => setKind(e.target.value)} className={input}>
@@ -77,8 +94,8 @@ export function RuleForm({
         </select>
       </label>
       {kind === 'time' ? (
-        <fieldset className={`${field} sm:col-span-2 rounded-2xl bg-surface-secondary p-3`}>
-          <legend>{t('fields.whenDate')}</legend>
+        <div className={`${field} sm:col-span-2`}>
+          <span className="font-medium">{t('fields.whenDate')}</span>
           <div className="grid gap-2 sm:grid-cols-3">
             <select name="timeEntity" defaultValue={defaults.timeEntity ?? TIME_ENTITIES[0]} className={input}>
               {TIME_ENTITIES.map((e) => (
@@ -89,8 +106,8 @@ export function RuleForm({
             <input name="delayDays" type="number" min={0} max={3650} placeholder={t('fields.delayDays')} defaultValue={defaults.delayDays ?? 0} className={input} />
           </div>
           <span className="text-xs text-muted">{t('hints.time')}</span>
-          {err('timeConfig') ? <span role="alert" className="text-destructive">{t('errors.timeConfig')}</span> : null}
-        </fieldset>
+          {err('timeConfig') ? <span role="alert" className="text-danger">{t('errors.timeConfig')}</span> : null}
+        </div>
       ) : (
         <label className={field}>
           {t('fields.triggerEvent')}
@@ -101,8 +118,9 @@ export function RuleForm({
           </select>
         </label>
       )}
-      <fieldset className={`${field} sm:col-span-2 rounded-2xl bg-surface-secondary p-3`}>
-        <legend>{t('fields.condition')}</legend>
+      </Section>
+      <Section n={2} title={t('sections.if')}>
+      <div className={`${field} sm:col-span-2`}>
         <div className="grid gap-2 sm:grid-cols-3">
           <input name="condField" placeholder={t('fields.condField')} defaultValue={defaults.condField} maxLength={100} className={input} />
           <select name="condOp" defaultValue={defaults.condOp ?? 'eq'} className={input}>
@@ -113,7 +131,9 @@ export function RuleForm({
           <input name="condValue" placeholder={t('fields.condValue')} defaultValue={defaults.condValue} maxLength={200} className={input} />
         </div>
         <span className="text-xs text-muted">{t('hints.condition')}</span>
-      </fieldset>
+      </div>
+      </Section>
+      <Section n={3} title={t('sections.then')}>
       <label className={field}>
         {t('fields.action')}
         <select name="action" required value={chosenAction} onChange={(e) => setChosenAction(e.target.value)} className={input}>
@@ -205,16 +225,17 @@ export function RuleForm({
           <input name="url" type="url" placeholder="https://" maxLength={500} defaultValue={defaults.url} className={input} />
         </label>
       ) : null}
-      <label className="flex items-center gap-2 text-sm sm:col-span-2">
-        <input name="active" type="checkbox" defaultChecked={defaults.active ?? true} />
+      </Section>
+      <label className="flex min-h-11 items-center gap-2 text-sm sm:col-span-2">
+        <input name="active" type="checkbox" defaultChecked={defaults.active ?? true} className="size-4 accent-[var(--accent)]" />
         {t('fields.active')}
       </label>
-      {err('actionConfig') ? <p role="alert" className="text-sm text-destructive sm:col-span-2">{t('errors.actionConfig')}</p> : null}
+      {err('actionConfig') ? <p role="alert" className="text-sm text-danger sm:col-span-2">{t('errors.actionConfig')}</p> : null}
       {state.ok === false && state.message ? (
-        <p role="alert" className="text-sm text-destructive sm:col-span-2">{t('errors.invalid')}</p>
+        <p role="alert" className="text-sm text-danger sm:col-span-2">{t('errors.invalid')}</p>
       ) : null}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground disabled:opacity-50">
+        <button type="submit" disabled={pending} className="inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground transition-opacity disabled:opacity-50">
           {t('save')}
         </button>
       </div>

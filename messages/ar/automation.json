@@ -59,7 +59,10 @@
     "crm_lead_won": "ربح العميل المحتمل",
     "crm_lead_lost": "خسارة العميل المحتمل",
     "chatter_activity_done": "إنجاز النشاط",
-    "credit_sales_contract_state_changed": "تغيير حالة عقد الائتمان"
+    "credit_sales_contract_state_changed": "تغيير حالة عقد الائتمان",
+    "sales_order_cancelled": "إلغاء أمر البيع",
+    "inventory_delivery_validated": "تأكيد التسليم",
+    "inventory_move_posted": "ترحيل حركة المخزون"
   },
   "ops": {
     "eq": "يساوي",
@@ -92,5 +95,11 @@
     "lead": "العميل المحتمل",
     "activity": "النشاط",
     "credit_contract": "عقد الائتمان"
-  }
+  },
+  "sections": {
+    "when": "عندما",
+    "if": "فقط إذا",
+    "then": "ثم"
+  },
+  "subtitle": "تعمل القواعد تلقائيًا عند حدوث أمر ما في مساحة عملك."
 }

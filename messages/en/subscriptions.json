@@ -1,6 +1,10 @@
 {
-  "module": { "name": "Subscription" },
-  "menu": { "billing": "Billing" },
+  "module": {
+    "name": "Subscription"
+  },
+  "menu": {
+    "billing": "Billing"
+  },
   "title": "Billing",
   "forbidden": "You do not have access to billing.",
   "plan": "Plan",
@@ -9,11 +13,18 @@
   "monthly": "Monthly total",
   "trialEnds": "Trial ends",
   "periodEnds": "Current period ends",
-  "states": { "trial": "Trial", "active": "Active", "past_due": "Payment overdue", "cancelled": "Cancelled" },
+  "states": {
+    "trial": "Trial",
+    "active": "Active",
+    "past_due": "Payment overdue",
+    "cancelled": "Cancelled"
+  },
   "payment": {
     "title": "How to pay",
     "ccp": "Pay by CCP or bank transfer to the account Revora support gives you.",
     "transfer": "Payment methods: CCP, bank transfer or cash at our office.",
     "reference": "Quote your company NIF as the payment reference, then send the receipt to support."
-  }
+  },
+  "subtitle": "Your Revora plan, usage and how to pay.",
+  "daysLeft": "{count, plural, =0 {Ends today} one {# day left} other {# days left}}"
 }

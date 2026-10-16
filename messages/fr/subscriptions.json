@@ -1,6 +1,10 @@
 {
-  "module": { "name": "Abonnement" },
-  "menu": { "billing": "Facturation" },
+  "module": {
+    "name": "Abonnement"
+  },
+  "menu": {
+    "billing": "Facturation"
+  },
   "title": "Facturation",
   "forbidden": "Vous n'avez pas accès à la facturation.",
   "plan": "Formule",
@@ -9,11 +13,18 @@
   "monthly": "Total mensuel",
   "trialEnds": "Fin de l'essai",
   "periodEnds": "Fin de la période en cours",
-  "states": { "trial": "Essai", "active": "Actif", "past_due": "Paiement en retard", "cancelled": "Résilié" },
+  "states": {
+    "trial": "Essai",
+    "active": "Actif",
+    "past_due": "Paiement en retard",
+    "cancelled": "Résilié"
+  },
   "payment": {
     "title": "Comment payer",
     "ccp": "Payez par CCP ou virement bancaire sur le compte communiqué par le support Revora.",
     "transfer": "Modes de paiement : CCP, virement bancaire ou espèces à notre bureau.",
     "reference": "Indiquez votre NIF comme référence de paiement, puis envoyez le justificatif au support."
-  }
+  },
+  "subtitle": "Votre formule Revora, son usage et comment payer.",
+  "daysLeft": "{count, plural, =0 {Se termine aujourd’hui} one {# jour restant} other {# jours restants}}"
 }
