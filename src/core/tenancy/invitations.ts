@@ -1,6 +1,6 @@
 // Team invitations (W6-B). Runs on the owner connection with explicit company checks, like service.ts.
 import { createHash, randomBytes } from 'node:crypto';
-import { and, desc, eq, gt, isNull, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, isNull, lte, sql } from 'drizzle-orm';
 import { getDb } from '@/core/db/client';
 import { companies, invitations, memberships, roles, users } from '@/core/db/schema';
 import type { Db } from '@/core/db/types';
@@ -11,6 +11,8 @@ import { invitationEmail } from '@/core/auth/emails';
 import { canManageTeam, getMemberRole, isMemberRoleKey } from './members';
 
 export const INVITE_TTL_DAYS = 7;
+/** Invitations a company may create per rolling hour. Resends count. */
+export const INVITE_HOURLY_LIMIT = 30;
 export const INVITABLE_ROLE_KEYS = ['admin', 'manager', 'staff'] as const;
 export type InvitableRoleKey = (typeof INVITABLE_ROLE_KEYS)[number];
 
@@ -23,6 +25,8 @@ export interface CreateInvitationInput {
   locale?: Locale;
   /** Public origin for the link. Defaults to BETTER_AUTH_URL. */
   baseUrl?: string;
+  /** Open invitation this one replaces (resend). It is revoked when the new one is created. */
+  replaces?: string;
 }
 
 export interface CreatedInvitation {
@@ -38,6 +42,7 @@ export interface InvitationRow {
   email: string;
   roleKey: string;
   expiresAt: Date;
+  expired: boolean;
 }
 
 export type InvitationState = 'open' | 'expired' | 'revoked' | 'accepted';
@@ -136,6 +141,42 @@ export async function createInvitation(
     .limit(1);
   if (member) return err('CONFLICT', 'already a member', { reason: 'already_member' });
 
+  const now = new Date();
+  const [recent] = await db
+    .select({ n: sql<number>`count(*)::int` })
+    .from(invitations)
+    .where(and(eq(invitations.companyId, companyId), gte(invitations.createdAt, new Date(now.getTime() - 60 * 60 * 1000))));
+  if ((recent?.n ?? 0) >= INVITE_HOURLY_LIMIT) {
+    return err('STATE', 'too many invitations, try again later', { reason: 'rate_limited' });
+  }
+
+  // Expired invitations are dead: clear them so the address can be invited again.
+  await db
+    .update(invitations)
+    .set({ revokedAt: now })
+    .where(
+      and(
+        eq(invitations.companyId, companyId),
+        eq(invitations.email, email),
+        isNull(invitations.acceptedAt),
+        isNull(invitations.revokedAt),
+        lte(invitations.expiresAt, now),
+      ),
+    );
+  if (input.replaces) {
+    await db
+      .update(invitations)
+      .set({ revokedAt: now })
+      .where(
+        and(
+          eq(invitations.id, input.replaces),
+          eq(invitations.companyId, companyId),
+          isNull(invitations.acceptedAt),
+          isNull(invitations.revokedAt),
+        ),
+      );
+  }
+
   const [pending] = await db
     .select({ id: invitations.id })
     .from(invitations)
@@ -211,11 +252,11 @@ export async function listInvitations(
         eq(invitations.companyId, companyId),
         isNull(invitations.acceptedAt),
         isNull(invitations.revokedAt),
-        gt(invitations.expiresAt, new Date()),
       ),
     )
     .orderBy(desc(invitations.createdAt));
-  return ok(rows);
+  const now = new Date();
+  return ok(rows.map((r) => ({ ...r, expired: isInviteExpired(r.expiresAt, now) })));
 }
 
 export async function revokeInvitation(
@@ -240,6 +281,31 @@ export async function revokeInvitation(
     .returning({ id: invitations.id });
   if (updated.length === 0) return err('NOT_FOUND', 'invitation not found');
   return ok(undefined);
+}
+
+/** Replaces an open or expired invitation with a fresh link and expiry, and emails it again. */
+export async function resendInvitation(
+  userId: string,
+  companyId: string,
+  invitationId: string,
+  options: Pick<CreateInvitationInput, 'locale' | 'baseUrl'> = {},
+  db: Db = getDb(),
+): Promise<Result<CreatedInvitation>> {
+  const role = await getMemberRole(userId, companyId, db);
+  if (!canManageTeam(role)) return err('FORBIDDEN', 'only owners and admins can resend invitations');
+  const [inv] = await db
+    .select({ email: invitations.email, roleKey: invitations.roleKey })
+    .from(invitations)
+    .where(
+      and(
+        eq(invitations.id, invitationId),
+        eq(invitations.companyId, companyId),
+        isNull(invitations.acceptedAt),
+        isNull(invitations.revokedAt),
+      ),
+    );
+  if (!inv) return err('NOT_FOUND', 'invitation not found');
+  return createInvitation(userId, companyId, { ...options, email: inv.email, roleKey: inv.roleKey, replaces: invitationId }, db);
 }
 
 function stateOf(row: { acceptedAt: Date | null; revokedAt: Date | null; expiresAt: Date }): InvitationState {

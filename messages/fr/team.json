@@ -17,7 +17,9 @@
     "title": "Invitations en attente",
     "empty": "Aucune invitation en attente.",
     "expires": "expire le {date}",
-    "revoke": "Révoquer"
+    "revoke": "Révoquer",
+    "resend": "Renvoyer",
+    "expired": "expirée"
   },
   "invite": {
     "title": "Inviter un membre",
@@ -53,7 +55,9 @@
     "signed_out": "Connectez-vous ou créez un compte avec l’adresse e-mail invitée pour accepter.",
     "signup": "Créer un compte",
     "login": "Se connecter",
-    "signed_in_as": "Connecté en tant que {email}."
+    "signed_in_as": "Connecté en tant que {email}.",
+    "switch_account": "Changer de compte",
+    "wrong_account": "Cette invitation est destinée à {email}. Connectez-vous avec cette adresse pour l'accepter."
   },
   "errors": {
     "generic": "Une erreur est survenue. Réessayez.",
@@ -70,6 +74,7 @@
     "wrong_email": "Cette invitation a été envoyée à une autre adresse e-mail.",
     "accepted": "Cette invitation a déjà été acceptée.",
     "expired": "Cette invitation a expiré.",
-    "revoked": "Cette invitation a été révoquée."
+    "revoked": "Cette invitation a été révoquée.",
+    "rate_limited": "Trop d'invitations envoyées récemment. Réessayez plus tard."
   }
 }

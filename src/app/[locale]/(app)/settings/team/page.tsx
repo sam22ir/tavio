@@ -44,6 +44,7 @@ export default async function TeamPage({ params }: { params: Promise<{ locale: s
           email: i.email,
           roleKey: i.roleKey,
           expiresAt: i.expiresAt.toISOString(),
+          expired: i.expired,
         }))}
         canManage={data.canManage}
         emailEnabled={invitationEmailEnabled()}
